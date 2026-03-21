@@ -2,15 +2,10 @@
 
 SOLID-inspired composable project templates for LLM agents.
 
-Generate a `CLAUDE.md`, `.cursorrules`, or `AI_CONTEXT.md` for any project
-by combining reusable base templates with framework-specific stack templates —
-structured like object-oriented design, built for AI-augmented engineering.
-
----
-
-## Status
-
-Early design phase. Specification in progress.
+Generate a context file (`CLAUDE.md`, `AGENTS.md`, `.cursor/rules/project.mdc`,
+`copilot-instructions.md`, or `AI_CONTEXT.md`) for any project by combining
+reusable base templates with framework-specific stack templates — structured
+like object-oriented design, built for AI-augmented engineering.
 
 ---
 
@@ -27,12 +22,48 @@ repository provides a composable system inspired by SOLID principles:
 
 ---
 
+## Structure
+
+```
+base/          # cross-cutting — git, docs, quality (all projects)
+frontend/      # frontend layer — UX, CSS, SEO (UI projects only)
+backend/       # backend layer — config, HTTP, database, observability
+stack/         # concrete stacks — extend base + frontend or backend
+output/        # rendering rules per AI tool
+INTERVIEW.md   # agent-driven project setup interview
+SPEC.md        # design decisions and system architecture
+ROADMAP.md     # project status and planned work
+```
+
+---
+
+## Supported stacks
+
+| Template | Extends |
+|----------|---------|
+| `stack/static-site.md` | base |
+| `stack/astro.md` | static-site |
+| `stack/python-lib.md` | base |
+| `stack/flask.md` | python-lib |
+| `stack/fastapi.md` | python-lib |
+| `stack/react-spa.md` | base |
+| `stack/go-service.md` | base |
+
+## Supported agents
+
+| Agent | Output file | Format guide |
+|-------|-------------|--------------|
+| Claude Code | `CLAUDE.md` | `output/claude.md` |
+| Cursor | `.cursor/rules/project.mdc` | `output/cursorrules.md` |
+| GitHub Copilot | `.github/copilot-instructions.md` | `output/copilot.md` |
+| OpenAI Codex CLI | `AGENTS.md` | `output/codex.md` |
+| Generic / other | `AI_CONTEXT.md` | `output/generic.md` |
+
+---
+
 ## Roadmap
 
-- [ ] Base templates (git, ux, docs, quality)
-- [ ] Stack templates (static-site, astro, python-lib, react-spa)
-- [ ] Interview template (agent-driven project setup)
-- [ ] Agent output mapping (CLAUDE.md, .cursorrules, AI_CONTEXT.md)
+See `ROADMAP.md`.
 
 ---
 

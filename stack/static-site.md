@@ -1,5 +1,5 @@
 # Stack — Static Site
-[DEPENDS ON: base/git.md, base/ux.md, base/docs.md, base/quality.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md]
 
 A static site generated at build time and served as plain HTML, CSS, and
 minimal JavaScript. No backend, no database, no login.
@@ -60,8 +60,17 @@ to change.
 
 ---
 
+## Code conventions
+
+- **ESLint** for any JS/TS code — configured in `eslint.config.js`, run on save
+- **Prettier** owns all formatting — commit `.prettierrc`; no style debates
+  in code review
+- If no JS/TS is present in the project, skip ESLint
+
+---
+
 ## CSS conventions
-[EXTEND: base-quality]
+[EXTEND: frontend-quality]
 
 - All CSS in a single global stylesheet
 - Use CSS custom properties from `:root` for all colours and spacing
@@ -71,7 +80,7 @@ to change.
 ---
 
 ## Performance
-[EXTEND: base-quality]
+[EXTEND: frontend-quality]
 
 - Preload critical above-the-fold assets (hero image, primary font)
 - Static generation by default — no client-side rendering unless necessary
@@ -80,7 +89,7 @@ to change.
 ---
 
 ## SEO
-[EXTEND: base-quality]
+[EXTEND: frontend-quality]
 
 - `robots.txt` required
 - Open Graph and Twitter Card meta tags required

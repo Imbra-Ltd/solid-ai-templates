@@ -27,9 +27,11 @@ Which stack template applies to this project?
 
 - `stack/static-site.md` — generic static site (any framework)
 - `stack/astro.md` — Astro static site
-- `stack/python-lib.md` — Python library or CLI tool *(coming soon)*
-- `stack/react-spa.md` — React single-page application *(coming soon)*
-- `stack/fastapi.md` — FastAPI backend *(coming soon)*
+- `stack/python-lib.md` — Python library or CLI tool
+- `stack/flask.md` — Flask web application or API
+- `stack/fastapi.md` — FastAPI backend
+- `stack/react-spa.md` — React single-page application (TypeScript)
+- `stack/go-service.md` — Go service, API server, or CLI tool
 
 ---
 
@@ -109,8 +111,18 @@ Any deviations?
 
 ## Step 10 — Output format [REQUIRED]
 
-Which context file format should be generated?
+Which AI tool will use this context file?
 
-- `CLAUDE.md` — Claude / Claude Code
-- `.cursorrules` — Cursor
-- `AI_CONTEXT.md` — generic / other agent
+| Choice | Output file | Location | Format guide |
+|--------|-------------|----------|--------------|
+| Claude Code | `CLAUDE.md` | project root | `output/claude.md` |
+| Cursor | `.cursor/rules/project.mdc` | `.cursor/rules/` | `output/cursorrules.md` |
+| GitHub Copilot | `copilot-instructions.md` | `.github/` | `output/copilot.md` |
+| OpenAI Codex CLI | `AGENTS.md` | project root | `output/codex.md` |
+| Other / generic | `AI_CONTEXT.md` | project root | `output/generic.md` |
+
+Interop: `AGENTS.md` (Codex) is also read by Claude Code as a fallback.
+If the project uses both, generating `AGENTS.md` alone may be sufficient.
+
+Load the corresponding file in `output/` and apply its structure and
+formatting rules when rendering the final context file.
