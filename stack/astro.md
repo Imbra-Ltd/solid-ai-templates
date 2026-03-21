@@ -1,5 +1,5 @@
 # Stack — Astro (Static Site)
-[DEPENDS ON: base/git.md, base/ux.md, base/docs.md, base/quality.md, stack/static-site.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md, stack/static-site.md]
 
 Extends the static site stack with Astro-specific rules.
 
@@ -61,6 +61,16 @@ for Content Collections.
 - Use a single `IntersectionObserver` script in the base layout for
   `.reveal` → `.reveal.visible` transitions
 - Do not add per-component reveal scripts
+
+---
+
+## Code conventions
+
+- **ESLint** with `@typescript-eslint/recommended` for any `.ts` / `.tsx`
+  files — configured in `eslint.config.js`, run on save
+- **Prettier** owns all formatting — commit `.prettierrc`; no style debates
+  in code review
+- `.astro` files formatted with the official Prettier Astro plugin
 
 ---
 

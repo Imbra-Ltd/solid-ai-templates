@@ -1,16 +1,19 @@
 # Base — Git Conventions
 [ID: base-git]
 
+## Committer identity
+- Configure git with your full name and a consistent, professional email address
+- Do not use private or personal email addresses for work repositories
+- Identity must not change — git history and tooling depend on consistent authorship
+
 ## Commit messages
 - Use conventional commit prefixes:
   `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `style:`, `test:`
-- Keep the subject line under 72 characters
+- Keep the subject line under 80 characters
 - Use the imperative mood: "add feature" not "added feature"
 
 ## Branching
 - Always work on a branch — never commit directly to `main`
-- Exception: documentation-only changes (`docs/`, `README.md`, `CLAUDE.md`)
-  may go directly to `main`
 - Branch naming: `feat/description`, `fix/description`, `chore/description`,
   `docs/description`
 
@@ -27,10 +30,12 @@
   git checkout main && git pull
   ```
 
-## Versioning
-- Follows `vA.B.C.D` — A=major, B=minor, C=build, D=hotfix
-- No VERSION file — git tags only
-- Release process:
+## README
+- Every repository MUST contain a `README.md`
+- README must state: the purpose of the repository and a reference to the
+  `docs/` folder if it exists
+
+## Release process
   1. `git checkout -b chore/release-vA.B.C.D`
   2. `git commit --allow-empty -m "chore: release vA.B.C.D"`
   3. Push, open PR, merge
@@ -40,3 +45,5 @@
 ## General
 - Do not commit build output, secrets, or dependency directories
 - Do not commit generated files that can be reproduced by running a build command
+- Treat every repository as if it were public — no secrets, credentials, or
+  sensitive information in source files or history

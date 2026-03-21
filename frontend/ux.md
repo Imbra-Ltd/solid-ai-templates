@@ -1,5 +1,5 @@
-# Base — UX Principles
-[ID: base-ux]
+# Frontend — UX Principles
+[ID: frontend-ux]
 
 ## UX principles
 - Mobile-first — design for small screens first, enhance for larger ones
@@ -26,7 +26,16 @@
 - Mobile: max-width 768px
 - Small mobile: max-width 480px
 
+## Design system
+- Use a design system if one exists for the project — never design ad-hoc
+  components that duplicate established patterns
+- Design tokens (colours, spacing, typography, radii) MUST come from the
+  design system — never hardcode visual values
+- Component-driven development: build UI as a hierarchy of reusable,
+  self-contained components; avoid monolithic views
+- New components SHOULD be documented with usage examples before shipping
+
 ## Browser support
 - Default target: last 2 versions of Chrome, Firefox, Safari, and Edge
 - Progressive enhancement: graceful degradation for unsupported features
-- [OVERRIDE: base-ux-browsers] to specify a different support matrix
+- [OVERRIDE: frontend-ux-browsers] to specify a different support matrix
