@@ -10,13 +10,22 @@
   the API is testable independently of any frontend, and the contract becomes
   a product in its own right
 
-## API types
-- REST — SHOULD be the default choice
-- gRPC — SHOULD be used for internal service-to-service communication where
-  performance is critical
-- GraphQL — MAY be used for frontend-facing APIs where flexible querying
-  is needed
-- Other types (SOAP, WebSockets) require a per-case ADR
+## Protocol selection
+[ID: backend-api-protocols]
+
+| Protocol  | Use when                                                                                            |
+|-----------|-----------------------------------------------------------------------------------------------------|
+| REST      | Default. External APIs, browser/mobile clients, third-party integrations, ops/admin endpoints       |
+| gRPC      | Internal service-to-service, performance-critical paths, streaming, polyglot teams sharing a schema |
+| GraphQL   | Frontend-facing APIs where clients need flexible querying and over-fetching is a real problem       |
+| WebSocket | Real-time push, bidirectional streams where HTTP polling is not viable                              |
+| Messaging | Async, fire-and-forget, event-driven — see `backend/messaging.md`                                   |
+
+- Start with REST — only deviate with a stated reason in an ADR
+- REST + gRPC is valid: REST for external/ops endpoints, gRPC for internal hot paths
+- Never use gRPC as the primary interface for browser clients
+- GraphQL and REST in the same service require strong justification — dual surfaces double the maintenance burden
+- SOAP and other legacy protocols require a per-case ADR
 
 ## OpenAPI specification
 - Every API MUST have an OpenAPI specification

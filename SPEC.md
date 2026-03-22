@@ -33,7 +33,9 @@ base/
 ├── release.md     # Semver, version bump propagation, backward compat, cut-over
 ├── testing.md     # Test pyramid, coverage thresholds, naming conventions
 ├── cicd.md        # Pipeline stages, triggers, environments, IaC, deployment
-└── containers.md  # Dockerfile, runtime security, resource limits, Kubernetes
+├── containers.md  # Dockerfile, runtime security, resource limits, Kubernetes
+├── deployment.md  # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
+└── templating.md  # Server-side rendering — partials, escaping, caching, forms, testing
 ```
 
 ### 2. Frontend templates (abstract, frontend layer)
@@ -94,6 +96,7 @@ stack/
 ├── celery-worker.md  # extends base + backend/jobs + python-lib
 ├── go-lib.md         # extends base — Go library/CLI, package design, error handling, tooling
 ├── go-service.md     # extends base + backend + go-lib — abstract Go service layer
+├── go-echo.md        # extends go-service — Echo v4 routing, middleware, validation
 ├── express.md        # extends base + backend — Node.js + TypeScript
 ├── nestjs.md         # extends base + backend — NestJS + TypeScript
 ├── spring-boot.md    # extends base + backend — Java/Kotlin
@@ -104,7 +107,8 @@ stack/
 ├── flutter.md        # extends base — Dart, Riverpod, cross-platform mobile
 ├── terraform.md      # extends base — HCL, modules, remote state, security
 ├── nodejs-lib.md     # extends base — TypeScript npm library / CLI
-└── rust-lib.md       # extends base — Rust crate / CLI, thiserror, clippy
+├── rust-lib.md       # extends base — Rust crate / CLI, thiserror, clippy
+└── htmx.md           # extends backend/templating — HTMX 2.x, Alpine.js, SSE, partial responses
 ```
 
 ### 3. Interview template (orchestrator)
@@ -159,7 +163,7 @@ base/quality.md ─────────────────────�
 frontend/ux.md ─────────────────────────────► stack/static-site.md
 frontend/quality.md ────────────────────────►          │
                                                         ▼
-                                             stack/astro.md
+                                             stack/static-site-astro.md
                                                         │
                                              + INTERVIEW.md answers
                                                         │
@@ -215,7 +219,7 @@ applies — higher numbers win:
 3. **Stack template** — overrides or extends the layer or base
 4. **Interview answers** — the highest precedence; always win over any template
 
-Example: `base/testing.md` defines the test naming convention. `stack/fastapi.md`
+Example: `base/testing.md` defines the test naming convention. `stack/python-fastapi.md`
 extends it with a Python-specific pattern. The interview answer "use BDD-style
 names" overrides both. The final output uses the interview answer.
 
@@ -265,7 +269,7 @@ DEFAULTED sections are pre-filled from the selected base + stack templates.
 
 ## How an agent uses the system
 
-1. User provides `INTERVIEW.md` and a stack template (e.g. `stack/fastapi.md`)
+1. User provides `INTERVIEW.md` and a stack template (e.g. `stack/python-fastapi.md`)
 2. Agent reads the stack template, identifies its base dependencies
 3. Agent loads the referenced base templates
 4. Agent runs the interview (REQUIRED questions only)

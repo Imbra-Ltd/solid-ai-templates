@@ -11,7 +11,7 @@ suppliers, and purchase orders.
 - **Owner**: Warehouse platform team
 - **Repo**: github.com/acme/inventory-api
 - **Deployment**: Docker → Fly.io (production), Docker Compose (local)
-- **Stack source**: `stack/flask.md` + `backend/auth.md` + `backend/jobs.md`
+- **Stack source**: `stack/python-flask.md` + `backend/auth.md` + `backend/jobs.md`
 - **Output format**: `output/claude.md`
 
 ---

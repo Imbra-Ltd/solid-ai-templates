@@ -1,5 +1,5 @@
 # Stack — SvelteKit Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md, stack/svelte.md, backend/config.md, backend/http.md, backend/api.md, backend/auth.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md, stack/spa-svelte.md, backend/config.md, backend/http.md, backend/api.md, backend/auth.md]
 
 Extends the Svelte stack with SvelteKit-specific rules. Covers file-based
 routing, server-side rendering, API routes, form actions, and deployment
@@ -15,7 +15,7 @@ adapters.
 - Runtime: Svelte 5 (runes)
 - Bundler: Vite (built-in)
 - Routing: file-based (`src/routes/`)
-- State: Svelte runes + stores (per `stack/svelte.md`)
+- State: Svelte runes + stores (per `stack/spa-svelte.md`)
 - Styling: [plain CSS / Tailwind / CSS Modules]
 - HTTP client: SvelteKit `fetch` (server) / TanStack Query (client)
 - Test runner: Vitest + Playwright

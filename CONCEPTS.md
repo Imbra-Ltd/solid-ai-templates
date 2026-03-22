@@ -59,11 +59,11 @@ Use this to find the right file when searching for a specific topic.
 | Stack | File |
 |-------|------|
 | Generic static site (HTML/CSS/JS) | `stack/static-site.md` |
-| Astro (static, islands) | `stack/astro.md` |
-| React SPA (TypeScript, Vite) | `stack/react-spa.md` |
+| Astro (static, islands) | `stack/static-site-astro.md` |
+| React SPA (TypeScript, Vite) | `stack/spa-react.md` |
 | Python library / SDK | `stack/python-lib.md` |
-| Flask web application | `stack/flask.md` |
-| FastAPI async service | `stack/fastapi.md` |
+| Flask web application | `stack/python-flask.md` |
+| FastAPI async service | `stack/python-fastapi.md` |
 | Go HTTP service | `stack/go-service.md` |
 
 ---
