@@ -12,6 +12,7 @@ Usage:
   py tests/run_e2e.py --dry-run          # print prompt, skip claude call
 """
 
+import datetime
 import io
 import os
 import subprocess
@@ -874,15 +875,15 @@ def run_test(test, dry_run=False):
         print(f"\n{'='*60}")
         print(f"[{tid}] DRY RUN — prompt length: {len(prompt)} chars")
         print(prompt[:400], "...")
-        return SKIP, "dry-run", None
+        return SKIP, "dry-run", None, None
 
     t0 = time.time()
     try:
         output = run_claude(prompt)
     except subprocess.TimeoutExpired:
-        return ERR, "claude timed out after 180s", None
+        return ERR, "claude timed out after 180s", None, None
     except FileNotFoundError:
-        return ERR, "claude not found — is Claude Code installed?", None
+        return ERR, "claude not found — is Claude Code installed?", None, None
     elapsed = time.time() - t0
 
     failures = check_assertions(
@@ -892,11 +893,76 @@ def run_test(test, dry_run=False):
     )
 
     if failures:
-        return FAIL, "\n".join(failures), elapsed
-    return PASS, f"{elapsed:.1f}s", elapsed
+        return FAIL, "\n".join(failures), elapsed, output
+    return PASS, f"{elapsed:.1f}s", elapsed, None
+
+
+def write_report(run_results, started_at, dry_run):
+    reports_dir = os.path.join(ROOT, "tests", "reports")
+    os.makedirs(reports_dir, exist_ok=True)
+
+    ts = started_at.strftime("%Y-%m-%dT%H-%M-%S")
+    report_path = os.path.join(reports_dir, f"{ts}-e2e.md")
+
+    passed  = sum(1 for r in run_results if r["status"] == PASS)
+    failed  = sum(1 for r in run_results if r["status"] == FAIL)
+    skipped = sum(1 for r in run_results if r["status"] == SKIP)
+    errored = sum(1 for r in run_results if r["status"] == ERR)
+    total   = len(run_results)
+
+    lines = [
+        "# E2E Test Report",
+        "",
+        f"**Date**: {started_at.strftime('%Y-%m-%d %H:%M:%S')}  ",
+        f"**Runner**: run_e2e.py  ",
+        f"**Mode**: {'dry-run' if dry_run else 'live'}  ",
+        f"**Tests run**: {total}",
+        "",
+        "## Summary",
+        "",
+        (f"{total} tests — {passed} passed  {failed} failed  "
+         f"{skipped} skipped  {errored} errors"),
+        "",
+        "---",
+        "",
+        "## Results",
+        "",
+    ]
+
+    for r in run_results:
+        elapsed_str = f"  ({r['elapsed']:.1f}s)" if r["elapsed"] else ""
+        lines.append(f"### {r['status']}  {r['id']}{elapsed_str}")
+        lines.append("")
+        if r["status"] == FAIL:
+            lines.append("**Expected**:")
+            lines.append("")
+            lines.append("```")
+            for line in r["detail"].splitlines():
+                lines.append(line)
+            lines.append("```")
+            lines.append("")
+            lines.append("**Observed** (first 1000 chars of model output):")
+            lines.append("")
+            lines.append("```")
+            lines.append((r["output"] or "")[:1000])
+            lines.append("```")
+            lines.append("")
+        elif r["status"] == ERR:
+            lines.append(f"**Error**: {r['detail']}")
+            lines.append("")
+        elif r["status"] == SKIP:
+            lines.append(f"**Skipped**: {r['detail']}")
+            lines.append("")
+
+    with io.open(report_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+
+    print(f"\nReport: {os.path.relpath(report_path, ROOT)}")
 
 
 def main():
+    started_at = datetime.datetime.now()
+
     args = sys.argv[1:]
     dry_run = "--dry-run" in args
     filter_ids = [a for a in args if not a.startswith("--")]
@@ -909,14 +975,18 @@ def main():
             sys.exit(1)
 
     results = {PASS: 0, FAIL: 0, SKIP: 0, ERR: 0}
-    failures = []
+    run_results = []
 
     print(f"Running {len(tests)} test(s)...\n")
 
     for test in tests:
         tid = test["id"]
-        status, detail, elapsed = run_test(test, dry_run=dry_run)
+        status, detail, elapsed, output = run_test(test, dry_run=dry_run)
         results[status] += 1
+        run_results.append({
+            "id": tid, "status": status,
+            "detail": detail, "elapsed": elapsed, "output": output,
+        })
 
         if status == PASS:
             print(f"  {status}  {tid}  ({detail})")
@@ -925,8 +995,6 @@ def main():
         else:
             print(f"  {status}  {tid}")
             print(detail)
-            if status == FAIL:
-                failures.append(tid)
 
     total = sum(results.values())
     print(
@@ -936,6 +1004,9 @@ def main():
         f"{results[SKIP]} skipped  "
         f"{results[ERR]} errors"
     )
+
+    write_report(run_results, started_at, dry_run)
+
     sys.exit(0 if results[FAIL] == 0 and results[ERR] == 0 else 1)
 
 

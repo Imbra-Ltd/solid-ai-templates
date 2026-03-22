@@ -14,6 +14,7 @@ Usage:
   py tests/run_smoke.py SYS-01 MNF-01
 """
 
+import datetime
 import io
 import os
 import re
@@ -355,10 +356,68 @@ CHECKS = [
 
 
 # ---------------------------------------------------------------------------
+# Report
+# ---------------------------------------------------------------------------
+
+def write_report(run_results, started_at):
+    reports_dir = os.path.join(ROOT, "tests", "reports")
+    os.makedirs(reports_dir, exist_ok=True)
+
+    ts = started_at.strftime("%Y-%m-%dT%H-%M-%S")
+    report_path = os.path.join(reports_dir, f"{ts}-smoke.md")
+
+    passed  = sum(1 for r in run_results if r["status"] == PASS)
+    failed  = sum(1 for r in run_results if r["status"] == FAIL)
+    errored = sum(1 for r in run_results if r["status"] == ERR)
+    total   = len(run_results)
+
+    lines = [
+        "# Smoke Test Report",
+        "",
+        f"**Date**: {started_at.strftime('%Y-%m-%d %H:%M:%S')}  ",
+        f"**Runner**: run_smoke.py  ",
+        f"**Checks run**: {total}",
+        "",
+        "## Summary",
+        "",
+        f"{total} checks — {passed} passed  {failed} failed  {errored} errors",
+        "",
+        "---",
+        "",
+        "## Results",
+        "",
+    ]
+
+    for r in run_results:
+        lines.append(f"### {r['status']}  {r['id']} — {r['title']}")
+        lines.append("")
+        if r["status"] == FAIL:
+            lines.append("**Expected**: all assertions pass with no violations")
+            lines.append("")
+            lines.append("**Observed**:")
+            lines.append("")
+            lines.append("```")
+            for line in r["failures"]:
+                lines.append(line)
+            lines.append("```")
+            lines.append("")
+        elif r["status"] == ERR:
+            lines.append(f"**Error**: {r['error']}")
+            lines.append("")
+
+    with io.open(report_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+
+    print(f"\nReport: {os.path.relpath(report_path, ROOT)}")
+
+
+# ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
 
 def main():
+    started_at = datetime.datetime.now()
+
     args = sys.argv[1:]
     filter_ids = [a for a in args if not a.startswith("--")]
 
@@ -370,6 +429,7 @@ def main():
             sys.exit(1)
 
     results = {PASS: 0, FAIL: 0, ERR: 0}
+    run_results = []
 
     print(f"Running {len(checks)} check(s)...\n")
 
@@ -379,6 +439,10 @@ def main():
         except Exception as e:
             print(f"  {ERR}  {check['id']}  — {e}")
             results[ERR] += 1
+            run_results.append({
+                "id": check["id"], "title": check["title"],
+                "status": ERR, "failures": [], "error": str(e),
+            })
             continue
 
         if failures:
@@ -386,9 +450,17 @@ def main():
             for line in failures:
                 print(line)
             results[FAIL] += 1
+            run_results.append({
+                "id": check["id"], "title": check["title"],
+                "status": FAIL, "failures": failures, "error": None,
+            })
         else:
             print(f"  {PASS}  {check['id']}")
             results[PASS] += 1
+            run_results.append({
+                "id": check["id"], "title": check["title"],
+                "status": PASS, "failures": [], "error": None,
+            })
 
     total = sum(results.values())
     print(
@@ -397,6 +469,9 @@ def main():
         f"{results[FAIL]} failed  "
         f"{results[ERR]} errors"
     )
+
+    write_report(run_results, started_at)
+
     sys.exit(0 if results[FAIL] == 0 and results[ERR] == 0 else 1)
 
 
