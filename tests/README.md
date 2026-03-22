@@ -34,6 +34,15 @@ See `CODIFICATION.md` for the ID scheme, area codes, and component group registr
 | `SAIT-E2E-OUT-GR001A` | E2E | P1 | Full interview → CLAUDE.md for a Go gRPC service |
 | `SAIT-E2E-OUT-MB001A` | E2E | P1 | Full interview → CLAUDE.md for a Flutter mobile project |
 | `SAIT-E2E-OUT-LB001A` | E2E | P1 | Full interview → CLAUDE.md for a Go library project |
+| `SAIT-E2E-OUT-FL001A` | E2E | P1 | Full interview → CLAUDE.md for a Flask project |
+| `SAIT-E2E-OUT-PY001A` | E2E | P2 | Full interview → CLAUDE.md for a generic Python service |
+| `SAIT-E2E-OUT-PG001A` | E2E | P1 | Full interview → CLAUDE.md for a Python gRPC service |
+| `SAIT-E2E-OUT-CW001A` | E2E | P1 | Full interview → CLAUDE.md for a Python Celery worker |
+| `SAIT-E2E-OUT-PL001A` | E2E | P1 | Full interview → CLAUDE.md for a Python library project |
+| `SAIT-E2E-OUT-GS001A` | E2E | P2 | Full interview → CLAUDE.md for a generic Go service |
+| `SAIT-E2E-OUT-HG001A` | E2E | P1 | Full interview → CLAUDE.md for a Hugo static site project |
+| `SAIT-E2E-OUT-NL001A` | E2E | P1 | Full interview → CLAUDE.md for a Node.js library project |
+| `SAIT-E2E-OUT-RL001A` | E2E | P1 | Full interview → CLAUDE.md for a Rust library project |
 | `SAIT-E2E-DEP-CL001A` | E2E | P1 | Cloud deployment target produces correct deployment rules |
 | `SAIT-E2E-DEP-HY001A` | E2E | P1 | Hybrid deployment target produces correct deployment rules |
 | `SAIT-E2E-DEP-OF001A` | E2E | P1 | Offline deployment target produces correct deployment rules |
