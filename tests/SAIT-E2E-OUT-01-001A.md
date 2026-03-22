@@ -29,7 +29,7 @@ tags: [e2e, output, fastapi, claude-md]
 | PASSED | Generated `CLAUDE.md` contains all required sections; base rules and FastAPI-specific rules are both present; no section is empty or contradictory |
 | FAILED | One or more required sections are missing; base rules absent; FastAPI-specific rules absent; sections are contradictory |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

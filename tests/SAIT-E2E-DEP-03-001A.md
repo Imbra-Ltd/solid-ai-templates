@@ -29,7 +29,7 @@ tags: [e2e, deployment, offline, air-gapped, pki]
 | PASSED | Output mandates self-hosted PKI, local DNS resolver, local artifact registry mirror; no references to public internet services |
 | FAILED | Output references public CAs, external registries, or cloud-managed services; air-gap constraints absent |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

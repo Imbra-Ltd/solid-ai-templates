@@ -29,7 +29,7 @@ tags: [e2e, output, go, service]
 | PASSED | Output contains shared Go service rules (net/http, structured logging, graceful shutdown, testify); base rules present; no framework-specific rules present |
 | FAILED | Framework-specific rules (Echo, Gin) appear despite no framework being selected; shared rules absent |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

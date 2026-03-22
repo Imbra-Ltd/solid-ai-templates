@@ -29,7 +29,7 @@ tags: [e2e, output, grpc, go, protobuf]
 | PASSED | Output contains gRPC-specific rules (protobuf schemas, code generation, interceptors, error codes); go-service and base rules present |
 | FAILED | gRPC-specific rules absent; output indistinguishable from a plain Go HTTP service |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

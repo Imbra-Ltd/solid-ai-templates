@@ -29,7 +29,7 @@ tags: [e2e, output, express, nodejs]
 | PASSED | Output contains Express-specific rules (middleware, Zod validation, Supertest); base and backend rules present |
 | FAILED | Express-specific rules absent; output indistinguishable from a generic backend service |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

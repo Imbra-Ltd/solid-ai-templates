@@ -1,5 +1,5 @@
 ---
-id: SAIT-SMK-CMP-04-001A
+id: SAIT-SMK-TPL-04-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567809
 title: All EXTEND and OVERRIDE directives reference existing section IDs
 product: sait

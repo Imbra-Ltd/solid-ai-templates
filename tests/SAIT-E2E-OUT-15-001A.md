@@ -29,7 +29,7 @@ tags: [e2e, output, flask, python]
 | PASSED | Output contains Flask-specific rules (blueprints, application factory, Flask-SQLAlchemy, pytest-flask); python-service and base rules present |
 | FAILED | Flask-specific rules absent; output indistinguishable from a generic Python service |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

@@ -29,7 +29,7 @@ tags: [e2e, output, htmx, hypermedia, server-side]
 | PASSED | Output contains HTMX rules (hypermedia-first, hx-* attributes, partial HTML responses, OOB swaps); backend-templating and base rules present; no SPA or JSON API conventions present |
 | FAILED | HTMX-specific rules absent; output resembles a JSON REST API or a JavaScript SPA |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

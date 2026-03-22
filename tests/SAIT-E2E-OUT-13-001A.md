@@ -29,7 +29,7 @@ tags: [e2e, output, flutter, mobile, dart]
 | PASSED | Output contains Flutter-specific rules (widgets, state management, platform channels, golden tests); frontend and base rules present |
 | FAILED | Flutter-specific rules absent; output resembles a web frontend project |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

@@ -29,7 +29,7 @@ tags: [e2e, output, rust, library, crates-io]
 | PASSED | Output contains Rust library rules (crate API design, `pub` surface discipline, rustdoc, semver, `cargo test`); base rules present; no Actix or Axum rules present |
 | FAILED | Output includes HTTP server or async runtime rules inappropriate for a library; Rust-specific packaging conventions absent |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

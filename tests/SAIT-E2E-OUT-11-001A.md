@@ -29,7 +29,7 @@ tags: [e2e, output, astro, static-site]
 | PASSED | Output contains Astro-specific rules (content collections, islands, zero-JS default, MDX); frontend and base rules present |
 | FAILED | Astro-specific rules absent; output resembles a React SPA or generic frontend project |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

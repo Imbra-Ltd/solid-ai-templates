@@ -11,11 +11,11 @@ See `CODIFICATION.md` for the ID scheme, area codes, and component group registr
 |----|------|----------|-------|
 | `SAIT-SMK-SYS-01-001A` | SMK | P0 | All DEPENDS ON file paths resolve to existing files |
 | `SAIT-SMK-SYS-02-001A` | SMK | P0 | All section IDs are unique across all templates |
-| `SAIT-SMK-CMP-04-001A` | SMK | P1 | All EXTEND and OVERRIDE directives reference existing IDs |
-| `SAIT-INT-CMP-01-001A` | INT | P0 | DEPENDS ON chain assembles a complete rule set |
-| `SAIT-INT-CMP-02-001A` | INT | P1 | EXTEND adds rules without removing base rules |
-| `SAIT-INT-CMP-03-001A` | INT | P1 | OVERRIDE replaces parent section entirely |
-| `SAIT-INT-CMP-05-001A` | INT | P1 | Conflicting OVERRIDEs on the same ID are flagged or resolved |
+| `SAIT-SMK-TPL-04-001A` | SMK | P1 | All EXTEND and OVERRIDE directives reference existing IDs |
+| `SAIT-INT-TPL-01-001A` | INT | P0 | DEPENDS ON chain assembles a complete rule set |
+| `SAIT-INT-TPL-02-001A` | INT | P1 | EXTEND adds rules without removing base rules |
+| `SAIT-INT-TPL-03-001A` | INT | P1 | OVERRIDE replaces parent section entirely |
+| `SAIT-INT-TPL-05-001A` | INT | P1 | Conflicting OVERRIDEs on the same ID are flagged or resolved |
 | `SAIT-INT-MNF-01-001A` | INT | P0 | All manifest entries reference valid paths and IDs |
 | `SAIT-INT-ITV-01-001A` | INT | P0 | All REQUIRED interview questions are asked before output is generated |
 | `SAIT-INT-ITV-02-001A` | INT | P1 | DEFAULTED sections are pre-filled from the selected stack template |

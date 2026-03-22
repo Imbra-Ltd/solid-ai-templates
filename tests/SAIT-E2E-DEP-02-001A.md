@@ -29,7 +29,7 @@ tags: [e2e, deployment, hybrid, private-ca, pki]
 | PASSED | Output references private CA for internal services, split DNS strategy, and mixed registry; no assumptions that all traffic is public or fully air-gapped |
 | FAILED | Output applies cloud-only or air-gap-only rules; split-trust model absent |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

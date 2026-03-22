@@ -16,7 +16,7 @@ Follows the Imbra Procedure Specification Standard
 |---------|-------------|
 | `PRODUCT` | Product code — always `SAIT` |
 | `TYPE` | Procedure type — `SMK`, `INT`, `E2E` |
-| `AREA` | Functional area — `SYS`, `CMP`, `MNF`, `OUT`, `ITV`, `DEP` |
+| `AREA` | Functional area — `SYS`, `TPL`, `MNF`, `OUT`, `ITV`, `DEP` |
 | `NN` | Two-digit component group number — unique within an area |
 | `NNN` | Three-digit sequence number within the group |
 | `VER` | Version letter — `A` original, `B` first major revision |
@@ -46,7 +46,7 @@ Follows the Imbra Procedure Specification Standard
 | Code | Area | Description |
 |------|------|-------------|
 | `SYS` | System | Cross-cutting structural checks spanning multiple concerns |
-| `CMP` | Composition | Template composition — DEPENDS ON chain, EXTEND, OVERRIDE directives |
+| `TPL` | Template | Template composition — DEPENDS ON chain, EXTEND, OVERRIDE directives |
 | `MNF` | Manifest | manifest.yaml consistency — IDs, file paths, dependency references |
 | `OUT` | Output | Context file generation — interview → CLAUDE.md / AGENTS.md / etc. |
 | `ITV` | Interview | Interview flow — required questions, defaults, answer precedence |
@@ -66,7 +66,7 @@ reused for a different component within the same area.
 | `01` | File structure — DEPENDS ON path resolution, file existence |
 | `02` | ID uniqueness — section IDs across all templates |
 
-### COMP
+### TPL
 
 | Number | Component |
 |--------|-----------|
@@ -148,11 +148,11 @@ corrected prerequisites where test intent is unchanged.
 |----|---------|
 | `SAIT-SMK-SYS-01-001A` | Smoke — system — file structure — spec 1, version A |
 | `SAIT-SMK-SYS-02-001A` | Smoke — system — ID uniqueness — spec 1, version A |
-| `SAIT-SMK-CMP-04-001A` | Smoke — composition — ref resolution — spec 1, version A |
-| `SAIT-INT-CMP-01-001A` | Integration — composition — DEPENDS ON chain — spec 1, version A |
-| `SAIT-INT-CMP-02-001A` | Integration — composition — EXTEND directive — spec 1, version A |
-| `SAIT-INT-CMP-03-001A` | Integration — composition — OVERRIDE directive — spec 1, version A |
-| `SAIT-INT-CMP-05-001A` | Integration — composition — conflict resolution — spec 1, version A |
+| `SAIT-SMK-TPL-04-001A` | Smoke — composition — ref resolution — spec 1, version A |
+| `SAIT-INT-TPL-01-001A` | Integration — composition — DEPENDS ON chain — spec 1, version A |
+| `SAIT-INT-TPL-02-001A` | Integration — composition — EXTEND directive — spec 1, version A |
+| `SAIT-INT-TPL-03-001A` | Integration — composition — OVERRIDE directive — spec 1, version A |
+| `SAIT-INT-TPL-05-001A` | Integration — composition — conflict resolution — spec 1, version A |
 | `SAIT-INT-MNF-01-001A` | Integration — manifest — manifest entries — spec 1, version A |
 | `SAIT-INT-ITV-01-001A` | Integration — interview — required questions — spec 1, version A |
 | `SAIT-INT-ITV-02-001A` | Integration — interview — default sections — spec 1, version A |

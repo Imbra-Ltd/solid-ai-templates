@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-CMP-01-001A
+id: SAIT-INT-TPL-01-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567803
 title: DEPENDS ON chain assembles a complete, non-contradictory rule set
 product: sait
@@ -76,5 +76,5 @@ tags: [composition, depends-on, inheritance]
 
 ## Related
 
-- Related procedures: `SAIT-INT-CMP-02-001A`, `SAIT-INT-CMP-03-001A`
+- Related procedures: `SAIT-INT-TPL-02-001A`, `SAIT-INT-TPL-03-001A`
 - Implements: SPEC.md §Inheritance model
