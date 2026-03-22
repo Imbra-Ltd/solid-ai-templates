@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-COMP-DO001A
+id: SAIT-INT-TPL-01-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567803
 title: DEPENDS ON chain assembles a complete, non-contradictory rule set
 product: sait
@@ -29,7 +29,7 @@ tags: [composition, depends-on, inheritance]
 | PASSED | All sections from all templates in the dependency chain appear in the assembled output; no section is missing |
 | FAILED | One or more sections from a parent template are absent from the assembled output |
 | SKIPPED | No agent available to run the assembly |
-| BLOCKED | `SAIT-SMOKE-SYS-FS001A` is failing — DEPENDS ON paths do not resolve |
+| BLOCKED | `SAIT-SMK-SYS-01-001A` is failing — DEPENDS ON paths do not resolve |
 | ERROR | Agent fails to load or process the template files |
 
 ## Steps
@@ -76,5 +76,5 @@ tags: [composition, depends-on, inheritance]
 
 ## Related
 
-- Related procedures: `SAIT-INT-COMP-EX001A`, `SAIT-INT-COMP-OV001A`
+- Related procedures: `SAIT-INT-TPL-02-001A`, `SAIT-INT-TPL-03-001A`
 - Implements: SPEC.md §Inheritance model

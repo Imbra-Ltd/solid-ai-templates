@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-MANIF-MF001A
+id: SAIT-INT-MNF-01-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567806
 title: All manifest entries reference valid file paths and depend on valid IDs
 product: sait
@@ -30,7 +30,7 @@ tags: [manifest, consistency, dependency-graph]
 | PASSED | All `file:` paths exist; all `depends_on` IDs resolve to a declared `id:` in the manifest; all IDs are unique |
 | FAILED | One or more `file:` paths do not exist; or one or more `depends_on` IDs have no matching declaration; or duplicate IDs exist |
 | SKIPPED | `manifest.yaml` is absent from the repository |
-| BLOCKED | `SAIT-SMOKE-SYS-FS001A` is failing |
+| BLOCKED | `SAIT-SMK-SYS-01-001A` is failing |
 | ERROR | YAML parser fails; file system is inaccessible |
 
 ## Steps
@@ -109,5 +109,5 @@ and added to CI as a pre-merge check.
 
 ## Related
 
-- Related procedures: `SAIT-SMOKE-SYS-FS001A`, `SAIT-SMOKE-SYS-ID001A`
+- Related procedures: `SAIT-SMK-SYS-01-001A`, `SAIT-SMK-SYS-02-001A`
 - Implements: SPEC.md §Inheritance model, manifest.yaml

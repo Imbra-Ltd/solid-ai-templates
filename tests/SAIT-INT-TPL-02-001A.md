@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-COMP-EX001A
+id: SAIT-INT-TPL-02-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567804
 title: EXTEND directive adds stack rules on top of parent section without removing base rules
 product: sait
@@ -30,7 +30,7 @@ tags: [composition, extend, inheritance]
 | PASSED | Assembled section contains all base rules AND all stack extension rules; order is base first, extension second |
 | FAILED | One or more base rules are absent; or extension rules replace rather than extend base rules |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-DO001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load or process the template files |
 
 ## Steps
@@ -71,5 +71,5 @@ tags: [composition, extend, inheritance]
 
 ## Related
 
-- Related procedures: `SAIT-INT-COMP-DO001A`, `SAIT-INT-COMP-OV001A`
+- Related procedures: `SAIT-INT-TPL-01-001A`, `SAIT-INT-TPL-03-001A`
 - Implements: SPEC.md §Override mechanism

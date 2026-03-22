@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-COMP-OV001A
+id: SAIT-INT-TPL-03-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567805
 title: OVERRIDE directive replaces parent section entirely in the assembled output
 product: sait
@@ -30,7 +30,7 @@ tags: [composition, override, inheritance]
 | PASSED | Assembled section contains only the OVERRIDE rules; no rules from the parent section appear |
 | FAILED | Parent section rules appear alongside or instead of the OVERRIDE rules |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-DO001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load or process the template files |
 
 ## Steps
@@ -70,5 +70,5 @@ tags: [composition, override, inheritance]
 
 ## Related
 
-- Related procedures: `SAIT-INT-COMP-DO001A`, `SAIT-INT-COMP-EX001A`
+- Related procedures: `SAIT-INT-TPL-01-001A`, `SAIT-INT-TPL-02-001A`
 - Implements: SPEC.md §Override mechanism

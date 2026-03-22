@@ -1,5 +1,5 @@
 ---
-id: SAIT-E2E-OUT-FA001A
+id: SAIT-E2E-OUT-01-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567807
 title: Full interview produces a correct CLAUDE.md for a Python FastAPI project
 product: sait
@@ -29,7 +29,7 @@ tags: [e2e, output, fastapi, claude-md]
 | PASSED | Generated `CLAUDE.md` contains all required sections; base rules and FastAPI-specific rules are both present; no section is empty or contradictory |
 | FAILED | One or more required sections are missing; base rules absent; FastAPI-specific rules absent; sections are contradictory |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-DO001A` is failing |
+| BLOCKED | `SAIT-INT-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps
@@ -91,5 +91,5 @@ tags: [e2e, output, fastapi, claude-md]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-GE001A`
+- Related procedures: `SAIT-E2E-OUT-02-001A`
 - Implements: SPEC.md §How an agent uses the system
