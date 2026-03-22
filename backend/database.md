@@ -2,20 +2,65 @@
 [ID: backend-database]
 
 ## Schema changes
+
 - All schema changes via migrations — never edit the database manually
 - Migrations are committed to source control
 - Never regenerate or modify a migration that is already merged
 - One migration per logical change — do not batch unrelated schema changes
+- Migrations must be reversible — provide a `down` migration for every `up`
 
 ## Queries
+
 - No raw SQL strings — use an ORM or query builder
-- Use parameterised queries if raw SQL is unavoidable — never string interpolation
+- Use parameterised queries if raw SQL is unavoidable — never string
+  interpolation
 - No unbounded queries — always apply a limit or filter
+- Avoid `SELECT *` — select only the columns actually needed
+- Detect and eliminate N+1 queries — use eager loading (`joinedload`,
+  `preload`, `WITH` clauses, `DataLoader`) for related data fetched in a loop
+- Prefer indexed columns in `WHERE`, `JOIN ON`, and `ORDER BY` clauses
+- Review slow query logs in staging before releasing schema changes
+
+## Indexing
+
+- Add an index for every foreign key — most ORMs do not do this automatically
+- Add composite indexes for common multi-column filter + sort combinations
+- Avoid over-indexing write-heavy tables — each index adds write overhead
+- Use partial indexes for filtered queries on large tables
+  (e.g. `WHERE deleted_at IS NULL`)
+- Drop unused indexes — check `pg_stat_user_indexes` or equivalent regularly
 
 ## Transactions
-- Wrap multi-step writes in a transaction — commit only after all writes succeed
+
+- Wrap multi-step writes in a transaction — commit only after all writes
+  succeed
 - Never leave a transaction open across an HTTP request boundary
+- Keep transactions short — do not call external services inside a transaction
+- Use serialisable isolation only when genuinely required; prefer read
+  committed for OLTP workloads
 
 ## Connections
+
 - Use a connection pool — never open a new connection per request
-- Inject the database session/connection as a dependency — no global DB handles
+- Inject the database session/connection as a dependency — no global DB
+  handles
+- Set explicit pool size limits appropriate to the deployment
+  (e.g. `pool_size=10`, `max_overflow=5` for a single-instance service)
+- Monitor pool exhaustion — alert when pool wait time exceeds threshold
+
+## Soft deletes
+
+- Use soft deletes (`deleted_at` timestamp) only when audit history is
+  required; otherwise use hard deletes
+- If using soft deletes, add a partial index on `deleted_at IS NULL` and
+  filter all queries by default — never return deleted rows to callers
+- Consider an append-only audit log table as an alternative to soft deletes
+
+## Testing
+
+- Use a real database in integration tests — not an in-memory SQLite
+  substitute unless the production DB is also SQLite
+- Reset state between test runs — truncate tables or wrap each test in a
+  transaction rolled back after completion
+- Never run schema migrations against a production database inside a test
+  suite

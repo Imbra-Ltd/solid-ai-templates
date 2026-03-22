@@ -21,6 +21,41 @@
   `aria-label`
 - Keyboard navigation: menus must close on Escape and restore focus
 
+## Accessibility testing
+
+Meeting WCAG 2.1 AA requires both automated and manual testing — automated
+tools catch ~30–40% of issues; the rest require human judgment.
+
+### Automated (run in CI)
+
+- **axe-core** — integrate via `@axe-core/react`, `axe-playwright`, or
+  `jest-axe`; zero violations allowed before merge
+- **Lighthouse** — accessibility score ≥ 90 on all key pages; run in CI
+  via `lighthouse-ci`
+- **ESLint `jsx-a11y`** — catches missing `alt`, incorrect ARIA roles, and
+  missing form labels at write time; must be configured in the linter
+
+### Manual (run before shipping new interactive components)
+
+- **Keyboard-only navigation** — tab through the entire feature; every
+  action reachable without a mouse; focus order is logical; no focus traps
+  except intentional modal dialogs
+- **Screen reader** — test with at least one: NVDA + Chrome (Windows),
+  VoiceOver + Safari (macOS / iOS), or TalkBack (Android); verify that
+  all content and state changes are announced correctly
+- **Zoom to 200%** — no content clipped or overlapping at double zoom;
+  horizontal scroll must not appear on a 1280px viewport
+- **High contrast mode** — verify in Windows High Contrast or forced-colors
+  CSS media query; no information lost when colours are overridden
+
+### Criteria for done
+
+A feature is not complete until:
+- [ ] `axe-core` reports zero violations in component tests
+- [ ] Lighthouse accessibility score ≥ 90
+- [ ] Keyboard navigation verified manually
+- [ ] Screen reader walkthrough completed for new interactive elements
+
 ## Responsive breakpoints
 - Tablet: max-width 1024px
 - Mobile: max-width 768px

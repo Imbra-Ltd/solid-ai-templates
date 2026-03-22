@@ -26,6 +26,29 @@ Avoid:
 - **Mediator / Event Bus** between components — use shared state or lifting
   state up instead; an event bus between components creates invisible coupling
 
+## State management
+
+Choose the right tool for the scope of the state — do not use a global store
+for state that is local to a component or a server cache for state that is
+never fetched from a server.
+
+| State type | Tool | When to use |
+|------------|------|-------------|
+| **Local UI state** | `useState`, `useReducer` | Scoped to one component — form inputs, toggles, counters |
+| **Shared UI state** | Zustand / Redux Toolkit | Needed by multiple unrelated components — auth session, sidebar open, active filters |
+| **Server state** | TanStack Query / SWR | Data fetched from an API — lists, detail views, paginated results |
+| **Form state** | React Hook Form / Formik | Complex forms with validation, field arrays, multi-step flows |
+| **URL state** | Router search params | Shareable or bookmarkable UI state — filters, pagination, selected tab |
+
+Rules:
+- Never duplicate server state in a global store — TanStack Query or SWR is
+  the cache; the store holds only client-owned state
+- Never put derived state in the store — compute it from existing state with
+  a selector or `useMemo`
+- Prefer URL state for anything the user should be able to bookmark or share
+- Keep global store slices small and focused — one slice per domain concern,
+  not one slice for everything
+
 ## Linting and formatting
 - A linter MUST be configured for all JS/TS code
 - Linter and formatter SHOULD run on save in the IDE — never rely on CI

@@ -13,7 +13,8 @@ Apply the following order when reviewing, from most to least critical:
 
 1. **Security and compliance** — exploits, credentials in source, license violations
 2. **Correctness** — logic errors, edge cases, unhandled errors, race conditions
-3. **Readability** — code that is difficult to understand or follow
+3. **Readability** — names that obscure intent, nesting deeper than three
+   levels, cognitive complexity above 15, boolean flag parameters
 4. **Guideline adherence** — inconsistencies with project conventions
 
 ## MUST checklist
@@ -28,7 +29,8 @@ Apply the following order when reviewing, from most to least critical:
 - [ ] Code coverage does not decrease
 - [ ] Lint errors/warnings do not increase
 - [ ] Third-party dependencies are necessary, understood, and well-maintained
-- [ ] Code is simple — minimal abstraction, minimal dependencies
+- [ ] Code is simple — no new abstraction without two or more call sites,
+  no new dependency without a documented reason
 
 ## Deviations
 - If a SHOULD rule is not followed, the reason MUST be documented
