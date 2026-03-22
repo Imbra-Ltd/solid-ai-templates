@@ -1,5 +1,5 @@
 ---
-id: SAIT-E2E-DEP-02-001A
+id: SAIT-E2E-DPL-02-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567827
 title: Hybrid deployment target produces correct deployment rules in the output
 product: sait
@@ -69,5 +69,5 @@ tags: [e2e, deployment, hybrid, private-ca, pki]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-DEP-01-001A`, `SAIT-E2E-DEP-03-001A`
+- Related procedures: `SAIT-E2E-DPL-01-001A`, `SAIT-E2E-DPL-03-001A`
 - Implements: `base/deployment.md` §Deployment targets — hybrid

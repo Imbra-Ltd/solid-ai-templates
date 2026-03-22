@@ -16,7 +16,7 @@ Follows the Imbra Procedure Specification Standard
 |---------|-------------|
 | `PRODUCT` | Product code — always `SAIT` |
 | `TYPE` | Procedure type — `SMK`, `INT`, `E2E` |
-| `AREA` | Functional area — `SYS`, `TPL`, `MNF`, `OUT`, `ITV`, `DEP` |
+| `AREA` | Functional area — `SYS`, `TPL`, `MNF`, `OUT`, `ITV`, `DPL` |
 | `NN` | Two-digit component group number — unique within an area |
 | `NNN` | Three-digit sequence number within the group |
 | `VER` | Version letter — `A` original, `B` first major revision |
@@ -50,7 +50,7 @@ Follows the Imbra Procedure Specification Standard
 | `MNF` | Manifest | manifest.yaml consistency — IDs, file paths, dependency references |
 | `OUT` | Output | Context file generation — interview → CLAUDE.md / AGENTS.md / etc. |
 | `ITV` | Interview | Interview flow — required questions, defaults, answer precedence |
-| `DEP` | Deployment | Deployment target scenarios — cloud, hybrid, offline |
+| `DPL` | Deployment | Deployment target scenarios — cloud, hybrid, offline |
 
 ---
 
@@ -119,7 +119,7 @@ reused for a different component within the same area.
 | `02` | Default sections — DEFAULTED sections pre-filled from templates |
 | `03` | Precedence — interview answers override stack and base rules |
 
-### DEP
+### DPL
 
 | Number | Component |
 |--------|-----------|
@@ -181,6 +181,6 @@ corrected prerequisites where test intent is unchanged.
 | `SAIT-E2E-OUT-22-001A` | E2E — output — Node.js lib flow — spec 1, version A |
 | `SAIT-E2E-OUT-23-001A` | E2E — output — Rust lib flow — spec 1, version A |
 | `SAIT-E2E-OUT-24-001A` | E2E — output — HTMX flow — spec 1, version A |
-| `SAIT-E2E-DEP-01-001A` | E2E — deployment — cloud scenario — spec 1, version A |
-| `SAIT-E2E-DEP-02-001A` | E2E — deployment — hybrid scenario — spec 1, version A |
-| `SAIT-E2E-DEP-03-001A` | E2E — deployment — offline scenario — spec 1, version A |
+| `SAIT-E2E-DPL-01-001A` | E2E — deployment — cloud scenario — spec 1, version A |
+| `SAIT-E2E-DPL-02-001A` | E2E — deployment — hybrid scenario — spec 1, version A |
+| `SAIT-E2E-DPL-03-001A` | E2E — deployment — offline scenario — spec 1, version A |
