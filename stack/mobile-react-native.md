@@ -1,5 +1,5 @@
 # Stack — React Native Mobile Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, stack/react-spa.md, backend/auth.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, stack/spa-react.md, backend/auth.md]
 
 Extends the React SPA stack with React Native and Expo conventions. Covers
 mobile-specific project structure, navigation, platform APIs, offline

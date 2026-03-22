@@ -10,7 +10,7 @@ Analytics dashboard for monitoring SaaS subscription metrics and customer health
 - **Owner**: Growth engineering
 - **Repo**: github.com/acme/adminflow
 - **Deployment**: Vercel (production + preview per PR)
-- **Stack source**: `stack/react-spa.md`
+- **Stack source**: `stack/spa-react.md`
 - **Output format**: `output/claude.md`
 
 ---

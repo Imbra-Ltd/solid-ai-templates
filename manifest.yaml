@@ -25,6 +25,8 @@ base:
     file: base/containers.md
   - id: base-readme
     file: base/readme.md
+  - id: base-deployment
+    file: base/deployment.md
 
 frontend:
   - id: frontend-ux
@@ -77,15 +79,22 @@ backend:
   - id: backend-quality
     file: backend/quality.md
     depends_on: [base-quality]
+  - id: backend-templating
+    file: backend/templating.md
 
 stacks:
+  - id: stack-htmx
+    file: stack/htmx.md
+    depends_on:
+      - backend-templating
+
   - id: stack-astro
-    file: stack/astro.md
+    file: stack/static-site-astro.md
     depends_on:
       - frontend-static-site
 
   - id: stack-react-spa
-    file: stack/react-spa.md
+    file: stack/spa-react.md
     depends_on:
       - base-git
       - base-docs
@@ -94,7 +103,7 @@ stacks:
       - frontend-quality
 
   - id: stack-nextjs
-    file: stack/nextjs.md
+    file: stack/full-nextjs.md
     depends_on:
       - base-git
       - base-docs
@@ -130,18 +139,18 @@ stacks:
       - stack-python-lib
 
   - id: stack-flask
-    file: stack/flask.md
+    file: stack/python-flask.md
     depends_on:
       - stack-python-service
 
   - id: stack-fastapi
-    file: stack/fastapi.md
+    file: stack/python-fastapi.md
     depends_on:
       - stack-python-service
       - backend-concurrency
 
   - id: stack-django
-    file: stack/django.md
+    file: stack/python-django.md
     depends_on:
       - stack-python-service
       - backend-api
@@ -167,8 +176,13 @@ stacks:
       - backend-features
       - backend-messaging
 
+  - id: stack-go-echo
+    file: stack/go-echo.md
+    depends_on:
+      - stack-go-service
+
   - id: stack-vue
-    file: stack/vue.md
+    file: stack/spa-vue.md
     depends_on:
       - base-git
       - base-docs
@@ -177,7 +191,7 @@ stacks:
       - frontend-quality
 
   - id: stack-svelte
-    file: stack/svelte.md
+    file: stack/spa-svelte.md
     depends_on:
       - base-git
       - base-docs
@@ -186,7 +200,7 @@ stacks:
       - frontend-quality
 
   - id: stack-sveltekit
-    file: stack/sveltekit.md
+    file: stack/full-sveltekit.md
     depends_on:
       - base-git
       - base-docs
@@ -200,12 +214,12 @@ stacks:
       - backend-auth
 
   - id: stack-hugo
-    file: stack/hugo.md
+    file: stack/static-site-hugo.md
     depends_on:
       - frontend-static-site
 
   - id: stack-express
-    file: stack/express.md
+    file: stack/node-express.md
     depends_on:
       - base-git
       - base-docs
@@ -221,7 +235,7 @@ stacks:
       - backend-messaging
 
   - id: stack-nestjs
-    file: stack/nestjs.md
+    file: stack/node-nestjs.md
     depends_on:
       - base-git
       - base-docs
@@ -237,7 +251,7 @@ stacks:
       - backend-messaging
 
   - id: stack-spring-boot
-    file: stack/spring-boot.md
+    file: stack/java-spring-boot.md
     depends_on:
       - base-git
       - base-docs
@@ -253,7 +267,7 @@ stacks:
       - backend-messaging
 
   - id: stack-celery-worker
-    file: stack/celery-worker.md
+    file: stack/python-celery-worker.md
     depends_on:
       - base-git
       - base-docs
@@ -266,7 +280,7 @@ stacks:
       - stack-python-lib
 
   - id: stack-grpc-go
-    file: stack/grpc-go.md
+    file: stack/go-grpc.md
     depends_on:
       - stack-go-lib
       - stack-go-service
@@ -274,7 +288,7 @@ stacks:
       - backend-concurrency
 
   - id: stack-grpc-python
-    file: stack/grpc-python.md
+    file: stack/python-grpc.md
     depends_on:
       - base-git
       - base-docs
@@ -285,7 +299,7 @@ stacks:
       - stack-python-lib
 
   - id: stack-grpc-java
-    file: stack/grpc-java.md
+    file: stack/java-grpc.md
     depends_on:
       - base-git
       - base-docs
@@ -295,7 +309,7 @@ stacks:
       - backend-concurrency
 
   - id: stack-react-native
-    file: stack/react-native.md
+    file: stack/mobile-react-native.md
     depends_on:
       - base-git
       - base-docs
@@ -304,7 +318,7 @@ stacks:
       - backend-auth
 
   - id: stack-flutter
-    file: stack/flutter.md
+    file: stack/mobile-flutter.md
     depends_on:
       - base-git
       - base-docs
@@ -312,7 +326,7 @@ stacks:
       - backend-auth
 
   - id: stack-terraform
-    file: stack/terraform.md
+    file: stack/iac-terraform.md
     depends_on:
       - base-git
       - base-docs

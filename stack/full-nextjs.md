@@ -1,5 +1,5 @@
 # Stack — Next.js Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md, stack/react-spa.md, backend/config.md, backend/http.md, backend/api.md, backend/auth.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md, stack/spa-react.md, backend/config.md, backend/http.md, backend/api.md, backend/auth.md]
 
 Extends the React SPA stack with Next.js-specific rules. Covers the App
 Router, Server and Client Components, data fetching, API routes, metadata,

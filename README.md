@@ -43,7 +43,7 @@ context file for your project.
 ### Generate a context file for a FastAPI project
 
 1. Open Claude Code (or your preferred agent) in a new or existing project.
-2. Attach `INTERVIEW.md` and `stack/fastapi.md` to the conversation.
+2. Attach `INTERVIEW.md` and `stack/python-fastapi.md` to the conversation.
 3. The agent asks required questions (project name, database, auth method, etc.).
 4. Specify the output format — for Claude Code:
 
@@ -59,7 +59,7 @@ Expected output: a `CLAUDE.md` file ready to place at the project root.
 
 ### Generate for a React SPA
 
-Same steps with `stack/react-spa.md`. The agent applies the frontend layer
+Same steps with `stack/spa-react.md`. The agent applies the frontend layer
 (UX, accessibility, CSS conventions) on top of the base rules.
 
 ### Compose templates manually
@@ -111,30 +111,32 @@ is coherent and complete.
 |----------|-------|---------|
 | `stack/python-lib.md` | library | base |
 | `stack/python-service.md` | abstract | base + backend + python-lib |
-| `stack/flask.md` | backend | python-service |
-| `stack/fastapi.md` | backend | python-service + backend/concurrency |
-| `stack/django.md` | backend | python-service + backend/api + backend/auth |
-| `stack/celery-worker.md` | backend | base + backend/jobs + python-lib |
+| `stack/python-flask.md` | backend | python-service |
+| `stack/python-fastapi.md` | backend | python-service + backend/concurrency |
+| `stack/python-django.md` | backend | python-service + backend/api + backend/auth |
+| `stack/python-celery-worker.md` | backend | base + backend/jobs + python-lib |
 | `stack/go-lib.md` | library | base |
 | `stack/go-service.md` | abstract | base + backend + go-lib |
-| `stack/grpc-go.md` | backend | go-service + backend/grpc |
-| `stack/grpc-python.md` | backend | python-lib + backend/grpc |
-| `stack/grpc-java.md` | backend | base + backend/grpc |
-| `stack/express.md` | backend | base + backend |
-| `stack/nestjs.md` | backend | base + backend |
-| `stack/spring-boot.md` | backend | base + backend |
-| `stack/react-spa.md` | frontend | base + frontend |
-| `stack/vue.md` | frontend | base + frontend |
-| `stack/svelte.md` | frontend | base + frontend |
-| `stack/nextjs.md` | full-stack | base + frontend + react-spa + backend partial |
-| `stack/sveltekit.md` | full-stack | base + frontend + svelte + backend partial |
-| `stack/astro.md` | static | base + frontend + frontend/static-site |
-| `stack/hugo.md` | static | base + frontend + frontend/static-site |
-| `stack/react-native.md` | mobile | base + react-spa + backend/auth |
-| `stack/flutter.md` | mobile | base |
-| `stack/terraform.md` | DevOps | base |
+| `stack/go-echo.md` | backend | go-service |
+| `stack/go-grpc.md` | backend | go-service + backend/grpc |
+| `stack/python-grpc.md` | backend | python-lib + backend/grpc |
+| `stack/java-grpc.md` | backend | base + backend/grpc |
+| `stack/node-express.md` | backend | base + backend |
+| `stack/node-nestjs.md` | backend | base + backend |
+| `stack/java-spring-boot.md` | backend | base + backend |
+| `stack/spa-react.md` | frontend | base + frontend |
+| `stack/spa-vue.md` | frontend | base + frontend |
+| `stack/spa-svelte.md` | frontend | base + frontend |
+| `stack/full-nextjs.md` | full-stack | base + frontend + react-spa + backend partial |
+| `stack/full-sveltekit.md` | full-stack | base + frontend + svelte + backend partial |
+| `stack/static-site-astro.md` | static | base + frontend + frontend/static-site |
+| `stack/static-site-hugo.md` | static | base + frontend + frontend/static-site |
+| `stack/mobile-react-native.md` | mobile | base + react-spa + backend/auth |
+| `stack/mobile-flutter.md` | mobile | base |
+| `stack/iac-terraform.md` | DevOps | base |
 | `stack/nodejs-lib.md` | library | base |
 | `stack/rust-lib.md` | library | base |
+| `stack/htmx.md` | hypermedia | backend/templating |
 
 ## Supported agents
 

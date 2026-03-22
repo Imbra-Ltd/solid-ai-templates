@@ -19,7 +19,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `frontend/ux.md` — UX principles, WCAG 2.1 AA, responsive breakpoints
 - [x] `frontend/quality.md` — CSS conventions, performance, SEO
 - [x] `stack/static-site.md` — generic static site (any generator)
-- [x] `stack/astro.md` — Astro islands, client directives (extends static-site)
+- [x] `stack/static-site-astro.md` — Astro islands, client directives (extends static-site)
 - [x] `INTERVIEW.md` — agent-driven project setup interview
 
 ---
@@ -50,9 +50,9 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 ## Phase 4 — Stack expansion
 
 - [x] `stack/python-lib.md` — Python library / CLI (packaging, mypy, ruff, pytest)
-- [x] `stack/flask.md` — Flask web app (factory pattern, blueprints, migrations)
-- [x] `stack/fastapi.md` — FastAPI (async, Pydantic v2, DI, OpenAPI)
-- [x] `stack/react-spa.md` — React + TypeScript (components, state, RTL, a11y, E2E)
+- [x] `stack/python-flask.md` — Flask web app (factory pattern, blueprints, migrations)
+- [x] `stack/python-fastapi.md` — FastAPI (async, Pydantic v2, DI, OpenAPI)
+- [x] `stack/spa-react.md` — React + TypeScript (components, state, RTL, a11y, E2E)
 - [x] `stack/go-service.md` — Go service (packages, interfaces, concurrency) — refactored in Phase 8
 
 ---
@@ -86,12 +86,12 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 ## Phase 7 — Quality improvements (post-assessment)
 
 - [x] `backend/messaging.md` — new: brokers, producers, consumers, schema, DLQ, observability, testing
-- [x] `stack/fastapi.md` — added Feature flags and Messaging sections; updated DEPENDS ON
-- [x] `stack/flask.md` — added Feature flags and Messaging sections; updated DEPENDS ON
+- [x] `stack/python-fastapi.md` — added Feature flags and Messaging sections; updated DEPENDS ON
+- [x] `stack/python-flask.md` — added Feature flags and Messaging sections; updated DEPENDS ON
 - [x] `stack/go-service.md` — added Feature flags and Messaging sections; updated DEPENDS ON
 - [x] `stack/static-site.md` — added ID tags to all sections (required by astro.md OVERRIDE directives)
-- [x] `stack/django.md` — new: Django 4.2/5.x, DRF, ORM, migrations, admin, pytest-django
-- [x] `stack/nextjs.md` — new: App Router, Server/Client Components, data fetching, API routes
+- [x] `stack/python-django.md` — new: Django 4.2/5.x, DRF, ORM, migrations, admin, pytest-django
+- [x] `stack/full-nextjs.md` — new: App Router, Server/Client Components, data fetching, API routes
 - [x] `examples/flask-api/CLAUDE.md` — new: InventoryAPI example (Flask + Celery + PostgreSQL)
 - [x] `examples/go-service/CLAUDE.md` — new: MetricsHub example (Go + chi + PostgreSQL + Redis)
 - [x] `manifest.yaml` — new: machine-readable dependency graph for composition engines
@@ -105,22 +105,26 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `stack/python-service.md` — new: abstract Python web service layer (SQLAlchemy, Alembic, pydantic-settings)
 - [x] `stack/go-lib.md` — new: base Go library/CLI conventions (packages, errors, quality, tooling)
 - [x] `stack/go-service.md` — refactored to extend go-lib; DEPENDS ON simplified
-- [x] `stack/vue.md` — new: Vue 3 + Composition API + Pinia + Vitest
-- [x] `stack/svelte.md` — new: Svelte 5 runes + Vitest + Playwright
-- [x] `stack/sveltekit.md` — new: file-based routing, form actions, SSR, Nitro
-- [x] `stack/hugo.md` — new: Go templates, archetypes, content structure
-- [x] `stack/nestjs.md` — new: modules, controllers, providers, guards, pipes, DI
-- [x] `stack/express.md` — new: minimal Node.js REST API, Zod validation, Supertest
-- [x] `stack/spring-boot.md` — new: Java/Kotlin, JPA, Spring Security, Flyway, Testcontainers
-- [x] `stack/celery-worker.md` — new: standalone Celery worker, retry/backoff, Beat scheduling
-- [x] `stack/grpc-go.md` — new: extends go-service + backend/grpc (bufconn, errgroup)
-- [x] `stack/grpc-python.md` — new: extends python-lib + backend/grpc (grpcio-aio, pytest-asyncio)
-- [x] `stack/grpc-java.md` — new: extends backend/grpc (InProcessServerBuilder, grpc-java lifecycle)
-- [x] `stack/react-native.md` — new: Expo, file-based routing, offline, permissions, Maestro/Detox
-- [x] `stack/flutter.md` — new: Dart 3, Riverpod, go_router, freezed, json_serializable
-- [x] `stack/terraform.md` — new: HCL, modules, remote state, workspaces, tfsec, terratest
+- [x] `stack/spa-vue.md` — new: Vue 3 + Composition API + Pinia + Vitest
+- [x] `stack/spa-svelte.md` — new: Svelte 5 runes + Vitest + Playwright
+- [x] `stack/full-sveltekit.md` — new: file-based routing, form actions, SSR, Nitro
+- [x] `stack/static-site-hugo.md` — new: Go templates, archetypes, content structure
+- [x] `stack/node-nestjs.md` — new: modules, controllers, providers, guards, pipes, DI
+- [x] `stack/node-express.md` — new: minimal Node.js REST API, Zod validation, Supertest
+- [x] `stack/java-spring-boot.md` — new: Java/Kotlin, JPA, Spring Security, Flyway, Testcontainers
+- [x] `stack/python-celery-worker.md` — new: standalone Celery worker, retry/backoff, Beat scheduling
+- [x] `stack/go-grpc.md` — new: extends go-service + backend/grpc (bufconn, errgroup)
+- [x] `stack/python-grpc.md` — new: extends python-lib + backend/grpc (grpcio-aio, pytest-asyncio)
+- [x] `stack/java-grpc.md` — new: extends backend/grpc (InProcessServerBuilder, grpc-java lifecycle)
+- [x] `stack/mobile-react-native.md` — new: Expo, file-based routing, offline, permissions, Maestro/Detox
+- [x] `stack/mobile-flutter.md` — new: Dart 3, Riverpod, go_router, freezed, json_serializable
+- [x] `stack/iac-terraform.md` — new: HCL, modules, remote state, workspaces, tfsec, terratest
 - [x] `stack/nodejs-lib.md` — new: TypeScript npm library/CLI, tsup, package exports, Vitest
 - [x] `stack/rust-lib.md` — new: Rust crate/CLI, thiserror/anyhow, clippy, proptest, crates.io
+- [x] `base/deployment.md` — new: deployment targets (cloud/hybrid/offline), certs, LB, service discovery, registries, secrets
+- [x] `backend/templating.md` — new: server-side rendering — partials, escaping, caching, CSRF, forms, testing
+- [x] `stack/htmx.md` — new: HTMX 2.x, Alpine.js, SSE, OOB swaps, partial responses, Playwright testing
+- [x] `stack/go-echo.md` — new: Echo v4 routing, middleware, validation, error handling
 - [x] `manifest.yaml` — updated: all new stacks registered with dependency graph
 - [x] `SPEC.md` — updated: stack list, backend/ list, frontend/ list
 

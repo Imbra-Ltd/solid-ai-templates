@@ -26,11 +26,11 @@ Ask all REQUIRED questions before generating anything.
 Which stack template applies to this project?
 
 - `stack/static-site.md` — generic static site (any framework)
-- `stack/astro.md` — Astro static site
+- `stack/static-site-astro.md` — Astro static site
 - `stack/python-lib.md` — Python library or CLI tool
-- `stack/flask.md` — Flask web application or API
-- `stack/fastapi.md` — FastAPI backend
-- `stack/react-spa.md` — React single-page application (TypeScript)
+- `stack/python-flask.md` — Flask web application or API
+- `stack/python-fastapi.md` — FastAPI backend
+- `stack/spa-react.md` — React single-page application (TypeScript)
 - `stack/go-service.md` — Go service, API server, or CLI tool
 
 ---

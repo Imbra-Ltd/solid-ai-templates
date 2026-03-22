@@ -11,7 +11,7 @@ writing, and contact information.
 - **Owner**: Maria Chen
 - **URL**: mariachen.design
 - **Deployment**: GitHub Pages via GitHub Actions on push to `main`
-- **Stack source**: `stack/astro.md`
+- **Stack source**: `stack/static-site-astro.md`
 - **Output format**: `output/claude.md`
 
 ---

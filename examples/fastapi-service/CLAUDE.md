@@ -10,7 +10,7 @@ REST API for managing tasks, projects, and team assignments.
 - **Owner**: Platform team
 - **Repo**: github.com/acme/taskflow-api
 - **Deployment**: Docker → Railway (production), Docker Compose (local)
-- **Stack source**: `stack/fastapi.md` + `backend/auth.md` + `backend/caching.md`
+- **Stack source**: `stack/python-fastapi.md` + `backend/auth.md` + `backend/caching.md`
 - **Output format**: `output/claude.md`
 
 ---
