@@ -1,8 +1,6 @@
-# solid-ai-templates
+# SOLID-AI Templates
 
 Composable, SOLID-inspired templates for generating AI agent context files.
-
----
 
 ## Overview
 
@@ -16,8 +14,6 @@ any project type.
 The system is agent-agnostic: the same templates produce output for Claude
 Code, Cursor, GitHub Copilot, or OpenAI Codex CLI by applying a different
 output format guide.
-
----
 
 ## Quick start
 
@@ -38,14 +34,9 @@ solid-ai-templates/stack/<your-stack>.md
 The agent will ask a short set of questions and generate a ready-to-use
 context file for your project.
 
-**Available stacks:** `fastapi`, `flask`, `python-lib`, `react-spa`,
-`go-service`, `astro`, `static-site`
-
 **Available output formats:** `CLAUDE.md`, `AGENTS.md`,
 `.cursor/rules/project.mdc`, `.github/copilot-instructions.md`,
 `AI_CONTEXT.md`
-
----
 
 ## Usage
 
@@ -76,8 +67,6 @@ Same steps with `stack/react-spa.md`. The agent applies the frontend layer
 Each template declares its dependencies with `DEPENDS ON` and can override
 base rules with `OVERRIDE`. See `SPEC.md` for the full composition rules.
 
----
-
 ## Project structure
 
 ```
@@ -93,8 +82,6 @@ solid-ai-templates/
 ├── CONCEPTS.md     # Concept-to-file navigation index
 └── ROADMAP.md      # Project status and planned work
 ```
-
----
 
 ## Development setup
 
@@ -118,19 +105,36 @@ No build step or runtime dependencies — all templates are plain Markdown.
 `INTERVIEW.md`, run through the interview, and confirm the generated output
 is coherent and complete.
 
----
-
 ## Supported stacks
 
-| Template | Extends |
-|----------|---------|
-| `stack/static-site.md` | base |
-| `stack/astro.md` | static-site |
-| `stack/python-lib.md` | base |
-| `stack/flask.md` | python-lib |
-| `stack/fastapi.md` | python-lib |
-| `stack/react-spa.md` | base + frontend |
-| `stack/go-service.md` | base |
+| Template | Layer | Extends |
+|----------|-------|---------|
+| `stack/python-lib.md` | library | base |
+| `stack/python-service.md` | abstract | base + backend + python-lib |
+| `stack/flask.md` | backend | python-service |
+| `stack/fastapi.md` | backend | python-service + backend/concurrency |
+| `stack/django.md` | backend | python-service + backend/api + backend/auth |
+| `stack/celery-worker.md` | backend | base + backend/jobs + python-lib |
+| `stack/go-lib.md` | library | base |
+| `stack/go-service.md` | abstract | base + backend + go-lib |
+| `stack/grpc-go.md` | backend | go-service + backend/grpc |
+| `stack/grpc-python.md` | backend | python-lib + backend/grpc |
+| `stack/grpc-java.md` | backend | base + backend/grpc |
+| `stack/express.md` | backend | base + backend |
+| `stack/nestjs.md` | backend | base + backend |
+| `stack/spring-boot.md` | backend | base + backend |
+| `stack/react-spa.md` | frontend | base + frontend |
+| `stack/vue.md` | frontend | base + frontend |
+| `stack/svelte.md` | frontend | base + frontend |
+| `stack/nextjs.md` | full-stack | base + frontend + react-spa + backend partial |
+| `stack/sveltekit.md` | full-stack | base + frontend + svelte + backend partial |
+| `stack/astro.md` | static | base + frontend + frontend/static-site |
+| `stack/hugo.md` | static | base + frontend + frontend/static-site |
+| `stack/react-native.md` | mobile | base + react-spa + backend/auth |
+| `stack/flutter.md` | mobile | base |
+| `stack/terraform.md` | DevOps | base |
+| `stack/nodejs-lib.md` | library | base |
+| `stack/rust-lib.md` | library | base |
 
 ## Supported agents
 
@@ -142,8 +146,6 @@ is coherent and complete.
 | OpenAI Codex CLI | `AGENTS.md` | `output/codex.md` |
 | Generic / other | `AI_CONTEXT.md` | `output/generic.md` |
 
----
-
 ## Links
 
 - [System design and composition rules](SPEC.md)
@@ -151,14 +153,10 @@ is coherent and complete.
 - [Project status and roadmap](ROADMAP.md)
 - [Example generated context files](examples/)
 
----
-
 ## License
 
 No license has been declared for this repository yet. All rights reserved
 until a license is added.
-
----
 
 ## Author
 
