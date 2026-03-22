@@ -10,6 +10,7 @@ Use this to find the right file when searching for a specific topic.
 | Concern | File |
 |---------|------|
 | Commit messages, branching, PR workflow | `base/git.md` |
+| README structure and maintenance rules | `base/readme.md` |
 | Documentation standards, ADRs, docs-as-code | `base/docs.md` |
 | Architecture principles, SOLID, code style | `base/quality.md` |
 | Code review process and checklists | `base/review.md` |
