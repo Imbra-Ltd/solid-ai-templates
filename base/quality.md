@@ -101,11 +101,13 @@ Apply SOLID at the class, module, and service level:
   scattered across the codebase are a maintenance hazard
 
 ## Code style
-- Source files MUST use ASCII characters only; files MUST be UTF-8 encoded
-- MUST use LF line endings — never CRLF
-- Style SHOULD be enforced by a linter configured to run on save
-- Write code that requires no comments — if a comment is needed, the code
-  is not clear enough; refactor first
+- Encode all source files in UTF-8; content MUST be restricted to ASCII
+  characters
+- Line endings MUST be LF — CRLF is not acceptable in any committed file
+- A linter SHOULD enforce formatting automatically on save; keep manual style
+  rules to a minimum
+- Prefer self-documenting code — if a comment feels necessary, treat it as a
+  signal that the code needs restructuring before the comment is added
 - Add comments only where the intent cannot be expressed in code
 
 ## Debug code

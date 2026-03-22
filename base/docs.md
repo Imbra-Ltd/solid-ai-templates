@@ -2,7 +2,8 @@
 [ID: base-docs]
 
 ## Rule language
-Use MUST / SHOULD / COULD to express the weight of every rule:
+All rules use the key words defined in **RFC 2119** to indicate requirement
+levels. Every rule MUST use one of these words:
 
 | Word | Meaning |
 |------|---------|
@@ -10,7 +11,7 @@ Use MUST / SHOULD / COULD to express the weight of every rule:
 | MUST NOT | Absolute prohibition |
 | SHOULD | Recommended — deviations require justification |
 | SHOULD NOT | Not recommended — may be ignored with justification |
-| COULD | Optional — developer decides without further discussion |
+| MAY | Optional — developer decides without further discussion |
 
 ## Single source of truth
 - `README.md` is the single source of truth for project structure

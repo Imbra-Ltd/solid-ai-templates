@@ -91,6 +91,8 @@ Use this to find the right file when searching for a specific topic.
 | How do I version a breaking API change? | `backend/api.md` — Versioning |
 | When should I cache? | `backend/caching.md` — When to cache |
 | How do I write a test name? | `base/testing.md` — Naming conventions |
+| What naming convention for unit tests? | `base/testing.md` — Naming; stack template for language-specific pattern |
+| What naming convention for integration/system tests? | `imbra-knowledge/standards/` — codification scheme |
 | What goes in a commit message? | `base/git.md` — Commit message format |
 | How do I document an architecture decision? | `base/docs.md` — ADR |
 | When should I use async vs. threads? | `backend/concurrency.md` — Decision table |

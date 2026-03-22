@@ -128,11 +128,12 @@ CLAUDE.md
 - `httpx.AsyncClient` with `ASGITransport` for route tests — no `TestClient` (sync)
 - One async `client` fixture in `conftest.py`
 - Test each route for: success (2xx), validation error (422), auth error (401/403)
-- No mocking of the database in integration tests — use a test database
+- No mocking of the database in component integration tests — use a test database
 - Override dependencies with `app.dependency_overrides` in tests
-- Name tests using the pattern: `test_<route_or_function>_<state>_<expected>`
+- Component test naming: `test_<route_or_function>_<state>_<expected>`
   e.g. `test_create_item_invalid_payload_returns_422`
-- Unit tests in `tests/unit/`, integration tests in `tests/integration/`
+- Component tests in `tests/component/`, component integration tests in
+  `tests/integration/`
 - Run before every commit: `pytest && mypy src/ --strict`
 
 ---
