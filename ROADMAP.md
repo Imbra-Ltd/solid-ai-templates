@@ -53,7 +53,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `stack/flask.md` — Flask web app (factory pattern, blueprints, migrations)
 - [x] `stack/fastapi.md` — FastAPI (async, Pydantic v2, DI, OpenAPI)
 - [x] `stack/react-spa.md` — React + TypeScript (components, state, RTL, a11y, E2E)
-- [x] `stack/go-service.md` — Go service / CLI (packages, interfaces, concurrency)
+- [x] `stack/go-service.md` — Go service (packages, interfaces, concurrency) — refactored in Phase 8
 
 ---
 
@@ -83,7 +83,50 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ---
 
-## Phase 7 — Testing
+## Phase 7 — Quality improvements (post-assessment)
+
+- [x] `backend/messaging.md` — new: brokers, producers, consumers, schema, DLQ, observability, testing
+- [x] `stack/fastapi.md` — added Feature flags and Messaging sections; updated DEPENDS ON
+- [x] `stack/flask.md` — added Feature flags and Messaging sections; updated DEPENDS ON
+- [x] `stack/go-service.md` — added Feature flags and Messaging sections; updated DEPENDS ON
+- [x] `stack/static-site.md` — added ID tags to all sections (required by astro.md OVERRIDE directives)
+- [x] `stack/django.md` — new: Django 4.2/5.x, DRF, ORM, migrations, admin, pytest-django
+- [x] `stack/nextjs.md` — new: App Router, Server/Client Components, data fetching, API routes
+- [x] `examples/flask-api/CLAUDE.md` — new: InventoryAPI example (Flask + Celery + PostgreSQL)
+- [x] `examples/go-service/CLAUDE.md` — new: MetricsHub example (Go + chi + PostgreSQL + Redis)
+- [x] `manifest.yaml` — new: machine-readable dependency graph for composition engines
+
+---
+
+## Phase 8 — Stack expansion (backend, frontend, mobile, DevOps, libraries)
+
+- [x] `frontend/static-site.md` — new: abstract SSG layer (moved from stack/static-site.md)
+- [x] `backend/grpc.md` — new: abstract gRPC layer (proto design, status codes, interceptors, buf)
+- [x] `stack/python-service.md` — new: abstract Python web service layer (SQLAlchemy, Alembic, pydantic-settings)
+- [x] `stack/go-lib.md` — new: base Go library/CLI conventions (packages, errors, quality, tooling)
+- [x] `stack/go-service.md` — refactored to extend go-lib; DEPENDS ON simplified
+- [x] `stack/vue.md` — new: Vue 3 + Composition API + Pinia + Vitest
+- [x] `stack/svelte.md` — new: Svelte 5 runes + Vitest + Playwright
+- [x] `stack/sveltekit.md` — new: file-based routing, form actions, SSR, Nitro
+- [x] `stack/hugo.md` — new: Go templates, archetypes, content structure
+- [x] `stack/nestjs.md` — new: modules, controllers, providers, guards, pipes, DI
+- [x] `stack/express.md` — new: minimal Node.js REST API, Zod validation, Supertest
+- [x] `stack/spring-boot.md` — new: Java/Kotlin, JPA, Spring Security, Flyway, Testcontainers
+- [x] `stack/celery-worker.md` — new: standalone Celery worker, retry/backoff, Beat scheduling
+- [x] `stack/grpc-go.md` — new: extends go-service + backend/grpc (bufconn, errgroup)
+- [x] `stack/grpc-python.md` — new: extends python-lib + backend/grpc (grpcio-aio, pytest-asyncio)
+- [x] `stack/grpc-java.md` — new: extends backend/grpc (InProcessServerBuilder, grpc-java lifecycle)
+- [x] `stack/react-native.md` — new: Expo, file-based routing, offline, permissions, Maestro/Detox
+- [x] `stack/flutter.md` — new: Dart 3, Riverpod, go_router, freezed, json_serializable
+- [x] `stack/terraform.md` — new: HCL, modules, remote state, workspaces, tfsec, terratest
+- [x] `stack/nodejs-lib.md` — new: TypeScript npm library/CLI, tsup, package exports, Vitest
+- [x] `stack/rust-lib.md` — new: Rust crate/CLI, thiserror/anyhow, clippy, proptest, crates.io
+- [x] `manifest.yaml` — updated: all new stacks registered with dependency graph
+- [x] `SPEC.md` — updated: stack list, backend/ list, frontend/ list
+
+---
+
+## Phase 9 — Agent testing
 
 - [ ] Test end-to-end with Claude Code (`CLAUDE.md` output)
 - [ ] Test end-to-end with Cursor (`.mdc` output)
@@ -93,7 +136,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ---
 
-## Phase 8 — Validation
+## Phase 10 — Validation
 
 - [ ] Use the system on a real new project end-to-end
 - [ ] Use the system on a real refactoring project end-to-end

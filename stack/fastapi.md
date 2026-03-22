@@ -1,5 +1,5 @@
 # Stack — FastAPI Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, backend/config.md, backend/http.md, backend/database.md, backend/observability.md, backend/quality.md, backend/concurrency.md, stack/python-lib.md]
+[DEPENDS ON: stack/python-service.md, backend/concurrency.md]
 
 Extends the Python library stack with FastAPI-specific rules. Covers async
 request handling, Pydantic schemas, dependency injection, OpenAPI, and
@@ -144,6 +144,29 @@ CLAUDE.md
 - All routes have `summary`, `tags`, and explicit `response_model`
 - Disable OpenAPI in production if the API is not public: `openapi_url=None`
 - Keep schema clean — avoid `include_in_schema=False` as a crutch
+
+---
+
+## Feature flags (if applicable)
+[EXTEND: backend-features]
+
+- Inject the flag client as a FastAPI dependency via `Depends()` — never
+  import it as a module-level global
+- Evaluate flags in the route handler or service entry point —
+  not deep inside domain logic
+- Use `asyncio.to_thread()` if the flag SDK evaluation is synchronous
+
+---
+
+## Messaging (if applicable)
+[EXTEND: backend-messaging]
+
+- Use `aio-pika` for RabbitMQ, `aiokafka` for Kafka, or `aiobotocore` for SQS —
+  all broker clients must be async
+- Initialise the broker connection in the `lifespan` context manager —
+  not at module level
+- Consumer coroutines run as background tasks started in `lifespan` —
+  use `asyncio.create_task()` with structured shutdown
 
 ---
 
