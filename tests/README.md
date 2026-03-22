@@ -43,6 +43,7 @@ See `CODIFICATION.md` for the ID scheme, area codes, and component group registr
 | `SAIT-E2E-OUT-HG001A` | E2E | P1 | Full interview → CLAUDE.md for a Hugo static site project |
 | `SAIT-E2E-OUT-NL001A` | E2E | P1 | Full interview → CLAUDE.md for a Node.js library project |
 | `SAIT-E2E-OUT-RL001A` | E2E | P1 | Full interview → CLAUDE.md for a Rust library project |
+| `SAIT-E2E-OUT-HX001A` | E2E | P1 | Full interview → CLAUDE.md for an HTMX project |
 | `SAIT-E2E-DEP-CL001A` | E2E | P1 | Cloud deployment target produces correct deployment rules |
 | `SAIT-E2E-DEP-HY001A` | E2E | P1 | Hybrid deployment target produces correct deployment rules |
 | `SAIT-E2E-DEP-OF001A` | E2E | P1 | Offline deployment target produces correct deployment rules |
