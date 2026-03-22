@@ -63,6 +63,8 @@ backend/
 ├── jobs.md           # background jobs, idempotency, retry, DLQ, scheduling
 ├── concurrency.md    # threads vs. processes vs. async, shared state, structured concurrency
 ├── microservices.md  # service boundaries, inter-service comms, saga, contract testing
+├── errors.md        # classification, propagation, recovery, external failures
+├── features.md      # feature flags, rollout strategy, experimentation
 ├── observability.md # log levels, log format, health check, error visibility
 ├── monitoring.md    # key metrics, thresholds, alerts, dashboards, incidents
 └── quality.md       # layered architecture, security, performance, API stability
@@ -178,6 +180,43 @@ A stack template extends a section by referencing its ID:
 ```
 
 If no override or extend is declared, the base section is used as-is.
+
+---
+
+## Precedence rules
+
+When multiple templates reference the same section ID, the following order
+applies — higher numbers win:
+
+1. **Base template** — the default; always the lowest precedence
+2. **Layer template** (frontend / backend) — overrides or extends the base
+3. **Stack template** — overrides or extends the layer or base
+4. **Interview answers** — the highest precedence; always win over any template
+
+Example: `base/testing.md` defines the test naming convention. `stack/fastapi.md`
+extends it with a Python-specific pattern. The interview answer "use BDD-style
+names" overrides both. The final output uses the interview answer.
+
+---
+
+## Conflict resolution
+
+A conflict occurs when two templates at the same layer reference the same
+section ID with different directives (`OVERRIDE` vs `EXTEND`).
+
+**Rule: the more specific directive wins.**
+
+| Situation | Resolution |
+|-----------|------------|
+| One template `EXTEND`s, another `OVERRIDE`s the same ID | `OVERRIDE` wins — it replaces the base; the `EXTEND` is applied on top of the overridden content |
+| Two templates both `OVERRIDE` the same ID | Error — the agent MUST surface this conflict to the user and ask which override to apply |
+| Two templates both `EXTEND` the same ID | Both extensions are applied; order follows the dependency declaration in the stack template |
+
+**When a conflict cannot be resolved automatically**, the agent must:
+
+1. Show the user both conflicting rules
+2. Ask which takes precedence
+3. Record the decision in the `[OVERRIDES]` section of the interview output
 
 ---
 

@@ -7,23 +7,28 @@
 - Validate all incoming request data before processing
 
 ## URI design
-- Use lowercase letters and hyphens to separate words — never underscores or camelCase
-- Use nouns, not verbs: `/orders`, not `/getOrders`
-- Use plural nouns for collections: `/orders`, `/products`
-- Use singular for individual resources beneath a collection: `/orders/{orderId}`
-- Use hierarchical paths for related resources: `/customers/{id}/orders`
+- Path segments MUST be lowercase with hyphens as word separators —
+  underscores and camelCase are not permitted
+- Paths MUST use nouns, not verbs: `/orders` not `/getOrders`
+- Collection resources MUST use plural nouns: `/orders`, `/products`
+- Individual resources MUST be addressed under their collection:
+  `/orders/{orderId}`
+- Sub-resources MUST be nested under their parent: `/customers/{id}/orders`
 - A URI MUST NOT end with a trailing slash
-- Use American English — no abbreviations or acronyms in URIs
+- Paths MUST use American English spelling with no abbreviations or acronyms
 
 ## Query parameters
-- Use camelCase for query parameter names
-- Use query parameters for filtering, sorting, and pagination
-- Reserved names — do not use these for other purposes:
-  `limit`, `skip`, `offset`, `expand`, `sortedBy`
+- Query parameter names MUST use camelCase
+- Query parameters MUST be used for filtering, sorting, and pagination —
+  not for resource identity (use path segments for that)
+- The following names are reserved for framework-level use and MUST NOT
+  be repurposed: `limit`, `skip`, `offset`, `expand`, `sortedBy`
 
 ## Request headers
-- Use Hyphenated-Pascal-Case for all HTTP headers: `Order-Metadata-Header`
-- Custom headers SHOULD NOT use the `X-` prefix (deprecated per RFC 6648)
+- All HTTP headers MUST follow Hyphenated-Pascal-Case casing:
+  `Api-Correlation-Id`, `Accept-Language`
+- Custom headers SHOULD NOT use the `X-` prefix — this convention was
+  deprecated by RFC 6648; use a vendor or application-specific prefix instead
 
 ## HTTP methods
 | Method | Use for | Idempotent |
@@ -35,15 +40,17 @@
 | DELETE | Remove a resource | Yes |
 
 ## Resource representation
-- Use JSON as the default format; XML where explicitly required
-- Use ISO standards for field types:
-  - Dates/times: ISO 8601
-  - Languages: ISO 639
-  - Countries: ISO 3166-1 alpha-2
-  - Currencies: ISO 4217
-- Integers larger than 9007199254740992 (2^53) MUST be represented as strings
-  to avoid JavaScript floating-point precision loss
-- Include only necessary fields — keep response payloads small
+- JSON MUST be the default serialisation format; XML MAY be used where
+  explicitly required by the consuming system
+- Field types MUST conform to the relevant ISO standard:
+  - Date and time values: ISO 8601
+  - Language codes: ISO 639
+  - Country codes: ISO 3166-1 alpha-2
+  - Currency codes: ISO 4217
+- Any integer that exceeds 2^53 − 1 (9007199254740991) MUST be serialised
+  as a string — JavaScript cannot represent larger integers precisely
+- Responses MUST contain only the fields needed by the caller — do not pad
+  payloads with fields that are not consumed
 
 ## HATEOAS
 - Embed hyperlinks in responses to enable resource discovery
@@ -51,9 +58,9 @@
   ```json
   "links": [
     {
-      "href": "documents/a12231e4-46ef-4adf-82e2-8a74fc017447",
-      "rel": "documents",
-      "type": "deliveryNote",
+      "href": "invoices/f9c3b2a1-0d4e-4f8b-9c7a-1e2d3f4a5b6c",
+      "rel": "invoice",
+      "type": "paymentSummary",
       "media": "application/pdf"
     }
   ]
@@ -68,8 +75,10 @@
 - Set explicit `Content-Type: application/json` on all JSON responses
 
 ## Authentication and authorisation
-- MUST use HTTPS — never serve APIs over plain HTTP
-- Use token-based authentication with expiring access tokens (JWT)
-- External APIs MUST have both authentication and authorisation
-- Internal APIs SHOULD have at least authentication
-- Never expose unauthenticated write endpoints
+- All API traffic MUST be served over HTTPS — plain HTTP is not acceptable
+- Access tokens MUST have a finite lifetime; use JWT or an equivalent
+  short-lived token mechanism
+- Every external API endpoint MUST enforce both authentication and
+  authorisation
+- Internal API endpoints SHOULD require authentication at minimum
+- Write endpoints MUST NOT be accessible without a valid authenticated identity

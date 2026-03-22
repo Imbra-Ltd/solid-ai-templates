@@ -3,13 +3,14 @@
 
 ## Principle
 Security is not a phase — it is part of every build, review, and release.
-Detect risks as early as possible in the development process.
+Vulnerabilities and legal exposure MUST be surfaced during development —
+not after deployment.
 
 ## SAST (Static Application Security Testing)
-- SAST MUST run in every CI pipeline
-- A failed SAST scan MUST fail the build — code with security issues cannot
-  be merged or deployed
-- Fix SAST findings before merging; document false positives explicitly
+- Every pipeline run MUST include a static security analysis step
+- A failed scan MUST stop the build — the branch MUST NOT progress until
+  findings are resolved or formally accepted as false positives
+- Accepted false positives MUST be documented with a written justification
 
 ## SCA (Software Composition Analysis)
 - All dependencies MUST be tracked for known vulnerabilities and license risks
@@ -18,12 +19,12 @@ Detect risks as early as possible in the development process.
 - Dependencies with unacceptable licenses MUST NOT be merged
 
 ## Secret detection
-- Secret detection MUST run in CI — commits containing credentials, tokens,
-  or API keys MUST be rejected
-- Never store sensitive information in source files, commit history, issue
-  trackers, or documentation tools
-- Secrets used at runtime MUST be stored in a secret vault — never in
-  environment files committed to the repository
+- Secret detection MUST run in CI — any commit containing credentials, tokens,
+  or API keys MUST be rejected automatically
+- Sensitive values MUST NOT appear in any artefact that enters source control —
+  this includes commit messages, issue comments, and documentation files
+- Runtime secrets MUST be fetched from a dedicated vault at startup — MUST NOT
+  be written to disk or committed in any form
 
 ## License compliance
 - Before adding a dependency, verify its license is acceptable

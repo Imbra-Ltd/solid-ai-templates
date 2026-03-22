@@ -24,38 +24,40 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ---
 
-## Phase 2 — Backend layer (from SE handbook)
+## Phase 2 — Backend layer
 
-- [x] `backend/http.md` — enriched: URI design, headers, HATEOAS, auth, RFC 9457 errors
-- [x] `backend/observability.md` — enriched: log levels with examples, JSON format, rules
-- [x] `backend/api.md` — new: API-first, OpenAPI, versioning, deprecation headers, pagination
-- [x] `backend/monitoring.md` — new: key metrics, thresholds, alerts, dashboards, incidents
-- [x] `backend/caching.md` — new: cache-aside, keys, TTL, invalidation, resilience, stampede
-- [x] `backend/auth.md` — new: authn/authz, JWT, RBAC, sessions, API keys, token transport
-- [x] `backend/jobs.md` — new: idempotency, retry/backoff, DLQ, scheduling-as-code, observability
-- [x] `backend/concurrency.md` — new: when-to-use table, shared state, structured concurrency, pitfalls
-- [x] `backend/microservices.md` — new: boundaries, inter-service comms, saga, contract testing, observability
+- [x] `backend/http.md` — URI design, headers, HATEOAS, auth, RFC 9457 errors
+- [x] `backend/observability.md` — log levels with examples, JSON format, distributed tracing
+- [x] `backend/api.md` — API-first, OpenAPI, versioning, deprecation headers, pagination
+- [x] `backend/monitoring.md` — key metrics, thresholds, alerts, dashboards, incidents
+- [x] `backend/caching.md` — cache-aside, keys, TTL, invalidation, resilience, stampede
+- [x] `backend/auth.md` — authn/authz, JWT, RBAC, sessions, API keys, token transport
+- [x] `backend/jobs.md` — idempotency, retry/backoff, DLQ, scheduling-as-code, observability
+- [x] `backend/concurrency.md` — when-to-use table, shared state, structured concurrency
+- [x] `backend/microservices.md` — boundaries, inter-service comms, saga, contract testing
+- [x] `backend/config.md` — env vars, validation, secrets management, environment separation
+- [x] `backend/database.md` — migrations, queries, indexing, N+1, connection pooling
 
 ---
 
-## Phase 3 — Frontend layer (from SE handbook)
+## Phase 3 — Frontend layer
 
-- [x] `frontend/ux.md` — enriched: design system principle, component-driven development
-- [x] `frontend/quality.md` — enriched: linting/formatting on save, no console warnings, Core Web Vitals
+- [x] `frontend/ux.md` — enriched: design system, component-driven development
+- [x] `frontend/quality.md` — enriched: linting on save, Core Web Vitals, design patterns
 
 ---
 
 ## Phase 4 — Stack expansion
 
-- [x] `stack/python-lib.md` — Python library / CLI (packaging, mypy, ruff, pytest, test naming)
-- [x] `stack/flask.md` — Flask web app (factory pattern, blueprints, migrations, test naming)
-- [x] `stack/fastapi.md` — FastAPI (async, Pydantic v2, DI, OpenAPI, test naming)
-- [x] `stack/react-spa.md` — React + TypeScript (components, state, RTL, a11y, Gherkin naming, E2E)
-- [x] `stack/go-service.md` — Go service / CLI (packages, interfaces, concurrency, test naming, k6)
+- [x] `stack/python-lib.md` — Python library / CLI (packaging, mypy, ruff, pytest)
+- [x] `stack/flask.md` — Flask web app (factory pattern, blueprints, migrations)
+- [x] `stack/fastapi.md` — FastAPI (async, Pydantic v2, DI, OpenAPI)
+- [x] `stack/react-spa.md` — React + TypeScript (components, state, RTL, a11y, E2E)
+- [x] `stack/go-service.md` — Go service / CLI (packages, interfaces, concurrency)
 
 ---
 
-## Phase 3 — Agent output coverage
+## Phase 5 — Agent output coverage
 
 - [x] `output/claude.md` — Claude Code → `CLAUDE.md`
 - [x] `output/cursorrules.md` — Cursor → `.cursor/rules/project.mdc`
@@ -65,7 +67,23 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ---
 
-## Phase 4 — Testing
+## Phase 6 — Quality pass
+
+- [x] `base/quality.md` — added Readability and Maintainability sections
+- [x] `base/review.md` — sharpened readability and simplicity criteria with measurable rules
+- [x] `backend/config.md` — expanded validation, secrets management, environment separation
+- [x] `backend/database.md` — expanded indexing, N+1 prevention, soft deletes, testing
+- [x] `backend/errors.md` — new: error classification, propagation, recovery, external failures
+- [x] `backend/features.md` — new: feature flags, rollout strategy, experimentation, kill switches
+- [x] `frontend/quality.md` — added state management decision guide
+- [x] `frontend/ux.md` — added accessibility testing (axe, Lighthouse, screen reader, keyboard)
+- [x] `SPEC.md` — documented precedence rules and OVERRIDE/EXTEND conflict resolution
+- [x] `CONCEPTS.md` — new: concept-to-file navigation index
+- [x] `examples/` — new: three complete generated context files (FastAPI, React SPA, Astro)
+
+---
+
+## Phase 7 — Testing
 
 - [ ] Test end-to-end with Claude Code (`CLAUDE.md` output)
 - [ ] Test end-to-end with Cursor (`.mdc` output)
@@ -75,7 +93,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ---
 
-## Phase 5 — Validation
+## Phase 8 — Validation
 
 - [ ] Use the system on a real new project end-to-end
 - [ ] Use the system on a real refactoring project end-to-end

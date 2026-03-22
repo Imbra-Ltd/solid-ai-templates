@@ -2,17 +2,19 @@
 [ID: backend-api]
 
 ## API-first
-- Software MUST be designed API-first — define the contract before writing
-  implementation
-- Exceptions require a documented Architecture Decision Record (ADR)
-- API-first enables: multiple clients (web, mobile) sharing one contract,
-  headless testing, and API-as-a-product exposure
+- Software MUST be designed API-first — the public contract MUST be agreed
+  upon and documented before implementation begins
+- Any deviation from API-first design MUST be recorded in an Architecture
+  Decision Record (ADR) with a stated justification
+- Benefits: client teams (web, mobile, third-party) can work in parallel,
+  the API is testable independently of any frontend, and the contract becomes
+  a product in its own right
 
 ## API types
 - REST — SHOULD be the default choice
 - gRPC — SHOULD be used for internal service-to-service communication where
   performance is critical
-- GraphQL — COULD be used for frontend-facing APIs where flexible querying
+- GraphQL — MAY be used for frontend-facing APIs where flexible querying
   is needed
 - Other types (SOAP, WebSockets) require a per-case ADR
 
@@ -32,33 +34,36 @@
 - MUST NOT use media type to control API versions
 
 ## Backward compatibility
-Breaking changes require a new major version. A change is breaking when:
-- A field or object is removed or renamed in the response
-- A field type is changed
-- The authentication type changes
-- An HTTP verb or URI path changes
-- The protocol or Content-Type changes
-- Business logic or flow changes in a way that alters observable behaviour
+A new major version is required whenever a breaking change is introduced.
 
-A change is **not** breaking when:
-- A new field or object is added to the response
-- A new path or HTTP verb is added
-- Additional optional query parameters are added
+**Breaking changes** — any of the following constitutes a break:
+- Removing or renaming a response field or object
+- Changing the type of an existing field
+- Switching the authentication scheme
+- Modifying an existing HTTP verb or URI path
+- Changing the wire protocol or Content-Type
+- Altering business logic in a way that changes observable results
+
+**Non-breaking changes** — these MUST NOT require a version bump:
+- Adding a new optional field or object to a response
+- Adding a new endpoint or HTTP verb
+- Adding new optional query parameters
 
 ## Deprecation strategy
 When a breaking change is introduced:
 
 1. Deploy the new version alongside the old one
-2. Add the `Deprecation` header to all responses from the old version:
-   `Deprecation: @1688169599` (Unix timestamp of when it became deprecated)
-3. Optionally add the `Sunset` header with the removal date:
-   `Sunset: Sat, 31 Dec 2025 23:59:59 GMT`
+2. Add the `Deprecation` header to all responses from the old version with
+   the Unix timestamp of when deprecation started:
+   `Deprecation: @<unix-timestamp>`
+3. Optionally add the `Sunset` header with the planned removal date:
+   `Sunset: <HTTP-date>`
 4. Notify all consumers and agree on a migration timeline
 5. Remove the old version only after the sunset date has passed
 
 ```
-Deprecation: @1688169599
-Sunset: Sat, 31 Dec 2025 23:59:59 GMT
+Deprecation: @<unix-timestamp>
+Sunset: <HTTP-date>
 ```
 
 ## Statelessness

@@ -63,12 +63,51 @@ Apply SOLID at the class, module, and service level:
 - Transparent decorators (a decorator that wraps and clearly delegates) are
   acceptable; opaque interceptors that inject hidden behaviour are not
 
+## Readability
+
+- **Names are the primary documentation** — a name that requires a comment to
+  explain is a name that needs to be changed
+- Functions and methods: verb or verb phrase (`calculateTotal`, `fetchUser`)
+- Classes and modules: noun or noun phrase (`OrderRepository`, `AuthService`)
+- Booleans: prefix with `is`, `has`, or `can` (`isActive`, `hasPermission`)
+- No single-letter names except loop counters (`i`, `j`) and well-established
+  conventions (`err` in Go, `e` in except clauses)
+- No abbreviations unless universally understood in the domain (`url`, `id`,
+  `http` are fine; `mgr`, `proc`, `obj` are not)
+- A function's name must make reading its body unnecessary — if you need to
+  read the implementation to understand what a call site does, the function
+  needs a better name or needs to be split
+- Cognitive complexity ≤ 15 per function — enforced by static analysis
+  (SonarQube, Codacy, or equivalent); each nesting level and decision point
+  increases the score
+- Maximum nesting depth of three levels — use early returns and guard clauses
+  to reduce indentation rather than adding else branches
+- No boolean flag parameters — they force the caller to read the implementation
+  to understand what `true` means; use an enum or two named functions instead
+- Avoid negative conditions in `if` statements where possible —
+  `if isEnabled` reads better than `if !isDisabled`
+
+## Maintainability
+
+- No circular dependencies between modules or packages — dependency graphs
+  must be acyclic; restructure or introduce an interface to break cycles
+- Keep the dependency graph shallow — if changing module A requires reading
+  modules B, C, and D to understand the impact, the coupling is too high
+- Changes to one module's internals must not require changes in unrelated
+  modules — if they do, the abstraction boundary is wrong
+- Before removing or renaming a public symbol, mark it deprecated with a
+  comment referencing the replacement; remove it in a follow-up change
+- Magic numbers and magic strings must be named constants — unnamed literals
+  scattered across the codebase are a maintenance hazard
+
 ## Code style
-- Source files MUST use ASCII characters only; files MUST be UTF-8 encoded
-- MUST use LF line endings — never CRLF
-- Style SHOULD be enforced by a linter configured to run on save
-- Write code that requires no comments — if a comment is needed, the code
-  is not clear enough; refactor first
+- Encode all source files in UTF-8; content MUST be restricted to ASCII
+  characters
+- Line endings MUST be LF — CRLF is not acceptable in any committed file
+- A linter SHOULD enforce formatting automatically on save; keep manual style
+  rules to a minimum
+- Prefer self-documenting code — if a comment feels necessary, treat it as a
+  signal that the code needs restructuring before the comment is added
 - Add comments only where the intent cannot be expressed in code
 
 ## Debug code

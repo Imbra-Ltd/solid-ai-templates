@@ -11,27 +11,33 @@
 ## Priority order
 Apply the following order when reviewing, from most to least critical:
 
-1. **Security and compliance** — exploits, credentials in source, license violations
-2. **Correctness** — logic errors, edge cases, unhandled errors, race conditions
-3. **Readability** — code that is difficult to understand or follow
-4. **Guideline adherence** — inconsistencies with project conventions
+1. **Security exposure** — anything that could be exploited, any credential
+   or license problem
+2. **Functional correctness** — paths that produce wrong results, unhandled
+   failures, or race conditions
+3. **Clarity** — obscure names, deep nesting, high cognitive complexity,
+   boolean flag parameters
+4. **Convention compliance** — code that deviates from agreed project patterns
 
 ## MUST checklist
-- [ ] No secrets, credentials, or tokens in source code
-- [ ] All error paths handled — no unhandled exceptions or silent failures
-- [ ] Dependencies have an acceptable license
-- [ ] Critical flows are documented
-- [ ] Documentation is in sync with the code changes
+- [ ] No credentials, tokens, or sensitive values appear anywhere in the
+  committed files
+- [ ] Every failure path is explicitly handled — no silent catches, no
+  swallowed exceptions
+- [ ] Any new dependency carries a license compatible with the project policy
+- [ ] Significant logic or architectural decisions are captured in documentation
+- [ ] Existing documentation reflects the state of the code after this change
 
 ## SHOULD checklist
 - [ ] Non-trivial functions have a unit test for each relevant variant
 - [ ] Code coverage does not decrease
 - [ ] Lint errors/warnings do not increase
 - [ ] Third-party dependencies are necessary, understood, and well-maintained
-- [ ] Code is simple — minimal abstraction, minimal dependencies
+- [ ] Code is simple — no new abstraction without two or more call sites,
+  no new dependency without a documented reason
 
 ## Deviations
-- If a SHOULD rule is not followed, the reason MUST be documented
-  (e.g., as a PR comment)
-- If a MUST rule is not followed, it MUST be escalated and explicitly approved
-  before merging
+- Deviating from a SHOULD rule requires a written explanation in the pull
+  request
+- Deviating from a MUST rule requires explicit sign-off from a designated
+  approver before the change can land

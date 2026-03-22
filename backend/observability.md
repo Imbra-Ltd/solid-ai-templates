@@ -11,7 +11,7 @@ Use the correct level — do not elevate debug information to INFO:
 | FATAL | App cannot continue — imminent shutdown | Out of memory, missing critical dependency at startup, DB schema mismatch |
 | ERROR | Operation failed — normal flow disrupted | Failed DB write, file not found, unhandled exception in request handler |
 | WARN | Unexpected but recoverable — may lead to error | Low disk space, slow response, retry attempt, deprecated endpoint accessed |
-| INFO | Normal operation — confirm correct functioning | User logged in, service started, transaction committed, scheduled task started |
+| INFO | Normal operation — confirm correct functioning | Order accepted, service started, payment processed, scheduled job completed |
 | DEBUG | Technical detail for debugging — not for production | Query results, data mapping steps, connection established |
 | TRACE | Most verbose — step-by-step tracing, development only | Function parameters, pipeline steps, request/response payloads |
 
@@ -29,9 +29,9 @@ Use the correct level — do not elevate debug information to INFO:
   {
     "Timestamp": "2024-01-15T12:34:56.789Z",
     "Level": "Information",
-    "MessageTemplate": "User ({userId}) logged in.",
-    "Message": "User (12345) logged in.",
-    "Properties": { "userId": 12345 }
+    "MessageTemplate": "Order ({orderId}) accepted.",
+    "Message": "Order (ORD-78901) accepted.",
+    "Properties": { "orderId": "ORD-78901" }
   }
   ```
 

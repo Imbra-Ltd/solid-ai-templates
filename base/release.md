@@ -9,14 +9,14 @@
 - PATCH — backward-compatible bug fixes
 
 ## Version bump propagation
-When upgrading a dependency, the consuming package MUST bump its own version
-to the same level or higher:
+A consumer that references an upgraded dependency MUST advance its own version
+at least as far:
 - Dependency bumps MINOR → consumer MUST bump at least MINOR (not just PATCH)
 - Dependency bumps MAJOR → consumer MUST bump MAJOR
 
-> Rationale: A patch bump implies a drop-in replacement. If a dependency
-> changed its minor version, the consumer is no longer a drop-in replacement
-> of its previous patch — failing to bump breaks downstream consumers.
+> Rationale: If a dependency received a minor bump, declaring only a patch
+> change in the consumer would mislead downstream callers — they would assume
+> a drop-in replacement when the interface has changed.
 
 ## Backward compatibility
 - APIs SHOULD remain backward compatible across minor and patch versions
@@ -38,8 +38,9 @@ Client B: [--- v1 ----------|-------- v2 --------]
 ```
 
 ## Release gate
-- MUST: All automated tests (unit, integration, e2e) MUST be green on the
-  staging/QA environment before releasing to production
-- If tests are not green, DO NOT release to production
-- The team consuming a service is responsible for verifying the overall
-  system — not just the service under change
+- All automated tests MUST pass on the staging environment before any
+  production release
+- A failing test suite MUST block the release — MUST NOT promote a build
+  until every test passes
+- The team that owns a downstream service — not the team that made the change —
+  is accountable for verifying the integrated system before release

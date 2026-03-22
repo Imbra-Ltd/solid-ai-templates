@@ -17,16 +17,18 @@ Add custom metrics for business-critical operations specific to the service
 (e.g. orders processed, jobs queued, messages consumed).
 
 ## Thresholds and alerts
-- Set thresholds based on historical data and expected usage — not arbitrary values
-- MUST create alerts for all P1 and P2 scenarios before the service goes to production
-- If an incident occurs without a corresponding alert, an alert MUST be created
-  immediately after the incident is resolved to prevent recurrence
+- Thresholds MUST be derived from observed behaviour over time — MUST NOT
+  be set to arbitrary round numbers without a measurement baseline
+- Every P1 and P2 failure scenario MUST have a corresponding alert defined
+  before the service is promoted to production
+- Every post-incident review MUST produce at least one new alert that would
+  have detected the issue earlier
 - Alerts MUST be actionable — every alert must have a clear response procedure
 
 ### Example thresholds
-- CPU > 80% sustained for 5 minutes → alert
-- Response time p95 > 3s for more than 100 requests in 5 minutes → alert
-- Disk usage > 80% sustained for 30 minutes → alert
+- CPU > 75% sustained for 10 minutes → alert
+- Response time p95 > 500ms sustained over 50 requests in 2 minutes → alert
+- Disk usage > 90% sustained for 15 minutes → alert
 - Error rate > 1% sustained for 2 minutes → alert
 
 ## Dashboards

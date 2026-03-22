@@ -117,12 +117,13 @@ CLAUDE.md
 - React Testing Library for component tests — test behaviour, not implementation
 - No `getByTestId` as a first resort — prefer accessible queries
   (`getByRole`, `getByLabelText`, `getByText`)
-- Vitest for unit tests on utils, hooks, and services
+- Vitest for component tests on utils, hooks, and services
 - Mock API calls at the network boundary (`msw`) — not inside components
-- Name component tests using Given/When/Then:
+- Component test naming: Given/When/Then
   e.g. `given a logged-out user, when they submit the form, then an error is shown`
-- E2E tests MUST cover critical user journeys (login, checkout, key flows)
-- E2E tests SHOULD use Playwright or Cypress — colocated in `e2e/` at project root
+- System tests MUST cover critical user journeys (login, checkout, key flows)
+- System tests SHOULD use Playwright or Cypress — colocated in `tests/system/`
+  at project root
 - Run before every commit: `npm test && tsc --noEmit`
 
 ---

@@ -100,10 +100,11 @@ CLAUDE.md
 - `pytest-flask` for the test client and app fixture
 - One `app` fixture in `conftest.py` — uses `TestingConfig`
 - Test each route for: success, validation error, auth error (if applicable)
-- No mocking of the database in integration tests — use a test database
-- Name tests using the pattern: `test_<route_or_function>_<state>_<expected>`
+- No mocking of the database in component integration tests — use a test database
+- Component test naming: `test_<route_or_function>_<state>_<expected>`
   e.g. `test_create_user_duplicate_email_returns_409`
-- Unit tests in `tests/unit/`, integration tests in `tests/integration/`
+- Component tests in `tests/component/`, component integration tests in
+  `tests/integration/`
 - Run before every commit: `pytest && mypy src/ --strict`
 
 ---

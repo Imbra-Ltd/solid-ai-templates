@@ -75,9 +75,10 @@ CLAUDE.md
 - Aim for 100% coverage of public API; use `# pragma: no cover` sparingly
 - Use `pytest.mark.parametrize` for data-driven cases
 - No mocks for pure functions — test with real inputs
-- Unit tests in `tests/unit/`, integration tests in `tests/integration/`
-- Name tests using the pattern: `test_<unit_of_work>_<state>_<expected>`
+- Component test naming: `test_<unit_of_work>_<state>_<expected>`
   e.g. `test_sum_negative_first_param_raises_value_error`
+- Component tests in `tests/component/`, component integration tests in
+  `tests/integration/`
 - Run before every commit: `pytest && mypy src/ --strict`
 
 ---

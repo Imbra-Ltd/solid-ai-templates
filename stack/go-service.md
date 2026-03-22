@@ -113,11 +113,12 @@ CLAUDE.md
 - Table-driven tests with `t.Run()` for parameterised cases
 - Test the public API of each package — not unexported functions
 - Use interfaces to inject dependencies in tests — no monkey-patching
-- Integration tests in `internal/[feature]/*_integration_test.go` behind
-  a build tag: `//go:build integration`
-- Name test functions: `TestUnitOfWork_StateUnderTest_ExpectedBehavior`
+- Component integration tests in `internal/[feature]/*_integration_test.go`
+  behind a build tag: `//go:build integration`
+- Component test naming: `Test<UnitOfWork>_<State>_<Expected>`
   e.g. `TestCreateUser_DuplicateEmail_ReturnsConflictError`
-- Load tests written with k6 — colocated in `loadtest/` at project root
+- Performance tests written with k6 — colocated in `tests/performance/` at
+  project root
 - Run before every commit: `go test ./... && go vet ./...`
 
 ---
