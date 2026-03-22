@@ -1,14 +1,14 @@
 ---
-id: SAIT-E2E-OUT-04-001A
+id: SAIT-E2E-FMT-05-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567812
 title: Full interview produces a correct .cursor/rules/project.mdc for a FastAPI project
 product: sait
 type: e2e
-area: OUT
+area: FMT
 priority: p1
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -30,7 +30,7 @@ tags: [e2e, output, cursor, mdc]
 | PASSED | Output is formatted as `.mdc` per `output/cursorrules.md`; all required sections present; Cursor-specific frontmatter present |
 | FAILED | Output uses CLAUDE.md format; Cursor frontmatter absent; required sections missing |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-E2E-OUT-01-001A` is failing |
+| BLOCKED | `SAIT-E2E-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps
@@ -69,4 +69,4 @@ tags: [e2e, output, cursor, mdc]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-01-001A`, `SAIT-E2E-OUT-03-001A`
+- Related procedures: `SAIT-E2E-TPL-01-001A`, `SAIT-E2E-FMT-05-001A`

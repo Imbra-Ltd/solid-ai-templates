@@ -1,14 +1,14 @@
 ---
-id: SAIT-E2E-OUT-10-001A
+id: SAIT-E2E-STK-06-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567821
 title: Full interview produces a correct CLAUDE.md for a Next.js project
 product: sait
 type: e2e
-area: OUT
+area: STK
 priority: p1
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -70,4 +70,4 @@ tags: [e2e, output, nextjs, fullstack, react]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-09-001A`, `SAIT-E2E-OUT-11-001A`
+- Related procedures: `SAIT-E2E-STK-05-001A`, `SAIT-E2E-STK-07-001A`

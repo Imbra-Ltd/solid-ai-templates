@@ -4,11 +4,11 @@ uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567804
 title: EXTEND directive adds stack rules on top of parent section without removing base rules
 product: sait
 type: int
-area: COMP
+area: TPL
 priority: p1
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"

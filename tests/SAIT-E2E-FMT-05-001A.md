@@ -1,14 +1,14 @@
 ---
-id: SAIT-E2E-OUT-06-001A
+id: SAIT-E2E-FMT-05-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567814
 title: Full interview produces a correct AI_CONTEXT.md for a FastAPI project
 product: sait
 type: e2e
-area: OUT
+area: FMT
 priority: p2
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -30,7 +30,7 @@ tags: [e2e, output, generic, ai-context]
 | PASSED | Output filename is `AI_CONTEXT.md`; formatting follows `output/generic.md`; all required sections present; no tool-specific formatting |
 | FAILED | Output uses CLAUDE.md or Cursor-specific formatting; required sections missing |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-E2E-OUT-01-001A` is failing |
+| BLOCKED | `SAIT-E2E-TPL-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps
@@ -68,4 +68,4 @@ tags: [e2e, output, generic, ai-context]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-05-001A`
+- Related procedures: `SAIT-E2E-FMT-05-001A`

@@ -1,14 +1,14 @@
 ---
-id: SAIT-E2E-OUT-22-001A
+id: SAIT-E2E-STK-18-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567836
 title: Full interview produces a correct CLAUDE.md for a Node.js library project
 product: sait
 type: e2e
-area: OUT
+area: STK
 priority: p1
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -69,4 +69,4 @@ tags: [e2e, output, nodejs, library, npm]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-14-001A`, `SAIT-E2E-OUT-19-001A`
+- Related procedures: `SAIT-E2E-STK-10-001A`, `SAIT-E2E-STK-15-001A`

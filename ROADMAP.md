@@ -142,6 +142,6 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ## Phase 10 — Validation
 
-- [ ] Use the system on a real new project end-to-end
+- [ ] Use the system on a real new project end-to-end (see examples)
 - [ ] Use the system on a real refactoring project end-to-end
 - [ ] Refine templates based on gaps found during real use

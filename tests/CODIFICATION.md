@@ -16,7 +16,7 @@ Follows the Imbra Procedure Specification Standard
 |---------|-------------|
 | `PRODUCT` | Product code — always `SAIT` |
 | `TYPE` | Procedure type — `SMK`, `INT`, `E2E` |
-| `AREA` | Functional area — `SYS`, `TPL`, `MNF`, `OUT`, `ITV`, `DPL` |
+| `AREA` | Functional area — `SYS`, `TPL`, `MNF`, `STK`, `FMT`, `ITV`, `DPL` |
 | `NN` | Two-digit component group number — unique within an area |
 | `NNN` | Three-digit sequence number within the group |
 | `VER` | Version letter — `A` original, `B` first major revision |
@@ -47,8 +47,9 @@ Follows the Imbra Procedure Specification Standard
 |------|------|-------------|
 | `SYS` | System | Cross-cutting structural checks spanning multiple concerns |
 | `TPL` | Template | Template composition — DEPENDS ON chain, EXTEND, OVERRIDE directives |
+| `STK` | Stack | Full interview → correct CLAUDE.md content per stack |
 | `MNF` | Manifest | manifest.yaml consistency — IDs, file paths, dependency references |
-| `OUT` | Output | Context file generation — interview → CLAUDE.md / AGENTS.md / etc. |
+| `FMT` | Format | Output format rendering — AGENTS.md, Cursor .mdc, Copilot, generic |
 | `ITV` | Interview | Interview flow — required questions, defaults, answer precedence |
 | `DPL` | Deployment | Deployment target scenarios — cloud, hybrid, offline |
 
@@ -59,14 +60,14 @@ Follows the Imbra Procedure Specification Standard
 Component group numbers are fixed per area. Once assigned, a number is never
 reused for a different component within the same area.
 
-### SYS
+### SYS - System
 
 | Number | Component |
 |--------|-----------|
 | `01` | File structure — DEPENDS ON path resolution, file existence |
 | `02` | ID uniqueness — section IDs across all templates |
 
-### TPL
+### TPL - Template
 
 | Number | Component |
 |--------|-----------|
@@ -76,42 +77,47 @@ reused for a different component within the same area.
 | `04` | Reference resolution — EXTEND/OVERRIDE refs point to existing IDs |
 | `05` | Conflict resolution — two templates OVERRIDE the same section ID |
 
-### MANIF
+### MNF - Manifest
 
 | Number | Component |
 |--------|-----------|
 | `01` | Manifest entries — file paths, IDs, depends_on references |
 
-### OUT
+### STK - Stack
 
 | Number | Component |
 |--------|-----------|
-| `01` | FastAPI output — python-fastapi stack interview flow |
-| `02` | Go Echo output — go-echo stack interview flow |
-| `03` | AGENTS.md output — OpenAI Codex CLI format |
-| `04` | Cursor output — .cursor/rules/project.mdc format |
-| `05` | Copilot output — .github/copilot-instructions.md format |
-| `06` | Generic output — AI_CONTEXT.md fallback format |
-| `07` | Django output — python-django stack interview flow |
-| `08` | Express output — node-express stack interview flow |
-| `09` | React SPA output — spa-react stack interview flow |
-| `10` | Next.js output — full-nextjs stack interview flow |
-| `11` | Astro output — static-site-astro stack interview flow |
-| `12` | gRPC Go output — go-grpc stack interview flow |
-| `13` | Flutter output — mobile-flutter stack interview flow |
-| `14` | Go lib output — go-lib stack interview flow |
-| `15` | Flask output — python-flask stack interview flow |
-| `16` | Python service output — python-service base stack |
-| `17` | Python gRPC output — python-grpc stack interview flow |
-| `18` | Celery worker output — python-celery-worker stack |
-| `19` | Python lib output — python-lib stack interview flow |
-| `20` | Go service output — go-service base stack |
-| `21` | Hugo output — static-site-hugo stack interview flow |
-| `22` | Node.js lib output — nodejs-lib stack interview flow |
-| `23` | Rust lib output — rust-lib stack interview flow |
-| `24` | HTMX output — htmx stack interview flow |
+| `01` | FastAPI — python-fastapi stack interview flow |
+| `02` | Go Echo — go-echo stack interview flow |
+| `03` | Django — python-django stack interview flow |
+| `04` | Express — node-express stack interview flow |
+| `05` | React SPA — spa-react stack interview flow |
+| `06` | Next.js — full-nextjs stack interview flow |
+| `07` | Astro — static-site-astro stack interview flow |
+| `08` | Go gRPC — go-grpc stack interview flow |
+| `09` | Flutter — mobile-flutter stack interview flow |
+| `10` | Go lib — go-lib stack interview flow |
+| `11` | Flask — python-flask stack interview flow |
+| `12` | Python service — python-service base stack |
+| `13` | Python gRPC — python-grpc stack interview flow |
+| `14` | Celery worker — python-celery-worker stack |
+| `15` | Python lib — python-lib stack interview flow |
+| `16` | Go service — go-service base stack |
+| `17` | Hugo — static-site-hugo stack interview flow |
+| `18` | Node.js lib — nodejs-lib stack interview flow |
+| `19` | Rust lib — rust-lib stack interview flow |
+| `20` | HTMX — htmx stack interview flow |
 
-### INTVW
+### FMT - Output Format
+
+| Number | Component |
+|--------|-----------|
+| `01` | AGENTS.md — OpenAI Codex CLI format |
+| `02` | Cursor — .cursor/rules/project.mdc format |
+| `03` | Copilot — .github/copilot-instructions.md format |
+| `04` | Generic — AI_CONTEXT.md fallback format |
+
+### ITV - Interview
 
 | Number | Component |
 |--------|-----------|
@@ -119,7 +125,7 @@ reused for a different component within the same area.
 | `02` | Default sections — DEFAULTED sections pre-filled from templates |
 | `03` | Precedence — interview answers override stack and base rules |
 
-### DPL
+### DPL - Deployment Guidelines
 
 | Number | Component |
 |--------|-----------|
@@ -157,30 +163,15 @@ corrected prerequisites where test intent is unchanged.
 | `SAIT-INT-ITV-01-001A` | Integration — interview — required questions — spec 1, version A |
 | `SAIT-INT-ITV-02-001A` | Integration — interview — default sections — spec 1, version A |
 | `SAIT-INT-ITV-03-001A` | Integration — interview — answer precedence — spec 1, version A |
-| `SAIT-E2E-OUT-01-001A` | E2E — output — FastAPI flow — spec 1, version A |
-| `SAIT-E2E-OUT-02-001A` | E2E — output — Go Echo flow — spec 1, version A |
-| `SAIT-E2E-OUT-03-001A` | E2E — output — AGENTS.md format — spec 1, version A |
-| `SAIT-E2E-OUT-04-001A` | E2E — output — Cursor format — spec 1, version A |
-| `SAIT-E2E-OUT-05-001A` | E2E — output — Copilot format — spec 1, version A |
-| `SAIT-E2E-OUT-06-001A` | E2E — output — Generic format — spec 1, version A |
-| `SAIT-E2E-OUT-07-001A` | E2E — output — Django flow — spec 1, version A |
-| `SAIT-E2E-OUT-08-001A` | E2E — output — Express flow — spec 1, version A |
-| `SAIT-E2E-OUT-09-001A` | E2E — output — React SPA flow — spec 1, version A |
-| `SAIT-E2E-OUT-10-001A` | E2E — output — Next.js flow — spec 1, version A |
-| `SAIT-E2E-OUT-11-001A` | E2E — output — Astro flow — spec 1, version A |
-| `SAIT-E2E-OUT-12-001A` | E2E — output — gRPC Go flow — spec 1, version A |
-| `SAIT-E2E-OUT-13-001A` | E2E — output — Flutter flow — spec 1, version A |
-| `SAIT-E2E-OUT-14-001A` | E2E — output — Go lib flow — spec 1, version A |
-| `SAIT-E2E-OUT-15-001A` | E2E — output — Flask flow — spec 1, version A |
-| `SAIT-E2E-OUT-16-001A` | E2E — output — Python service flow — spec 1, version A |
-| `SAIT-E2E-OUT-17-001A` | E2E — output — Python gRPC flow — spec 1, version A |
-| `SAIT-E2E-OUT-18-001A` | E2E — output — Celery worker flow — spec 1, version A |
-| `SAIT-E2E-OUT-19-001A` | E2E — output — Python lib flow — spec 1, version A |
-| `SAIT-E2E-OUT-20-001A` | E2E — output — Go service flow — spec 1, version A |
-| `SAIT-E2E-OUT-21-001A` | E2E — output — Hugo flow — spec 1, version A |
-| `SAIT-E2E-OUT-22-001A` | E2E — output — Node.js lib flow — spec 1, version A |
-| `SAIT-E2E-OUT-23-001A` | E2E — output — Rust lib flow — spec 1, version A |
-| `SAIT-E2E-OUT-24-001A` | E2E — output — HTMX flow — spec 1, version A |
+| `SAIT-E2E-STK-01-001A` | E2E — stack — FastAPI flow — spec 1, version A |
+| `SAIT-E2E-STK-02-001A` | E2E — stack — Go Echo flow — spec 1, version A |
+| `SAIT-E2E-FMT-01-001A` | E2E — format — CLAUDE.md format (Claude Code) — spec 1, version A |
+| `SAIT-E2E-FMT-02-001A` | E2E — format — AGENTS.md format (Codex CLI) — spec 1, version A |
+| `SAIT-E2E-FMT-03-001A` | E2E — format — Cursor format — spec 1, version A |
+| `SAIT-E2E-FMT-04-001A` | E2E — format — Copilot format — spec 1, version A |
+| `SAIT-E2E-FMT-05-001A` | E2E — format — Generic format — spec 1, version A |
+| `SAIT-E2E-STK-03-001A` | E2E — stack — Django flow — spec 1, version A |
+| `SAIT-E2E-STK-20-001A` | E2E — stack — HTMX flow — spec 1, version A |
 | `SAIT-E2E-DPL-01-001A` | E2E — deployment — cloud scenario — spec 1, version A |
 | `SAIT-E2E-DPL-02-001A` | E2E — deployment — hybrid scenario — spec 1, version A |
 | `SAIT-E2E-DPL-03-001A` | E2E — deployment — offline scenario — spec 1, version A |

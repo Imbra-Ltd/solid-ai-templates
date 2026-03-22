@@ -1,14 +1,14 @@
 ---
-id: SAIT-E2E-OUT-03-001A
+id: SAIT-E2E-FMT-05-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567811
 title: Full interview produces a correct AGENTS.md for a FastAPI project
 product: sait
 type: e2e
-area: OUT
+area: FMT
 priority: p1
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -25,13 +25,13 @@ tags: [e2e, output, agents-md, codex]
 
 ## Results
 
-| Result | Condition |
-|--------|-----------|
-| PASSED | Output file is named `AGENTS.md`; all required sections present; formatting follows `output/codex.md` rules |
-| FAILED | Output uses CLAUDE.md format; required sections missing; wrong filename |
-| SKIPPED | No agent available |
-| BLOCKED | `SAIT-E2E-OUT-01-001A` is failing |
-| ERROR | Agent fails to load template files or produce output |
+| Result  | Condition                                                                                                   |
+|---------|-------------------------------------------------------------------------------------------------------------|
+| PASSED  | Output file is named `AGENTS.md`; all required sections present; formatting follows `output/codex.md` rules |
+| FAILED  | Output uses CLAUDE.md format; required sections missing; wrong filename                                     |
+| SKIPPED | No agent available                                                                                          |
+| BLOCKED | `SAIT-E2E-TPL-01-001A` is failing                                                                           |
+| ERROR   | Agent fails to load template files or produce output                                                        |
 
 ## Steps
 
@@ -39,7 +39,7 @@ tags: [e2e, output, agents-md, codex]
 
 - Repository cloned locally
 - Claude Code available
-- Same interview answers as `SAIT-E2E-OUT-01-001A` (OrderService / FastAPI)
+- Same interview answers as `SAIT-E2E-TPL-01-001A` (OrderService / FastAPI)
 
 ### Setup
 
@@ -53,7 +53,7 @@ tags: [e2e, output, agents-md, codex]
    Using INTERVIEW.md and stack/python-fastapi.md, generate an AGENTS.md
    for this project. Use output/codex.md for formatting rules.
    ```
-2. Provide the same interview answers as `SAIT-E2E-OUT-01-001A`
+2. Provide the same interview answers as `SAIT-E2E-TPL-01-001A`
 3. Save the generated output
 
 ### Assertions
@@ -70,4 +70,4 @@ tags: [e2e, output, agents-md, codex]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-01-001A`, `SAIT-E2E-OUT-04-001A`
+- Related procedures: `SAIT-E2E-TPL-01-001A`, `SAIT-E2E-FMT-05-001A`

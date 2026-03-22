@@ -1,14 +1,14 @@
 ---
-id: SAIT-E2E-OUT-16-001A
+id: SAIT-E2E-STK-12-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567830
 title: Full interview produces a correct CLAUDE.md for a generic Python service
 product: sait
 type: e2e
-area: OUT
+area: STK
 priority: p2
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -70,4 +70,4 @@ tags: [e2e, output, python, service]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-01-001A`, `SAIT-E2E-OUT-15-001A`
+- Related procedures: `SAIT-E2E-STK-01-001A`, `SAIT-E2E-STK-11-001A`

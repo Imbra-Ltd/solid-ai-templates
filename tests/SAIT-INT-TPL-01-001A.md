@@ -4,11 +4,11 @@ uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567803
 title: DEPENDS ON chain assembles a complete, non-contradictory rule set
 product: sait
 type: int
-area: COMP
+area: TPL
 priority: p0
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -24,13 +24,13 @@ tags: [composition, depends-on, inheritance]
 
 ## Results
 
-| Result | Condition |
-|--------|-----------|
-| PASSED | All sections from all templates in the dependency chain appear in the assembled output; no section is missing |
-| FAILED | One or more sections from a parent template are absent from the assembled output |
-| SKIPPED | No agent available to run the assembly |
-| BLOCKED | `SAIT-SMK-SYS-01-001A` is failing — DEPENDS ON paths do not resolve |
-| ERROR | Agent fails to load or process the template files |
+| Result  | Condition                                                                                                     |
+|---------|---------------------------------------------------------------------------------------------------------------|
+| PASSED  | All sections from all templates in the dependency chain appear in the assembled output; no section is missing |
+| FAILED  | One or more sections from a parent template are absent from the assembled output                              |
+| SKIPPED | No agent available to run the assembly                                                                        |
+| BLOCKED | `SAIT-SMK-SYS-01-001A` is failing — DEPENDS ON paths do not resolve                                           |
+| ERROR   | Agent fails to load or process the template files                                                             |
 
 ## Steps
 

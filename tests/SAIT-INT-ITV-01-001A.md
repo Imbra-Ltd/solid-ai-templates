@@ -72,3 +72,9 @@ tags: [interview, required, questions]
 
 - Related procedures: `SAIT-INT-ITV-02-001A`, `SAIT-INT-ITV-03-001A`
 - Implements: SPEC.md §Interview template structure
+
+## Notes
+
+Requires multi-turn conversation to test the re-prompt behaviour
+(agent must ask again when a REQUIRED question is skipped). Not
+automatable with single-turn `claude -p`.

@@ -6,9 +6,9 @@ product: sait
 type: int
 area: INTVW
 priority: p0
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"

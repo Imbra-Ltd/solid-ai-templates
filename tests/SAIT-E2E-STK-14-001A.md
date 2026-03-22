@@ -1,14 +1,14 @@
 ---
-id: SAIT-E2E-OUT-18-001A
+id: SAIT-E2E-STK-14-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567832
 title: Full interview produces a correct CLAUDE.md for a Python Celery worker
 product: sait
 type: e2e
-area: OUT
+area: STK
 priority: p1
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -70,4 +70,4 @@ tags: [e2e, output, celery, python, async, worker]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-16-001A`
+- Related procedures: `SAIT-E2E-STK-12-001A`

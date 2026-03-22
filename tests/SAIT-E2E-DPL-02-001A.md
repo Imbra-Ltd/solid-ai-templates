@@ -4,11 +4,11 @@ uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567827
 title: Hybrid deployment target produces correct deployment rules in the output
 product: sait
 type: e2e
-area: DEP
+area: DPL
 priority: p1
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"

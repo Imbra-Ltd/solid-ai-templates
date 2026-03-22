@@ -1,14 +1,14 @@
 ---
-id: SAIT-E2E-OUT-08-001A
+id: SAIT-E2E-STK-04-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567819
 title: Full interview produces a correct CLAUDE.md for a Node Express project
 product: sait
 type: e2e
-area: OUT
+area: STK
 priority: p1
-status: draft
+status: ready
 environment: [local]
-automatable: manual
+automatable: yes
 created: 2026-03-22
 author: Branimir Georgiev
 product-version: "1.x"
@@ -69,4 +69,4 @@ tags: [e2e, output, express, nodejs]
 
 ## Related
 
-- Related procedures: `SAIT-E2E-OUT-02-001A`
+- Related procedures: `SAIT-E2E-STK-02-001A`
