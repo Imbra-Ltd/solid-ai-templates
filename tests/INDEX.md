@@ -9,9 +9,9 @@ See `CODIFICATION.md` for the ID scheme, area codes, and component group registr
 
 | ID | Type | Priority | Title |
 |----|------|----------|-------|
-| `SAIT-SMK-SYS-01-001A` | SMOKE | P0 | All DEPENDS ON file paths resolve to existing files |
-| `SAIT-SMK-SYS-02-001A` | SMOKE | P0 | All section IDs are unique across all templates |
-| `SAIT-SMK-CMP-04-001A` | SMOKE | P1 | All EXTEND and OVERRIDE directives reference existing IDs |
+| `SAIT-SMK-SYS-01-001A` | SMK | P0 | All DEPENDS ON file paths resolve to existing files |
+| `SAIT-SMK-SYS-02-001A` | SMK | P0 | All section IDs are unique across all templates |
+| `SAIT-SMK-CMP-04-001A` | SMK | P1 | All EXTEND and OVERRIDE directives reference existing IDs |
 | `SAIT-INT-CMP-01-001A` | INT | P0 | DEPENDS ON chain assembles a complete rule set |
 | `SAIT-INT-CMP-02-001A` | INT | P1 | EXTEND adds rules without removing base rules |
 | `SAIT-INT-CMP-03-001A` | INT | P1 | OVERRIDE replaces parent section entirely |
