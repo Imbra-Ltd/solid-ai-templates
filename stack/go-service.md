@@ -1,19 +1,20 @@
-# Stack — Go Service / CLI
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, backend/config.md, backend/http.md, backend/database.md, backend/observability.md, backend/quality.md, backend/concurrency.md]
+# Stack — Go Service
+[DEPENDS ON: stack/go-lib.md, backend/config.md, backend/http.md, backend/database.md, backend/observability.md, backend/quality.md, backend/concurrency.md, backend/features.md, backend/messaging.md]
 
-A Go service, API server, or CLI tool. Covers package design, error handling,
-interfaces, concurrency, testing, and tooling.
+Extends the Go library stack with service-specific rules. Covers project
+structure, HTTP handlers, configuration, concurrency, graceful shutdown,
+and deployment.
 
 ---
 
 ## Stack
 [ID: go-service-stack]
+[OVERRIDE: go-lib-stack]
 
 - Language: Go 1.22+
 - HTTP router: [net/http (stdlib) / chi / gin / echo]
 - Database: [database/sql + pgx / sqlc / GORM]
-- CLI framework: [cobra / flag (stdlib)]
-- Config: [viper / env / godotenv]
+- Config: [github.com/caarlos0/env / viper / godotenv]
 - Test runner: go test (stdlib)
 - Containerisation: Docker
 - Distribution: [binary / Docker image / GitHub Releases]
@@ -22,8 +23,6 @@ interfaces, concurrency, testing, and tooling.
 
 ## Project structure
 [ID: go-service-structure]
-
-Standard layout for a service with one binary:
 
 ```
 cmd/
@@ -51,97 +50,80 @@ CLAUDE.md
 
 - `internal/` enforces encapsulation — external packages cannot import it
 - `cmd/` is thin — no business logic, only wiring
-- No `utils/` or `helpers/` packages — name packages by domain
 
 ---
 
-## Package and interface design
-[ID: go-service-packages]
-
-- Small, focused packages — one domain concern per package
-- Define interfaces where the caller, not the implementer, owns them
-- Keep interfaces small: prefer 1–3 methods
-- Accept interfaces, return concrete types (in most cases)
-- Avoid package-level `init()` — use explicit initialisation in `main`
-
----
-
-## Error handling
-[ID: go-service-errors]
-
-- Always handle errors — never `_` discard an error return
-- Wrap errors with context: `fmt.Errorf("creating user: %w", err)`
-- Use `errors.Is()` and `errors.As()` for inspection — never string matching
-- Define sentinel errors (`var ErrNotFound = errors.New(...)`) in the package
-  that owns the concept
-- Log errors once — at the top of the call stack, not at every level
-
----
-
-## HTTP handlers (if applicable)
+## HTTP handlers
 [EXTEND: backend-http]
 
 - Decode request body explicitly — never trust unvalidated input
 - Use `http.Error()` or a JSON encoder for all error responses
+- Handlers are thin — delegate all logic to service functions
 
 ---
 
 ## Configuration
 [EXTEND: backend-config]
 
-- Use a `Config` struct loaded at startup; pass it explicitly, do not use globals
+- One `Config` struct in `internal/config/config.go` — loaded from env
+  vars at startup; passed explicitly through the dependency graph
+- Never read `os.Getenv` directly in application code outside of
+  the config loader
 
 ---
 
 ## Concurrency
 [EXTEND: backend-concurrency]
 
-- Do not share memory by communicating — communicate by sharing memory sparingly
-- Protect shared state with `sync.Mutex` or `sync.RWMutex`; document which
-  fields are guarded and by which lock
+- Protect shared state with `sync.Mutex` or `sync.RWMutex` — document
+  which fields are guarded and by which lock
 - Always use `context.Context` as the first argument in functions that may block
-- Cancel contexts and clean up goroutines on shutdown — use `errgroup` for
-  structured concurrency
+- Use `errgroup` for structured concurrency — all goroutines started in
+  `main.go` under one group, stopped cleanly on context cancellation
 - Never start a goroutine without a clear owner and a clear way to stop it
+- Graceful shutdown: listen for `SIGTERM`, call server shutdown, drain
+  in-flight requests, then cancel the root context
 
 ---
 
 ## Testing
-[EXTEND: base-testing]
+[EXTEND: go-lib-testing]
 
-- Use stdlib `testing` package — no third-party assertion libraries
-- Table-driven tests with `t.Run()` for parameterised cases
-- Test the public API of each package — not unexported functions
-- Use interfaces to inject dependencies in tests — no monkey-patching
-- Component integration tests in `internal/[feature]/*_integration_test.go`
+- Integration tests in `internal/[feature]/*_integration_test.go`
   behind a build tag: `//go:build integration`
-- Component test naming: `Test<UnitOfWork>_<State>_<Expected>`
-  e.g. `TestCreateUser_DuplicateEmail_ReturnsConflictError`
-- Performance tests written with k6 — colocated in `tests/performance/` at
-  project root
+- Performance tests with k6 — colocated in `tests/performance/`
 - Run before every commit: `go test ./... && go vet ./...`
 
 ---
 
-## Code quality
-[EXTEND: base-quality]
+## Feature flags (if applicable)
+[EXTEND: backend-features]
 
-- Follow **Effective Go** (https://go.dev/doc/effective_go) for idioms and
-  design decisions — the canonical Go style reference
-- Follow **Go Code Review Comments** (https://go.dev/wiki/CodeReviewComments)
-  for common pitfalls and reviewer expectations
-- `gofmt` / `goimports` — code must be formatted; CI will reject unformatted code
-- Run `go vet ./...` — fix all warnings before committing
-- Run `staticcheck ./...` for additional static analysis
-- No unused imports or variables — the compiler rejects these
-- Exported symbols must have a doc comment
+- Use the OpenFeature Go SDK or a provider SDK (LaunchDarkly, Unleash) —
+  wrap behind an interface so the provider can be swapped in tests
+- Pass the flag client through the dependency graph — constructor argument,
+  not a package-level singleton
+- In tests, use the in-memory OpenFeature provider
+
+---
+
+## Messaging (if applicable)
+[EXTEND: backend-messaging]
+
+- Use `confluent-kafka-go` for Kafka, `amqp091-go` for RabbitMQ, or the
+  AWS SDK v2 `sqs` package for SQS
+- Run consumers as goroutines under an `errgroup` — stop cleanly on
+  context cancellation
+- Define a `Message` struct per topic/queue — decode at the entry point,
+  never pass raw `[]byte` to business logic
 
 ---
 
 ## Git conventions
-[EXTEND: base-git]
+[EXTEND: go-lib-git]
 
-- Do not commit compiled binaries, `*.test` files, or `vendor/` (unless vendoring intentionally)
+- Do not commit compiled binaries, `*.test` files, or `vendor/` (unless
+  vendoring intentionally)
 - `go.sum` is committed — do not delete or regenerate without cause
 - Tag releases with `vX.Y.Z` — Go module proxy uses these
 
@@ -152,8 +134,9 @@ CLAUDE.md
 go run ./cmd/[service]    # develop
 go build ./cmd/[service]  # build binary
 go test ./...             # run all tests
+go test -tags integration ./...  # run integration tests
 go vet ./...              # static analysis
 goimports -w .            # format imports
-make migrate-up           # apply DB migrations (if using Makefile)
+make migrate-up           # apply DB migrations
 docker build -t [name] .  # build container image
 ```

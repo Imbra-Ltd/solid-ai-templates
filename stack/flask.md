@@ -1,5 +1,5 @@
 # Stack — Flask Web Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, backend/config.md, backend/http.md, backend/database.md, backend/observability.md, backend/quality.md, stack/python-lib.md]
+[DEPENDS ON: stack/python-service.md]
 
 Extends the Python library stack with Flask-specific rules for web
 applications and APIs. Covers application factory, blueprints, config,
@@ -106,6 +106,27 @@ CLAUDE.md
 - Component tests in `tests/component/`, component integration tests in
   `tests/integration/`
 - Run before every commit: `pytest && mypy src/ --strict`
+
+---
+
+## Feature flags (if applicable)
+[EXTEND: backend-features]
+
+- Inject the flag client via Flask's application context (`g` or a custom
+  extension) — avoid module-level globals
+- Evaluate flags in the route handler or service function entry point
+
+---
+
+## Messaging (if applicable)
+[EXTEND: backend-messaging]
+
+- Use Celery with a Redis or RabbitMQ broker for background task queues —
+  Celery workers run as separate processes from the Flask WSGI server
+- For SQS or event-streaming use cases, use `boto3` in a dedicated consumer
+  script, not inside a Flask request handler
+- Define Celery tasks in a `tasks.py` module per app — keep task functions
+  thin and delegate to service functions
 
 ---
 

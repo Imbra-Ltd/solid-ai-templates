@@ -1,21 +1,15 @@
-# Stack — Static Site
+# Frontend — Static Site
+[ID: frontend-static-site]
 [DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md]
 
-A static site generated at build time and served as plain HTML, CSS, and
-minimal JavaScript. No backend, no database, no login.
-
----
-
-## Stack
-- Framework: [static site generator — Astro, Eleventy, Hugo, Jekyll, etc.]
-- Interactive components: [JS framework or plain JS — only where state is needed]
-- CSS: [plain CSS / Tailwind / CSS modules]
-- Content: [JSON files / CMS / Markdown / hardcoded]
-- Deployed via CI/CD on push to `main`
+Abstract rules for any static site generated at build time and served as
+plain HTML, CSS, and minimal JavaScript. Never used directly — always
+extended by a framework-specific stack (Astro, Hugo, Eleventy, etc.).
 
 ---
 
 ## Architecture principle
+[ID: static-site-architecture]
 
 ```
 data files  →  components  →  build output (HTML)
@@ -24,13 +18,14 @@ Edit here                    Deployed here
 ```
 
 - Separation of content and code — editable content lives in a data directory
-- Default to static components; only reach for interactive framework when
+- Default to static components; only reach for an interactive framework when
   client-side state is genuinely required
 - One stylesheet — no inline styles except dynamic/computed values
 
 ---
 
 ## Content structure
+[ID: static-site-content]
 [EXTEND: base-docs]
 
 All editable content lives in a data directory as structured files (JSON,
@@ -45,6 +40,8 @@ to change.
 ---
 
 ## Assets
+[ID: static-site-assets]
+
 - Images: `public/images/` — reference as `/images/filename.ext`
 - Documents: `public/docs/` — reference as `/docs/filename.ext`
 - No assets outside `public/` — only files in `public/` are served statically
@@ -52,6 +49,7 @@ to change.
 ---
 
 ## Pages
+[ID: static-site-pages]
 
 | Page     | Path    | Notes             |
 |----------|---------|-------------------|
@@ -61,6 +59,7 @@ to change.
 ---
 
 ## Code conventions
+[ID: static-site-code]
 
 - **ESLint** for any JS/TS code — configured in `eslint.config.js`, run on save
 - **Prettier** owns all formatting — commit `.prettierrc`; no style debates

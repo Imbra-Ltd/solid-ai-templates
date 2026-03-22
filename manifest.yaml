@@ -1,0 +1,352 @@
+# Template System Manifest
+# Machine-readable dependency graph for the solid-ai-templates composition engine.
+# See SPEC.md for the full specification.
+
+version: "1.0"
+
+base:
+  - id: base-git
+    file: base/git.md
+  - id: base-docs
+    file: base/docs.md
+  - id: base-quality
+    file: base/quality.md
+  - id: base-review
+    file: base/review.md
+  - id: base-testing
+    file: base/testing.md
+  - id: base-devsecops
+    file: base/devsecops.md
+  - id: base-release
+    file: base/release.md
+  - id: base-cicd
+    file: base/cicd.md
+  - id: base-containers
+    file: base/containers.md
+  - id: base-readme
+    file: base/readme.md
+
+frontend:
+  - id: frontend-ux
+    file: frontend/ux.md
+    depends_on: [base-quality]
+  - id: frontend-quality
+    file: frontend/quality.md
+    depends_on: [base-quality]
+  - id: frontend-static-site
+    file: frontend/static-site.md
+    depends_on: [base-git, base-docs, base-quality, frontend-ux, frontend-quality]
+
+backend:
+  - id: backend-config
+    file: backend/config.md
+  - id: backend-http
+    file: backend/http.md
+  - id: backend-api
+    file: backend/api.md
+    depends_on: [backend-http]
+  - id: backend-database
+    file: backend/database.md
+  - id: backend-caching
+    file: backend/caching.md
+  - id: backend-auth
+    file: backend/auth.md
+    depends_on: [backend-http]
+  - id: backend-jobs
+    file: backend/jobs.md
+  - id: backend-concurrency
+    file: backend/concurrency.md
+  - id: backend-messaging
+    file: backend/messaging.md
+  - id: backend-grpc
+    file: backend/grpc.md
+    depends_on: [backend-auth, backend-observability]
+  - id: backend-microservices
+    file: backend/microservices.md
+    depends_on: [backend-http, backend-api, backend-messaging]
+  - id: backend-errors
+    file: backend/errors.md
+    depends_on: [backend-http, backend-observability]
+  - id: backend-features
+    file: backend/features.md
+  - id: backend-observability
+    file: backend/observability.md
+  - id: backend-monitoring
+    file: backend/monitoring.md
+    depends_on: [backend-observability]
+  - id: backend-quality
+    file: backend/quality.md
+    depends_on: [base-quality]
+
+stacks:
+  - id: stack-astro
+    file: stack/astro.md
+    depends_on:
+      - frontend-static-site
+
+  - id: stack-react-spa
+    file: stack/react-spa.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - frontend-ux
+      - frontend-quality
+
+  - id: stack-nextjs
+    file: stack/nextjs.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - frontend-ux
+      - frontend-quality
+      - stack-react-spa
+      - backend-config
+      - backend-http
+      - backend-api
+      - backend-auth
+
+  - id: stack-python-lib
+    file: stack/python-lib.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+
+  - id: stack-python-service
+    file: stack/python-service.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - backend-config
+      - backend-http
+      - backend-database
+      - backend-observability
+      - backend-quality
+      - backend-features
+      - backend-messaging
+      - stack-python-lib
+
+  - id: stack-flask
+    file: stack/flask.md
+    depends_on:
+      - stack-python-service
+
+  - id: stack-fastapi
+    file: stack/fastapi.md
+    depends_on:
+      - stack-python-service
+      - backend-concurrency
+
+  - id: stack-django
+    file: stack/django.md
+    depends_on:
+      - stack-python-service
+      - backend-api
+      - backend-auth
+
+  - id: stack-go-lib
+    file: stack/go-lib.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+
+  - id: stack-go-service
+    file: stack/go-service.md
+    depends_on:
+      - stack-go-lib
+      - backend-config
+      - backend-http
+      - backend-database
+      - backend-observability
+      - backend-quality
+      - backend-concurrency
+      - backend-features
+      - backend-messaging
+
+  - id: stack-vue
+    file: stack/vue.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - frontend-ux
+      - frontend-quality
+
+  - id: stack-svelte
+    file: stack/svelte.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - frontend-ux
+      - frontend-quality
+
+  - id: stack-sveltekit
+    file: stack/sveltekit.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - frontend-ux
+      - frontend-quality
+      - stack-svelte
+      - backend-config
+      - backend-http
+      - backend-api
+      - backend-auth
+
+  - id: stack-hugo
+    file: stack/hugo.md
+    depends_on:
+      - frontend-static-site
+
+  - id: stack-express
+    file: stack/express.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - backend-config
+      - backend-http
+      - backend-api
+      - backend-database
+      - backend-observability
+      - backend-auth
+      - backend-quality
+      - backend-features
+      - backend-messaging
+
+  - id: stack-nestjs
+    file: stack/nestjs.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - backend-config
+      - backend-http
+      - backend-api
+      - backend-database
+      - backend-observability
+      - backend-auth
+      - backend-quality
+      - backend-features
+      - backend-messaging
+
+  - id: stack-spring-boot
+    file: stack/spring-boot.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - backend-config
+      - backend-http
+      - backend-api
+      - backend-database
+      - backend-observability
+      - backend-auth
+      - backend-quality
+      - backend-features
+      - backend-messaging
+
+  - id: stack-celery-worker
+    file: stack/celery-worker.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - backend-config
+      - backend-jobs
+      - backend-observability
+      - backend-messaging
+      - backend-quality
+      - stack-python-lib
+
+  - id: stack-grpc-go
+    file: stack/grpc-go.md
+    depends_on:
+      - stack-go-lib
+      - stack-go-service
+      - backend-grpc
+      - backend-concurrency
+
+  - id: stack-grpc-python
+    file: stack/grpc-python.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - backend-config
+      - backend-grpc
+      - backend-concurrency
+      - stack-python-lib
+
+  - id: stack-grpc-java
+    file: stack/grpc-java.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - backend-config
+      - backend-grpc
+      - backend-concurrency
+
+  - id: stack-react-native
+    file: stack/react-native.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - stack-react-spa
+      - backend-auth
+
+  - id: stack-flutter
+    file: stack/flutter.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - backend-auth
+
+  - id: stack-terraform
+    file: stack/terraform.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - base-cicd
+      - base-devsecops
+
+  - id: stack-nodejs-lib
+    file: stack/nodejs-lib.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+
+  - id: stack-rust-lib
+    file: stack/rust-lib.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+
+output:
+  - id: output-claude
+    file: output/claude.md
+    produces: CLAUDE.md
+  - id: output-cursor
+    file: output/cursorrules.md
+    produces: .cursor/rules/project.mdc
+  - id: output-copilot
+    file: output/copilot.md
+    produces: .github/copilot-instructions.md
+  - id: output-codex
+    file: output/codex.md
+    produces: AGENTS.md
+  - id: output-generic
+    file: output/generic.md
+    produces: AI_CONTEXT.md

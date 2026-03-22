@@ -44,7 +44,8 @@ projects. Extend base templates. Never used directly by a project.
 ```
 frontend/
 ├── ux.md          # UX principles, WCAG 2.1 AA, responsive breakpoints
-└── quality.md     # CSS conventions, performance, SEO & analytics
+├── quality.md     # CSS conventions, performance, SEO & analytics
+└── static-site.md # abstract SSG rules — content, assets, SEO (extended by Astro, Hugo)
 ```
 
 ### 3. Backend templates (abstract, backend layer)
@@ -59,10 +60,12 @@ backend/
 ├── api.md           # API-first, OpenAPI, versioning, deprecation, pagination
 ├── database.md      # migrations, transactions, no raw SQL, connection pooling
 ├── caching.md       # cache-aside, TTL, invalidation, resilience, stampede
-├── auth.md           # authn/authz, JWT, RBAC, sessions, API keys
-├── jobs.md           # background jobs, idempotency, retry, DLQ, scheduling
-├── concurrency.md    # threads vs. processes vs. async, shared state, structured concurrency
-├── microservices.md  # service boundaries, inter-service comms, saga, contract testing
+├── auth.md          # authn/authz, JWT, RBAC, sessions, API keys
+├── jobs.md          # background jobs, idempotency, retry, DLQ, scheduling
+├── concurrency.md   # threads vs. processes vs. async, shared state, structured concurrency
+├── messaging.md     # brokers, producers, consumers, schema, DLQ, observability
+├── grpc.md          # proto design, status codes, interceptors, health check (extended by grpc-* stacks)
+├── microservices.md # service boundaries, inter-service comms, saga, contract testing
 ├── errors.md        # classification, propagation, recovery, external failures
 ├── features.md      # feature flags, rollout strategy, experimentation
 ├── observability.md # log levels, log format, health check, error visibility
@@ -76,13 +79,32 @@ Technology-specific rules. Each stack declares which layers it depends on.
 
 ```
 stack/
-├── static-site.md    # extends base + frontend — generic static site
-├── astro.md          # extends base + frontend + static-site
+├── astro.md          # extends base + frontend + frontend/static-site
+├── hugo.md           # extends base + frontend + frontend/static-site
 ├── react-spa.md      # extends base + frontend — React + TypeScript
+├── vue.md            # extends base + frontend — Vue 3 + Pinia
+├── svelte.md         # extends base + frontend — Svelte 5 + runes
+├── nextjs.md         # extends base + frontend + react-spa + backend partial
+├── sveltekit.md      # extends base + frontend + svelte + backend partial
 ├── python-lib.md     # extends base — Python packaging, mypy, ruff, pytest
-├── flask.md          # extends base + backend + python-lib
-├── fastapi.md        # extends base + backend + python-lib
-└── go-service.md     # extends base + backend
+├── python-service.md # extends base + backend + python-lib — abstract Python service layer
+├── flask.md          # extends python-service
+├── fastapi.md        # extends python-service + backend/concurrency
+├── django.md         # extends python-service + backend/api + backend/auth
+├── celery-worker.md  # extends base + backend/jobs + python-lib
+├── go-lib.md         # extends base — Go library/CLI, package design, error handling, tooling
+├── go-service.md     # extends base + backend + go-lib — abstract Go service layer
+├── express.md        # extends base + backend — Node.js + TypeScript
+├── nestjs.md         # extends base + backend — NestJS + TypeScript
+├── spring-boot.md    # extends base + backend — Java/Kotlin
+├── grpc-go.md        # extends base + backend/grpc + go-service
+├── grpc-python.md    # extends base + backend/grpc + python-lib
+├── grpc-java.md      # extends base + backend/grpc
+├── react-native.md   # extends base + react-spa — Expo, mobile, offline
+├── flutter.md        # extends base — Dart, Riverpod, cross-platform mobile
+├── terraform.md      # extends base — HCL, modules, remote state, security
+├── nodejs-lib.md     # extends base — TypeScript npm library / CLI
+└── rust-lib.md       # extends base — Rust crate / CLI, thiserror, clippy
 ```
 
 ### 3. Interview template (orchestrator)

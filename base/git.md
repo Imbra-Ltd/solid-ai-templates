@@ -32,8 +32,7 @@
 
 ## README
 - Every repository MUST contain a `README.md`
-- The README MUST answer: what does this repository do, and where is the
-  documentation? If a `docs/` folder exists, it MUST be referenced
+- The README MUST conform to the structure and rules defined in `base/readme.md`
 
 ## Release process
   1. `git checkout -b chore/release-vA.B.C.D`
