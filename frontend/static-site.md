@@ -8,6 +8,15 @@ extended by a framework-specific stack (Astro, Hugo, Eleventy, etc.).
 
 ---
 
+## Stack
+[ID: static-site-stack]
+
+- Output: static HTML generated at build time
+- Serving: CDN or plain web server — no server-side runtime required
+- JavaScript: minimal and opt-in — zero-JS by default where possible
+
+---
+
 ## Architecture principle
 [ID: static-site-architecture]
 

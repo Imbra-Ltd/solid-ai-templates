@@ -59,6 +59,7 @@ no HTTP layer.
 ---
 
 ## Testing
+[ID: go-lib-testing]
 [EXTEND: base-testing]
 
 - Use stdlib `testing` package — no third-party assertion libraries
@@ -72,6 +73,7 @@ no HTTP layer.
 ---
 
 ## Git conventions
+[ID: go-lib-git]
 [EXTEND: base-git]
 
 - Do not commit compiled binaries or `*.test` files

@@ -54,6 +54,7 @@ CLAUDE.md
 ---
 
 ## HTTP handlers
+[ID: go-service-http]
 [EXTEND: backend-http]
 
 - Decode request body explicitly — never trust unvalidated input
@@ -87,6 +88,7 @@ CLAUDE.md
 ---
 
 ## Testing
+[ID: go-service-testing]
 [EXTEND: go-lib-testing]
 
 - Integration tests in `internal/[feature]/*_integration_test.go`
