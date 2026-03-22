@@ -1,0 +1,73 @@
+---
+id: SAIT-E2E-OUT-03-001A
+uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567811
+title: Full interview produces a correct AGENTS.md for a FastAPI project
+product: sait
+type: e2e
+area: OUT
+priority: p1
+status: draft
+environment: [local]
+automatable: manual
+created: 2026-03-22
+author: Branimir Georgiev
+product-version: "1.x"
+tags: [e2e, output, agents-md, codex]
+---
+
+## Short description
+
+> **Given** `INTERVIEW.md`, `stack/python-fastapi.md`, and `output/codex.md`
+> are attached to an agent
+> **When** the agent conducts the interview and generates output
+> **Then** the result is a valid `AGENTS.md` formatted per `output/codex.md`
+> containing all required sections
+
+## Results
+
+| Result | Condition |
+|--------|-----------|
+| PASSED | Output file is named `AGENTS.md`; all required sections present; formatting follows `output/codex.md` rules |
+| FAILED | Output uses CLAUDE.md format; required sections missing; wrong filename |
+| SKIPPED | No agent available |
+| BLOCKED | `SAIT-E2E-OUT-01-001A` is failing |
+| ERROR | Agent fails to load template files or produce output |
+
+## Steps
+
+### Prerequisites
+
+- Repository cloned locally
+- Claude Code available
+- Same interview answers as `SAIT-E2E-OUT-01-001A` (OrderService / FastAPI)
+
+### Setup
+
+1. Open Claude Code
+2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `output/codex.md`
+
+### Execution
+
+1. Ask the agent:
+   ```
+   Using INTERVIEW.md and stack/python-fastapi.md, generate an AGENTS.md
+   for this project. Use output/codex.md for formatting rules.
+   ```
+2. Provide the same interview answers as `SAIT-E2E-OUT-01-001A`
+3. Save the generated output
+
+### Assertions
+
+1. Assert output filename is `AGENTS.md`
+2. Assert formatting follows `output/codex.md` rules (not CLAUDE.md rules)
+3. Assert all required sections are present
+4. Assert FastAPI-specific rules are present
+5. Assert base rules from `base/git.md` and `base/quality.md` are present
+
+### Teardown
+
+1. Delete the generated `AGENTS.md`
+
+## Related
+
+- Related procedures: `SAIT-E2E-OUT-01-001A`, `SAIT-E2E-OUT-04-001A`
