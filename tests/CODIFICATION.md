@@ -15,8 +15,8 @@ Follows the Imbra Procedure Specification Standard
 | Segment | Description |
 |---------|-------------|
 | `PRODUCT` | Product code — always `SAIT` |
-| `TYPE` | Procedure type — `SMOKE`, `INT`, `E2E` |
-| `AREA` | Functional area — `SYS`, `COMP`, `MANIF`, `OUT`, `INTVW`, `DEP` |
+| `TYPE` | Procedure type — `SMK`, `INT`, `E2E` |
+| `AREA` | Functional area — `SYS`, `CMP`, `MNF`, `OUT`, `ITV`, `DEP` |
 | `NN` | Two-digit component group number — unique within an area |
 | `NNN` | Three-digit sequence number within the group |
 | `VER` | Version letter — `A` original, `B` first major revision |
@@ -35,7 +35,7 @@ Follows the Imbra Procedure Specification Standard
 
 | Code | Type | Description |
 |------|------|-------------|
-| `SMOKE` | Smoke test | Quick structural health check — files exist, IDs unique, paths resolve |
+| `SMK` | Smoke test | Quick structural health check — files exist, IDs unique, paths resolve |
 | `INT` | Integration test | Verify two or more templates work together correctly |
 | `E2E` | End-to-end test | Verify a complete interview → output generation flow |
 
@@ -46,10 +46,10 @@ Follows the Imbra Procedure Specification Standard
 | Code | Area | Description |
 |------|------|-------------|
 | `SYS` | System | Cross-cutting structural checks spanning multiple concerns |
-| `COMP` | Composition | Template composition — DEPENDS ON chain, EXTEND, OVERRIDE directives |
-| `MANIF` | Manifest | manifest.yaml consistency — IDs, file paths, dependency references |
+| `CMP` | Composition | Template composition — DEPENDS ON chain, EXTEND, OVERRIDE directives |
+| `MNF` | Manifest | manifest.yaml consistency — IDs, file paths, dependency references |
 | `OUT` | Output | Context file generation — interview → CLAUDE.md / AGENTS.md / etc. |
-| `INTVW` | Interview | Interview flow — required questions, defaults, answer precedence |
+| `ITV` | Interview | Interview flow — required questions, defaults, answer precedence |
 | `DEP` | Deployment | Deployment target scenarios — cloud, hybrid, offline |
 
 ---
