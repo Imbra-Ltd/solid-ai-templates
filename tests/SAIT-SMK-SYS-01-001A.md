@@ -1,5 +1,5 @@
 ---
-id: SAIT-SMOKE-SYS-01-001A
+id: SAIT-SMK-SYS-01-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567801
 title: All DEPENDS ON file paths in stack templates resolve to existing files
 product: sait
@@ -73,4 +73,4 @@ source of truth.
 
 ## Related
 
-- Related procedures: `SAIT-SMOKE-SYS-02-001A`, `SAIT-INT-MANIF-01-001A`
+- Related procedures: `SAIT-SMK-SYS-02-001A`, `SAIT-INT-MNF-01-001A`

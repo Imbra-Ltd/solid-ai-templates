@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-INTVW-02-001A
+id: SAIT-INT-ITV-02-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567816
 title: DEFAULTED sections are pre-filled from the selected stack template
 product: sait
@@ -29,7 +29,7 @@ tags: [interview, defaults, pre-filled]
 | PASSED | All DEFAULTED sections appear in the output populated with values from the stack template; user was not asked to provide these values |
 | FAILED | Agent asks the user to fill in DEFAULTED sections manually; or DEFAULTED sections are empty in the output |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-INTVW-01-001A` is failing |
+| BLOCKED | `SAIT-INT-ITV-01-001A` is failing |
 | ERROR | Agent fails to load template files |
 
 ## Steps
@@ -71,5 +71,5 @@ tags: [interview, defaults, pre-filled]
 
 ## Related
 
-- Related procedures: `SAIT-INT-INTVW-01-001A`, `SAIT-INT-INTVW-03-001A`
+- Related procedures: `SAIT-INT-ITV-01-001A`, `SAIT-INT-ITV-03-001A`
 - Implements: SPEC.md §Interview template structure

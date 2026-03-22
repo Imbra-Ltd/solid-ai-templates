@@ -29,7 +29,7 @@ tags: [e2e, deployment, cloud, certificates, dns]
 | PASSED | Output references public CA, managed DNS, public registry, and external load balancer; no private PKI or air-gap assumptions present |
 | FAILED | Output contains hybrid or offline rules (private CA, internal DNS); cloud-specific conventions absent |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

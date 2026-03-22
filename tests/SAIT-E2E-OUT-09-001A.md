@@ -29,7 +29,7 @@ tags: [e2e, output, react, spa, frontend]
 | PASSED | Output contains React-specific rules (components, hooks, RTL, a11y); frontend layer rules present (UX, accessibility, CSS); base rules present |
 | FAILED | React-specific rules absent; frontend layer rules absent; output resembles a backend service |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

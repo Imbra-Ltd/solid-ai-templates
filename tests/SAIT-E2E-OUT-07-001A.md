@@ -29,7 +29,7 @@ tags: [e2e, output, django, python]
 | PASSED | Output contains Django-specific rules (ORM, migrations, DRF, admin, pytest-django); base rules present; python-service rules present |
 | FAILED | Django-specific rules absent; output indistinguishable from a generic Python service |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-INTVW-01-001A
+id: SAIT-INT-ITV-01-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567815
 title: Agent asks all REQUIRED questions before generating output
 product: sait
@@ -70,5 +70,5 @@ tags: [interview, required, questions]
 
 ## Related
 
-- Related procedures: `SAIT-INT-INTVW-02-001A`, `SAIT-INT-INTVW-03-001A`
+- Related procedures: `SAIT-INT-ITV-02-001A`, `SAIT-INT-ITV-03-001A`
 - Implements: SPEC.md §Interview template structure

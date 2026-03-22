@@ -1,5 +1,5 @@
 ---
-id: SAIT-SMOKE-SYS-02-001A
+id: SAIT-SMK-SYS-02-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567802
 title: All section IDs are unique across all templates
 product: sait
@@ -70,4 +70,4 @@ A future CI step should automate this using `manifest.yaml`.
 
 ## Related
 
-- Related procedures: `SAIT-SMOKE-SYS-01-001A`, `SAIT-INT-COMP-02-001A`, `SAIT-INT-COMP-03-001A`
+- Related procedures: `SAIT-SMK-SYS-01-001A`, `SAIT-INT-CMP-02-001A`, `SAIT-INT-CMP-03-001A`

@@ -29,7 +29,7 @@ tags: [e2e, output, hugo, static-site]
 | PASSED | Output contains Hugo-specific rules (content types, archetypes, shortcodes, taxonomies, Go templates); frontend and base rules present |
 | FAILED | Hugo-specific rules absent; output resembles a JavaScript-based static site generator |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

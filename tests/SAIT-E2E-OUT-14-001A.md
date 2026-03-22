@@ -29,7 +29,7 @@ tags: [e2e, output, go, library]
 | PASSED | Output contains Go library rules (exported API design, semver, no main package, godoc); server/deployment sections absent; base rules present |
 | FAILED | Output includes server or deployment rules inappropriate for a library; library API conventions absent |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

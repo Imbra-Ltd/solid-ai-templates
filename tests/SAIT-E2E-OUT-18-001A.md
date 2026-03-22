@@ -29,7 +29,7 @@ tags: [e2e, output, celery, python, async, worker]
 | PASSED | Output contains Celery-specific rules (task definition, broker config, retry policy, idempotency, beat scheduler); python-service and base rules present |
 | FAILED | Celery-specific rules absent; output resembles a web service rather than an async worker |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

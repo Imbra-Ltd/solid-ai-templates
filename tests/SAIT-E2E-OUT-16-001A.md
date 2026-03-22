@@ -29,7 +29,7 @@ tags: [e2e, output, python, service]
 | PASSED | Output contains shared Python service rules (virtual environment, type hints, Black/Ruff, pytest, logging); base rules present; no framework-specific rules present |
 | FAILED | Framework-specific rules (Flask, FastAPI, Django) appear despite no framework being selected; shared rules absent |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

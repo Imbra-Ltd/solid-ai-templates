@@ -29,7 +29,7 @@ tags: [e2e, output, nextjs, fullstack, react]
 | PASSED | Output contains Next.js-specific rules (App Router, Server Components, Route Handlers, ISR); frontend and base rules present |
 | FAILED | Next.js-specific rules absent; output indistinguishable from a generic React SPA |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

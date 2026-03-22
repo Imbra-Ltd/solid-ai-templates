@@ -29,7 +29,7 @@ tags: [e2e, output, go-echo, claude-md]
 | PASSED | Generated `CLAUDE.md` contains all required sections; base rules, go-service rules, and go-echo-specific rules are all present; no section is empty or contradictory |
 | FAILED | One or more required sections are missing; base rules absent; go-echo-specific rules absent; sections are contradictory |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

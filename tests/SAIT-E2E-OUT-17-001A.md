@@ -29,7 +29,7 @@ tags: [e2e, output, grpc, python, protobuf]
 | PASSED | Output contains Python gRPC rules (protobuf schemas, grpcio-tools generation, interceptors, servicer implementation); python-service and base rules present |
 | FAILED | gRPC-specific rules absent; output indistinguishable from a generic Python HTTP service |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

@@ -146,17 +146,17 @@ corrected prerequisites where test intent is unchanged.
 
 | ID | Meaning |
 |----|---------|
-| `SAIT-SMOKE-SYS-01-001A` | Smoke — system — file structure — spec 1, version A |
-| `SAIT-SMOKE-SYS-02-001A` | Smoke — system — ID uniqueness — spec 1, version A |
-| `SAIT-SMOKE-COMP-04-001A` | Smoke — composition — ref resolution — spec 1, version A |
-| `SAIT-INT-COMP-01-001A` | Integration — composition — DEPENDS ON chain — spec 1, version A |
-| `SAIT-INT-COMP-02-001A` | Integration — composition — EXTEND directive — spec 1, version A |
-| `SAIT-INT-COMP-03-001A` | Integration — composition — OVERRIDE directive — spec 1, version A |
-| `SAIT-INT-COMP-05-001A` | Integration — composition — conflict resolution — spec 1, version A |
-| `SAIT-INT-MANIF-01-001A` | Integration — manifest — manifest entries — spec 1, version A |
-| `SAIT-INT-INTVW-01-001A` | Integration — interview — required questions — spec 1, version A |
-| `SAIT-INT-INTVW-02-001A` | Integration — interview — default sections — spec 1, version A |
-| `SAIT-INT-INTVW-03-001A` | Integration — interview — answer precedence — spec 1, version A |
+| `SAIT-SMK-SYS-01-001A` | Smoke — system — file structure — spec 1, version A |
+| `SAIT-SMK-SYS-02-001A` | Smoke — system — ID uniqueness — spec 1, version A |
+| `SAIT-SMK-CMP-04-001A` | Smoke — composition — ref resolution — spec 1, version A |
+| `SAIT-INT-CMP-01-001A` | Integration — composition — DEPENDS ON chain — spec 1, version A |
+| `SAIT-INT-CMP-02-001A` | Integration — composition — EXTEND directive — spec 1, version A |
+| `SAIT-INT-CMP-03-001A` | Integration — composition — OVERRIDE directive — spec 1, version A |
+| `SAIT-INT-CMP-05-001A` | Integration — composition — conflict resolution — spec 1, version A |
+| `SAIT-INT-MNF-01-001A` | Integration — manifest — manifest entries — spec 1, version A |
+| `SAIT-INT-ITV-01-001A` | Integration — interview — required questions — spec 1, version A |
+| `SAIT-INT-ITV-02-001A` | Integration — interview — default sections — spec 1, version A |
+| `SAIT-INT-ITV-03-001A` | Integration — interview — answer precedence — spec 1, version A |
 | `SAIT-E2E-OUT-01-001A` | E2E — output — FastAPI flow — spec 1, version A |
 | `SAIT-E2E-OUT-02-001A` | E2E — output — Go Echo flow — spec 1, version A |
 | `SAIT-E2E-OUT-03-001A` | E2E — output — AGENTS.md format — spec 1, version A |

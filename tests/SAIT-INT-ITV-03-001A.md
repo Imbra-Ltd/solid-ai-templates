@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-INTVW-03-001A
+id: SAIT-INT-ITV-03-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567817
 title: Interview answers override stack and base template rules in the output
 product: sait
@@ -29,7 +29,7 @@ tags: [interview, precedence, override]
 | PASSED | Interview answer appears in the output; contradicted stack rule does not appear; no contradiction exists in the output |
 | FAILED | Stack rule appears instead of or alongside the interview answer; output contains a contradiction |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-INTVW-01-001A` is failing |
+| BLOCKED | `SAIT-INT-ITV-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps
@@ -77,5 +77,5 @@ This tests the highest precedence level defined in SPEC.md:
 
 ## Related
 
-- Related procedures: `SAIT-INT-INTVW-01-001A`, `SAIT-INT-INTVW-02-001A`
+- Related procedures: `SAIT-INT-ITV-01-001A`, `SAIT-INT-ITV-02-001A`
 - Implements: SPEC.md §Precedence rules

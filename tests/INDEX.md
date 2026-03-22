@@ -9,17 +9,17 @@ See `CODIFICATION.md` for the ID scheme, area codes, and component group registr
 
 | ID | Type | Priority | Title |
 |----|------|----------|-------|
-| `SAIT-SMOKE-SYS-01-001A` | SMOKE | P0 | All DEPENDS ON file paths resolve to existing files |
-| `SAIT-SMOKE-SYS-02-001A` | SMOKE | P0 | All section IDs are unique across all templates |
-| `SAIT-SMOKE-COMP-04-001A` | SMOKE | P1 | All EXTEND and OVERRIDE directives reference existing IDs |
-| `SAIT-INT-COMP-01-001A` | INT | P0 | DEPENDS ON chain assembles a complete rule set |
-| `SAIT-INT-COMP-02-001A` | INT | P1 | EXTEND adds rules without removing base rules |
-| `SAIT-INT-COMP-03-001A` | INT | P1 | OVERRIDE replaces parent section entirely |
-| `SAIT-INT-COMP-05-001A` | INT | P1 | Conflicting OVERRIDEs on the same ID are flagged or resolved |
-| `SAIT-INT-MANIF-01-001A` | INT | P0 | All manifest entries reference valid paths and IDs |
-| `SAIT-INT-INTVW-01-001A` | INT | P0 | All REQUIRED interview questions are asked before output is generated |
-| `SAIT-INT-INTVW-02-001A` | INT | P1 | DEFAULTED sections are pre-filled from the selected stack template |
-| `SAIT-INT-INTVW-03-001A` | INT | P0 | Interview answers override stack and base template rules in the output |
+| `SAIT-SMK-SYS-01-001A` | SMOKE | P0 | All DEPENDS ON file paths resolve to existing files |
+| `SAIT-SMK-SYS-02-001A` | SMOKE | P0 | All section IDs are unique across all templates |
+| `SAIT-SMK-CMP-04-001A` | SMOKE | P1 | All EXTEND and OVERRIDE directives reference existing IDs |
+| `SAIT-INT-CMP-01-001A` | INT | P0 | DEPENDS ON chain assembles a complete rule set |
+| `SAIT-INT-CMP-02-001A` | INT | P1 | EXTEND adds rules without removing base rules |
+| `SAIT-INT-CMP-03-001A` | INT | P1 | OVERRIDE replaces parent section entirely |
+| `SAIT-INT-CMP-05-001A` | INT | P1 | Conflicting OVERRIDEs on the same ID are flagged or resolved |
+| `SAIT-INT-MNF-01-001A` | INT | P0 | All manifest entries reference valid paths and IDs |
+| `SAIT-INT-ITV-01-001A` | INT | P0 | All REQUIRED interview questions are asked before output is generated |
+| `SAIT-INT-ITV-02-001A` | INT | P1 | DEFAULTED sections are pre-filled from the selected stack template |
+| `SAIT-INT-ITV-03-001A` | INT | P0 | Interview answers override stack and base template rules in the output |
 | `SAIT-E2E-OUT-01-001A` | E2E | P0 | Full interview → CLAUDE.md for a FastAPI project |
 | `SAIT-E2E-OUT-02-001A` | E2E | P0 | Full interview → CLAUDE.md for a Go Echo project |
 | `SAIT-E2E-OUT-03-001A` | E2E | P1 | Full interview → AGENTS.md output format |

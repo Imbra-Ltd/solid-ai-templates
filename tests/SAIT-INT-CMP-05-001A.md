@@ -1,5 +1,5 @@
 ---
-id: SAIT-INT-COMP-05-001A
+id: SAIT-INT-CMP-05-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567810
 title: Agent surfaces a conflict when two templates OVERRIDE the same section ID
 product: sait
@@ -30,7 +30,7 @@ tags: [composition, override, conflict]
 | PASSED | Agent explicitly flags the conflict, shows both OVERRIDE rules, and asks the user to choose before generating output |
 | FAILED | Agent silently picks one OVERRIDE without notifying the user; or agent produces output without resolving the conflict |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-03-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-03-001A` is failing |
 | ERROR | Agent fails to load or process the template files |
 
 ## Steps
@@ -94,5 +94,5 @@ this conflict to the user and ask which override to apply."
 
 ## Related
 
-- Related procedures: `SAIT-INT-COMP-03-001A`
+- Related procedures: `SAIT-INT-CMP-03-001A`
 - Implements: SPEC.md §Conflict resolution

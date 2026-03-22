@@ -29,7 +29,7 @@ tags: [e2e, output, python, library]
 | PASSED | Output contains Python library rules (public API design, semver, pyproject.toml packaging, docstrings, no server entrypoint); base rules present |
 | FAILED | Output includes server or deployment rules inappropriate for a library; packaging conventions absent |
 | SKIPPED | No agent available |
-| BLOCKED | `SAIT-INT-COMP-01-001A` is failing |
+| BLOCKED | `SAIT-INT-CMP-01-001A` is failing |
 | ERROR | Agent fails to load template files or produce output |
 
 ## Steps

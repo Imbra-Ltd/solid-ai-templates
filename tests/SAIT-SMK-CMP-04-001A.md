@@ -1,5 +1,5 @@
 ---
-id: SAIT-SMOKE-COMP-04-001A
+id: SAIT-SMK-CMP-04-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567809
 title: All EXTEND and OVERRIDE directives reference existing section IDs
 product: sait
@@ -30,7 +30,7 @@ tags: [structure, extend, override, ids]
 | PASSED | Every ID referenced by EXTEND or OVERRIDE exists as an `[ID: ...]` tag in at least one template file |
 | FAILED | One or more EXTEND or OVERRIDE directives reference an ID that does not exist in any template file |
 | SKIPPED | Repository cannot be cloned or accessed |
-| BLOCKED | `SAIT-SMOKE-SYS-02-001A` is failing |
+| BLOCKED | `SAIT-SMK-SYS-02-001A` is failing |
 | ERROR | File system is inaccessible; grep fails |
 
 ## Steps
@@ -71,5 +71,5 @@ tags: [structure, extend, override, ids]
 
 ## Related
 
-- Related procedures: `SAIT-SMOKE-SYS-02-001A`
+- Related procedures: `SAIT-SMK-SYS-02-001A`
 - Implements: SPEC.md §Override mechanism
