@@ -3,8 +3,6 @@
 Single source of truth for project status and planned work.
 See `SPEC.md` for design decisions and `README.md` for an overview.
 
----
-
 ## Phase 1 — Foundation
 
 - [x] `base/git.md` — committer identity, commits, branching, PR workflow, versioning
@@ -22,8 +20,6 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `stack/static-site-astro.md` — Astro islands, client directives (extends static-site)
 - [x] `INTERVIEW.md` — agent-driven project setup interview
 
----
-
 ## Phase 2 — Backend layer
 
 - [x] `backend/http.md` — URI design, headers, HATEOAS, auth, RFC 9457 errors
@@ -38,14 +34,10 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `backend/config.md` — env vars, validation, secrets management, environment separation
 - [x] `backend/database.md` — migrations, queries, indexing, N+1, connection pooling
 
----
-
 ## Phase 3 — Frontend layer
 
 - [x] `frontend/ux.md` — enriched: design system, component-driven development
 - [x] `frontend/quality.md` — enriched: linting on save, Core Web Vitals, design patterns
-
----
 
 ## Phase 4 — Stack expansion
 
@@ -55,8 +47,6 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `stack/spa-react.md` — React + TypeScript (components, state, RTL, a11y, E2E)
 - [x] `stack/go-service.md` — Go service (packages, interfaces, concurrency) — refactored in Phase 8
 
----
-
 ## Phase 5 — Agent output coverage
 
 - [x] `output/claude.md` — Claude Code → `CLAUDE.md`
@@ -64,8 +54,6 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `output/copilot.md` — GitHub Copilot → `.github/copilot-instructions.md`
 - [x] `output/codex.md` — OpenAI Codex CLI → `AGENTS.md`
 - [x] `output/generic.md` — fallback → `AI_CONTEXT.md`
-
----
 
 ## Phase 6 — Quality pass
 
@@ -81,8 +69,6 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `CONCEPTS.md` — new: concept-to-file navigation index
 - [x] `examples/` — new: three complete generated context files (FastAPI, React SPA, Astro)
 
----
-
 ## Phase 7 — Quality improvements (post-assessment)
 
 - [x] `backend/messaging.md` — new: brokers, producers, consumers, schema, DLQ, observability, testing
@@ -95,8 +81,6 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `examples/flask-api/CLAUDE.md` — new: InventoryAPI example (Flask + Celery + PostgreSQL)
 - [x] `examples/go-service/CLAUDE.md` — new: MetricsHub example (Go + chi + PostgreSQL + Redis)
 - [x] `manifest.yaml` — new: machine-readable dependency graph for composition engines
-
----
 
 ## Phase 8 — Stack expansion (backend, frontend, mobile, DevOps, libraries)
 
@@ -128,8 +112,6 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `manifest.yaml` — updated: all new stacks registered with dependency graph
 - [x] `SPEC.md` — updated: stack list, backend/ list, frontend/ list
 
----
-
 ## Phase 9 — Automated testing
 
 - [x] Structural smoke checks — `run_smoke.py` (SYS-01/02, TPL-01/02/03/04, MNF-01)
@@ -138,19 +120,14 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] E2E interview tests — `run_e2e.py` (ITV-02/03)
 - [x] E2E deployment target tests — `run_e2e.py` (DPL-01..03)
 - [x] Timestamped Markdown reports written after every run
-- [ ] Improve test runners — parallel execution, `--fail-fast`, `--area` filter (issue #10)
-
----
 
 ## Phase 10 — Templates testing
 
-- [x] Test end-to-end with Claude Code (`CLAUDE.md` output) — automated via `run_e2e.py` (FMT-01, STK-01..20)
-- [ ] Test end-to-end with Cursor (`.mdc` output) — automated via `run_e2e.py` (FMT-03); live run pending
-- [ ] Test end-to-end with GitHub Copilot — automated via `run_e2e.py` (FMT-04); live run pending
-- [ ] Test end-to-end with OpenAI Codex CLI — automated via `run_e2e.py` (FMT-02); live run pending
+- [x] Test end-to-end with Claude Code (`CLAUDE.md` output) — automated via `run_e2e.py` (FMT-01)
+- [ ] Test end-to-end with Cursor (`.mdc` output) — automated via `run_e2e.py` (FMT-03)
+- [ ] Test end-to-end with GitHub Copilot — automated via `run_e2e.py` (FMT-04)
+- [ ] Test end-to-end with OpenAI Codex CLI — automated via `run_e2e.py` (FMT-02)
 - [ ] Document agent-specific quirks and workarounds
-
----
 
 ## Phase 11 — Validation
 
