@@ -27,7 +27,7 @@ def read(rel_path):
         return f.read()
 
 
-def build_prompt(stack_file, answers, output_file="formats/CLAUDE.md",
+def build_prompt(stack_file, answers, output_file="formats/claude.md",
                  extra_files=()):
     interview = read("INTERVIEW.md")
     stack = read(stack_file)
@@ -871,7 +871,7 @@ def run_test(test, dry_run=False):
 
     prompt = build_prompt(
         test["stack"], test["answers"],
-        test.get("output_file", "formats/CLAUDE.md"),
+        test.get("output_file", "formats/claude.md"),
         test.get("extra_files", ()),
     )
 
