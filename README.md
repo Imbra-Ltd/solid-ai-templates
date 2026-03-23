@@ -257,6 +257,7 @@ is coherent and complete.
 | `stack/iac-terraform.md`        | DevOps     | base                                          |
 | `stack/nodejs-lib.md`           | library    | base                                          |
 | `stack/rust-lib.md`             | library    | base                                          |
+| `stack/c-embedded.md`           | embedded   | base                                          |
 | `stack/htmx.md`                 | hypermedia | backend/templating                            |
 
 ## Supported agents
