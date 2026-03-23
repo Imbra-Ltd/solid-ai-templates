@@ -24,15 +24,44 @@ output format guide.
 git clone https://github.com/Imbra-Ltd/solid-ai-templates.git
 ```
 
-Open your agent and provide two files:
+**Option A — Direct** (you know your stack):
+
+Attach the stack template and provide answers inline:
+
+```
+solid-ai-templates/stack/go-service.md
+```
+
+> "Generate a CLAUDE.md. Name: my-service, owner: Acme,
+> repo: github.com/acme/my-service, database: PostgreSQL, auth: JWT."
+
+No questions asked — the agent generates the file immediately.
+
+To save typing for a setup your team uses repeatedly, create a Markdown file
+with pre-filled answers and attach it alongside the stack template:
+
+```markdown
+# My project defaults
+
+- Language: Go 1.22
+- Framework: Echo
+- Deployment target: cloud
+- Distribution: Docker image
+- Database: PostgreSQL via pgx v5
+- Cache: Redis via go-redis
+- API style: REST / OpenAPI
+- Auth: JWT bearer tokens
+```
+
+Attach both files and say: *"Generate a CLAUDE.md. Name: X, owner: Y, repo: Z."*
+
+**Option B — Interview** (guided, ~15 questions):
 
 ```
 solid-ai-templates/INTERVIEW.md
-solid-ai-templates/stack/<your-stack>.md
 ```
 
-The agent will ask a short set of questions and generate a ready-to-use
-context file for your project.
+The agent asks all required questions and selects the right stack template.
 
 **Available output formats:** `CLAUDE.md`, `AGENTS.md`,
 `.cursor/rules/project.mdc`, `.github/copilot-instructions.md`,
@@ -75,7 +104,8 @@ solid-ai-templates/
 ├── backend/        # Backend layer — HTTP, API, database, observability
 ├── frontend/       # Frontend layer — UX, accessibility, CSS, SEO
 ├── stack/          # Concrete stacks — extend base + layer templates
-├── formats/         # Output format guides per agent tool
+├── formats/        # Output format guides per agent tool
+├── profiles/       # Pre-answered interviews for common project patterns
 ├── examples/       # Complete generated context files (reference)
 ├── INTERVIEW.md    # Agent-driven project setup interview
 ├── SPEC.md         # System design, composition rules, precedence
