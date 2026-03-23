@@ -15,6 +15,10 @@ The system is agent-agnostic: the same templates produce output for Claude
 Code, Cursor, GitHub Copilot, or OpenAI Codex CLI by applying a different
 output format guide.
 
+Works for new projects and refactoring alike — the generated context file
+describes how code *should be written*, giving your agent a consistent target
+to work toward whether starting from scratch or improving existing code.
+
 ## Quick start
 
 **Prerequisites:** an AI agent that accepts a Markdown context file
@@ -99,6 +103,90 @@ No questions asked — the agent generates immediately.
 
 Each template declares its dependencies with `DEPENDS ON` and can override
 base rules with `OVERRIDE`. See `SPEC.md` for the full composition rules.
+
+
+## Examples
+
+The examples below use Claude Code. For other agents, replace the `Attach:` step
+with the equivalent file attachment mechanism for your tool.
+
+### Start a new project
+
+```
+Attach: INTERVIEW.md
+
+I want to build a new project. Guide me through the setup and generate a CLAUDE.md.
+```
+
+Or directly if you already know your stack:
+
+```
+Attach: stack/python-fastapi.md
+
+Generate a CLAUDE.md for a new project.
+Name: my-service, owner: Acme, repo: github.com/acme/my-service,
+database: PostgreSQL, auth: JWT.
+```
+
+### Refactor an existing project
+
+```
+Attach: stack/python-fastapi.md
+
+Generate a CLAUDE.md for an existing project I want to refactor.
+Name: my-service, owner: Acme, repo: github.com/acme/my-service,
+database: PostgreSQL, auth: JWT.
+```
+
+### Apply a hotfix
+
+If the project already has a `CLAUDE.md`:
+
+```
+Read the repository and fix the following bug: <describe the bug>.
+Follow the conventions in CLAUDE.md — keep the change minimal,
+add a regression test, and use the correct error handling and git conventions.
+```
+
+If the project has no `CLAUDE.md` yet (legacy code):
+
+```
+Attach: stack/<your-stack>.md
+
+Generate a CLAUDE.md for this project first.
+Name: <name>, owner: <owner>, repo: <repo>.
+Then read the repository and fix the following bug: <describe the bug>.
+Keep the change minimal and add a regression test.
+```
+
+### Review code against project conventions
+
+If the project already has a `CLAUDE.md`:
+
+```
+Review this file against the conventions in CLAUDE.md and list any violations.
+```
+
+If the project has no `CLAUDE.md` yet (legacy code):
+
+```
+Attach: stack/<your-stack>.md
+
+Generate a CLAUDE.md for this project first.
+Name: <name>, owner: <owner>, repo: <repo>.
+Then review this file against the generated conventions and list any violations.
+```
+
+### Migrate to a new stack
+
+```
+Attach: stack/<target-stack>.md
+
+Generate a CLAUDE.md for the target stack I am migrating to.
+Name: <name>, owner: <owner>, repo: <repo>.
+Then read the repository and migrate one module at a time toward
+the conventions in the generated CLAUDE.md.
+```
 
 ## Project structure
 
