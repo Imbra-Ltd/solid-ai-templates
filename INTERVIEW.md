@@ -55,7 +55,14 @@ adjust. Proceed to Phase 4 once the user approves.
 
 ## Phase 4 — Generate
 
-Select the matching stack template from the table below and load its
+Before generating, collect any missing identity fields in a single question:
+
+- Project name (if not mentioned during the conversation)
+- Owner (person, team, or organisation)
+- Repository URL (e.g. github.com/acme/my-service)
+- Which AI tool will use this file? (Claude Code / Cursor / Copilot / Codex CLI / Other)
+
+Then select the matching stack template from the table below and load its
 DEPENDS ON chain. Apply any adjustments from Phase 3.
 Generate the output file using the format rules in `formats/claude.md`.
 
