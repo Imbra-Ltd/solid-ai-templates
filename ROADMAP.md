@@ -130,7 +130,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ---
 
-## Phase 9 — Agent testing
+## Phase 9 — Templates testing
 
 - [x] Test end-to-end with Claude Code (`CLAUDE.md` output) — automated via `run_e2e.py` (FMT-01, STK-01..20)
 - [ ] Test end-to-end with Cursor (`.mdc` output) — automated via `run_e2e.py` (FMT-03); live run pending
