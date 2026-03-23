@@ -130,7 +130,19 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ---
 
-## Phase 9 — Templates testing
+## Phase 9 — Automated testing
+
+- [x] Structural smoke checks — `run_smoke.py` (SYS-01/02, TPL-01/02/03/04, MNF-01)
+- [x] E2E stack tests — `run_e2e.py` (STK-01..20, all 20 stacks)
+- [x] E2E format tests — `run_e2e.py` (FMT-01..05, all output formats)
+- [x] E2E interview tests — `run_e2e.py` (ITV-02/03)
+- [x] E2E deployment target tests — `run_e2e.py` (DPL-01..03)
+- [x] Timestamped Markdown reports written after every run
+- [ ] Improve test runners — parallel execution, `--fail-fast`, `--area` filter (issue #10)
+
+---
+
+## Phase 10 — Templates testing
 
 - [x] Test end-to-end with Claude Code (`CLAUDE.md` output) — automated via `run_e2e.py` (FMT-01, STK-01..20)
 - [ ] Test end-to-end with Cursor (`.mdc` output) — automated via `run_e2e.py` (FMT-03); live run pending
@@ -140,7 +152,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ---
 
-## Phase 10 — Validation
+## Phase 11 — Validation
 
 - [ ] Use the system on a real new project end-to-end (see examples)
 - [ ] Use the system on a real refactoring project end-to-end
