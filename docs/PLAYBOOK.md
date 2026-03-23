@@ -93,14 +93,34 @@ composition model.
 
 ## Validate a template change
 
-1. **Reference check**: confirm every `[DEPENDS ON: ...]` path resolves to a
-   real file in the repo
-2. **ID check**: confirm every `[EXTEND: <id>]` and `[OVERRIDE: <id>]`
-   references an `[ID: ...]` that exists in a parent template
-3. **Manifest check**: confirm the changed template has a matching entry in
-   `manifest.yaml` with correct `depends_on` IDs
-4. **Agent check**: attach `INTERVIEW.md` + the changed template to an agent
-   and confirm the generated output is coherent and complete
+1. **Smoke check**: run the automated structural checks — no agent required:
+   ```bash
+   py tests/run_smoke.py
+   ```
+   This verifies all `[DEPENDS ON: ...]` paths, unique IDs, `[EXTEND: ...]` /
+   `[OVERRIDE: ...]` references, and `manifest.yaml` consistency in one pass.
+2. **Agent check**: attach `INTERVIEW.md` + the changed template to an agent
+   and confirm the generated output is coherent and complete; or run the
+   relevant E2E test if one exists:
+   ```bash
+   py tests/run_e2e.py STK-01   # example — replace with the relevant ID
+   ```
+   Reports are written to `tests/reports/` after every run.
+
+---
+
+## Run the test suite
+
+```bash
+py tests/run_smoke.py              # 7 structural checks — seconds
+py tests/run_e2e.py                # 30 agent tests — ~1-2 hours
+py tests/run_e2e.py STK-01 FMT-01  # specific tests only
+py tests/run_e2e.py --dry-run      # build prompts, skip agent calls
+```
+
+See `tests/CODIFICATION.md` for the ID scheme and `tests/INDEX.md` for the
+full list of specs. Requires `py -m pip install pyyaml` for the manifest
+check.
 
 ---
 
