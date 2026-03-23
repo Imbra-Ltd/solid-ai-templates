@@ -105,7 +105,6 @@ solid-ai-templates/
 ├── frontend/       # Frontend layer — UX, accessibility, CSS, SEO
 ├── stack/          # Concrete stacks — extend base + layer templates
 ├── formats/        # Output format guides per agent tool
-├── profiles/       # Pre-answered interviews for common project patterns
 ├── examples/       # Complete generated context files (reference)
 ├── INTERVIEW.md    # Agent-driven project setup interview
 ├── SPEC.md         # System design, composition rules, precedence
