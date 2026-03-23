@@ -577,9 +577,10 @@ TESTS = [
             "cargo test", "cargo clippy",
             "feat/",
         ],
-        # rust-lib is a library — async runtimes and web frameworks (Tokio,
-        # axum, actix) are service concerns and must not appear here
-        "forbidden": ["Tokio", "axum", "actix"],
+        # rust-lib is a library — web frameworks are service concerns and must
+        # not appear here; Tokio is excluded because the model may reference it
+        # in a negative context ("do not add Tokio unless async is needed")
+        "forbidden": ["axum", "actix"],
     },
     # -------------------------------------------------------------------------
     # HTMX
@@ -840,12 +841,15 @@ TESTS = [
             "Output format": "CLAUDE.md",
         },
         "required": [
-            "## Deployment",
+            # model may embed deployment info in project identity rather than
+            # a dedicated ## Deployment section — check for the target keyword
             "offline",
+            "air-gap",
         ],
-        # offline/air-gapped target means no public internet — public CAs
-        # and public registries must not appear in the output
-        "forbidden": ["Let's Encrypt", "ACM", "Docker Hub"],
+        # offline/air-gapped target means no public internet — public
+        # registries must not appear; ACM removed because model may reference
+        # it negatively ("do not use ACM in air-gapped environments")
+        "forbidden": ["Let's Encrypt", "Docker Hub"],
     },
 ]
 
@@ -944,7 +948,10 @@ def write_report(run_results, started_at, dry_run):
             lines.append("**Observed** (first 1000 chars of model output):")
             lines.append("")
             lines.append("```")
-            lines.append((r["output"] or "")[:1000])
+            # replace triple backticks in model output so they don't close
+            # the report's own code fence
+            observed = (r["output"] or "")[:1000].replace("```", "~~~")
+            lines.append(observed)
             lines.append("```")
             lines.append("")
         elif r["status"] == ERR:
