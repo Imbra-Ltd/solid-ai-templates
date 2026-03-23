@@ -69,27 +69,27 @@ The agent asks all required questions and selects the right stack template.
 
 ## Usage
 
-### Generate a context file for a FastAPI project
+### Generate a context file via interview
 
-1. Open Claude Code (or your preferred agent) in a new or existing project.
-2. Attach `INTERVIEW.md` and `stack/python-fastapi.md` to the conversation.
-3. The agent asks required questions (project name, database, auth method, etc.).
-4. Specify the output format — for Claude Code:
+1. Open your agent (Claude Code, Cursor, etc.).
+2. Attach `INTERVIEW.md`.
+3. The agent explores what you want to build, asks a few clarifying questions,
+   proposes a stack, and generates the file once you confirm.
+
+Expected output: a `CLAUDE.md` (or equivalent) ready to place at your project root.
+
+### Generate a context file directly
+
+1. Open your agent.
+2. Attach the relevant stack template (e.g. `stack/python-fastapi.md`).
+3. Provide your answers inline:
 
 ```
-Please generate a CLAUDE.md for this project.
+Generate a CLAUDE.md. Name: my-service, owner: Acme,
+repo: github.com/acme/my-service, database: PostgreSQL, auth: JWT.
 ```
 
-The agent produces a complete context file that combines base rules (git,
-quality, testing, security) with FastAPI-specific conventions (async handlers,
-Pydantic v2, OpenAPI).
-
-Expected output: a `CLAUDE.md` file ready to place at the project root.
-
-### Generate for a React SPA
-
-Same steps with `stack/spa-react.md`. The agent applies the frontend layer
-(UX, accessibility, CSS conventions) on top of the base rules.
+No questions asked — the agent generates immediately.
 
 ### Compose templates manually
 
