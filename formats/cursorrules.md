@@ -2,8 +2,9 @@
 [ID: output-cursor]
 
 Used by: Cursor IDE
-Output filename: `.cursor/rules/project.mdc`
-Place in: `.cursor/rules/` (project root)
+Output filename: `project.mdc`
+Write to: `generated/project.mdc` (inside this repo)
+Place in: `.cursor/rules/` (copy from `generated/` to the target project)
 
 Note: `.cursorrules` (flat file, project root) is the legacy format and is
 deprecated. New projects should use `.mdc` files in `.cursor/rules/`.

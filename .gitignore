@@ -1,2 +1,4 @@
 .idea/
 tests/reports/
+generated/*
+!generated/.gitkeep

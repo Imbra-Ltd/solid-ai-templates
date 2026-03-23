@@ -4,7 +4,8 @@
 Used by: any agent not covered by a specific format (Copilot Workspace,
 Gemini, custom agents, etc.)
 Output filename: `AI_CONTEXT.md`
-Place in: project root
+Write to: `generated/AI_CONTEXT.md` (inside this repo)
+Place in: project root (copy from `generated/` to the target project)
 
 ---
 

@@ -3,7 +3,8 @@
 
 Used by: OpenAI Codex CLI
 Output filename: `AGENTS.md`
-Place in: project root
+Write to: `generated/AGENTS.md` (inside this repo)
+Place in: project root (copy from `generated/` to the target project)
 
 Interop note: Claude Code reads `AGENTS.md` as a fallback when no `CLAUDE.md`
 is present. If the project uses both Codex CLI and Claude Code, a single
