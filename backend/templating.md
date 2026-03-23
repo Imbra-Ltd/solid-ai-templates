@@ -98,6 +98,7 @@ templates/
 ---
 
 ## Testing
+[ID: backend-templating-testing]
 [EXTEND: base-testing]
 
 - Test each template renders without error for its happy path

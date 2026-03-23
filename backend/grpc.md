@@ -96,6 +96,7 @@ file with runtime conventions, project structure, and tooling.
 ---
 
 ## Testing
+[ID: grpc-testing]
 [EXTEND: base-testing]
 
 - Unit-test domain service functions independently of gRPC — pass plain

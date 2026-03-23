@@ -1,6 +1,6 @@
 # Backend — Error Handling
 [ID: backend-errors]
-[DEPENDS ON: backend-http, backend-observability]
+[DEPENDS ON: backend/http.md, backend/observability.md]
 
 Error response format and logging rules are defined in `backend/http.md` and
 `backend/observability.md`. This template covers classification, propagation,

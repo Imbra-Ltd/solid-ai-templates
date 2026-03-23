@@ -71,6 +71,7 @@ A feature is not complete until:
 - New components SHOULD be documented with usage examples before shipping
 
 ## Browser support
+[ID: frontend-ux-browsers]
+
 - Default target: last 2 versions of Chrome, Firefox, Safari, and Edge
 - Progressive enhancement: graceful degradation for unsupported features
-- [OVERRIDE: frontend-ux-browsers] to specify a different support matrix
