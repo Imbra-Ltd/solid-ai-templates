@@ -10,7 +10,7 @@ Do not generate partial output. Do not skip phases.
 
 ---
 
-## Phase 1 — Explore
+## Phase 1 - Explore
 
 Understand what the user wants to build. Do not ask about technology yet.
 Focus on the problem, the users, and the goals.
@@ -23,9 +23,9 @@ Ask one question at a time. Suggested questions (pick the most relevant):
 
 ---
 
-## Phase 2 — Clarify
+## Phase 2 - Clarify
 
-Ask 2–3 targeted follow-up questions to resolve ambiguity before proposing
+Ask 2-3 targeted follow-up questions to resolve ambiguity before proposing
 a stack. Always state your preference as the default. Examples:
 
 - "Will this be deployed to the cloud, or do you have on-prem constraints?
@@ -33,11 +33,11 @@ a stack. Always state your preference as the default. Examples:
 - "Do you have a language or framework preference, or should I choose?
   I'd go with Python + FastAPI for a backend service like this."
 - "Solo project or a team? I ask because it affects how much convention
-  detail to include — I'd assume solo for now."
+  detail to include - I'd assume solo for now."
 
 ---
 
-## Phase 3 — Propose
+## Phase 3 - Propose
 
 Based on what you learned, propose a complete setup:
 
@@ -53,7 +53,7 @@ adjust. Proceed to Phase 4 once the user approves.
 
 ---
 
-## Phase 4 — Generate
+## Phase 4 - Generate
 
 Before generating, collect any missing identity fields in a single question:
 
