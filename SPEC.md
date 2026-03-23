@@ -108,6 +108,7 @@ stack/
 ├── terraform.md      # extends base — HCL, modules, remote state, security
 ├── nodejs-lib.md     # extends base — TypeScript npm library / CLI
 ├── rust-lib.md       # extends base — Rust crate / CLI, thiserror, clippy
+├── c-embedded.md     # extends base — bare-metal C, CMake, Unity, HAL, static analysis
 └── htmx.md           # extends backend/templating — HTMX 2.x, Alpine.js, SSE, partial responses
 ```
 

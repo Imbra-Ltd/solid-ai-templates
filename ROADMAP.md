@@ -135,7 +135,11 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `README.md` quick start: two paths — direct (stack template only) and interview
 - [x] `INTERVIEW.md` rewritten: explore → clarify → propose → generate flow
 
-## Phase 12 — Validation
+## Phase 12 — Stack expansion (embedded)
+
+- [x] `stack/c-embedded.md` — new: bare-metal C, GCC + CMake, Unity, HAL, binary + static lib
+
+## Phase 13 — Validation
 
 - [ ] Use the system on a real new project end-to-end (see examples)
 - [ ] Use the system on a real refactoring project end-to-end

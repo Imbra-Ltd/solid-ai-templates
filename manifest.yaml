@@ -347,6 +347,13 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+  - id: stack-c-embedded
+    file: stack/c-embedded.md
+    depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - base-testing
 
 output:
   - id: output-claude

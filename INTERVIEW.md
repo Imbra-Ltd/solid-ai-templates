@@ -96,3 +96,4 @@ Generate the output file using the format rules in `formats/claude.md`.
 | Hugo (static site)            | `stack/static-site-hugo.md`     | Go templates, archetypes, content structure      |
 | Rust library / CLI / crate    | `stack/rust-lib.md`             | Rust crate or CLI, thiserror/anyhow, crates.io   |
 | Terraform (IaC)               | `stack/iac-terraform.md`        | Infrastructure as code, modules, remote state    |
+| Embedded C (bare metal)       | `stack/c-embedded.md`           | GCC + CMake, Unity tests, HAL, binary + .a       |
