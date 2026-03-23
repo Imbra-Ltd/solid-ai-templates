@@ -72,11 +72,11 @@ Use this to find the right file when searching for a specific topic.
 
 | Target agent | File |
 |--------------|------|
-| Claude Code → `CLAUDE.md` | `output/claude.md` |
-| Cursor → `.cursor/rules/project.mdc` | `output/cursorrules.md` |
-| GitHub Copilot → `.github/copilot-instructions.md` | `output/copilot.md` |
-| OpenAI Codex CLI → `AGENTS.md` | `output/codex.md` |
-| Any other agent → `AI_CONTEXT.md` | `output/generic.md` |
+| Claude Code → `CLAUDE.md` | `formats/claude.md` |
+| Cursor → `.cursor/rules/project.mdc` | `formats/cursorrules.md` |
+| GitHub Copilot → `.github/copilot-instructions.md` | `formats/copilot.md` |
+| OpenAI Codex CLI → `AGENTS.md` | `formats/codex.md` |
+| Any other agent → `AI_CONTEXT.md` | `formats/generic.md` |
 
 ---
 

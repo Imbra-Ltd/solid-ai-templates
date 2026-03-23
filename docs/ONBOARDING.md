@@ -77,7 +77,7 @@ Then run the system end-to-end with an agent:
 
 1. Open Claude Code in any project directory
 2. Attach `INTERVIEW.md` and `stack/python-flask.md`
-3. Ask: "Generate a CLAUDE.md for this project using output/claude.md format"
+3. Ask: "Generate a CLAUDE.md for this project using formats/claude.md format"
 4. Review the output — this is what users get
 
 Or use the automated E2E runner:

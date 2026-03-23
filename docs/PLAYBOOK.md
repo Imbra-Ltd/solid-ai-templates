@@ -83,7 +83,7 @@ composition model.
    (e.g. `backend/auth.md`)
 4. Ask the agent to generate the output:
    ```
-   Generate a CLAUDE.md for this project using output/claude.md format.
+   Generate a CLAUDE.md for this project using formats/claude.md format.
    ```
 5. Review the output — check that base rules and stack-specific rules are
    both present and consistent

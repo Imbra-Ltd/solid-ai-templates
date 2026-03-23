@@ -75,7 +75,7 @@ solid-ai-templates/
 ├── backend/        # Backend layer — HTTP, API, database, observability
 ├── frontend/       # Frontend layer — UX, accessibility, CSS, SEO
 ├── stack/          # Concrete stacks — extend base + layer templates
-├── output/         # Output format guides per agent tool
+├── formats/         # Output format guides per agent tool
 ├── examples/       # Complete generated context files (reference)
 ├── INTERVIEW.md    # Agent-driven project setup interview
 ├── SPEC.md         # System design, composition rules, precedence
@@ -142,11 +142,11 @@ is coherent and complete.
 
 | Agent | Output file | Format guide |
 |-------|-------------|--------------|
-| Claude Code | `CLAUDE.md` | `output/claude.md` |
-| Cursor | `.cursor/rules/project.mdc` | `output/cursorrules.md` |
-| GitHub Copilot | `.github/copilot-instructions.md` | `output/copilot.md` |
-| OpenAI Codex CLI | `AGENTS.md` | `output/codex.md` |
-| Generic / other | `AI_CONTEXT.md` | `output/generic.md` |
+| Claude Code | `CLAUDE.md` | `formats/claude.md` |
+| Cursor | `.cursor/rules/project.mdc` | `formats/cursorrules.md` |
+| GitHub Copilot | `.github/copilot-instructions.md` | `formats/copilot.md` |
+| OpenAI Codex CLI | `AGENTS.md` | `formats/codex.md` |
+| Generic / other | `AI_CONTEXT.md` | `formats/generic.md` |
 
 ## Links
 

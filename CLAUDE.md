@@ -19,7 +19,7 @@ base/           # Cross-cutting rules — apply to every project
 backend/        # Backend layer — HTTP, API, database, observability, etc.
 frontend/       # Frontend layer — UX, accessibility, CSS, SSG
 stack/          # Concrete stacks — extend base + layer templates
-output/         # Rendering rules per AI agent tool
+formats/         # Rendering rules per AI agent tool
 examples/       # Complete generated context files (reference)
 INTERVIEW.md    # Agent-driven project setup interview
 SPEC.md         # System design, composition rules, precedence

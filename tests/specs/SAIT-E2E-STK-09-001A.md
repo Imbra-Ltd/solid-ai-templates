@@ -42,7 +42,7 @@ tags: [e2e, output, flutter, mobile, dart]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/mobile-flutter.md`, `output/claude.md`
+2. Attach `INTERVIEW.md`, `stack/mobile-flutter.md`, `formats/claude.md`
 3. Interview answers:
    - Project name: FieldSurveyApp
    - Language: Dart

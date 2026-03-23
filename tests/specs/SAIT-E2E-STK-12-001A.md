@@ -42,7 +42,7 @@ tags: [e2e, output, python, service]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/python-service.md`, `output/claude.md`
+2. Attach `INTERVIEW.md`, `stack/python-service.md`, `formats/claude.md`
 3. Interview answers:
    - Project name: DataPipelineWorker
    - Language: Python

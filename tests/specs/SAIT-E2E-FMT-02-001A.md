@@ -17,17 +17,17 @@ tags: [e2e, output, agents-md, codex]
 
 ## Short description
 
-> **Given** `INTERVIEW.md`, `stack/python-fastapi.md`, and `output/codex.md`
+> **Given** `INTERVIEW.md`, `stack/python-fastapi.md`, and `formats/codex.md`
 > are attached to an agent
 > **When** the agent conducts the interview and generates output
-> **Then** the result is a valid `AGENTS.md` formatted per `output/codex.md`
+> **Then** the result is a valid `AGENTS.md` formatted per `formats/codex.md`
 > containing all required sections
 
 ## Results
 
 | Result  | Condition                                                                                                   |
 |---------|-------------------------------------------------------------------------------------------------------------|
-| PASSED  | Output file is named `AGENTS.md`; all required sections present; formatting follows `output/codex.md` rules |
+| PASSED  | Output file is named `AGENTS.md`; all required sections present; formatting follows `formats/codex.md` rules |
 | FAILED  | Output uses CLAUDE.md format; required sections missing; wrong filename                                     |
 | SKIPPED | No agent available                                                                                          |
 | BLOCKED | `SAIT-E2E-TPL-01-001A` is failing                                                                           |
@@ -44,14 +44,14 @@ tags: [e2e, output, agents-md, codex]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `output/codex.md`
+2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `formats/codex.md`
 
 ### Execution
 
 1. Ask the agent:
    ```
    Using INTERVIEW.md and stack/python-fastapi.md, generate an AGENTS.md
-   for this project. Use output/codex.md for formatting rules.
+   for this project. Use formats/codex.md for formatting rules.
    ```
 2. Provide the same interview answers as `SAIT-E2E-TPL-01-001A`
 3. Save the generated output
@@ -59,7 +59,7 @@ tags: [e2e, output, agents-md, codex]
 ### Assertions
 
 1. Assert output filename is `AGENTS.md`
-2. Assert formatting follows `output/codex.md` rules (not CLAUDE.md rules)
+2. Assert formatting follows `formats/codex.md` rules (not CLAUDE.md rules)
 3. Assert all required sections are present
 4. Assert FastAPI-specific rules are present
 5. Assert base rules from `base/git.md` and `base/quality.md` are present

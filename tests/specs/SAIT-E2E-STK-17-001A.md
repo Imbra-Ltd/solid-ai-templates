@@ -42,7 +42,7 @@ tags: [e2e, output, hugo, static-site]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/static-site-hugo.md`, `output/claude.md`
+2. Attach `INTERVIEW.md`, `stack/static-site-hugo.md`, `formats/claude.md`
 3. Interview answers:
    - Project name: DocumentationSite
    - Language: Markdown + Go templates

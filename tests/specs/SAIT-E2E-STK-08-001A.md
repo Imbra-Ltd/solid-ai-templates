@@ -42,7 +42,7 @@ tags: [e2e, output, grpc, go, protobuf]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/go-grpc.md`, `output/claude.md`
+2. Attach `INTERVIEW.md`, `stack/go-grpc.md`, `formats/claude.md`
 3. Interview answers:
    - Project name: PaymentGateway
    - Language: Go

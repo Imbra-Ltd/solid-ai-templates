@@ -42,7 +42,7 @@ tags: [e2e, output, nextjs, fullstack, react]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/full-nextjs.md`, `output/claude.md`
+2. Attach `INTERVIEW.md`, `stack/full-nextjs.md`, `formats/claude.md`
 3. Interview answers:
    - Project name: StorefrontApp
    - Language: TypeScript

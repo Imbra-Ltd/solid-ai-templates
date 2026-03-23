@@ -17,17 +17,17 @@ tags: [e2e, output, cursor, mdc]
 
 ## Short description
 
-> **Given** `INTERVIEW.md`, `stack/python-fastapi.md`, and `output/cursorrules.md`
+> **Given** `INTERVIEW.md`, `stack/python-fastapi.md`, and `formats/cursorrules.md`
 > are attached to an agent
 > **When** the agent conducts the interview and generates output
 > **Then** the result is a valid `.cursor/rules/project.mdc` formatted per
-> `output/cursorrules.md` containing all required sections
+> `formats/cursorrules.md` containing all required sections
 
 ## Results
 
 | Result | Condition |
 |--------|-----------|
-| PASSED | Output is formatted as `.mdc` per `output/cursorrules.md`; all required sections present; Cursor-specific frontmatter present |
+| PASSED | Output is formatted as `.mdc` per `formats/cursorrules.md`; all required sections present; Cursor-specific frontmatter present |
 | FAILED | Output uses CLAUDE.md format; Cursor frontmatter absent; required sections missing |
 | SKIPPED | No agent available |
 | BLOCKED | `SAIT-E2E-TPL-01-001A` is failing |
@@ -43,7 +43,7 @@ tags: [e2e, output, cursor, mdc]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `output/cursorrules.md`
+2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `formats/cursorrules.md`
 
 ### Execution
 
@@ -51,14 +51,14 @@ tags: [e2e, output, cursor, mdc]
    ```
    Using INTERVIEW.md and stack/python-fastapi.md, generate a
    .cursor/rules/project.mdc for this project.
-   Use output/cursorrules.md for formatting rules.
+   Use formats/cursorrules.md for formatting rules.
    ```
 2. Provide interview answers (OrderService / FastAPI)
 3. Save the generated output
 
 ### Assertions
 
-1. Assert output follows `.mdc` format as defined in `output/cursorrules.md`
+1. Assert output follows `.mdc` format as defined in `formats/cursorrules.md`
 2. Assert Cursor-specific frontmatter is present
 3. Assert all required content sections are present
 4. Assert FastAPI-specific rules are present

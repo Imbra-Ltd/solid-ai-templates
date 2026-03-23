@@ -27,7 +27,7 @@ def read(rel_path):
         return f.read()
 
 
-def build_prompt(stack_file, answers, output_file="output/CLAUDE.md",
+def build_prompt(stack_file, answers, output_file="formats/CLAUDE.md",
                  extra_files=()):
     interview = read("INTERVIEW.md")
     stack = read(stack_file)
@@ -86,7 +86,7 @@ def check_assertions(output, required=(), forbidden=()):
 #   spec        the spec file this test implements
 #   stack       stack template file fed to the agent
 #   answers     interview answers the agent receives
-#   output_file output format template (defaults to output/CLAUDE.md)
+#   output_file output format template (defaults to formats/CLAUDE.md)
 #   extra_files additional template files to include in the prompt
 #   required    strings that MUST appear in the output — the test fails if any
 #               are missing; used to assert that key sections and rules are
@@ -616,7 +616,7 @@ TESTS = [
         "id": "FMT-01",
         "spec": "SAIT-E2E-FMT-01-001A",
         "stack": "stack/python-fastapi.md",
-        "output_file": "output/claude.md",
+        "output_file": "formats/claude.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -640,7 +640,7 @@ TESTS = [
         "id": "FMT-02",
         "spec": "SAIT-E2E-FMT-02-001A",
         "stack": "stack/python-fastapi.md",
-        "output_file": "output/codex.md",
+        "output_file": "formats/codex.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -664,7 +664,7 @@ TESTS = [
         "id": "FMT-03",
         "spec": "SAIT-E2E-FMT-03-001A",
         "stack": "stack/python-fastapi.md",
-        "output_file": "output/cursorrules.md",
+        "output_file": "formats/cursorrules.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -687,7 +687,7 @@ TESTS = [
         "id": "FMT-04",
         "spec": "SAIT-E2E-FMT-04-001A",
         "stack": "stack/python-fastapi.md",
-        "output_file": "output/copilot.md",
+        "output_file": "formats/copilot.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -711,7 +711,7 @@ TESTS = [
         "id": "FMT-05",
         "spec": "SAIT-E2E-FMT-05-001A",
         "stack": "stack/python-fastapi.md",
-        "output_file": "output/generic.md",
+        "output_file": "formats/generic.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -871,7 +871,7 @@ def run_test(test, dry_run=False):
 
     prompt = build_prompt(
         test["stack"], test["answers"],
-        test.get("output_file", "output/CLAUDE.md"),
+        test.get("output_file", "formats/CLAUDE.md"),
         test.get("extra_files", ()),
     )
 

@@ -42,7 +42,7 @@ tags: [e2e, output, htmx, hypermedia, server-side]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/htmx.md`, `output/claude.md`
+2. Attach `INTERVIEW.md`, `stack/htmx.md`, `formats/claude.md`
 3. Interview answers:
    - Project name: AdminDashboard
    - Backend language: Python (Flask or FastAPI)

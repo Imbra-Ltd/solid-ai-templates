@@ -350,17 +350,17 @@ stacks:
 
 output:
   - id: output-claude
-    file: output/claude.md
+    file: formats/claude.md
     produces: CLAUDE.md
   - id: output-cursor
-    file: output/cursorrules.md
+    file: formats/cursorrules.md
     produces: .cursor/rules/project.mdc
   - id: output-copilot
-    file: output/copilot.md
+    file: formats/copilot.md
     produces: .github/copilot-instructions.md
   - id: output-codex
-    file: output/codex.md
+    file: formats/codex.md
     produces: AGENTS.md
   - id: output-generic
-    file: output/generic.md
+    file: formats/generic.md
     produces: AI_CONTEXT.md

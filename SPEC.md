@@ -127,7 +127,7 @@ Rendering rules for each supported AI tool. Describe structure, formatting
 constraints, and tone for that tool's context file format.
 
 ```
-output/
+formats/
 ├── claude.md         # Claude Code → CLAUDE.md
 ├── cursorrules.md    # Cursor → .cursor/rules/project.mdc
 ├── copilot.md        # GitHub Copilot → .github/copilot-instructions.md
@@ -167,7 +167,7 @@ frontend/quality.md ────────────────────
                                                         │
                                              + INTERVIEW.md answers
                                                         │
-                                             + output/claude.md rules
+                                             + formats/claude.md rules
                                                         │
                                                         ▼
                                                    CLAUDE.md
@@ -290,7 +290,7 @@ frontend/[concern].md           # frontend layer — UI projects only
 backend/[concern].md            # backend layer — services and APIs only
 stack/[framework].md            # concrete — extends base + frontend or backend
 stack/[framework]-[variant].md  # variant of a framework (e.g. astro-ssr.md)
-output/[agent].md               # rendering rules for a specific AI tool
+formats/[agent].md               # rendering rules for a specific AI tool
 INTERVIEW.md                    # orchestrator — always one file
 SPEC.md                         # this file
 ROADMAP.md                      # project status and planned work

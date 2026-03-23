@@ -17,17 +17,17 @@ tags: [e2e, output, copilot, github]
 
 ## Short description
 
-> **Given** `INTERVIEW.md`, `stack/python-fastapi.md`, and `output/copilot.md`
+> **Given** `INTERVIEW.md`, `stack/python-fastapi.md`, and `formats/copilot.md`
 > are attached to an agent
 > **When** the agent conducts the interview and generates output
 > **Then** the result is a valid `.github/copilot-instructions.md` formatted
-> per `output/copilot.md` containing all required sections
+> per `formats/copilot.md` containing all required sections
 
 ## Results
 
 | Result | Condition |
 |--------|-----------|
-| PASSED | Output follows `output/copilot.md` formatting rules; all required sections present; file is valid Markdown for GitHub Copilot |
+| PASSED | Output follows `formats/copilot.md` formatting rules; all required sections present; file is valid Markdown for GitHub Copilot |
 | FAILED | Output uses CLAUDE.md format; required sections missing; Copilot-specific formatting absent |
 | SKIPPED | No agent available |
 | BLOCKED | `SAIT-E2E-TPL-01-001A` is failing |
@@ -43,7 +43,7 @@ tags: [e2e, output, copilot, github]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `output/copilot.md`
+2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `formats/copilot.md`
 
 ### Execution
 
@@ -51,14 +51,14 @@ tags: [e2e, output, copilot, github]
    ```
    Using INTERVIEW.md and stack/python-fastapi.md, generate a
    .github/copilot-instructions.md for this project.
-   Use output/copilot.md for formatting rules.
+   Use formats/copilot.md for formatting rules.
    ```
 2. Provide interview answers (OrderService / FastAPI)
 3. Save the generated output
 
 ### Assertions
 
-1. Assert output follows formatting rules from `output/copilot.md`
+1. Assert output follows formatting rules from `formats/copilot.md`
 2. Assert all required sections are present
 3. Assert FastAPI-specific rules are present
 

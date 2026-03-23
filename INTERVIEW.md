@@ -115,14 +115,14 @@ Which AI tool will use this context file?
 
 | Choice | Output file | Location | Format guide |
 |--------|-------------|----------|--------------|
-| Claude Code | `CLAUDE.md` | project root | `output/claude.md` |
-| Cursor | `.cursor/rules/project.mdc` | `.cursor/rules/` | `output/cursorrules.md` |
-| GitHub Copilot | `copilot-instructions.md` | `.github/` | `output/copilot.md` |
-| OpenAI Codex CLI | `AGENTS.md` | project root | `output/codex.md` |
-| Other / generic | `AI_CONTEXT.md` | project root | `output/generic.md` |
+| Claude Code | `CLAUDE.md` | project root | `formats/claude.md` |
+| Cursor | `.cursor/rules/project.mdc` | `.cursor/rules/` | `formats/cursorrules.md` |
+| GitHub Copilot | `copilot-instructions.md` | `.github/` | `formats/copilot.md` |
+| OpenAI Codex CLI | `AGENTS.md` | project root | `formats/codex.md` |
+| Other / generic | `AI_CONTEXT.md` | project root | `formats/generic.md` |
 
 Interop: `AGENTS.md` (Codex) is also read by Claude Code as a fallback.
 If the project uses both, generating `AGENTS.md` alone may be sufficient.
 
-Load the corresponding file in `output/` and apply its structure and
+Load the corresponding file in `formats/` and apply its structure and
 formatting rules when rendering the final context file.

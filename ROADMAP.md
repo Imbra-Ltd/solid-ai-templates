@@ -49,11 +49,11 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ## Phase 5 — Agent output coverage
 
-- [x] `output/claude.md` — Claude Code → `CLAUDE.md`
-- [x] `output/cursorrules.md` — Cursor → `.cursor/rules/project.mdc`
-- [x] `output/copilot.md` — GitHub Copilot → `.github/copilot-instructions.md`
-- [x] `output/codex.md` — OpenAI Codex CLI → `AGENTS.md`
-- [x] `output/generic.md` — fallback → `AI_CONTEXT.md`
+- [x] `formats/claude.md` — Claude Code → `CLAUDE.md`
+- [x] `formats/cursorrules.md` — Cursor → `.cursor/rules/project.mdc`
+- [x] `formats/copilot.md` — GitHub Copilot → `.github/copilot-instructions.md`
+- [x] `formats/codex.md` — OpenAI Codex CLI → `AGENTS.md`
+- [x] `formats/generic.md` — fallback → `AI_CONTEXT.md`
 
 ## Phase 6 — Quality pass
 
@@ -121,12 +121,12 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] E2E deployment target tests — `run_e2e.py` (DPL-01..03)
 - [x] Timestamped Markdown reports written after every run
 
-## Phase 10 — Templates testing
+## Phase 10 — Agents testing
 
 - [x] Test end-to-end with Claude Code (`CLAUDE.md` output) — automated via `run_e2e.py` (FMT-01)
+- [ ] Test end-to-end with OpenAI Codex CLI — automated via `run_e2e.py` (FMT-02)
 - [ ] Test end-to-end with Cursor (`.mdc` output) — automated via `run_e2e.py` (FMT-03)
 - [ ] Test end-to-end with GitHub Copilot — automated via `run_e2e.py` (FMT-04)
-- [ ] Test end-to-end with OpenAI Codex CLI — automated via `run_e2e.py` (FMT-02)
 - [ ] Document agent-specific quirks and workarounds
 
 ## Phase 11 — Validation

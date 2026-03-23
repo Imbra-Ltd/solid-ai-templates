@@ -42,7 +42,7 @@ tags: [e2e, output, grpc, python, protobuf]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/python-grpc.md`, `output/claude.md`
+2. Attach `INTERVIEW.md`, `stack/python-grpc.md`, `formats/claude.md`
 3. Interview answers:
    - Project name: MLInferenceService
    - Language: Python

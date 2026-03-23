@@ -42,7 +42,7 @@ tags: [e2e, output, react, spa, frontend]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/spa-react.md`, `output/claude.md`
+2. Attach `INTERVIEW.md`, `stack/spa-react.md`, `formats/claude.md`
 3. Interview answers:
    - Project name: DashboardApp
    - Language: TypeScript

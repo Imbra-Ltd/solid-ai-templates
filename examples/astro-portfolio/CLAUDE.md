@@ -12,7 +12,7 @@ writing, and contact information.
 - **URL**: mariachen.design
 - **Deployment**: GitHub Pages via GitHub Actions on push to `main`
 - **Stack source**: `stack/static-site-astro.md`
-- **Output format**: `output/claude.md`
+- **Output format**: `formats/claude.md`
 
 ---
 
