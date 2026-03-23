@@ -25,7 +25,8 @@ Read `SPEC.md` for the full composition model before contributing.
 
 - Git
 - A Markdown editor (any)
-- An AI agent for validation (Claude Code recommended)
+- Python 3.x — for running the structural smoke tests
+- An AI agent for validation (Claude Code recommended) — for E2E tests
 
 ## First steps
 
@@ -66,12 +67,24 @@ stack/python-flask.md
 
 ## Validate your understanding
 
-Before writing any template, run the system end-to-end:
+First, run the structural smoke tests to confirm the repo is in good shape:
+
+```bash
+py tests/run_smoke.py
+```
+
+Then run the system end-to-end with an agent:
 
 1. Open Claude Code in any project directory
 2. Attach `INTERVIEW.md` and `stack/python-flask.md`
 3. Ask: "Generate a CLAUDE.md for this project using output/claude.md format"
 4. Review the output — this is what users get
+
+Or use the automated E2E runner:
+
+```bash
+py tests/run_e2e.py STK-11   # Flask stack
+```
 
 ## Making your first contribution
 

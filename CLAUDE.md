@@ -116,11 +116,28 @@ git clone https://github.com/Imbra-Ltd/solid-ai-templates.git
 
 ## Testing
 
-- No automated tests — validation is done by running the interview with an agent
-- To validate a new template: attach `INTERVIEW.md` + the new stack to an agent
-  and confirm the generated output is coherent and complete
-- To validate a structural change: verify all `[DEPENDS ON: ...]` references
-  resolve to real files and all `[EXTEND: ...]` / `[OVERRIDE: ...]` IDs exist
+Two test runners live in `tests/`:
+
+```bash
+py tests/run_smoke.py              # 7 structural checks — no agent required
+py tests/run_smoke.py SYS-01       # run one check by ID
+
+py tests/run_e2e.py                # 30 agent-based tests via claude -p
+py tests/run_e2e.py STK-01 FMT-01  # run specific tests
+py tests/run_e2e.py --dry-run      # build prompts only, no agent call
+```
+
+Both runners write a timestamped Markdown report to `tests/reports/` after
+every run. Reports are gitignored.
+
+Spec files live in `tests/specs/`. See `tests/CODIFICATION.md` for the ID
+scheme and `tests/INDEX.md` for the full list of specs.
+
+- To validate a new template: run `py tests/run_smoke.py` and attach
+  `INTERVIEW.md` + the new stack to an agent to confirm coherent output
+- To validate a structural change: run `py tests/run_smoke.py` — it checks
+  all `[DEPENDS ON: ...]`, `[EXTEND: ...]`, `[OVERRIDE: ...]`, and
+  `manifest.yaml` references automatically
 
 ## Documentation
 
