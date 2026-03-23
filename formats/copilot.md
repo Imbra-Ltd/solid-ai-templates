@@ -3,7 +3,8 @@
 
 Used by: GitHub Copilot Chat (VS Code, JetBrains, GitHub.com)
 Output filename: `copilot-instructions.md`
-Place in: `.github/` (project root)
+Write to: `generated/copilot-instructions.md` (inside this repo)
+Place in: `.github/` (copy from `generated/` to the target project)
 
 ---
 

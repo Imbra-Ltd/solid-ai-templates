@@ -3,147 +3,96 @@
 <!--
 INSTRUCTIONS FOR THE AGENT
 ============================
-This file drives the project setup interview. Attach this file together
-with the stack/ directory and the relevant formats/ file.
-
-Follow these steps exactly:
-
-1. Ask ALL [REQUIRED] questions below, in order, grouped by section.
-2. For [DEFAULTED] sections, present the defaults and ask for deviations only.
-3. For [OPTIONAL] sections, ask only if the user has not already answered.
-4. After collecting all answers, select the matching stack template from
-   stack/ based on the language and framework answers. Confirm your choice:
-   "Based on your answers I will use stack/python-fastapi.md — correct?"
-5. Load the confirmed stack template and its DEPENDS ON chain.
-6. Apply any OVERRIDE answers from Step 6 over the stack rules.
-7. Generate the output context file using the confirmed stack + format template.
-
-Ask all REQUIRED questions before generating anything.
-Do not generate partial output or ask follow-up questions mid-generation.
+Follow the four phases below in order. Ask one question at a time.
+Always state your preference when asking a clarifying question.
+Do not generate partial output. Do not skip phases.
 -->
 
-## Step 1 — Project identity [REQUIRED]
+---
 
-1. What is the project name?
-2. What is it for, and who is it for? (one sentence)
-3. Who is the owner? (person, team, or organisation)
-4. Where is the repository hosted? (e.g. github.com/acme/my-service)
+## Phase 1 - Explore
+
+Understand what the user wants to build. Do not ask about technology yet.
+Focus on the problem, the users, and the goals.
+
+Ask one question at a time. Suggested questions (pick the most relevant):
+
+- What are you building, and who is it for?
+- What problem does it solve?
+- What are the key things the system needs to do?
 
 ---
 
-## Step 2 — Technical choices [REQUIRED]
+## Phase 2 - Clarify
 
-1. What is the primary language and runtime?
-   (e.g. Python 3.12, Go 1.22, TypeScript / Node 20, Java 21, Rust stable, Dart 3)
-2. What framework or stack are you using, if any?
-   (e.g. FastAPI, Flask, Django, Echo, Spring Boot, React, Next.js, SvelteKit,
-   NestJS, Express, Flutter, HTMX, Astro, Hugo, Terraform)
-3. What is the deployment target?
-   - `cloud` — public cloud, managed services, external CA
-   - `hybrid` — on-premises + cloud, private CA for internal traffic
-   - `offline` — air-gapped, no internet access
-4. How is the project distributed or deployed?
-   (e.g. Docker image, PyPI package, npm package, crates.io crate, Helm chart, binary)
+Ask 2-3 targeted follow-up questions to resolve ambiguity before proposing
+a stack. Always state your preference as the default. Examples:
+
+- "Will this be deployed to the cloud, or do you have on-prem constraints?
+  I'd default to cloud."
+- "Do you have a language or framework preference, or should I choose?
+  I'd go with Python + FastAPI for a backend service like this."
+- "Solo project or a team? I ask because it affects how much convention
+  detail to include - I'd assume solo for now."
 
 ---
 
-## Step 3 — Data and integrations [REQUIRED]
+## Phase 3 - Propose
 
-1. Does the project use a database? If yes, which one and via which library?
-   (e.g. PostgreSQL via SQLAlchemy 2, MySQL via GORM, MongoDB via Motor)
-2. Does the project use a message broker or event bus?
-   (e.g. RabbitMQ via aio-pika, Kafka via confluent-kafka, none)
-3. Does the project use a cache?
-   (e.g. Redis via redis-py, Memcached, none)
-4. Does the project expose or consume an API? If yes, which style?
-   (e.g. REST/OpenAPI, gRPC, GraphQL, none)
+Based on what you learned, propose a complete setup:
 
----
+- Language and version
+- Framework
+- Database and libraries (if applicable)
+- Auth mechanism (if applicable)
+- Deployment target and distribution
+- Key conventions: testing, linting, git
 
-## Step 4 — Auth [REQUIRED]
-
-1. Does the project require authentication or authorisation?
-   If yes, which mechanism?
-   (e.g. JWT bearer tokens, OAuth 2.0 / OIDC, API keys, session cookies, mTLS, none)
+Present the proposal as a short summary and ask the user to confirm or
+adjust. Proceed to Phase 4 once the user approves.
 
 ---
 
-## Step 5 — Git conventions [DEFAULTED]
+## Phase 4 - Generate
 
-Defaults from `base/git.md`:
-- Commit prefixes: `feat`, `fix`, `chore`, `docs`, `refactor`
-- Branch naming: `feat/<scope>`, `fix/<scope>`, `chore/<scope>`
-- Versioning: semver `vA.B.C` with git tags
+Before generating, collect any missing identity fields in a single question:
 
-Any deviations from these defaults?
+- Project name (if not mentioned during the conversation)
+- Owner (person, team, or organisation)
+- Repository URL (e.g. github.com/acme/my-service)
+- Which AI tool will use this file? (Claude Code / Cursor / Copilot / Codex CLI / Other)
 
----
+Then select the matching stack template from the table below and load its
+DEPENDS ON chain. Apply any adjustments from Phase 3.
+Generate the output file using the format rules in `formats/claude.md`.
 
-## Step 6 — Overrides [OPTIONAL]
-
-Are there any rules from the standard stack or base templates that this project
-should override? For example:
-
-- Different test runner than the stack default
-- Different linter or formatter
-- Non-standard branch naming
-- Any team-specific conventions not covered above
-
-List each override explicitly. Interview answers always take precedence over
-stack template rules.
-
----
-
-## Step 7 — Stack selection [AGENT]
-
-Based on the answers above, select the matching stack template from stack/:
-
-| If language + framework is... | Use... |
-|-------------------------------|--------|
-| Python + FastAPI | `stack/python-fastapi.md` |
-| Python + Flask | `stack/python-flask.md` |
-| Python + Django | `stack/python-django.md` |
-| Python + gRPC | `stack/python-grpc.md` |
-| Python + Celery | `stack/python-celery-worker.md` |
-| Python library / CLI | `stack/python-lib.md` |
-| Python service (no framework) | `stack/python-service.md` |
-| Go + Echo | `stack/go-echo.md` |
-| Go + gRPC | `stack/go-grpc.md` |
-| Go service / API | `stack/go-service.md` |
-| Go library / CLI | `stack/go-lib.md` |
-| Java + Spring Boot | `stack/java-spring-boot.md` |
-| Java + gRPC | `stack/java-grpc.md` |
-| Node.js + NestJS | `stack/node-nestjs.md` |
-| Node.js + Express | `stack/node-express.md` |
-| Node.js library / CLI | `stack/nodejs-lib.md` |
-| React SPA | `stack/spa-react.md` |
-| Vue SPA | `stack/spa-vue.md` |
-| Svelte SPA | `stack/spa-svelte.md` |
-| Next.js (full-stack) | `stack/full-nextjs.md` |
-| SvelteKit (full-stack) | `stack/full-sveltekit.md` |
-| HTMX + server rendering | `stack/htmx.md` |
-| Flutter (mobile) | `stack/mobile-flutter.md` |
-| React Native (mobile) | `stack/mobile-react-native.md` |
-| Astro (static site) | `stack/static-site-astro.md` |
-| Hugo (static site) | `stack/static-site-hugo.md` |
-| Rust library / CLI / crate | `stack/rust-lib.md` |
-| Terraform (IaC) | `stack/iac-terraform.md` |
-
-Confirm the selection with the user before proceeding.
-
----
-
-## Step 8 — Output format [REQUIRED]
-
-Which AI tool will use this context file?
-
-| Choice | Output file | Location | Format guide |
-|--------|-------------|----------|--------------|
-| Claude Code | `CLAUDE.md` | project root | `formats/claude.md` |
-| Cursor | `.cursor/rules/project.mdc` | `.cursor/rules/` | `formats/cursorrules.md` |
-| GitHub Copilot | `copilot-instructions.md` | `.github/` | `formats/copilot.md` |
-| OpenAI Codex CLI | `AGENTS.md` | project root | `formats/codex.md` |
-| Other / generic | `AI_CONTEXT.md` | project root | `formats/generic.md` |
-
-Load the corresponding file in `formats/` and apply its structure and
-formatting rules when rendering the final context file.
+| If language + framework is... | Use...                          | What it covers                                   |
+|-------------------------------|---------------------------------|--------------------------------------------------|
+| Python + FastAPI              | `stack/python-fastapi.md`       | Async REST API, Pydantic v2, DI, OpenAPI         |
+| Python + Flask                | `stack/python-flask.md`         | Sync REST API, factory pattern, blueprints       |
+| Python + Django               | `stack/python-django.md`        | Full web framework, ORM, DRF, admin              |
+| Python + gRPC                 | `stack/python-grpc.md`          | gRPC service, grpcio-aio, proto design           |
+| Python + Celery               | `stack/python-celery-worker.md` | Background tasks, retry/backoff, Beat scheduling |
+| Python library / CLI          | `stack/python-lib.md`           | Installable package or CLI tool, PyPI            |
+| Python service (no framework) | `stack/python-service.md`       | Generic Python web service, SQLAlchemy, Alembic  |
+| Go + Echo                     | `stack/go-echo.md`              | REST API, Echo v4, middleware, validation        |
+| Go + gRPC                     | `stack/go-grpc.md`              | gRPC service, bufconn, errgroup                  |
+| Go service / API              | `stack/go-service.md`           | Generic Go HTTP service, chi, structured logging |
+| Go library / CLI              | `stack/go-lib.md`               | Importable library or CLI binary                 |
+| Java + Spring Boot            | `stack/java-spring-boot.md`     | REST API, JPA, Spring Security, Flyway           |
+| Java + gRPC                   | `stack/java-grpc.md`            | gRPC service, grpc-java lifecycle                |
+| Node.js + NestJS              | `stack/node-nestjs.md`          | Structured REST API, modules, guards, pipes      |
+| Node.js + Express             | `stack/node-express.md`         | Minimal REST API, Zod validation                 |
+| Node.js library / CLI         | `stack/nodejs-lib.md`           | TypeScript npm package or CLI, tsup              |
+| React SPA                     | `stack/spa-react.md`            | Client-side app, TypeScript, RTL, a11y           |
+| Vue SPA                       | `stack/spa-vue.md`              | Client-side app, Composition API, Pinia          |
+| Svelte SPA                    | `stack/spa-svelte.md`           | Client-side app, Svelte 5 runes, Vitest          |
+| Next.js (full-stack)          | `stack/full-nextjs.md`          | App Router, Server/Client Components, API routes |
+| SvelteKit (full-stack)        | `stack/full-sveltekit.md`       | File-based routing, form actions, SSR            |
+| HTMX + server rendering       | `stack/htmx.md`                 | Server-rendered HTML, HTMX 2.x, Alpine.js        |
+| Flutter (mobile)              | `stack/mobile-flutter.md`       | iOS/Android, Riverpod, go_router, freezed        |
+| React Native (mobile)         | `stack/mobile-react-native.md`  | iOS/Android, Expo, file-based routing, Maestro   |
+| Astro (static site)           | `stack/static-site-astro.md`    | Islands architecture, client directives, MDX     |
+| Hugo (static site)            | `stack/static-site-hugo.md`     | Go templates, archetypes, content structure      |
+| Rust library / CLI / crate    | `stack/rust-lib.md`             | Rust crate or CLI, thiserror/anyhow, crates.io   |
+| Terraform (IaC)               | `stack/iac-terraform.md`        | Infrastructure as code, modules, remote state    |

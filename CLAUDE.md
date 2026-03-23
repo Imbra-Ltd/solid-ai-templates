@@ -19,7 +19,7 @@ base/           # Cross-cutting rules — apply to every project
 backend/        # Backend layer — HTTP, API, database, observability, etc.
 frontend/       # Frontend layer — UX, accessibility, CSS, SSG
 stack/          # Concrete stacks — extend base + layer templates
-formats/         # Rendering rules per AI agent tool
+formats/        # Rendering rules per AI agent tool
 examples/       # Complete generated context files (reference)
 INTERVIEW.md    # Agent-driven project setup interview
 SPEC.md         # System design, composition rules, precedence
@@ -156,12 +156,14 @@ scheme and `tests/INDEX.md` for the full list of specs.
 
 ### Documentation rules
 
-- Before every commit, update all relevant documents:
+- Before every PR, update all relevant documents:
   - `CLAUDE.md` — if architecture, naming conventions, or authoring rules change
   - `README.md` — if the stacks table, project structure, or quick start change
   - `SPEC.md` — if the composition model, inheritance rules, or ID system change
   - `ROADMAP.md` — if a template is added, removed, or renamed
   - `manifest.yaml` — if any template is added, removed, renamed, or re-depended
+  - `docs/PLAYBOOK.md` — if the workflow for generating or validating changes
+  - `docs/ONBOARDING.md` — if prerequisites or first steps change
 - Do not duplicate content across documents — cross-reference instead
 - Write in present tense — past or future tense indicates out-of-sync documentation
 

@@ -129,7 +129,13 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [ ] Test end-to-end with GitHub Copilot — automated via `run_e2e.py` (FMT-04)
 - [ ] Document agent-specific quirks and workarounds
 
-## Phase 11 — Validation
+## Phase 11 — Interview UX
+
+- [x] Stack selection table enriched with one-line descriptions
+- [x] `README.md` quick start: two paths — direct (stack template only) and interview
+- [x] `INTERVIEW.md` rewritten: explore → clarify → propose → generate flow
+
+## Phase 12 — Validation
 
 - [ ] Use the system on a real new project end-to-end (see examples)
 - [ ] Use the system on a real refactoring project end-to-end

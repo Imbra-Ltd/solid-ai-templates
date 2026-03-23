@@ -3,7 +3,8 @@
 
 Used by: Claude / Claude Code
 Output filename: `CLAUDE.md`
-Place in: project root
+Write to: `generated/CLAUDE.md` (inside this repo)
+Place in: project root (copy from `generated/` to the target project)
 
 ---
 

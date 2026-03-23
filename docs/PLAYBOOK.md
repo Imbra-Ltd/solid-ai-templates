@@ -75,19 +75,23 @@ composition model.
 
 ## Generate a context file for a project
 
+### Interview path
+
 1. Open your agent (Claude Code recommended)
-2. Attach two files:
-   - `INTERVIEW.md`
-   - The relevant stack template (e.g. `stack/python-flask.md`)
-3. For full-stack projects, attach additional layer templates if needed
-   (e.g. `backend/auth.md`)
-4. Ask the agent to generate the output:
+2. Attach `INTERVIEW.md`
+3. The agent explores what you want to build, asks a few clarifying questions,
+   proposes a stack, and generates the file once you confirm
+4. Place the generated file at the project root
+
+### Direct path
+
+1. Open your agent
+2. Attach the relevant stack template (e.g. `stack/python-flask.md`)
+3. Provide your answers inline:
    ```
-   Generate a CLAUDE.md for this project using formats/claude.md format.
+   Generate a CLAUDE.md. Name: X, owner: Y, repo: Z, database: PostgreSQL, auth: JWT.
    ```
-5. Review the output — check that base rules and stack-specific rules are
-   both present and consistent
-6. Place the generated file at the project root as `CLAUDE.md`
+4. Place the generated file at the project root
 
 ---
 
