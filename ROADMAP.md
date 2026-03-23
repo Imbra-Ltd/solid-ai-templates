@@ -135,7 +135,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] Test end-to-end with Claude Code (`CLAUDE.md` output) — automated via `run_e2e.py` (FMT-01, STK-01..20)
 - [ ] Test end-to-end with Cursor (`.mdc` output) — automated via `run_e2e.py` (FMT-03); live run pending
 - [ ] Test end-to-end with GitHub Copilot — automated via `run_e2e.py` (FMT-04); live run pending
-- [x] Test end-to-end with OpenAI Codex CLI — automated via `run_e2e.py` (FMT-02)
+- [ ] Test end-to-end with OpenAI Codex CLI — automated via `run_e2e.py` (FMT-02); live run pending
 - [ ] Document agent-specific quirks and workarounds
 
 ---
