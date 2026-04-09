@@ -8,6 +8,21 @@ frontmatter).
 
 ---
 
+## Choosing a model
+
+| | Inline | Reference |
+|---|---|---|
+| **Runtime** | Rules always in context — applied immediately | Agent must read template files first — may skip them |
+| **Maintenance** | Rules drift from templates over time | Single source of truth across projects |
+| **Best for** | Single project, reliable rule application | Multi-project consistency, shared conventions |
+
+**Recommendation:** default to inline for reliable agent behaviour. Use
+reference when maintaining conventions across multiple projects, and
+consider a hybrid — inline the most critical project-specific rules,
+reference the templates for the full quality framework.
+
+---
+
 ## Inline model (default)
 
 All rules are inlined — the output file is self-contained. Render the
