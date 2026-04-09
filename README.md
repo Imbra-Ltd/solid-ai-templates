@@ -99,6 +99,24 @@ repo: github.com/acme/my-service, database: PostgreSQL, auth: JWT.
 
 No questions asked — the agent generates immediately.
 
+### Vendor as a git submodule
+
+Check the templates into your project so your agent file can reference them
+directly:
+
+```bash
+git submodule add https://github.com/Imbra-Ltd/solid-ai-templates.git docs/solid-ai-templates
+```
+
+Then reference the base rules from your `CLAUDE.md` (or equivalent) and add
+project-specific overrides inline:
+
+```markdown
+Quality conventions defined in `docs/solid-ai-templates/base/quality.md`.
+```
+
+To pull template updates across all projects: `git submodule update --remote`.
+
 ### Compose templates manually
 
 Each template declares its dependencies with `DEPENDS ON` and can override
