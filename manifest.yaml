@@ -27,6 +27,9 @@ base:
     file: base/readme.md
   - id: base-deployment
     file: base/deployment.md
+  - id: base-typescript
+    file: base/typescript.md
+    depends_on: [base-quality]
 
 frontend:
   - id: frontend-ux
@@ -92,6 +95,7 @@ stacks:
     file: stack/static-site-astro.md
     depends_on:
       - frontend-static-site
+      - base-typescript
 
   - id: stack-react-spa
     file: stack/spa-react.md
@@ -99,6 +103,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
       - frontend-ux
       - frontend-quality
 
@@ -108,6 +113,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
       - frontend-ux
       - frontend-quality
       - stack-react-spa
@@ -187,6 +193,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
       - frontend-ux
       - frontend-quality
 
@@ -196,6 +203,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
       - frontend-ux
       - frontend-quality
 
@@ -205,6 +213,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
       - frontend-ux
       - frontend-quality
       - stack-svelte
@@ -224,6 +233,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
       - backend-config
       - backend-http
       - backend-api
@@ -240,6 +250,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
       - backend-config
       - backend-http
       - backend-api
@@ -314,6 +325,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
       - stack-react-spa
       - backend-auth
 
@@ -340,6 +352,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-typescript
 
   - id: stack-rust-lib
     file: stack/rust-lib.md
