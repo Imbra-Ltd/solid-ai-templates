@@ -13,7 +13,8 @@ Use this to find the right file when searching for a specific topic.
 | README structure and maintenance rules | `base/readme.md` |
 | Documentation standards, ADRs, docs-as-code | `base/docs.md` |
 | Architecture principles, SOLID, code style | `base/quality.md` |
-| Code review process and checklists | `base/review.md` |
+| TypeScript type design, discriminated unions, boolean naming | `base/typescript.md` |
+| Code review process, checklists, structure audit | `base/review.md` |
 | Test pyramid, coverage thresholds, naming | `base/testing.md` |
 | SAST, SCA, secret scanning, SBOM | `base/devsecops.md` |
 | Semantic versioning, release process | `base/release.md` |

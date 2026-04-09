@@ -1,5 +1,5 @@
 # Stack — SvelteKit Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md, stack/spa-svelte.md, backend/config.md, backend/http.md, backend/api.md, backend/auth.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/typescript.md, frontend/ux.md, frontend/quality.md, stack/spa-svelte.md, backend/config.md, backend/http.md, backend/api.md, backend/auth.md]
 
 Extends the Svelte stack with SvelteKit-specific rules. Covers file-based
 routing, server-side rendering, API routes, form actions, and deployment
