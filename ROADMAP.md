@@ -139,7 +139,11 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 - [x] `stack/c-embedded.md` — new: bare-metal C, GCC + CMake, Unity, HAL, binary + static lib
 
-## Phase 13 — Validation
+## Phase 13 — Language-specific base templates
+
+- [ ] `base/typescript.md` — new: type design, discriminated unions, naming, strictness
+
+## Phase 14 — Validation
 
 - [ ] Use the system on a real new project end-to-end (see examples)
 - [ ] Use the system on a real refactoring project end-to-end
