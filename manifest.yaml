@@ -369,18 +369,25 @@ stacks:
       - base-testing
 
 output:
+  - id: output-agent
+    file: formats/agent.md
   - id: output-claude
     file: formats/claude.md
+    depends_on: [output-agent]
     produces: CLAUDE.md
   - id: output-cursor
     file: formats/cursorrules.md
+    depends_on: [output-agent]
     produces: .cursor/rules/project.mdc
   - id: output-copilot
     file: formats/copilot.md
+    depends_on: [output-agent]
     produces: .github/copilot-instructions.md
   - id: output-codex
     file: formats/codex.md
+    depends_on: [output-agent]
     produces: AGENTS.md
   - id: output-generic
     file: formats/generic.md
+    depends_on: [output-agent]
     produces: AI_CONTEXT.md
