@@ -40,8 +40,13 @@ Use `base/quality.md` (and any language-specific quality template such as
 
 ## Structure audit
 A code review checks changed files. A structure audit checks project
-completeness. Run a structure audit when setting up a new project or after
-a major milestone. Verify every MUST from:
+completeness. Run a structure audit after:
+- New project setup
+- Framework or stack migration
+- Adding a major layer (backend, CI/CD, infrastructure)
+- Before a release milestone
+
+Verify every MUST from:
 
 - `base/docs.md` — standard documents (README, ONBOARDING, PLAYBOOK, ADRs)
 - `base/readme.md` — README has all 9 required sections
