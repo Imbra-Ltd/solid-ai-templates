@@ -10,6 +10,9 @@
   `type` or `kind` field plus a union is safer than class hierarchies
 - Compose sub-interfaces when a domain has multiple categories with
   different fields; keep single-purpose types flat
+- When declaring data arrays that use a discriminated union, type each
+  section with its specific sub-interface (`FlashItem[]`), not the
+  broad union (`Item[]`) — spread into the union array at the end
 - No enums — use `as const` objects or string literal unions
 - No `any` — use `unknown` and narrow, or define a proper type
 
