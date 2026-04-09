@@ -9,7 +9,9 @@
   blocks the team
 
 ## Priority order
-Apply the following order when reviewing, from most to least critical:
+Apply the following order when reviewing, from most to least critical.
+Use `base/quality.md` (and any language-specific quality template such as
+`base/typescript.md`) as the standard for items 2–4.
 
 1. **Security exposure** — anything that could be exploited, any credential
    or license problem
@@ -35,6 +37,18 @@ Apply the following order when reviewing, from most to least critical:
 - [ ] Third-party dependencies are necessary, understood, and well-maintained
 - [ ] Code is simple — no new abstraction without two or more call sites,
   no new dependency without a documented reason
+
+## Structure audit
+A code review checks changed files. A structure audit checks project
+completeness. Run a structure audit when setting up a new project or after
+a major milestone. Verify every MUST from:
+
+- `base/docs.md` — standard documents (README, ONBOARDING, PLAYBOOK, ADRs)
+- `base/readme.md` — README has all 9 required sections
+- `base/git.md` — .gitignore, README exist
+- The relevant frontend or backend layer template — required assets,
+  config files, SEO files
+- The relevant stack template — framework-specific files and conventions
 
 ## Deviations
 - Deviating from a SHOULD rule requires a written explanation in the pull
