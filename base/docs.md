@@ -27,6 +27,31 @@ levels. Every rule MUST use one of these words:
 | `docs/ONBOARDING.md` | Onboarding guide for new contributors |
 | `docs/PLAYBOOK.md` | Operational reference for common tasks |
 
+## Numbering
+- Use numbered headings (1, 1.1, 1.2, 2, 2.1, etc.) in PLAYBOOK and
+  ONBOARDING — this enables cross-referencing between documents
+  (e.g. "see PLAYBOOK 2.4")
+
+## ONBOARDING structure
+`docs/ONBOARDING.md` MUST contain the following sections in order:
+
+1. **Prerequisites** — required tools and versions (Node, Python, Docker, etc.)
+2. **First-time setup** — clone, install, configure (copy-pasteable commands)
+3. **Verify the setup** — how to confirm everything works (run dev server,
+   run tests, expected output)
+4. **Key files** — table of files a new contributor should read first
+5. **Project context** — brief domain overview and links to architecture docs
+6. **Daily workflow** — cross-reference PLAYBOOK sections, do not duplicate
+
+## PLAYBOOK structure
+`docs/PLAYBOOK.md` MUST contain the following sections in order:
+
+1. **Git workflow** — branch, commit, PR, merge, issues
+2. **Domain operations** — how to add/modify the project's core data or
+   entities (project-specific — e.g. "add a new lens", "add a migration")
+3. **Maintenance** — update dependencies, quality conventions, ADRs
+4. **Release and deploy** — release process, tagging, deployment
+
 ## Documentation rule
 Before every commit, update all relevant documentation:
 - **`CLAUDE.md`** — update if architecture, stack, design rules, or conventions change
