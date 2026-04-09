@@ -25,47 +25,57 @@ reference the templates for the full quality framework.
 
 ## Inline model (default)
 
-All rules are inlined — the output file is self-contained. Render the
-composed content in this order:
+All rules are inlined — the output file is self-contained. Use numbered
+headings for groups and subsections to enable cross-referencing between
+documents (e.g. "see CLAUDE.md section 2.3").
+
+Separate project rules (1–4) from agent instructions (5). Project rules
+describe *what the rules are*. The review process describes *how to check
+them*.
 
 ```
 # [Project Name]
 
 [One-sentence description from interview]
-
-## Project identity
 [IDENTITY answers: owner, repo URL, live URL if applicable]
 
-## Stack
+## 1. Project
+### 1.1 Stack
 [Stack template — Stack section]
-
-## Project structure
+### 1.2 Project structure
 [Stack template — architecture/structure sections]
-
-## Commands
+### 1.3 Commands
 [Stack template — Commands section]
 
-## Git conventions
+## 2. Code conventions
+### 2.1 Git
 [base/git.md + any stack EXTEND/OVERRIDE]
+### 2.2 [Language]
+[Language-specific conventions from stack template]
+### 2.3 [Additional code sections as needed]
+[Components, styling, data rules — project-specific]
 
-## Code conventions
-[Stack template — conventions sections]
-
-## Testing
+## 3. Quality
+### 3.1 Testing
 [Stack template — Testing section]
+### 3.2 [Additional quality sections as needed]
+[SEO, performance, accessibility — project-specific]
 
-## Documentation
-[base/docs.md]
-
-## Design
+## 4. Identity
+### 4.1 Design
 [Interview DESIGN answers, if applicable]
-
-## Brand voice
+### 4.2 Brand voice
 [Interview BRAND answers, if applicable]
+
+## 5. Review process
+### 5.1 Code review
+[base/review.md priority order + checklists to apply]
+### 5.2 Structure audit
+[Which templates to verify, when to run]
 ```
 
-Omit sections that are not applicable to the project (e.g. omit Design
-and Brand for a backend service).
+Omit sections that are not applicable to the project (e.g. omit section 4
+for a backend service, omit 3.2+ if only testing applies).
 
 ---
 
@@ -73,46 +83,52 @@ and Brand for a backend service).
 
 Use when the project vendors solid-ai-templates as a submodule. The agent
 file is leaner — it references the templates for base rules and only inlines
-project-specific overrides.
+project-specific overrides. Same grouped structure and numbering as the
+inline model.
 
 ```
 # [Project Name]
 
 [One-sentence description from interview]
-
 [Link to architecture docs if applicable]
 
 Quality conventions defined in `docs/solid-ai-templates/` (submodule).
 Key references:
 - [List the relevant base and layer templates for this stack]
 
-Before quality work, read the relevant templates above. Two scopes:
-- **Code review**: follow base/review.md priority order, apply
-  base/quality.md and language-specific templates as the standard.
-- **Structure audit**: verify MUSTs from base/docs.md, base/readme.md,
-  base/git.md, and relevant layer/stack templates. Run after: new project,
-  migration, new layer, or pre-release.
-
 Project-specific overrides and additions follow below.
 
-## Stack
+## 1. Project
+### 1.1 Stack
 [Stack template — Stack section]
-
-## Project structure
+### 1.2 Project structure
 [Planned or actual directory tree]
-
-## Commands
+### 1.3 Commands
 [Stack template — Commands section]
 
+## 2. Code conventions
 [PROJECT-SPECIFIC SECTIONS ONLY — e.g. Type design, Data rules,
-Component conventions, SEO, Performance. Omit anything already
-covered by the referenced templates.]
+Component conventions. Omit anything already covered by the
+referenced templates.]
 
-## Design
+## 3. Quality
+[PROJECT-SPECIFIC SECTIONS ONLY — e.g. SEO, Performance targets.
+Omit anything already covered by the referenced templates.]
+
+## 4. Identity
+### 4.1 Design
 [Interview DESIGN answers, if applicable]
-
-## Brand voice
+### 4.2 Brand voice
 [Interview BRAND answers, if applicable]
+
+## 5. Review process
+### 5.1 Code review
+Follow base/review.md priority order, apply base/quality.md and
+language-specific templates as the standard.
+### 5.2 Structure audit
+Verify MUSTs from base/docs.md, base/readme.md, base/git.md, and
+relevant layer/stack templates. Run after: new project, migration,
+new layer, or pre-release.
 ```
 
 ---
