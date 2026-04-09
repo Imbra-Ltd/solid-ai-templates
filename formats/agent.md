@@ -138,6 +138,7 @@ new layer, or pre-release.
 Both models MUST also generate:
 - `docs/ONBOARDING.md` — following the structure in `base/docs.md`
 - `docs/PLAYBOOK.md` — following the structure in `base/docs.md`
+- `docs/dev-journal.md` — following the structure in `base/docs.md`
 
 ---
 

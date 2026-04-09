@@ -26,6 +26,7 @@ levels. Every rule MUST use one of these words:
 | `CLAUDE.md` | AI agent context and project rules |
 | `docs/ONBOARDING.md` | Onboarding guide for new contributors |
 | `docs/PLAYBOOK.md` | Operational reference for common tasks |
+| `docs/dev-journal.md` | Development history and session log (MUST for agent-assisted projects) |
 
 ## Numbering
 - Use numbered headings (1, 1.1, 1.2, 2, 2.1, etc.) in PLAYBOOK and
@@ -64,6 +65,45 @@ Before every commit, update all relevant documentation:
   Records (ADR) in `docs/decisions/`
 - Each ADR documents: context, decision, alternatives considered, consequences
 - ADRs are immutable once merged — create a new ADR to supersede an old one
+- File naming: `NNN-slug.md` — zero-padded sequence number + kebab-case slug
+  (e.g. `001-data-storage.md`, `002-hosting.md`)
+- ADR file format:
+
+```markdown
+# ADR-NNN: [Decision title]
+
+**Status:** Accepted | Superseded by ADR-NNN
+**Date:** YYYY-MM-DD
+
+## Context
+[Why this decision was needed]
+
+## Decision
+[What was decided]
+
+## Alternatives considered
+[What was rejected and why]
+
+## Consequences
+[What follows from this decision]
+```
+
+- Do NOT maintain a monolithic architecture document that mixes decisions,
+  data model specs, and migration tracking — decisions go in ADRs, data
+  model is the code (`src/types/`), migration tracking belongs in the
+  dev journal or issue tracker
+
+## Development journal
+- Projects using agent-assisted development MUST maintain a
+  `docs/dev-journal.md`
+- Agents have no persistent memory across sessions — the journal provides
+  continuity by recording what was done, what changed, and why
+- Structure: architecture overview at the top, then chronological session
+  entries (newest last)
+- Each session entry records: date, tool used, key changes, decisions made
+- Do not duplicate content that belongs elsewhere — link to ADRs for
+  decisions, link to issues for task tracking, do not repeat data model
+  specs that live in code
 
 ## Writing style
 - Write in present tense — past or future tense indicates out-of-sync documentation
