@@ -1,5 +1,6 @@
 # Output Format — OpenAI Codex CLI
 [ID: output-codex]
+[DEPENDS ON: formats/agent.md]
 
 Used by: OpenAI Codex CLI
 Output filename: `AGENTS.md`
@@ -15,41 +16,7 @@ Claude-specific rules are required.
 
 ## Structure
 
-```
-# [Project Name]
-
-[One-sentence description from interview]
-Owner: [owner from interview]
-
----
-
-## Stack
-[Stack template — Stack section]
-
-## Project structure
-[Stack template — structure section]
-
----
-
-## Commands
-[Stack template — Commands section]
-
----
-
-## Code conventions
-[Stack template — conventions sections]
-
-## Git conventions
-[base/git.md + any stack EXTEND/OVERRIDE]
-
-## Testing
-[Stack template — Testing section]
-
----
-
-## Security
-[base/quality.md — Security section]
-```
+Use the inline or reference model from `formats/agent.md`.
 
 ---
 
@@ -57,10 +24,8 @@ Owner: [owner from interview]
 
 - No required structure — Codex imposes no schema
 - Full Markdown is supported; use headings, bullets, and fenced code blocks
-- Include all sections relevant to the project — Codex benefits from complete context
-- Keep lines under 80 characters where possible
-- No HTML — plain Markdown only
 - No frontmatter required
+- See `formats/agent.md` for shared formatting rules
 
 ## What to include
 
@@ -99,5 +64,5 @@ Package-level files should only contain rules that differ from or extend the roo
 
 ## Tone
 
-- Imperative and direct: "Use X", "Never do Y", "Always Z"
+- See `formats/agent.md` for shared tone
 - Include brief rationale only where a rule requires context to be followed correctly

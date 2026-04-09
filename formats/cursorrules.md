@@ -1,5 +1,6 @@
 # Output Format — Cursor
 [ID: output-cursor]
+[DEPENDS ON: formats/agent.md]
 
 Used by: Cursor IDE
 Output filename: `project.mdc`
@@ -39,30 +40,8 @@ For stack- or path-specific rules, set `alwaysApply: false` and define `globs`.
 
 ## Structure
 
-```
----
-description: Project rules for [Project Name]
-alwaysApply: true
----
-
-## Stack
-[Stack template — Stack section, condensed]
-
-## Project structure
-[Stack template — structure section, condensed]
-
-## Code conventions
-[Stack template — conventions sections]
-
-## Git conventions
-[base/git.md + any stack EXTEND/OVERRIDE, condensed]
-
-## Testing
-[Stack template — Testing section]
-
-## Commands
-[Stack template — Commands section]
-```
+Use the inline or reference model from `formats/agent.md`. Wrap the content
+in the `.mdc` frontmatter block shown above.
 
 ---
 
@@ -72,9 +51,9 @@ alwaysApply: true
 - Short, direct bullet points — no prose paragraphs
 - Remove rationale and background — rules only
 - No nested lists beyond one level
-- No HTML — plain Markdown only
 - Omit sections with no applicable rules
 - Target total file length: under 150 lines
+- See `formats/agent.md` for shared formatting rules
 
 ---
 

@@ -1,5 +1,6 @@
 # Output Format — GitHub Copilot
 [ID: output-copilot]
+[DEPENDS ON: formats/agent.md]
 
 Used by: GitHub Copilot Chat (VS Code, JetBrains, GitHub.com)
 Output filename: `copilot-instructions.md`
@@ -10,26 +11,7 @@ Place in: `.github/` (copy from `generated/` to the target project)
 
 ## Structure
 
-```
-# [Project Name]
-
-[One-sentence description from interview]
-
-## Stack
-[Stack template — Stack section, condensed]
-
-## Code conventions
-[Stack template — conventions sections, condensed]
-
-## Git conventions
-[base/git.md + any stack EXTEND/OVERRIDE, condensed]
-
-## Testing
-[Stack template — Testing section, condensed]
-
-## Commands
-[Stack template — Commands section]
-```
+Use the inline or reference model from `formats/agent.md`.
 
 ---
 
@@ -38,12 +20,10 @@ Place in: `.github/` (copy from `generated/` to the target project)
 - Natural language is acceptable — Copilot handles prose well
 - Whitespace and blank lines are ignored by Copilot; use them freely for readability
 - Bullet lists preferred for rules; short prose acceptable for context
-- No HTML — plain Markdown only
 - No frontmatter required
 - Omit sections that have no rules applicable to this project
 - Keep the file concise — Copilot adds it to every Chat session
-
----
+- See `formats/agent.md` for shared formatting rules
 
 ## What to include
 
