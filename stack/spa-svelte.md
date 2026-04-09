@@ -1,5 +1,5 @@
 # Stack — Svelte Single-Page Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/typescript.md, frontend/ux.md, frontend/quality.md]
 
 A client-side Svelte application with TypeScript. Svelte compiles components
 to vanilla JS at build time — no virtual DOM, minimal runtime overhead.

@@ -1,5 +1,5 @@
 # Stack — NestJS Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, backend/config.md, backend/http.md, backend/api.md, backend/database.md, backend/observability.md, backend/auth.md, backend/quality.md, backend/features.md, backend/messaging.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/typescript.md, backend/config.md, backend/http.md, backend/api.md, backend/database.md, backend/observability.md, backend/auth.md, backend/quality.md, backend/features.md, backend/messaging.md]
 
 A Node.js backend built with NestJS. Covers modules, controllers, providers,
 dependency injection, guards, pipes, interceptors, database integration,

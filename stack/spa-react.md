@@ -1,5 +1,5 @@
 # Stack — React Single-Page Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/typescript.md, frontend/ux.md, frontend/quality.md]
 
 A client-side React application with TypeScript. Covers component model,
 state management, routing, API integration, and tooling.

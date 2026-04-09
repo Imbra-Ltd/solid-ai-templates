@@ -1,5 +1,5 @@
 # Stack — Vue Single-Page Application
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/typescript.md, frontend/ux.md, frontend/quality.md]
 
 A client-side Vue application with TypeScript. Covers the Composition API,
 component model, state management with Pinia, routing, API integration,
