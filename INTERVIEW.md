@@ -55,16 +55,46 @@ adjust. Proceed to Phase 4 once the user approves.
 
 ## Phase 4 - Generate
 
-Before generating, collect any missing identity fields in a single question:
+Before generating, collect any missing fields in a single question:
 
 - Project name (if not mentioned during the conversation)
 - Owner (person, team, or organisation)
 - Repository URL (e.g. github.com/acme/my-service)
 - Which AI tool will use this file? (Claude Code / Cursor / Copilot / Codex CLI / Other)
+- **Inline or reference?** "Should I inline all rules into the agent file,
+  or reference solid-ai-templates as a submodule? I'd default to inline for
+  a quick start, reference if you plan to use the templates across multiple
+  projects."
 
-Then select the matching stack template from the table below and load its
+### Inline model (default)
+
+Select the matching stack template from the table below and load its
 DEPENDS ON chain. Apply any adjustments from Phase 3.
 Generate the output file using the format rules in `formats/claude.md`.
+All rules are inlined — the output file is self-contained.
+
+Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
+required structures in `base/docs.md`.
+
+### Reference model
+
+Generate a leaner agent file that references the templates instead of
+inlining them. The output file:
+
+1. Points to `docs/solid-ai-templates/` as a submodule for base quality,
+   review, and language-specific rules
+2. Lists the relevant template files for this project's stack
+3. Defines code review and structure audit scopes (which templates to
+   read for each)
+4. Contains only project-specific overrides and additions inline
+
+Tell the user to add the submodule:
+```
+git submodule add https://github.com/Imbra-Ltd/solid-ai-templates.git docs/solid-ai-templates
+```
+
+Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
+required structures in `base/docs.md`.
 
 | If language + framework is... | Use...                          | What it covers                                   |
 |-------------------------------|---------------------------------|--------------------------------------------------|
