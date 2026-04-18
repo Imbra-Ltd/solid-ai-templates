@@ -34,12 +34,20 @@
 - Every repository MUST contain a `README.md`
 - The README MUST conform to the structure and rules defined in `base/readme.md`
 
+## Versioning
+- Use [Semantic Versioning](https://semver.org/) — `MAJOR.MINOR.PATCH`
+  - **MAJOR** — incompatible API or breaking changes
+  - **MINOR** — new functionality, backwards-compatible
+  - **PATCH** — backwards-compatible bug fixes
+- Tags use the `v` prefix: `v1.0.0`, `v0.3.1`
+- Pre-release versions: `v1.0.0-alpha.1`, `v1.0.0-rc.1`
+
 ## Release process
-  1. `git checkout -b chore/release-vA.B.C.D`
-  2. `git commit --allow-empty -m "chore: release vA.B.C.D"`
+  1. `git checkout -b chore/release-vX.Y.Z`
+  2. `git commit --allow-empty -m "chore: release vX.Y.Z"`
   3. Push, open PR, merge
   4. `git checkout main && git pull`
-  5. `git tag vA.B.C.D && git push origin vA.B.C.D`
+  5. `git tag vX.Y.Z && git push origin vX.Y.Z`
 
 ## General
 - Do not commit build output, secrets, or dependency directories
