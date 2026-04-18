@@ -12,6 +12,9 @@
 - Target standard: WCAG 2.1 AA
 - Minimum text contrast ratio: 4.5:1 (normal text), 3:1 (large text)
 - All interactive elements reachable and operable by keyboard
+- Any non-focusable element (`<th>`, `<div>`, `<span>`) with `onClick` MUST
+  contain a `<button>` — `onClick` alone does not add the element to the tab
+  order or provide keyboard activation
 - Focus indicators must be visible at all times
 - No content that relies on colour alone to convey meaning
 - Images must have descriptive `alt` text; decorative images use `alt=""`
