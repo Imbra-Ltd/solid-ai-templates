@@ -40,3 +40,13 @@ When the user requests something out of scope:
 2. State what the current scope is
 3. Ask: "Should I finish the current work first, or switch to this?"
 4. If switching, commit current progress before starting the new task
+
+## End of session audit
+Before wrapping up a session, verify structural compliance:
+1. Check that all files required by referenced templates (e.g.
+   `base/docs.md`) exist and are populated
+2. Check that `CLAUDE.md` project structure matches the actual directory
+3. Check that `docs/dev-journal.md` has an entry for this session
+4. Check that any decisions made during the session have corresponding
+   ADRs in `docs/decisions/`
+5. Flag any gaps to the user before closing
