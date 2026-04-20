@@ -74,6 +74,35 @@ first-class concern.
 
 ---
 
+## Data changelog
+[ID: data-quality-changelog]
+
+- Changes to source data MUST be committed with a message explaining
+  what changed and why (e.g. "fix: update lens weight — manufacturer
+  corrected spec sheet")
+- When a scoring input changes, note that derived scores will change
+- Do not batch unrelated data changes into a single commit — one
+  entry or one field correction per commit
+- For bulk imports or migrations, document the source and method in
+  the commit message
+
+---
+
+## Identity and deduplication
+[ID: data-quality-identity]
+
+- Every entry MUST have a stable unique identifier that does not
+  change when other fields are updated
+- Define what makes two entries "the same" — document the identity
+  key (e.g. manufacturer + model name + variant)
+- Near-duplicates (regional names, revised versions, bundles) MUST
+  be distinct entries with a relationship field linking them
+- Never merge near-duplicates silently — flag for manual review
+- Discontinued items that are replaced by a successor SHOULD link
+  to the successor via a `replacedBy` field
+
+---
+
 ## Validation
 [ID: data-quality-validation]
 
