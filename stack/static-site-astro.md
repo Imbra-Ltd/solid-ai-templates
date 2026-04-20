@@ -44,7 +44,50 @@ All editable content lives in `src/data/` as JSON.
 | `src/data/[section].json` | [what it controls] |
 
 Note: `src/content/` is intentionally avoided — Astro reserves that path
-for Content Collections.
+for Content Collections. See the next section for when to migrate.
+
+---
+
+## Content Collections
+[ID: astro-content-collections]
+
+Use Astro Content Collections when data outgrows `src/data/` files:
+
+### When to migrate
+- A single data file exceeds ~200 entries or ~500 lines
+- Entries need rich text (Markdown body, not just fields)
+- Per-entry git diffs become hard to review in a single file
+- Non-developers need to author or edit content
+
+### Schema definition
+- Define collection schemas in `src/content.config.ts` using Zod
+- Every field that affects rendering or sorting MUST be in the schema
+- Use `z.enum()` for constrained values, not free strings
+- Mark optional fields explicitly with `.optional()`
+
+### File structure
+```
+src/content/
+  [collection]/
+    entry-slug.md       # frontmatter + optional Markdown body
+src/content.config.ts   # schema definitions
+```
+
+### Rendering patterns
+- Query with `getCollection()` / `getEntry()` — never read files
+  directly
+- Sort and filter in the page component, not in the data files
+- Use `render()` for Markdown body content — it returns compiled
+  HTML with full remark/rehype pipeline support
+
+### Migration checklist
+1. Create `src/content.config.ts` with Zod schema matching existing
+   data shape
+2. Convert each entry to a Markdown file with typed frontmatter
+3. Update components to use `getCollection()` instead of JSON imports
+4. Verify build passes — Astro validates frontmatter against schema
+   at build time
+5. Delete the old `src/data/` files
 
 ---
 
