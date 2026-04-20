@@ -7,11 +7,17 @@ agree with expansions rather than pushing back, leading to sessions that
 start with one task and end with five unrelated changes — none fully
 finished.
 
-## Before starting work
-- Confirm the scope with the user before making changes
-- If the task is ambiguous, ask: "What is the specific deliverable for
-  this session?"
-- Write down the agreed scope — refer back to it when the session drifts
+## Session startup
+Before starting any work, the agent MUST:
+1. Read all documents referenced in the project's CLAUDE.md (e.g.
+   `docs/solid-ai-templates/base/git.md`, `base/docs.md`, etc.)
+2. These contain binding conventions that CLAUDE.md inherits — do not
+   proceed until you have read and understood them
+3. Confirm the scope with the user before making changes
+4. If the task is ambiguous, ask: "What is the specific deliverable for
+   this session?"
+5. Write down the agreed scope — refer back to it when the session
+   drifts
 
 ## During work
 - If a task grows beyond the original scope, flag it explicitly:
