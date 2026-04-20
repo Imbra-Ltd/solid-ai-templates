@@ -12,16 +12,12 @@ Every README MUST contain the following sections, in this order:
 
 ### 1. Title and summary
 - The repository name MUST appear as a top-level heading
-- A single sentence MUST follow the title describing what the project does
-  and for whom — no preamble, no marketing language
+- 2–4 sentences MUST follow the title: what the project does, for whom,
+  what problem it solves, and why this solution exists — no preamble, no
+  marketing language
 - A badges line SHOULD follow: build status, latest version, license
 
-### 2. Overview
-- 2–4 sentences that answer: what problem does this solve, and why does
-  this solution exist instead of an alternative
-- MUST NOT duplicate or paraphrase the title summary — add new information
-
-### 3. Quick start
+### 2. Quick start
 - MUST be copy-pasteable: a reader MUST be able to go from zero to running
   in under five minutes by following this section alone
 - Prerequisites MUST be listed before the first command
@@ -29,37 +25,37 @@ Every README MUST contain the following sections, in this order:
 - MUST NOT assume environment-specific context (paths, credentials, ports)
   without stating them explicitly
 
-### 4. Usage
+### 3. Usage
 - MUST show the most common real-world usage — not every option, not
   contrived examples
 - Each example MUST include the expected output or outcome
 - If the project has multiple usage modes, each MUST have its own example
 
-### 5. Project structure
+### 4. Project structure
 - MUST include a directory tree covering the top two levels
 - Each entry MUST have a one-line description of its purpose
 - Generated directories (`dist/`, `__pycache__/`, `.venv/`) MUST be omitted
 
-### 6. Development setup
+### 5. Development setup
 - MUST cover: cloning, installing dependencies, running tests, running the
   application locally
 - MUST list every external tool or service required (database, message
   broker, etc.) and how to start it
 - If a `.env.example` file exists, MUST reference it here
 
-### 7. Configuration reference
+### 6. Configuration reference
 - SHOULD list every environment variable or configuration key the project
   reads, with type, default value, and a one-line description
 - Sensitive keys (secrets, tokens) MUST be noted as such — never show
   real values as defaults
 
-### 8. Links
+### 7. Links
 - SHOULD link to: full API / library reference, CHANGELOG, contribution
   guide, and any deployed environments (staging, docs site)
 - Internal links MUST use relative paths — not absolute URLs pointing to
   a specific branch or host
 
-### 9. License
+### 8. License
 - MUST state the license name and include a link to the full license text
 - MUST appear as the last section
 
