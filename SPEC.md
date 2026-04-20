@@ -84,6 +84,7 @@ Technology-specific rules. Each stack declares which layers it depends on.
 stack/
 ├── astro.md          # extends base + frontend + frontend/static-site
 ├── hugo.md           # extends base + frontend + frontend/static-site
+├── tutorial.md       # extends astro + base/issues + base/scope — multi-chapter tutorial site
 ├── react-spa.md      # extends base + frontend — React + TypeScript
 ├── vue.md            # extends base + frontend — Vue 3 + Pinia
 ├── svelte.md         # extends base + frontend — Svelte 5 + runes

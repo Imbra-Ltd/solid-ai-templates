@@ -30,6 +30,10 @@ base:
   - id: base-typescript
     file: base/typescript.md
     depends_on: [base-quality]
+  - id: base-issues
+    file: base/issues.md
+  - id: base-scope
+    file: base/scope.md
 
 frontend:
   - id: frontend-ux
@@ -96,6 +100,13 @@ stacks:
     depends_on:
       - frontend-static-site
       - base-typescript
+
+  - id: stack-tutorial
+    file: stack/static-site-tutorial.md
+    depends_on:
+      - stack-astro
+      - base-issues
+      - base-scope
 
   - id: stack-react-spa
     file: stack/spa-react.md

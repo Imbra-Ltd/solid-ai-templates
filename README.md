@@ -270,6 +270,7 @@ is coherent and complete.
 | `stack/full-sveltekit.md`       | full-stack | base + frontend + svelte + backend partial    |
 | `stack/static-site-astro.md`    | static     | base + frontend + frontend/static-site        |
 | `stack/static-site-hugo.md`     | static     | base + frontend + frontend/static-site        |
+| `stack/static-site-tutorial.md` | static     | static-site-astro + base/issues + base/scope  |
 | `stack/mobile-react-native.md`  | mobile     | base + react-spa + backend/auth               |
 | `stack/mobile-flutter.md`       | mobile     | base                                          |
 | `stack/iac-terraform.md`        | DevOps     | base                                          |
