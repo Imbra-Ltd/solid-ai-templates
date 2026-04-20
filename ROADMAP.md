@@ -146,6 +146,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 ## Phase 14 — Content stacks
 
 - [x] `stack/static-site-tutorial.md` — new: multi-chapter tutorial site (chapters, diagrams, CI split, CC BY-NC-SA 4.0)
+- [x] `base/data-quality.md` — new: data sourcing, completeness, freshness, scoring, validation for data-heavy projects
 
 ## Phase 15 — Validation
 

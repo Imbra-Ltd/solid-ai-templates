@@ -30,6 +30,8 @@ base:
   - id: base-typescript
     file: base/typescript.md
     depends_on: [base-quality]
+  - id: base-data-quality
+    file: base/data-quality.md
   - id: base-issues
     file: base/issues.md
   - id: base-scope
