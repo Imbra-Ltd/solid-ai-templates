@@ -35,8 +35,9 @@ base/
 ├── cicd.md        # Pipeline stages, triggers, environments, IaC, deployment
 ├── containers.md  # Dockerfile, runtime security, resource limits, Kubernetes
 ├── deployment.md  # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
-├── typescript.md  # Type design, naming, strictness — applies to all TypeScript projects
-└── templating.md  # Server-side rendering — partials, escaping, caching, forms, testing
+├── typescript.md    # Type design, naming, strictness — applies to all TypeScript projects
+├── templating.md    # Server-side rendering — partials, escaping, caching, forms, testing
+└── data-quality.md  # Data sourcing, completeness, freshness, scoring — data-heavy projects
 ```
 
 ### 2. Frontend templates (abstract, frontend layer)
