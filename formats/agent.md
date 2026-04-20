@@ -72,10 +72,17 @@ them*.
 [base/review.md priority order + checklists to apply]
 ### 5.2 Structure audit
 [Which templates to verify, when to run]
+
+## 6. Session protocol (if applicable)
+### 6.1 Startup
+[base/scope.md — Session startup: read referenced docs, confirm scope]
+### 6.2 End of session
+[base/scope.md — End of session audit: dev journal, ADRs, issues]
 ```
 
 Omit sections that are not applicable to the project (e.g. omit section 4
-for a backend service, omit 3.2+ if only testing applies).
+for a backend service, omit 3.2+ if only testing applies, omit section 6
+if the project does not use base/scope.md).
 
 ---
 
@@ -129,6 +136,13 @@ language-specific templates as the standard.
 Verify MUSTs from base/docs.md, base/readme.md, base/git.md, and
 relevant layer/stack templates. Run after: new project, migration,
 new layer, or pre-release.
+
+## 6. Session protocol (if applicable)
+### 6.1 Startup
+Read all referenced template documents before starting work.
+Confirm session scope with the user.
+### 6.2 End of session
+Update dev journal, verify docs, close resolved issues, flag gaps.
 ```
 
 ---
