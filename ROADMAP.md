@@ -143,7 +143,11 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 - [ ] `base/typescript.md` — new: type design, discriminated unions, naming, strictness
 
-## Phase 14 — Validation
+## Phase 14 — Content stacks
+
+- [x] `stack/static-site-tutorial.md` — new: multi-chapter tutorial site (chapters, diagrams, CI split, CC BY-NC-SA 4.0)
+
+## Phase 15 — Validation
 
 - [ ] Use the system on a real new project end-to-end (see examples)
 - [ ] Use the system on a real refactoring project end-to-end
