@@ -89,6 +89,79 @@ src/content.config.ts   # schema definitions
    at build time
 5. Delete the old `src/data/` files
 
+### Single-source content pattern
+[ID: astro-single-source-content]
+
+When content MUST remain SSG-agnostic (e.g. tutorial chapters that
+work as plain Markdown on GitHub, in ebooks, and in other SSGs), point
+the content collection at an external directory instead of duplicating
+files into `src/content/`.
+
+**Setup:**
+
+1. Set the glob loader `base` to the external directory:
+   ```typescript
+   // src/content.config.ts
+   const docs = defineCollection({
+     loader: glob({
+       pattern: "**/*.md",
+       base: "../chapters",  // relative to astro project root
+     }),
+     schema: z.object({ ... }),
+   });
+   ```
+
+2. Add a remark plugin to rewrite cross-reference links at build time.
+   Chapters use `[Link](02-slug.md)` for GitHub compatibility; the
+   plugin rewrites to `../slug/` for Astro routing:
+   ```typescript
+   // src/plugins/remark-rewrite-links.ts
+   import { visit } from "unist-util-visit";
+   import type { Root, Link } from "mdast";
+
+   const CHAPTER_LINK = /^(\d{2}-)(.+)\.md(#.*)?$/;
+
+   export function remarkRewriteLinks() {
+     return (tree: Root) => {
+       visit(tree, "link", (node: Link) => {
+         const match = node.url.match(CHAPTER_LINK);
+         if (match) {
+           node.url = `../${match[2]}/${match[3] || ""}`;
+         }
+       });
+     };
+   }
+   ```
+
+3. Register the plugin in `astro.config.mjs`:
+   ```javascript
+   import { remarkRewriteLinks } from
+     './src/plugins/remark-rewrite-links.ts';
+
+   export default defineConfig({
+     markdown: {
+       remarkPlugins: [remarkRewriteLinks],
+     },
+   });
+   ```
+
+4. In CI, create a symlink for shared assets if chapters reference
+   them via relative paths:
+   ```yaml
+   - name: Create assets symlink
+     run: >
+       mkdir -p astro-site/src/content &&
+       ln -s ../../../assets astro-site/src/content/assets
+   ```
+
+**Rules:**
+- MUST NOT duplicate content files into `src/content/` — the external
+  directory is the single source of truth
+- The remark plugin MUST handle all link patterns used in the source
+  Markdown (numbered prefixes, anchors)
+- Image paths from the source directory MUST resolve correctly in both
+  GitHub rendering and the Astro build
+
 ---
 
 ## Assets

@@ -68,8 +68,9 @@ and Quiz sections.
 - Reference other chapters by file: `[Topic A](02-topic-a.md)`
 - Reference sections within a chapter by heading anchor:
   `[Section Name](#section-name)`
-- The Astro build SHOULD rewrite chapter cross-references
-  automatically (see CI section)
+- The Astro build rewrites chapter cross-references automatically
+  via a remark plugin (see
+  [Single-source content pattern](static-site-astro.md#single-source-content-pattern))
 
 ---
 
