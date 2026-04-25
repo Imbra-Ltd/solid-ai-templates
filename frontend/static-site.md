@@ -87,6 +87,40 @@ to change.
 
 ---
 
+## Typography
+[ID: static-site-typography]
+
+- Prefer system font stacks over web fonts — eliminates font FOUC and
+  external dependencies:
+  ```css
+  --font-text: system-ui, -apple-system, sans-serif;
+  --font-code: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  ```
+- If web fonts are required, self-host them as woff2 files in `public/fonts/`
+  and declare `@font-face` in CSS — never depend on external CDNs at runtime
+- Use `font-display: block` for self-hosted fonts to prevent layout shift
+
+---
+
+## Theme persistence
+[ID: static-site-theme]
+
+- If the site supports dark mode via a `data-theme` attribute, initialize
+  the theme from `localStorage` in a `<script>` tag inside `<head>` —
+  before any content renders:
+  ```html
+  <script>
+    document.documentElement.setAttribute(
+      "data-theme",
+      localStorage.getItem("theme") || "light"
+    );
+  </script>
+  ```
+- MUST NOT set the theme in a body script or deferred module — this causes
+  a visible flash from light to dark on every page load
+
+---
+
 ## Performance
 [EXTEND: frontend-quality]
 
