@@ -60,5 +60,10 @@ Before ending a session, verify all of the following:
 6. **ADRs** — record any decisions made during the session in
    `docs/decisions/`
 7. **Open issues** — close resolved issues, create issues for remaining work
-8. **Flag gaps** — if any of the above cannot be completed, flag it
-   to the user before closing
+8. **Submodules** — check if upstream submodules need updates
+   (`git submodule update --remote`); commit the pointer bump if needed
+9. **Template feedback** — flag any conventions discovered or changed
+   during the session that should be contributed back to
+   solid-ai-templates
+10. **Flag gaps** — if any of the above cannot be completed, flag it
+    to the user before closing
