@@ -20,6 +20,9 @@
 ## Pull requests
 - PRs should be small and focused — one concern per PR
 - Always test locally before committing
+- **Before merging**, review the diff against the base branch. Follow
+  `base/review.md` priority order: security → correctness → clarity →
+  conventions. Check CI passes. Only merge after the review passes.
 - **Before pushing or creating a PR**, check `git status` and list open PRs.
   If the previous PR is closed or merged, create a new branch rather than
   pushing to a stale one.
