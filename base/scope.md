@@ -48,11 +48,17 @@ When the user requests something out of scope:
 4. If switching, commit current progress before starting the new task
 
 ## End of session audit
-Before wrapping up a session, verify structural compliance:
-1. Check that all files required by referenced templates (e.g.
-   `base/docs.md`) exist and are populated
-2. Check that `CLAUDE.md` project structure matches the actual directory
-3. Check that `docs/dev-journal.md` has an entry for this session
-4. Check that any decisions made during the session have corresponding
-   ADRs in `docs/decisions/`
-5. Flag any gaps to the user before closing
+Before ending a session, verify all of the following:
+1. **Dev journal** — add a session entry to `docs/dev-journal.md`
+   (date, tool, key changes, PRs merged, issues closed/created, open issues)
+2. **CLAUDE.md** — update if project structure or conventions changed
+3. **README.md** — update if public-facing info (setup, links, structure) changed
+4. **ONBOARDING.md** — update `docs/ONBOARDING.md` if prerequisites,
+   setup steps, or project structure changed
+5. **PLAYBOOK.md** — update `docs/PLAYBOOK.md` if operational
+   workflows or file paths changed
+6. **ADRs** — record any decisions made during the session in
+   `docs/decisions/`
+7. **Open issues** — close resolved issues, create issues for remaining work
+8. **Flag gaps** — if any of the above cannot be completed, flag it
+   to the user before closing
