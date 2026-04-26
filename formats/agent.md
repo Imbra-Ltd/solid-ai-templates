@@ -77,7 +77,13 @@ them*.
 ### 6.1 Startup
 [base/scope.md — Session startup: read referenced docs, confirm scope]
 ### 6.2 End of session
-[base/scope.md — End of session audit: dev journal, ADRs, issues]
+Before ending a session, verify all of the following:
+1. Dev journal — add a session entry to docs/dev-journal.md
+2. CLAUDE.md — update if project structure or conventions changed
+3. README.md — update if public-facing info changed
+4. ONBOARDING.md — update if setup steps or structure changed
+5. PLAYBOOK.md — update if workflows or file paths changed
+6. Open issues — close resolved issues, create issues for remaining work
 ```
 
 Omit sections that are not applicable to the project (e.g. omit section 4
@@ -141,7 +147,13 @@ new layer, or pre-release.
 Read all referenced template documents before starting work.
 Confirm session scope with the user.
 ### 6.2 End of session
-Update dev journal, verify docs, close resolved issues, flag gaps.
+Before ending a session, verify all of the following:
+1. Dev journal — add a session entry to docs/dev-journal.md
+2. CLAUDE.md — update if project structure or conventions changed
+3. README.md — update if public-facing info changed
+4. ONBOARDING.md — update if setup steps or structure changed
+5. PLAYBOOK.md — update if workflows or file paths changed
+6. Open issues — close resolved issues, create issues for remaining work
 ```
 
 ---
