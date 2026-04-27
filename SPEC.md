@@ -36,11 +36,24 @@ base/
 ├── containers.md  # Dockerfile, runtime security, resource limits, Kubernetes
 ├── deployment.md  # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
 ├── typescript.md    # Type design, naming, strictness — applies to all TypeScript projects
-├── templating.md    # Server-side rendering — partials, escaping, caching, forms, testing
-└── data-quality.md  # Data sourcing, completeness, freshness, scoring — data-heavy projects
+├── templating.md      # Server-side rendering — partials, escaping, caching, forms, testing
+├── data-quality.md    # Data sourcing, completeness, freshness, scoring — data-heavy projects
+└── quality-gates.md   # Three-layer gate model (editor → pre-commit → CI), thresholds, constraints
 ```
 
-### 2. Frontend templates (abstract, frontend layer)
+### 2. Platform templates (CI and security integration)
+
+CI and security tool mappings specific to a hosting platform. Orthogonal
+to the stack choice — a Python project on GitHub and a Python project on
+GitLab use the same tools; only the CI config and SAST tool differ.
+
+```
+platform/
+├── github.md      # CodeQL, GitHub Actions, gitleaks action, push protection
+└── gitlab.md      # Semgrep OSS, GitLab CI/CD, gitleaks CLI
+```
+
+### 3. Frontend templates (abstract, frontend layer)
 
 Concerns that apply to all frontend projects but not to backend or library
 projects. Extend base templates. Never used directly by a project.

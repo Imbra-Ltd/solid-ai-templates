@@ -6,6 +6,11 @@ Security is not a phase — it is part of every build, review, and release.
 Vulnerabilities and legal exposure MUST be surfaced during development —
 not after deployment.
 
+## Tool selection
+- Specific SAST and secret detection tools are defined per platform in
+  `platform/github.md` (CodeQL) and `platform/gitlab.md` (Semgrep)
+- See `base/quality-gates.md` for the three-layer enforcement model
+
 ## SAST (Static Application Security Testing)
 - Every pipeline run MUST include a static security analysis step
 - A failed scan MUST stop the build — the branch MUST NOT progress until

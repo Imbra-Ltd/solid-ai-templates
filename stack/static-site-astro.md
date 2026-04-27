@@ -1,5 +1,5 @@
 # Stack — Astro (Static Site)
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/typescript.md, frontend/ux.md, frontend/quality.md, frontend/static-site.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/quality-gates.md, base/typescript.md, frontend/ux.md, frontend/quality.md, frontend/static-site.md]
 
 Extends the static site stack with Astro-specific rules.
 
@@ -206,3 +206,22 @@ npm run dev      # develop — hot reload at localhost:4321
 npm run build    # compile — production build to dist/
 npm run preview  # verify — preview the production build locally
 ```
+---
+
+## Quality gates
+[EXTEND: base-quality-gates]
+
+| Category | Layer 1 (editor) | Layer 2 (pre-commit) | Layer 3 (CI) | Config |
+|----------|-----------------|---------------------|-------------|--------|
+| Lint | ESLint | ESLint | ESLint | `eslint.config.js` |
+| Format | Prettier | Prettier | Prettier --check | `.prettierrc` |
+| Type check | TypeScript | tsc --noEmit | tsc --noEmit | `tsconfig.json` |
+| Security | — | — | Platform SAST | — |
+| Secrets | — | gitleaks | gitleaks | — |
+| Build | — | — | astro build | — |
+| Links | — | — | lychee | `lychee.toml` |
+| Site quality | — | — | Lighthouse CI ≥ 90 | `lighthouserc.json` |
+
+- Hook framework: `husky` + `lint-staged` — config in `package.json`
+- Lighthouse thresholds: accessibility ≥ 90 (error), performance / SEO /
+  best practices ≥ 90 (warn)

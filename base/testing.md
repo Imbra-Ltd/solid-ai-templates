@@ -25,7 +25,9 @@ driver is TDD — tests are written alongside or before the code.
 - MUST cover all happy paths defined by functional requirements
 - MUST achieve 90% coverage of new code before merging
 - SHOULD cover negative scenarios and edge cases
-- The total codebase SHOULD maintain 80% unit test coverage
+- The total codebase SHOULD maintain 80% unit test coverage — see
+  `base/quality-gates.md` for the coverage policy (80% for new projects,
+  warn-only for legacy)
 - Coverage MUST NOT regress between releases
 - MUST be runnable from CI without human intervention
 - Names are not part of any external report or traceability system — they

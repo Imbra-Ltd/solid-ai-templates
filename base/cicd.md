@@ -5,6 +5,12 @@
 Every project MUST have an automated pipeline. No manual steps between a
 merged PR and a deployed artifact — humans approve, machines execute.
 
+## Quality gates
+- Stages 2–4 (lint, test, security scan) are defined in detail in
+  `base/quality-gates.md` — categories, thresholds, and tool constraints
+- Platform-specific CI integration is in `platform/github.md` or
+  `platform/gitlab.md`
+
 ## Pipeline stages
 A pipeline MUST include, in order:
 

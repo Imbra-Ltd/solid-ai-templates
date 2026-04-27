@@ -1,5 +1,5 @@
 # Stack — Python Library / CLI
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/quality-gates.md]
 
 A Python library, CLI tool, or shared package intended to be imported or
 installed. No web server, no frontend. May be published to PyPI.
@@ -111,3 +111,22 @@ ruff check src/ tests/    # lint
 ruff format src/ tests/   # format
 python -m build           # build distribution
 ```
+---
+
+## Quality gates
+[EXTEND: base-quality-gates]
+
+| Category | Layer 1 (editor) | Layer 2 (pre-commit) | Layer 3 (CI) | Config |
+|----------|-----------------|---------------------|-------------|--------|
+| Lint | Ruff | Ruff | Ruff | `pyproject.toml` |
+| Format | Ruff | Ruff format | Ruff format --check | `pyproject.toml` |
+| Type check | Pyright / mypy | mypy | mypy --strict | `pyproject.toml` |
+| Docstrings | Ruff `D` rules | Ruff `D` rules | Ruff `D` rules | `pyproject.toml` (Google convention) |
+| Security | — | — | Bandit + platform SAST | — |
+| Secrets | — | gitleaks | gitleaks | `.pre-commit-config.yaml` |
+| Tests | — | — | pytest | `pyproject.toml` |
+| Coverage | — | — | pytest-cov ≥ 80% | `pyproject.toml` |
+
+- Hook framework: `pre-commit` — config in `.pre-commit-config.yaml`
+- Docstring convention: Google — enforced via Ruff `D` rules with
+  `convention = "google"` in `pyproject.toml`
