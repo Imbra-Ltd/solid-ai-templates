@@ -4,7 +4,7 @@ Composable, SOLID-inspired templates for generating AI agent context files.
 
 ## Overview
 
-Most AI context files (`CLAUDE.md`, `AGENTS.md`, `.cursor/rules/project.mdc`)
+Most AI context files (`CLAUDE.md`, `AGENTS.md`)
 are written from scratch for each project and quickly fall out of sync.
 This repository provides a reusable template system — structured like
 object-oriented design — where base rules are defined once and composed with
@@ -71,9 +71,8 @@ solid-ai-templates/INTERVIEW.md
 The agent explores what you want to build, proposes a stack, and generates
 the file once you confirm.
 
-**Available output formats:** `CLAUDE.md`, `AGENTS.md`,
-`.cursor/rules/project.mdc`, `.github/copilot-instructions.md`,
-`AI_CONTEXT.md`
+**Available output formats:** `CLAUDE.md` (Claude Code),
+`AGENTS.md` (Codex CLI, Devin, Cursor, Windsurf)
 
 ## Usage
 
@@ -216,9 +215,9 @@ solid-ai-templates/
 ├── stack/          # Concrete stacks — extend base + layer templates
 ├── formats/        # Output format guides per agent tool
 ├── examples/       # Complete generated context files (reference)
+├── tools/          # sync.py — generates tables from manifest.yaml
 ├── INTERVIEW.md    # Agent-driven project setup interview
 ├── SPEC.md         # System design, composition rules, precedence
-├── CONCEPTS.md     # Concept-to-file navigation index
 └── ROADMAP.md      # Project status and planned work
 ```
 
@@ -246,53 +245,53 @@ is coherent and complete.
 
 ## Supported stacks
 
-| Template                        | Layer      | Extends                                       |
-|---------------------------------|------------|-----------------------------------------------|
-| `stack/python-lib.md`           | library    | base                                          |
-| `stack/python-service.md`       | abstract   | base + backend + python-lib                   |
-| `stack/python-flask.md`         | backend    | python-service                                |
-| `stack/python-fastapi.md`       | backend    | python-service + backend/concurrency          |
-| `stack/python-django.md`        | backend    | python-service + backend/api + backend/auth   |
-| `stack/python-celery-worker.md` | backend    | base + backend/jobs + python-lib              |
-| `stack/go-lib.md`               | library    | base                                          |
-| `stack/go-service.md`           | abstract   | base + backend + go-lib                       |
-| `stack/go-echo.md`              | backend    | go-service                                    |
-| `stack/go-grpc.md`              | backend    | go-service + backend/grpc                     |
-| `stack/python-grpc.md`          | backend    | python-lib + backend/grpc                     |
-| `stack/java-grpc.md`            | backend    | base + backend/grpc                           |
-| `stack/node-express.md`         | backend    | base + backend                                |
-| `stack/node-nestjs.md`          | backend    | base + backend                                |
-| `stack/java-spring-boot.md`     | backend    | base + backend                                |
-| `stack/spa-react.md`            | frontend   | base + frontend                               |
-| `stack/spa-vue.md`              | frontend   | base + frontend                               |
-| `stack/spa-svelte.md`           | frontend   | base + frontend                               |
-| `stack/full-nextjs.md`          | full-stack | base + frontend + react-spa + backend partial |
-| `stack/full-sveltekit.md`       | full-stack | base + frontend + svelte + backend partial    |
-| `stack/static-site-astro.md`    | static     | base + frontend + frontend/static-site        |
-| `stack/static-site-hugo.md`     | static     | base + frontend + frontend/static-site        |
-| `stack/static-site-tutorial.md` | static     | static-site-astro + base/issues + base/scope  |
-| `stack/mobile-react-native.md`  | mobile     | base + react-spa + backend/auth               |
-| `stack/mobile-flutter.md`       | mobile     | base                                          |
-| `stack/iac-terraform.md`        | DevOps     | base                                          |
-| `stack/nodejs-lib.md`           | library    | base                                          |
-| `stack/rust-lib.md`             | library    | base                                          |
-| `stack/c-embedded.md`           | embedded   | base                                          |
-| `stack/htmx.md`                 | hypermedia | backend/templating                            |
+<!-- generated:readme-stacks -->
+| Template | Layer | Description |
+|----------|-------|-------------|
+| `stack/htmx.md` | hypermedia | HTMX 2.x, Alpine.js, SSE, OOB swaps, partial responses |
+| `stack/static-site-astro.md` | static | Islands architecture, client directives, content collections |
+| `stack/static-site-tutorial.md` | static | Multi-chapter tutorial, diagrams, CC BY-NC-SA |
+| `stack/spa-react.md` | frontend | Client-side app, TypeScript, RTL, a11y |
+| `stack/full-nextjs.md` | full-stack | App Router, Server/Client Components, API routes |
+| `stack/python-lib.md` | library | Installable package or CLI tool, mypy, ruff, pytest |
+| `stack/python-service.md` | abstract | Generic Python web service, SQLAlchemy, Alembic |
+| `stack/python-flask.md` | backend | Sync REST API, factory pattern, blueprints |
+| `stack/python-fastapi.md` | backend | Async REST API, Pydantic v2, DI, OpenAPI |
+| `stack/python-django.md` | backend | Full web framework, ORM, DRF, admin |
+| `stack/go-lib.md` | library | Importable library or CLI binary |
+| `stack/go-service.md` | abstract | Generic Go HTTP service, chi, structured logging |
+| `stack/go-echo.md` | backend | REST API, Echo v4, middleware, validation |
+| `stack/spa-vue.md` | frontend | Client-side app, Composition API, Pinia, Vitest |
+| `stack/spa-svelte.md` | frontend | Client-side app, Svelte 5 runes, Vitest |
+| `stack/full-sveltekit.md` | full-stack | File-based routing, form actions, SSR |
+| `stack/static-site-hugo.md` | static | Go templates, archetypes, content structure |
+| `stack/node-express.md` | backend | Minimal REST API, Zod validation, Supertest |
+| `stack/node-nestjs.md` | backend | Modules, controllers, providers, guards, pipes, DI |
+| `stack/java-spring-boot.md` | backend | REST API, JPA, Spring Security, Flyway |
+| `stack/python-celery-worker.md` | backend | Background tasks, retry/backoff, Beat scheduling |
+| `stack/go-grpc.md` | backend | gRPC service, bufconn, errgroup |
+| `stack/python-grpc.md` | backend | gRPC service, grpcio-aio, proto design |
+| `stack/java-grpc.md` | backend | gRPC service, grpc-java lifecycle |
+| `stack/mobile-react-native.md` | mobile | iOS/Android, Expo, file-based routing, Maestro |
+| `stack/mobile-flutter.md` | mobile | iOS/Android, Riverpod, go_router, freezed |
+| `stack/iac-terraform.md` | DevOps | Infrastructure as code, modules, remote state |
+| `stack/nodejs-lib.md` | library | TypeScript npm package or CLI, tsup, Vitest |
+| `stack/rust-lib.md` | library | Rust crate or CLI, thiserror/anyhow, crates.io |
+| `stack/c-embedded.md` | embedded | GCC + CMake, Unity tests, HAL, binary + .a |
+<!-- /generated:readme-stacks -->
 
 ## Supported agents
 
-| Agent            | Output file                       | Format guide             |
-|------------------|-----------------------------------|--------------------------|
-| Claude Code      | `CLAUDE.md`                       | `formats/claude.md`      |
-| Cursor           | `.cursor/rules/project.mdc`       | `formats/cursorrules.md` |
-| GitHub Copilot   | `.github/copilot-instructions.md` | `formats/copilot.md`     |
-| OpenAI Codex CLI | `AGENTS.md`                       | `formats/codex.md`       |
-| Generic / other  | `AI_CONTEXT.md`                   | `formats/generic.md`     |
+| Agent | Output file |
+|-------|-------------|
+| Claude Code | `CLAUDE.md` |
+| Codex CLI, Devin, Cursor, Windsurf | `AGENTS.md` |
+
+See `formats/agents.md` for structure, models, and formatting rules.
 
 ## Links
 
 - [System design and composition rules](SPEC.md)
-- [Concept-to-file navigation index](CONCEPTS.md)
 - [Project status and roadmap](ROADMAP.md)
 - [Example generated context files](examples/)
 

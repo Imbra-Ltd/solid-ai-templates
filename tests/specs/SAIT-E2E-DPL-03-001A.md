@@ -42,7 +42,7 @@ tags: [e2e, deployment, offline, air-gapped, pki]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `base/deployment.md`, `formats/claude.md`
+2. Attach `INTERVIEW.md`, `stack/python-fastapi.md`, `base/deployment.md`, `formats/agents.md`
 3. Interview answers:
    - Project name: SecureIngestService
    - Language: Python

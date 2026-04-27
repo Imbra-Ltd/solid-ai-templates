@@ -27,7 +27,7 @@ def read(rel_path):
         return f.read()
 
 
-def build_prompt(stack_file, answers, output_file="formats/claude.md",
+def build_prompt(stack_file, answers, output_file="formats/agents.md",
                  extra_files=()):
     interview = read("INTERVIEW.md")
     stack = read(stack_file)
@@ -616,7 +616,7 @@ TESTS = [
         "id": "FMT-01",
         "spec": "SAIT-E2E-FMT-01-001A",
         "stack": "stack/python-fastapi.md",
-        "output_file": "formats/claude.md",
+        "output_file": "formats/agents.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -640,7 +640,7 @@ TESTS = [
         "id": "FMT-02",
         "spec": "SAIT-E2E-FMT-02-001A",
         "stack": "stack/python-fastapi.md",
-        "output_file": "formats/codex.md",
+        "output_file": "formats/agents.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -657,76 +657,22 @@ TESTS = [
         # keywords would indicate the model applied the wrong output format
         "forbidden": ["alwaysApply", "applyTo", "frontmatter"],
     },
-    # -------------------------------------------------------------------------
-    # FMT-03  Cursor .mdc
-    # -------------------------------------------------------------------------
+    # FMT-03, FMT-04, FMT-05 removed — cursorrules, copilot, generic
+    # formats dropped in favour of CLAUDE.md + AGENTS.md only
     {
         "id": "FMT-03",
         "spec": "SAIT-E2E-FMT-03-001A",
-        "stack": "stack/python-fastapi.md",
-        "output_file": "formats/cursorrules.md",
-        "answers": {
-            "Project name": "OrderService",
-            "Database": "PostgreSQL via SQLAlchemy 2",
-            "Auth": "JWT bearer tokens",
-            "Output format": "Cursor .mdc",
-        },
-        "required": [
-            "alwaysApply",
-            "description:",
-            "## Stack", "## Code conventions",
-            "## Git conventions", "## Testing",
-            "Python", "FastAPI",
-        ],
-        "forbidden": [],
+        "skip": True,
     },
-    # -------------------------------------------------------------------------
-    # FMT-04  GitHub Copilot
-    # -------------------------------------------------------------------------
     {
         "id": "FMT-04",
         "spec": "SAIT-E2E-FMT-04-001A",
-        "stack": "stack/python-fastapi.md",
-        "output_file": "formats/copilot.md",
-        "answers": {
-            "Project name": "OrderService",
-            "Database": "PostgreSQL via SQLAlchemy 2",
-            "Auth": "JWT bearer tokens",
-            "Output format": "copilot-instructions.md",
-        },
-        "required": [
-            "## Stack", "## Code conventions",
-            "## Git conventions", "## Testing", "## Commands",
-            "Python", "FastAPI",
-            "feat/",
-        ],
-        # copilot-instructions.md has no frontmatter or glob patterns — these
-        # keywords belong to Cursor (.mdc) format and must not appear here
-        "forbidden": ["alwaysApply", "globs:"],
+        "skip": True,
     },
-    # -------------------------------------------------------------------------
-    # FMT-05  Generic AI_CONTEXT.md
-    # -------------------------------------------------------------------------
     {
         "id": "FMT-05",
         "spec": "SAIT-E2E-FMT-05-001A",
-        "stack": "stack/python-fastapi.md",
-        "output_file": "formats/generic.md",
-        "answers": {
-            "Project name": "OrderService",
-            "Database": "PostgreSQL via SQLAlchemy 2",
-            "Auth": "JWT bearer tokens",
-            "Output format": "AI_CONTEXT.md",
-        },
-        "required": [
-            "## Stack", "## Architecture", "## Commands",
-            "## Code conventions", "## Git conventions", "## Testing",
-            "Python", "FastAPI",
-            "feat/",
-        ],
-        # generic format has no tool-specific directives — alwaysApply is a
-        # Cursor keyword and must not appear in a tool-agnostic output
-        "forbidden": ["alwaysApply"],
+        "skip": True,
     },
     # -------------------------------------------------------------------------
     # ITV-02  DEFAULTED sections pre-filled without user input
@@ -871,7 +817,7 @@ def run_test(test, dry_run=False):
 
     prompt = build_prompt(
         test["stack"], test["answers"],
-        test.get("output_file", "formats/claude.md"),
+        test.get("output_file", "formats/agents.md"),
         test.get("extra_files", ()),
     )
 

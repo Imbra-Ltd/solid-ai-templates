@@ -60,17 +60,18 @@ Before generating, collect any missing fields in a single question:
 - Project name (if not mentioned during the conversation)
 - Owner (person, team, or organisation)
 - Repository URL (e.g. github.com/acme/my-service)
-- Which AI tool will use this file? (Claude Code / Cursor / Copilot / Codex CLI / Other)
-- **Inline or reference?** "Should I inline all rules into the agent file,
-  or reference solid-ai-templates as a submodule? I'd default to inline for
-  a quick start, reference if you plan to use the templates across multiple
-  projects."
+- Output filename: `CLAUDE.md` (Claude Code) or `AGENTS.md`
+  (all others)? I'd default to `CLAUDE.md`.
+- **Inline, reference, or hybrid?** "Should I inline all rules, reference
+  solid-ai-templates as a submodule, or use a hybrid (inline critical rules,
+  reference the rest)? I'd default to inline for a single project, hybrid
+  if you plan to use the templates across multiple projects."
 
 ### Inline model (default)
 
 Select the matching stack template from the table below and load its
 DEPENDS ON chain. Apply any adjustments from Phase 3.
-Generate the output file using the format rules in `formats/claude.md`.
+Generate the output file using the format rules in `formats/agents.md`.
 All rules are inlined — the output file is self-contained.
 
 Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
@@ -96,34 +97,58 @@ git submodule add https://github.com/Imbra-Ltd/solid-ai-templates.git docs/solid
 Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
 required structures in `base/docs.md`.
 
-| If language + framework is... | Use...                          | What it covers                                   |
-|-------------------------------|---------------------------------|--------------------------------------------------|
-| Python + FastAPI              | `stack/python-fastapi.md`       | Async REST API, Pydantic v2, DI, OpenAPI         |
-| Python + Flask                | `stack/python-flask.md`         | Sync REST API, factory pattern, blueprints       |
-| Python + Django               | `stack/python-django.md`        | Full web framework, ORM, DRF, admin              |
-| Python + gRPC                 | `stack/python-grpc.md`          | gRPC service, grpcio-aio, proto design           |
-| Python + Celery               | `stack/python-celery-worker.md` | Background tasks, retry/backoff, Beat scheduling |
-| Python library / CLI          | `stack/python-lib.md`           | Installable package or CLI tool, PyPI            |
-| Python service (no framework) | `stack/python-service.md`       | Generic Python web service, SQLAlchemy, Alembic  |
-| Go + Echo                     | `stack/go-echo.md`              | REST API, Echo v4, middleware, validation        |
-| Go + gRPC                     | `stack/go-grpc.md`              | gRPC service, bufconn, errgroup                  |
-| Go service / API              | `stack/go-service.md`           | Generic Go HTTP service, chi, structured logging |
-| Go library / CLI              | `stack/go-lib.md`               | Importable library or CLI binary                 |
-| Java + Spring Boot            | `stack/java-spring-boot.md`     | REST API, JPA, Spring Security, Flyway           |
-| Java + gRPC                   | `stack/java-grpc.md`            | gRPC service, grpc-java lifecycle                |
-| Node.js + NestJS              | `stack/node-nestjs.md`          | Structured REST API, modules, guards, pipes      |
-| Node.js + Express             | `stack/node-express.md`         | Minimal REST API, Zod validation                 |
-| Node.js library / CLI         | `stack/nodejs-lib.md`           | TypeScript npm package or CLI, tsup              |
-| React SPA                     | `stack/spa-react.md`            | Client-side app, TypeScript, RTL, a11y           |
-| Vue SPA                       | `stack/spa-vue.md`              | Client-side app, Composition API, Pinia          |
-| Svelte SPA                    | `stack/spa-svelte.md`           | Client-side app, Svelte 5 runes, Vitest          |
-| Next.js (full-stack)          | `stack/full-nextjs.md`          | App Router, Server/Client Components, API routes |
-| SvelteKit (full-stack)        | `stack/full-sveltekit.md`       | File-based routing, form actions, SSR            |
-| HTMX + server rendering       | `stack/htmx.md`                 | Server-rendered HTML, HTMX 2.x, Alpine.js        |
-| Flutter (mobile)              | `stack/mobile-flutter.md`       | iOS/Android, Riverpod, go_router, freezed        |
-| React Native (mobile)         | `stack/mobile-react-native.md`  | iOS/Android, Expo, file-based routing, Maestro   |
-| Astro (static site)           | `stack/static-site-astro.md`    | Islands architecture, client directives, MDX     |
-| Hugo (static site)            | `stack/static-site-hugo.md`     | Go templates, archetypes, content structure      |
-| Rust library / CLI / crate    | `stack/rust-lib.md`             | Rust crate or CLI, thiserror/anyhow, crates.io   |
-| Terraform (IaC)               | `stack/iac-terraform.md`        | Infrastructure as code, modules, remote state    |
-| Embedded C (bare metal)       | `stack/c-embedded.md`           | GCC + CMake, Unity tests, HAL, binary + .a       |
+### Hybrid model
+
+Generate an agent file that inlines critical rules and references the
+templates for the rest. Follow the hybrid model structure in
+`formats/agents.md`. The output file:
+
+1. Points to `docs/solid-ai-templates/` as a submodule
+2. Lists ALL template files in the dependency chain
+3. Inlines git conventions, project structure, language-specific
+   safety rules, and content rules
+4. References quality framework, review process, testing, a11y,
+   SEO, and CI/CD from the templates
+
+Tell the user to add the submodule:
+```
+git submodule add https://github.com/Imbra-Ltd/solid-ai-templates.git docs/solid-ai-templates
+```
+
+Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
+required structures in `base/docs.md`.
+
+<!-- generated:interview-stacks -->
+| If the project is... | Use... | What it covers |
+|----------------------|--------|----------------|
+| HTMX + server rendering | `stack/htmx.md` | HTMX 2.x, Alpine.js, SSE, OOB swaps, partial responses |
+| Astro (static site) | `stack/static-site-astro.md` | Islands architecture, client directives, content collections |
+| Astro tutorial site | `stack/static-site-tutorial.md` | Multi-chapter tutorial, diagrams, CC BY-NC-SA |
+| React SPA | `stack/spa-react.md` | Client-side app, TypeScript, RTL, a11y |
+| Next.js (full-stack) | `stack/full-nextjs.md` | App Router, Server/Client Components, API routes |
+| Python library / CLI | `stack/python-lib.md` | Installable package or CLI tool, mypy, ruff, pytest |
+| Python service (no framework) | `stack/python-service.md` | Generic Python web service, SQLAlchemy, Alembic |
+| Python + Flask | `stack/python-flask.md` | Sync REST API, factory pattern, blueprints |
+| Python + FastAPI | `stack/python-fastapi.md` | Async REST API, Pydantic v2, DI, OpenAPI |
+| Python + Django | `stack/python-django.md` | Full web framework, ORM, DRF, admin |
+| Go library / CLI | `stack/go-lib.md` | Importable library or CLI binary |
+| Go service / API | `stack/go-service.md` | Generic Go HTTP service, chi, structured logging |
+| Go + Echo | `stack/go-echo.md` | REST API, Echo v4, middleware, validation |
+| Vue SPA | `stack/spa-vue.md` | Client-side app, Composition API, Pinia, Vitest |
+| Svelte SPA | `stack/spa-svelte.md` | Client-side app, Svelte 5 runes, Vitest |
+| SvelteKit (full-stack) | `stack/full-sveltekit.md` | File-based routing, form actions, SSR |
+| Hugo (static site) | `stack/static-site-hugo.md` | Go templates, archetypes, content structure |
+| Node.js + Express | `stack/node-express.md` | Minimal REST API, Zod validation, Supertest |
+| Node.js + NestJS | `stack/node-nestjs.md` | Modules, controllers, providers, guards, pipes, DI |
+| Java + Spring Boot | `stack/java-spring-boot.md` | REST API, JPA, Spring Security, Flyway |
+| Python + Celery | `stack/python-celery-worker.md` | Background tasks, retry/backoff, Beat scheduling |
+| Go + gRPC | `stack/go-grpc.md` | gRPC service, bufconn, errgroup |
+| Python + gRPC | `stack/python-grpc.md` | gRPC service, grpcio-aio, proto design |
+| Java + gRPC | `stack/java-grpc.md` | gRPC service, grpc-java lifecycle |
+| React Native (mobile) | `stack/mobile-react-native.md` | iOS/Android, Expo, file-based routing, Maestro |
+| Flutter (mobile) | `stack/mobile-flutter.md` | iOS/Android, Riverpod, go_router, freezed |
+| Terraform (IaC) | `stack/iac-terraform.md` | Infrastructure as code, modules, remote state |
+| Node.js library / CLI | `stack/nodejs-lib.md` | TypeScript npm package or CLI, tsup, Vitest |
+| Rust library / CLI / crate | `stack/rust-lib.md` | Rust crate or CLI, thiserror/anyhow, crates.io |
+| Embedded C (bare metal) | `stack/c-embedded.md` | GCC + CMake, Unity tests, HAL, binary + .a |
+<!-- /generated:interview-stacks -->

@@ -42,7 +42,7 @@ tags: [e2e, output, python, library]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/python-lib.md`, `formats/claude.md`
+2. Attach `INTERVIEW.md`, `stack/python-lib.md`, `formats/agents.md`
 3. Interview answers:
    - Project name: validify
    - Language: Python

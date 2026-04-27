@@ -4,62 +4,83 @@ Composable, SOLID-inspired template system for generating AI agent context
 files (CLAUDE.md, AGENTS.md, .cursor/rules/project.mdc, etc.) for any
 project type.
 
-## Project identity
+## 1. Project
+
+### 1.1 Identity
 
 - **Name**: solid-ai-templates
 - **Owner**: Imbra Ltd — Branimir Georgiev
 - **Repo**: github.com/Imbra-Ltd/solid-ai-templates
 - **Stack**: plain Markdown — no build step, no runtime dependencies
-- **Output**: context files for Claude Code, Cursor, GitHub Copilot, Codex CLI
+- **Output**: context files for Claude Code, Cursor, GitHub Copilot,
+  Codex CLI
+- **Model**: inline — all rules are self-contained in this file
 
-## Architecture
+### 1.2 Architecture
 
 ```
 base/           # Cross-cutting rules — apply to every project
-backend/        # Backend layer — HTTP, API, database, observability, etc.
+backend/        # Backend layer — HTTP, API, database, observability
 frontend/       # Frontend layer — UX, accessibility, CSS, SSG
+platform/       # CI and security tool mappings per hosting platform
 stack/          # Concrete stacks — extend base + layer templates
 formats/        # Rendering rules per AI agent tool
 examples/       # Complete generated context files (reference)
+generated/      # Agent output directory (gitignored)
+tests/          # Smoke and e2e test runners, specs, reports
+docs/           # Onboarding, playbook, decision logs
 INTERVIEW.md    # Agent-driven project setup interview
 SPEC.md         # System design, composition rules, precedence
 ROADMAP.md      # Project status and planned work
 manifest.yaml   # Machine-readable dependency graph
-CONCEPTS.md     # Concept-to-file navigation index
+tools/          # sync.py — generates tables from manifest
 ```
 
-### Template naming convention
+### 1.3 Template naming convention
 
 Stack files follow a `<prefix>-<name>.md` pattern:
 
 | Prefix | Examples |
 |--------|---------|
-| `python-` | python-flask, python-fastapi, python-django, python-grpc |
+| `python-` | python-flask, python-fastapi, python-django, python-grpc, python-celery-worker |
 | `go-` | go-lib, go-service, go-echo, go-grpc |
 | `java-` | java-spring-boot, java-grpc |
 | `node-` | node-express, node-nestjs |
+| `nodejs-` | nodejs-lib |
 | `spa-` | spa-react, spa-vue, spa-svelte |
 | `full-` | full-nextjs, full-sveltekit |
 | `mobile-` | mobile-flutter, mobile-react-native |
-| `static-site-` | static-site-astro, static-site-hugo |
+| `static-site-` | static-site-astro, static-site-hugo, static-site-tutorial |
 | `iac-` | iac-terraform |
+| `rust-` | rust-lib |
+| `c-` | c-embedded |
 
-### Inheritance model
+Stacks without a variant use a bare name (e.g. `htmx.md`).
+
+### 1.4 Inheritance model
 
 ```
-base/ → frontend/ or backend/ → stack/
+base/ ──┬── frontend/ ──┐
+        ├── backend/  ──┼── stack/
+        └── platform/ ──┘
 ```
 
 - Every stack declares `[DEPENDS ON: ...]` at the top
 - Sections are tagged `[ID: ...]`, extended with `[EXTEND: ...]`,
   replaced with `[OVERRIDE: ...]`
+- Platform templates are orthogonal to the stack chain — a project
+  picks one platform regardless of stack
 - `manifest.yaml` is the machine-readable dependency graph
 
-## Commands
+### 1.5 Commands
 
 ```bash
 # No build step — all templates are plain Markdown
 git clone https://github.com/Imbra-Ltd/solid-ai-templates.git
+
+# Sync generated sections after editing manifest.yaml
+py tools/sync.py            # update SPEC.md, README.md, INTERVIEW.md
+py tools/sync.py --check    # exit 1 if any file is out of sync
 
 # To generate a context file for a project:
 # 1. Open your agent
@@ -67,81 +88,97 @@ git clone https://github.com/Imbra-Ltd/solid-ai-templates.git
 # 3. Ask the agent to generate CLAUDE.md (or AGENTS.md, etc.)
 ```
 
-## Git conventions
+## 2. Code conventions
+
+### 2.1 Git
 
 - Branch: `main` (protected) — never commit directly
-- Branch naming: `feat/<scope>`, `fix/<scope>`, `docs/<scope>`, `chore/<scope>`
-- Commits: `<type>(<scope>): <summary>` — types: feat, fix, chore, docs, refactor
-- PRs are small and focused — one concern per PR; one approval required to merge
-- After a PR is merged, delete branch and pull main before starting new work
+- Branch naming: `feat/<scope>`, `fix/<scope>`, `docs/<scope>`,
+  `chore/<scope>`
+- Commits: `<type>(<scope>): <summary>` — types: feat, fix, chore,
+  docs, refactor
+- PRs are small and focused — one concern per PR; one approval
+  required to merge
+- After a PR is merged, delete branch and pull main before starting
+  new work
 - Do not commit `.idea/`, editor config, or any generated output
 
-## Code conventions
+### 2.2 Adding a new stack template
 
-### Adding a new stack template
+1. Create `stack/<prefix>-<name>.md` following an existing file of
+   the same category
+2. Add `[DEPENDS ON: ...]` at the top — list every template this
+   extends
+3. Tag every section with `[ID: <name>]` or `[EXTEND: <id>]` /
+   `[OVERRIDE: <id>]`
+4. Register in `manifest.yaml` under `stacks:` with `depends_on`,
+   `description`, `label`, and `layer` fields
+5. Run `py tools/sync.py` — updates SPEC.md, README.md, INTERVIEW.md
+6. Add to `ROADMAP.md` under the current phase
+7. Add an example in `examples/<name>/CLAUDE.md` if the stack is
+   concrete
 
-1. Create `stack/<prefix>-<name>.md` following an existing file of the same category
-2. Add `[DEPENDS ON: ...]` at the top — list every template this extends
-3. Tag every section with `[ID: <name>]` or `[EXTEND: <id>]` / `[OVERRIDE: <id>]`
-4. Register in `manifest.yaml` under `stacks:` with a `depends_on` list
-5. Add to the stack list in `SPEC.md`
-6. Add to the stacks table in `README.md`
-7. Add to `ROADMAP.md` under the current phase
-8. Add an example in `examples/<name>/CLAUDE.md` if the stack is concrete
+### 2.3 Adding a new base or layer template
 
-### Adding a new base or layer template
-
-1. Create `base/<name>.md`, `backend/<name>.md`, or `frontend/<name>.md`
+1. Create `base/<name>.md`, `backend/<name>.md`,
+   `frontend/<name>.md`, or `platform/<name>.md`
 2. Tag the file with `[ID: <layer>-<name>]`
 3. Tag every section with a unique `[ID: ...]`
-4. Register in `manifest.yaml` under the correct layer key
-5. Update `SPEC.md` — add to the relevant directory listing
+4. Register in `manifest.yaml` under the correct layer key with
+   a `description` field
+5. Run `py tools/sync.py` — updates SPEC.md directory listings
 6. Reference from dependent stack templates via `[DEPENDS ON: ...]`
 
-### Template authoring rules
+### 2.4 Template authoring rules
 
-- Sections use imperative, direct language: "Use X", "Never Y", "Always Z"
+- Sections use imperative, direct language: "Use X", "Never Y",
+  "Always Z"
 - No explanatory prose in rule lists — rules only
-- Use `[ID: ...]` on every section that another template might EXTEND or OVERRIDE
+- Use `[ID: ...]` on every section that another template might
+  EXTEND or OVERRIDE
 - Optional sections are marked `(if applicable)` in the heading
 - Keep line length under 80 characters
 - No HTML — Markdown only
 
-### manifest.yaml
+### 2.5 manifest.yaml
 
-- Every template file MUST have a corresponding entry in `manifest.yaml`
+- Every template file MUST have a corresponding entry in
+  `manifest.yaml`
 - IDs MUST be unique across all layers
-- `depends_on` lists MUST reference valid IDs — no dangling references
-- Stack entries go under `stacks:`, base under `base:`, layer under `backend:` or `frontend:`
+- `depends_on` lists MUST reference valid IDs — no dangling
+  references
+- Stack entries go under `stacks:`, base under `base:`, layer under
+  `backend:`, `frontend:`, or `platform:`
 
-## Testing
+## 3. Quality
+
+### 3.1 Testing
 
 Two test runners live in `tests/`:
 
 ```bash
-py tests/run_smoke.py              # 7 structural checks — no agent required
+py tests/run_smoke.py              # 7 structural checks
 py tests/run_smoke.py SYS-01       # run one check by ID
 
-py tests/run_e2e.py                # 30 agent-based tests via claude -p
+py tests/run_e2e.py                # 30 agent-based tests
 py tests/run_e2e.py STK-01 FMT-01  # run specific tests
-py tests/run_e2e.py --dry-run      # build prompts only, no agent call
+py tests/run_e2e.py --dry-run      # build prompts only
 ```
 
-Both runners write a timestamped Markdown report to `tests/reports/` after
-every run. Reports are gitignored.
+- Both runners write a timestamped Markdown report to
+  `tests/reports/` after every run (gitignored)
+- Spec files live in `tests/specs/` — see `tests/CODIFICATION.md`
+  for the ID scheme and `tests/INDEX.md` for the full list
+- To validate a new template: run `py tests/run_smoke.py` and
+  attach `INTERVIEW.md` + the new stack to an agent to confirm
+  coherent output
+- To validate a structural change: run `py tests/run_smoke.py` —
+  it checks all `[DEPENDS ON: ...]`, `[EXTEND: ...]`,
+  `[OVERRIDE: ...]`, and `manifest.yaml` references automatically
 
-Spec files live in `tests/specs/`. See `tests/CODIFICATION.md` for the ID
-scheme and `tests/INDEX.md` for the full list of specs.
+## 4. Documentation
 
-- To validate a new template: run `py tests/run_smoke.py` and attach
-  `INTERVIEW.md` + the new stack to an agent to confirm coherent output
-- To validate a structural change: run `py tests/run_smoke.py` — it checks
-  all `[DEPENDS ON: ...]`, `[EXTEND: ...]`, `[OVERRIDE: ...]`, and
-  `manifest.yaml` references automatically
-
-## Documentation
-
-### Standard documents
+### 4.1 Standard documents
 
 | File | Purpose |
 |------|---------|
@@ -149,32 +186,41 @@ scheme and `tests/INDEX.md` for the full list of specs.
 | `CLAUDE.md` | AI agent context and project rules (this file) |
 | `SPEC.md` | System design, composition rules, inheritance model, precedence |
 | `ROADMAP.md` | Project status and planned work — single source of truth for phase progress |
-| `CONCEPTS.md` | Concept-to-file navigation index |
-| `manifest.yaml` | Machine-readable dependency graph for all templates |
+| `manifest.yaml` | Machine-readable dependency graph for all templates (single source of truth for descriptions, labels, layers) |
 | `docs/ONBOARDING.md` | Onboarding guide for new contributors |
 | `docs/PLAYBOOK.md` | Operational reference — how to add templates, run interviews, validate output |
 
-### Documentation rules
+### 4.2 Documentation rules
 
 - Before every PR, update all relevant documents:
-  - `CLAUDE.md` — if architecture, naming conventions, or authoring rules change
-  - `README.md` — if the stacks table, project structure, or quick start change
-  - `SPEC.md` — if the composition model, inheritance rules, or ID system change
+  - `CLAUDE.md` — if architecture, naming conventions, or authoring
+    rules change
+  - `README.md` — if the stacks table, project structure, or quick
+    start change
+  - `SPEC.md` — if the composition model, inheritance rules, or ID
+    system change
   - `ROADMAP.md` — if a template is added, removed, or renamed
-  - `manifest.yaml` — if any template is added, removed, renamed, or re-depended
-  - `docs/PLAYBOOK.md` — if the workflow for generating or validating changes
+  - `manifest.yaml` — if any template is added, removed, renamed,
+    or re-depended
+  - `docs/PLAYBOOK.md` — if the workflow for generating or
+    validating changes
   - `docs/ONBOARDING.md` — if prerequisites or first steps change
-- Do not duplicate content across documents — cross-reference instead
-- Write in present tense — past or future tense indicates out-of-sync documentation
+- Do not duplicate content across documents — cross-reference
+  instead
+- Write in present tense — past or future tense indicates
+  out-of-sync documentation
 
-### Decision logs
+### 4.3 Decision logs
 
-- Significant structural decisions (new layer, naming convention change, override
-  model change) MUST be recorded as ADRs in `docs/decisions/`
-- Each ADR documents: context, decision, alternatives considered, consequences
-- ADRs are immutable once merged — create a new ADR to supersede an old one
+- Significant structural decisions (new layer, naming convention
+  change, override model change) MUST be recorded as ADRs in
+  `docs/decisions/`
+- Each ADR documents: context, decision, alternatives considered,
+  consequences
+- ADRs are immutable once merged — create a new ADR to supersede
+  an old one
 
-### Rule language
+### 4.4 Rule language
 
 All rules in templates use RFC 2119 keywords:
 
@@ -184,3 +230,50 @@ All rules in templates use RFC 2119 keywords:
 | MUST NOT | Absolute prohibition |
 | SHOULD | Recommended — deviations require justification |
 | MAY | Optional |
+
+## 5. Review process
+
+### 5.1 Code review
+
+Priority order (highest first):
+1. **Correctness** — do `[DEPENDS ON]`, `[EXTEND]`, `[OVERRIDE]`
+   references resolve? Does the manifest entry match?
+2. **Completeness** — are all required documents updated (see 4.2)?
+3. **Clarity** — are rules imperative and unambiguous?
+4. **Conventions** — does the template follow authoring rules
+   (see 2.4)?
+
+### 5.2 Structure audit
+
+Run `py tests/run_smoke.py` before every PR. It checks:
+- All `[DEPENDS ON: ...]` reference existing files
+- All `[EXTEND: ...]` and `[OVERRIDE: ...]` reference valid IDs
+- All manifest entries point to existing files
+- All template files have a manifest entry
+- No duplicate IDs across layers
+
+## 6. Session protocol
+
+### 6.1 Startup
+
+1. Read `CLAUDE.md` (this file) and `SPEC.md`
+2. Confirm the scope with the user before making changes
+3. If the task is ambiguous, ask: "What is the specific deliverable
+   for this session?"
+
+### 6.2 End of session
+
+Before ending a session, verify:
+
+1. **Dev journal** — add a session entry to `docs/dev-journal.md`
+2. **Smoke tests** — run `py tests/run_smoke.py` and confirm all
+   checks pass
+3. **CLAUDE.md** — update if architecture, naming, or authoring
+   rules changed
+4. **README.md** — update if the stacks table, structure, or quick
+   start changed
+5. **SPEC.md** — update if composition model or ID system changed
+6. **ROADMAP.md** — update if a template was added, removed, or
+   renamed
+7. **manifest.yaml** — update if any template was added, removed,
+   or re-depended
