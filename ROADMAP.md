@@ -148,7 +148,41 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `stack/static-site-tutorial.md` — new: multi-chapter tutorial site (chapters, diagrams, CI split, CC BY-NC-SA 4.0)
 - [x] `base/data-quality.md` — new: data sourcing, completeness, freshness, scoring, validation for data-heavy projects
 
-## Phase 15 — Validation
+## Phase 15 — Skills
+
+### Generative (produce new artifacts)
+
+- [ ] `/scaffold <stack>` — generate project boilerplate from interview answers + stack template
+- [ ] `/generate-context <stack> <format>` — produce CLAUDE.md / AGENTS.md / .cursor/rules from interview + stack + format
+- [ ] `/interview` — run the setup interview interactively
+
+### Transformation (change existing code)
+
+- [ ] `/refactor <target-stack>` — refactor code to match a stack template
+- [ ] `/migrate <from> <to>` — diff two stacks, produce migration plan
+- [ ] `/upgrade` — check code against latest template version, suggest updates
+
+### Review (analyze, don't change)
+
+- [ ] `/review-security` — check code against `base/security.md` + `base/devsecops.md`
+- [ ] `/review-quality` — check against `base/quality.md` + `base/review.md`
+- [ ] `/review-api` — check against `backend/api.md` + `backend/http.md`
+- [ ] `/review-db` — check against `backend/database.md`
+- [ ] `/review-a11y` — check against `frontend/ux.md` accessibility rules
+
+### Ops (infrastructure)
+
+- [ ] `/add-ci <platform>` — generate CI config from `platform/` templates
+- [ ] `/add-docker` — generate Dockerfile from `base/containers.md`
+- [ ] `/add-monitoring` — generate dashboards/alerts from `backend/monitoring.md`
+
+### Infrastructure
+
+- [ ] Define skill wrapper format (thin shell that references existing templates)
+- [ ] Claude Code skill integration (first target)
+- [ ] Document skill authoring in `docs/PLAYBOOK.md`
+
+## Phase 16 — Validation
 
 - [ ] Use the system on a real new project end-to-end (see examples)
 - [ ] Use the system on a real refactoring project end-to-end
