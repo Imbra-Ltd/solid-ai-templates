@@ -1,5 +1,5 @@
 # Stack — Go Library / CLI
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md]
+[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/quality-gates.md]
 
 Base Go conventions for any Go module — library, CLI tool, or service.
 Never used directly for services — always extended by `stack/go-service.md`.
@@ -92,3 +92,19 @@ go vet ./...          # static analysis
 goimports -w .        # format imports
 staticcheck ./...     # additional static analysis
 ```
+---
+
+## Quality gates
+[EXTEND: base-quality-gates]
+
+| Category | Layer 1 (editor) | Layer 2 (pre-commit) | Layer 3 (CI) | Config |
+|----------|-----------------|---------------------|-------------|--------|
+| Lint | golangci-lint | golangci-lint | golangci-lint | `.golangci.yml` |
+| Format | gofmt | gofmt | gofmt -l | built-in |
+| Type check | built-in | built-in | go vet | — |
+| Security | — | — | govulncheck + platform SAST | — |
+| Secrets | — | gitleaks | gitleaks | `.pre-commit-config.yaml` |
+| Tests | — | — | go test ./... | — |
+| Coverage | — | — | go test -cover ≥ 80% | — |
+
+- Hook framework: `pre-commit` or Makefile

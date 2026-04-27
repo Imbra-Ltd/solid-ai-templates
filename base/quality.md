@@ -100,6 +100,11 @@ Apply SOLID at the class, module, and service level:
 - Magic numbers and magic strings must be named constants — unnamed literals
   scattered across the codebase are a maintenance hazard
 
+## Automated enforcement
+- Quality conventions in this document are enforced automatically via
+  quality gates — see `base/quality-gates.md` for the three-layer model
+  (editor → pre-commit → CI), categories, and thresholds
+
 ## Code style
 - Encode all source files in UTF-8; content MUST be restricted to ASCII
   characters

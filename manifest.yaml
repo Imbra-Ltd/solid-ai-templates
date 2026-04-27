@@ -36,6 +36,17 @@ base:
     file: base/issues.md
   - id: base-scope
     file: base/scope.md
+  - id: base-quality-gates
+    file: base/quality-gates.md
+    depends_on: [base-quality, base-git, base-testing, base-devsecops, base-cicd]
+
+platform:
+  - id: platform-github
+    file: platform/github.md
+    depends_on: [base-quality-gates]
+  - id: platform-gitlab
+    file: platform/gitlab.md
+    depends_on: [base-quality-gates]
 
 frontend:
   - id: frontend-ux
