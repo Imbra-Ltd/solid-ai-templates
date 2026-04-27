@@ -42,7 +42,7 @@ tags: [e2e, output, nodejs, library, npm]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/nodejs-lib.md`, `formats/claude.md`
+2. Attach `INTERVIEW.md`, `stack/nodejs-lib.md`, `formats/agents.md`
 3. Interview answers:
    - Project name: parsekit
    - Language: TypeScript

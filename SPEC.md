@@ -3,13 +3,11 @@
 ## Goal
 
 A composable, inheritance-based template system that any LLM agent can use
-to generate a project context file (`CLAUDE.md`, `AGENTS.md`, `AI_CONTEXT.md`,
-or equivalent) for any type of project — from a static portfolio to a Python
-SDK to a React SPA.
+to generate a project context file (`CLAUDE.md` or `AGENTS.md`) for any
+type of project — from a static portfolio to a Python SDK to a React SPA.
 
-Designed to be agent-agnostic: works with Claude Code, Cursor, GitHub Copilot,
-OpenAI Codex CLI, or any agent that accepts a Markdown context file. The
-output filename is configurable, not hardcoded.
+Designed to be agent-agnostic: works with Claude Code, Codex CLI, Devin,
+Cursor, or any agent that reads a Markdown context file.
 
 Inspired by SOLID principles: each template has a single responsibility,
 is open for extension, and can be composed without modification.
@@ -23,112 +21,122 @@ is open for extension, and can be composed without modification.
 Reusable building blocks covering one concern each. Apply to every project
 regardless of stack. Never used directly — always composed into a higher layer.
 
-```
-base/
-├── git.md         # Committer identity, commits, branching, PR workflow, versioning
-├── docs.md        # Rule language, documentation standards, ADR, diagrams, docs-as-code
-├── quality.md     # Architecture, code style, security, testing
-├── review.md      # Peer review priority, MUST/SHOULD checklists, deviation rules
-├── devsecops.md   # SAST, SCA, SBOM, secret detection, license compliance
-├── release.md     # Semver, version bump propagation, backward compat, cut-over
-├── testing.md     # Test pyramid, coverage thresholds, naming conventions
-├── cicd.md        # Pipeline stages, triggers, environments, IaC, deployment
-├── containers.md  # Dockerfile, runtime security, resource limits, Kubernetes
-├── deployment.md  # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
-├── typescript.md    # Type design, naming, strictness — applies to all TypeScript projects
-├── templating.md      # Server-side rendering — partials, escaping, caching, forms, testing
-├── data-quality.md    # Data sourcing, completeness, freshness, scoring — data-heavy projects
-└── quality-gates.md   # Three-layer gate model (editor → pre-commit → CI), thresholds, constraints
-```
-
 ### 2. Platform templates (CI and security integration)
 
 CI and security tool mappings specific to a hosting platform. Orthogonal
 to the stack choice — a Python project on GitHub and a Python project on
 GitLab use the same tools; only the CI config and SAST tool differ.
 
-```
-platform/
-├── github.md      # CodeQL, GitHub Actions, gitleaks action, push protection
-└── gitlab.md      # Semgrep OSS, GitLab CI/CD, gitleaks CLI
-```
-
 ### 3. Frontend templates (abstract, frontend layer)
 
 Concerns that apply to all frontend projects but not to backend or library
 projects. Extend base templates. Never used directly by a project.
 
-```
-frontend/
-├── ux.md          # UX principles, WCAG 2.1 AA, responsive breakpoints
-├── quality.md     # CSS conventions, performance, SEO & analytics
-└── static-site.md # abstract SSG rules — content, assets, SEO (extended by Astro, Hugo)
-```
-
-### 3. Backend templates (abstract, backend layer)
+### 4. Backend templates (abstract, backend layer)
 
 Concerns shared by all backend services but not by frontend or pure libraries.
 Extend base templates. Never used directly by a project.
 
-```
-backend/
-├── config.md        # env vars, secrets, fail-fast validation
-├── http.md          # URI design, methods, headers, HATEOAS, auth, errors
-├── api.md           # API-first, OpenAPI, versioning, deprecation, pagination
-├── database.md      # migrations, transactions, no raw SQL, connection pooling
-├── caching.md       # cache-aside, TTL, invalidation, resilience, stampede
-├── auth.md          # authn/authz, JWT, RBAC, sessions, API keys
-├── jobs.md          # background jobs, idempotency, retry, DLQ, scheduling
-├── concurrency.md   # threads vs. processes vs. async, shared state, structured concurrency
-├── messaging.md     # brokers, producers, consumers, schema, DLQ, observability
-├── grpc.md          # proto design, status codes, interceptors, health check (extended by grpc-* stacks)
-├── microservices.md # service boundaries, inter-service comms, saga, contract testing
-├── errors.md        # classification, propagation, recovery, external failures
-├── features.md      # feature flags, rollout strategy, experimentation
-├── observability.md # log levels, log format, health check, error visibility
-├── monitoring.md    # key metrics, thresholds, alerts, dashboards, incidents
-└── quality.md       # layered architecture, security, performance, API stability
-```
-
-### 4. Stack templates (concrete)
+### 5. Stack templates (concrete)
 
 Technology-specific rules. Each stack declares which layers it depends on.
 
+### Directory listings
+
+Generated from `manifest.yaml` — run `py tools/sync.py` to refresh.
+
+<!-- generated:spec-directories -->
 ```
-stack/
-├── astro.md          # extends base + frontend + frontend/static-site
-├── hugo.md           # extends base + frontend + frontend/static-site
-├── tutorial.md       # extends astro + base/issues + base/scope — multi-chapter tutorial site
-├── react-spa.md      # extends base + frontend — React + TypeScript
-├── vue.md            # extends base + frontend — Vue 3 + Pinia
-├── svelte.md         # extends base + frontend — Svelte 5 + runes
-├── nextjs.md         # extends base + frontend + react-spa + backend partial
-├── sveltekit.md      # extends base + frontend + svelte + backend partial
-├── python-lib.md     # extends base — Python packaging, mypy, ruff, pytest
-├── python-service.md # extends base + backend + python-lib — abstract Python service layer
-├── flask.md          # extends python-service
-├── fastapi.md        # extends python-service + backend/concurrency
-├── django.md         # extends python-service + backend/api + backend/auth
-├── celery-worker.md  # extends base + backend/jobs + python-lib
-├── go-lib.md         # extends base — Go library/CLI, package design, error handling, tooling
-├── go-service.md     # extends base + backend + go-lib — abstract Go service layer
-├── go-echo.md        # extends go-service — Echo v4 routing, middleware, validation
-├── express.md        # extends base + backend — Node.js + TypeScript
-├── nestjs.md         # extends base + backend — NestJS + TypeScript
-├── spring-boot.md    # extends base + backend — Java/Kotlin
-├── grpc-go.md        # extends base + backend/grpc + go-service
-├── grpc-python.md    # extends base + backend/grpc + python-lib
-├── grpc-java.md      # extends base + backend/grpc
-├── react-native.md   # extends base + react-spa — Expo, mobile, offline
-├── flutter.md        # extends base — Dart, Riverpod, cross-platform mobile
-├── terraform.md      # extends base — HCL, modules, remote state, security
-├── nodejs-lib.md     # extends base — TypeScript npm library / CLI
-├── rust-lib.md       # extends base — Rust crate / CLI, thiserror, clippy
-├── c-embedded.md     # extends base — bare-metal C, CMake, Unity, HAL, static analysis
-└── htmx.md           # extends backend/templating — HTMX 2.x, Alpine.js, SSE, partial responses
+base/
+├── git.md          # Committer identity, commits, branching, PR workflow, versioning
+├── docs.md         # Rule language, documentation standards, ADR, diagrams, docs-as-code
+├── quality.md      # Architecture, code style, security, testing
+├── review.md       # Peer review priority, MUST/SHOULD checklists, deviation rules
+├── testing.md      # Test pyramid, coverage thresholds, naming conventions
+├── devsecops.md    # SAST, SCA, SBOM, secret detection, license compliance
+├── release.md      # Semver, version bump propagation, backward compat, cut-over
+├── cicd.md         # Pipeline stages, triggers, environments, IaC, deployment
+├── containers.md   # Dockerfile, runtime security, resource limits, Kubernetes
+├── readme.md       # README structure, badges, quick start, contribution guide
+├── deployment.md   # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
+├── typescript.md   # Type design, naming, strictness — applies to all TypeScript projects
+├── data-quality.md # Data sourcing, completeness, freshness, scoring — data-heavy projects
+├── issues.md       # Issue templates — epic, task, bug, incident, spike
+├── scope.md        # Scope guard, session protocol, drift prevention
+├── quality-gates.md # Three-layer gate model (editor, pre-commit, CI), thresholds
+└── ai-workflow.md  # AI-assisted development lifecycle, work item hierarchy
 ```
 
-### 3. Interview template (orchestrator)
+```
+platform/
+├── github.md       # CodeQL, GitHub Actions, gitleaks action, push protection
+└── gitlab.md       # Semgrep OSS, GitLab CI/CD, gitleaks CLI
+```
+
+```
+frontend/
+├── ux.md           # UX principles, WCAG 2.1 AA, responsive breakpoints
+├── quality.md      # CSS conventions, performance, SEO & analytics
+└── static-site.md  # Abstract SSG rules — content, assets, SEO
+```
+
+```
+backend/
+├── config.md       # Env vars, secrets, fail-fast validation
+├── http.md         # URI design, methods, headers, HATEOAS, auth, errors
+├── api.md          # API-first, OpenAPI, versioning, deprecation, pagination
+├── database.md     # Migrations, transactions, no raw SQL, connection pooling
+├── caching.md      # Cache-aside, TTL, invalidation, resilience, stampede
+├── auth.md         # Authn/authz, JWT, RBAC, sessions, API keys
+├── jobs.md         # Background jobs, idempotency, retry, DLQ, scheduling
+├── concurrency.md  # Threads vs. processes vs. async, shared state, structured concurrency
+├── messaging.md    # Brokers, producers, consumers, schema, DLQ, observability
+├── grpc.md         # Proto design, status codes, interceptors, health check
+├── microservices.md # Service boundaries, inter-service comms, saga, contract testing
+├── errors.md       # Classification, propagation, recovery, external failures
+├── features.md     # Feature flags, rollout strategy, experimentation
+├── observability.md # Log levels, log format, health check, error visibility
+├── monitoring.md   # Key metrics, thresholds, alerts, dashboards, incidents
+├── quality.md      # Layered architecture, security, performance, API stability
+└── templating.md   # Server-side rendering, partials, escaping, caching, forms, testing
+```
+
+```
+stack/
+├── htmx.md                     # HTMX 2.x, Alpine.js, SSE, OOB swaps, partial responses
+├── static-site-astro.md        # Islands architecture, client directives, content collections
+├── static-site-tutorial.md     # Multi-chapter tutorial, diagrams, CC BY-NC-SA
+├── spa-react.md                # Client-side app, TypeScript, RTL, a11y
+├── full-nextjs.md              # App Router, Server/Client Components, API routes
+├── python-lib.md               # Installable package or CLI tool, mypy, ruff, pytest
+├── python-service.md           # Generic Python web service, SQLAlchemy, Alembic
+├── python-flask.md             # Sync REST API, factory pattern, blueprints
+├── python-fastapi.md           # Async REST API, Pydantic v2, DI, OpenAPI
+├── python-django.md            # Full web framework, ORM, DRF, admin
+├── go-lib.md                   # Importable library or CLI binary
+├── go-service.md               # Generic Go HTTP service, chi, structured logging
+├── go-echo.md                  # REST API, Echo v4, middleware, validation
+├── spa-vue.md                  # Client-side app, Composition API, Pinia, Vitest
+├── spa-svelte.md               # Client-side app, Svelte 5 runes, Vitest
+├── full-sveltekit.md           # File-based routing, form actions, SSR
+├── static-site-hugo.md         # Go templates, archetypes, content structure
+├── node-express.md             # Minimal REST API, Zod validation, Supertest
+├── node-nestjs.md              # Modules, controllers, providers, guards, pipes, DI
+├── java-spring-boot.md         # REST API, JPA, Spring Security, Flyway
+├── python-celery-worker.md     # Background tasks, retry/backoff, Beat scheduling
+├── go-grpc.md                  # gRPC service, bufconn, errgroup
+├── python-grpc.md              # gRPC service, grpcio-aio, proto design
+├── java-grpc.md                # gRPC service, grpc-java lifecycle
+├── mobile-react-native.md      # iOS/Android, Expo, file-based routing, Maestro
+├── mobile-flutter.md           # iOS/Android, Riverpod, go_router, freezed
+├── iac-terraform.md            # Infrastructure as code, modules, remote state
+├── nodejs-lib.md               # TypeScript npm package or CLI, tsup, Vitest
+├── rust-lib.md                 # Rust crate or CLI, thiserror/anyhow, crates.io
+└── c-embedded.md               # GCC + CMake, Unity tests, HAL, binary + .a
+```
+<!-- /generated:spec-directories -->
+
+### 6. Interview template (orchestrator)
 
 A single file any agent uses to ask the user the required questions before
 generating the output context file. Questions are grouped by concern and
@@ -140,16 +148,14 @@ INTERVIEW.md
 
 ### 4. Output format templates
 
-Rendering rules for each supported AI tool. Describe structure, formatting
-constraints, and tone for that tool's context file format.
+Rendering rules for each output format. Describe structure, formatting
+constraints, and tone.
 
 ```
 formats/
-├── claude.md         # Claude Code → CLAUDE.md
-├── cursorrules.md    # Cursor → .cursor/rules/project.mdc
-├── copilot.md        # GitHub Copilot → .github/copilot-instructions.md
-├── codex.md          # OpenAI Codex CLI → AGENTS.md
-└── generic.md        # fallback → AI_CONTEXT.md
+├── shared.md    # Shared structure, model selection (inline/reference/hybrid)
+├── claude.md    # Claude Code → CLAUDE.md
+└── codex.md     # Codex CLI / Devin / Cursor → AGENTS.md
 ```
 
 ### 5. Profile (generated output)
@@ -157,15 +163,12 @@ formats/
 The context file generated for a specific project by combining interview
 answers + base templates + stack template + output format template.
 
-| Agent            | Output file                  | Location        |
-|------------------|------------------------------|-----------------|
-| Claude Code      | `CLAUDE.md`                  | project root    |
-| Cursor           | `.cursor/rules/project.mdc`  | `.cursor/rules/`|
-| GitHub Copilot   | `copilot-instructions.md`    | `.github/`      |
-| OpenAI Codex CLI | `AGENTS.md`                  | project root    |
-| Generic / other  | `AI_CONTEXT.md`              | project root    |
+| Agent | Output file | Location |
+|-------|-------------|----------|
+| Claude Code | `CLAUDE.md` | project root |
+| Codex CLI, Devin, Cursor, Windsurf | `AGENTS.md` | project root |
 
-Interop: `AGENTS.md` is also read by Claude Code as a fallback when no
+Interop: `AGENTS.md` is read by Claude Code as a fallback when no
 `CLAUDE.md` is present.
 
 ---
@@ -184,7 +187,7 @@ frontend/quality.md ────────────────────
                                                         │
                                              + INTERVIEW.md answers
                                                         │
-                                             + formats/claude.md rules
+                                             + formats/agents.md rules
                                                         │
                                                         ▼
                                                    CLAUDE.md
@@ -307,7 +310,7 @@ frontend/[concern].md           # frontend layer — UI projects only
 backend/[concern].md            # backend layer — services and APIs only
 stack/[framework].md            # concrete — extends base + frontend or backend
 stack/[framework]-[variant].md  # variant of a framework (e.g. astro-ssr.md)
-formats/[agent].md               # rendering rules for a specific AI tool
+formats/[tool].md               # rendering rules for a specific output format
 INTERVIEW.md                    # orchestrator — always one file
 SPEC.md                         # this file
 ROADMAP.md                      # project status and planned work

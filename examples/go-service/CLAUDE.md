@@ -13,7 +13,7 @@ flushes to a PostgreSQL time-series table on a configurable interval.
 - **Repo**: github.com/acme/metricshub
 - **Deployment**: Docker → Kubernetes (production), Docker Compose (local)
 - **Stack source**: `stack/go-service.md` + `backend/caching.md` + `backend/jobs.md`
-- **Output format**: `formats/claude.md`
+- **Output format**: `formats/agents.md`
 
 ---
 
