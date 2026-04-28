@@ -308,8 +308,9 @@ See `formats/agents.md` for structure, models, and formatting rules.
 
 ## License
 
-No license has been declared for this repository yet. All rights reserved
-until a license is added.
+[CC BY 4.0](LICENSE) — Creative Commons Attribution 4.0 International.
+You are free to use, share, and adapt the templates for any purpose,
+including commercial use, as long as you give attribution.
 
 ## Author
 
