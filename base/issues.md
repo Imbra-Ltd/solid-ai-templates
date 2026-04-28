@@ -6,42 +6,29 @@ a title convention, and a body template.
 
 ---
 
-## Labels
-[ID: base-issues-labels]
+## Issue types
+[ID: base-issues-types]
 
-Every issue MUST have exactly one type label and one priority label.
-Triage labels are terminal — applied when closing without action.
+Every issue MUST have exactly one type and one priority.
 
-### Type labels (pick one)
+| Type | When to use |
+|------|-------------|
+| Bug | Defect in existing functionality |
+| Epic | Large initiative spanning multiple tasks |
+| Task | Atomic implementable work |
+| Spike | Research or exploration — output is a decision |
+| Incident | Production outage or degradation affecting users now |
 
-Colors follow the Atlassian design system palette.
+| Priority | Meaning |
+|----------|---------|
+| P0 | Critical — blocks everything |
+| P1 | High — must fix before next milestone |
+| P2 | Medium — important but not blocking |
+| P3 | Low — nice to have |
+| P4 | Backlog — someday |
 
-| Label | Color | When to use |
-|-------|-------|-------------|
-| `bug` | `#C9372C` | Defect in existing functionality |
-| `epic` | `#8270DB` | Large initiative spanning multiple tasks |
-| `task` | `#357DE8` | Atomic implementable work |
-| `spike` | `#6CC3E0` | Research or exploration — output is a decision |
-| `incident` | `#AE2E24` | Production outage or degradation affecting users now |
-
-### Priority labels (pick one)
-
-Warm-to-cool gradient — visually distinct from type labels.
-
-| Label | Color | Meaning |
-|-------|-------|---------|
-| `P0` | `#E06C00` | Critical — blocks everything |
-| `P1` | `#FCA700` | High — must fix before next milestone |
-| `P2` | `#EED12B` | Medium — important but not blocking |
-| `P3` | `#4BCE97` | Low — nice to have |
-| `P4` | `#8590A2` | Backlog — someday |
-
-### Triage labels
-
-| Label | Color | When to use |
-|-------|-------|-------------|
-| `duplicate` | `#C1C7D0` | Already tracked by another issue |
-| `wontdo` | `#C1C7D0` | Acknowledged but will not be addressed |
+Platform-specific label implementation (names, colors) is defined in
+the platform template (e.g. `platform/github.md`).
 
 ---
 
