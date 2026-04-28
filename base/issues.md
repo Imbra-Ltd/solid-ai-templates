@@ -7,14 +7,41 @@ a title convention, and a body template.
 ---
 
 ## Labels
+[ID: base-issues-labels]
 
-| Type | Label | When to use |
-|------|-------|-------------|
-| Epic | `epic` | Large initiative spanning multiple tasks/sessions |
-| Task | domain labels | Atomic implementable work (use `enhancement`, `scoring`, `ui`, etc.) |
-| Bug | `bug` | Defect in existing functionality |
-| Incident | `incident` | Production outage or degradation affecting users now |
-| Spike | `question` | Research or exploration — output is a decision or ADR |
+Every issue MUST have exactly one type label and one priority label.
+Triage labels are terminal — applied when closing without action.
+
+### Type labels (pick one)
+
+Colors follow the Atlassian design system palette.
+
+| Label | Color | When to use |
+|-------|-------|-------------|
+| `bug` | `#C9372C` | Defect in existing functionality |
+| `epic` | `#8270DB` | Large initiative spanning multiple tasks |
+| `task` | `#357DE8` | Atomic implementable work |
+| `spike` | `#6CC3E0` | Research or exploration — output is a decision |
+| `incident` | `#AE2E24` | Production outage or degradation affecting users now |
+
+### Priority labels (pick one)
+
+Warm-to-cool gradient — visually distinct from type labels.
+
+| Label | Color | Meaning |
+|-------|-------|---------|
+| `P0` | `#E06C00` | Critical — blocks everything |
+| `P1` | `#FCA700` | High — must fix before next milestone |
+| `P2` | `#EED12B` | Medium — important but not blocking |
+| `P3` | `#4BCE97` | Low — nice to have |
+| `P4` | `#8590A2` | Backlog — someday |
+
+### Triage labels
+
+| Label | Color | When to use |
+|-------|-------|-------------|
+| `duplicate` | `#C1C7D0` | Already tracked by another issue |
+| `wontdo` | `#C1C7D0` | Acknowledged but will not be addressed |
 
 ---
 
@@ -158,7 +185,7 @@ bug — a bug is a defect you discover, an incident is something burning.
 
 Research or exploration where the output is a decision, not code.
 
-**Title:** the question being investigated (no prefix — the `question`
+**Title:** the question being investigated (no prefix — the `spike`
 label identifies the type)
 
 **Format:** use the task format. The acceptance criteria describe what the
