@@ -1,9 +1,9 @@
 # Platform — GitHub
 [ID: platform-github]
-[DEPENDS ON: base/quality-gates.md]
+[DEPENDS ON: base/quality-gates.md, base/issues.md]
 
-GitHub-specific CI and security integration. Maps quality gate categories
-to GitHub Actions workflows and GitHub-native features.
+GitHub-specific CI, security, and issue label integration. Maps quality
+gate categories to GitHub Actions workflows and GitHub-native features.
 
 ---
 
@@ -50,3 +50,44 @@ to GitHub Actions workflows and GitHub-native features.
 | Site quality | `treosh/lighthouse-ci-action` |
 | Link checking | `lycheeverse/lychee-action` |
 | All lint/format/type/test | Language-specific CLI in CI steps |
+
+---
+
+## Issue labels
+[ID: platform-github-labels]
+[EXTEND: base-issues-types]
+
+GitHub implements issue types and priorities as labels. Every issue
+MUST have exactly one type label and one priority label. Triage
+labels are terminal — applied when closing without action.
+
+Colors follow the Atlassian design system palette. Type labels use
+saturated hues; priority labels use a warm-to-cool gradient to
+remain visually distinct when displayed side by side.
+
+### Type labels (pick one)
+
+| Label | Color | Maps to |
+|-------|-------|---------|
+| `bug` | `#C9372C` | Bug |
+| `epic` | `#8270DB` | Epic |
+| `task` | `#357DE8` | Task |
+| `spike` | `#6CC3E0` | Spike |
+| `incident` | `#AE2E24` | Incident |
+
+### Priority labels (pick one)
+
+| Label | Color | Maps to |
+|-------|-------|---------|
+| `P0` | `#E06C00` | P0 — Critical |
+| `P1` | `#FCA700` | P1 — High |
+| `P2` | `#EED12B` | P2 — Medium |
+| `P3` | `#4BCE97` | P3 — Low |
+| `P4` | `#8590A2` | P4 — Backlog |
+
+### Triage labels
+
+| Label | Color | When to use |
+|-------|-------|-------------|
+| `duplicate` | `#C1C7D0` | Already tracked by another issue |
+| `wontdo` | `#C1C7D0` | Acknowledged but will not be addressed |
