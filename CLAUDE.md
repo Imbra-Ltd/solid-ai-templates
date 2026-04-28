@@ -103,6 +103,38 @@ py tools/sync.py --check    # exit 1 if any file is out of sync
   new work
 - Do not commit `.idea/`, editor config, or any generated output
 
+## Issue labels
+
+Every issue MUST have exactly one type label and one priority label.
+Triage labels are terminal — applied when closing without action.
+
+### Type labels (pick one)
+
+| Label | Color | When to use |
+|-------|-------|-------------|
+| `bug` | `#C9372C` | Defect in existing functionality |
+| `epic` | `#8270DB` | Large initiative spanning multiple tasks |
+| `task` | `#357DE8` | Atomic implementable work |
+| `spike` | `#6CC3E0` | Research or exploration — output is a decision |
+| `incident` | `#AE2E24` | Production outage or degradation affecting users now |
+
+### Priority labels (pick one)
+
+| Label | Color | Meaning |
+|-------|-------|---------|
+| `P0` | `#E06C00` | Critical — blocks everything |
+| `P1` | `#FCA700` | High — must fix before next milestone |
+| `P2` | `#EED12B` | Medium — important but not blocking |
+| `P3` | `#4BCE97` | Low — nice to have |
+| `P4` | `#8590A2` | Backlog — someday |
+
+### Triage labels
+
+| Label | Color | When to use |
+|-------|-------|-------------|
+| `duplicate` | `#C1C7D0` | Already tracked by another issue |
+| `wontdo` | `#C1C7D0` | Acknowledged but will not be addressed |
+
 ### 2.2 Adding a new stack template
 
 1. Create `stack/<prefix>-<name>.md` following an existing file of

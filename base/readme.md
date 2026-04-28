@@ -15,6 +15,11 @@ Every README MUST contain the following sections, in this order:
 - 2–4 sentences MUST follow the title: what the project does, for whom,
   what problem it solves, and why this solution exists — no preamble, no
   marketing language
+- A capability list MUST follow the summary — bullet points stating
+  what the product can do, written as capabilities not counts (e.g.
+  "browse and filter lenses by specs" not "240+ lenses"); this list
+  is the product's contract and the primary input for value evaluation
+  (see `base/360.md`)
 - A badges line SHOULD follow: build status, latest version, license
 
 ### 2. Quick start
@@ -76,8 +81,13 @@ Every README MUST contain the following sections, in this order:
   describe what the project does, not how good it is
 
 ### Audience
-- Write for a technically competent reader who has not seen this project
-  before — MUST NOT assume familiarity with internal terminology
+- A README serves two audiences. The first three sections (title,
+  quick start, usage) are user-facing — what the product does and
+  how to use it. The remaining sections (structure, setup, config)
+  are developer-facing — how to build and contribute. Write each
+  section for its audience.
+- Write for a reader who has not seen this project before — MUST
+  NOT assume familiarity with internal terminology
 - Acronyms MUST be expanded on first use
 
 ### Maintenance
