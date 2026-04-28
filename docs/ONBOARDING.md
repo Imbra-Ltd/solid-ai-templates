@@ -98,8 +98,18 @@ fixing content, and submitting a PR.
 - Stack files follow the `<prefix>-<name>.md` naming convention (see `CLAUDE.md`)
 - `manifest.yaml` must be updated whenever a file is added, removed, or renamed
 
+## Maintainership
+
+This project has a bus factor of 1 — Branimir Georgiev is the sole
+author and maintainer. The mitigation is documentation: everything
+needed to understand, maintain, and extend the project is in the
+repository (SPEC.md, CLAUDE.md, PLAYBOOK.md, ADRs in docs/decisions/,
+dev journal). No oral knowledge transfer is required.
+
+If the maintainer becomes unavailable, the project can be forked and
+continued from the repository alone.
+
 ## Getting help
 
 - `SPEC.md` — answers most "how does X work" questions
-- `CONCEPTS.md` — find which file covers a given concept
 - Open a GitHub Discussion if something is unclear

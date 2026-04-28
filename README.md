@@ -2,18 +2,23 @@
 
 Composable, SOLID-inspired templates for generating AI agent context files.
 
+## What it does
+
+- Generate consistent `CLAUDE.md` or `AGENTS.md` files for any project
+- Compose rules from reusable layers — base, backend/frontend, stack
+- Cover 30+ technology stacks (Python, Go, Java, Node, Rust, mobile, DevOps)
+- Output for any agent — Claude Code, Cursor, Copilot, Codex CLI
+- Run a 360-degree project assessment across four perspectives (user,
+  engineer, analyst, marketer)
+- Enforce standardized issue labels, quality gates, and review processes
+
 ## Overview
 
-Most AI context files (`CLAUDE.md`, `AGENTS.md`)
-are written from scratch for each project and quickly fall out of sync.
-This repository provides a reusable template system — structured like
-object-oriented design — where base rules are defined once and composed with
-stack-specific extensions to produce a complete, consistent context file for
-any project type.
-
-The system is agent-agnostic: the same templates produce output for Claude
-Code, Cursor, GitHub Copilot, or OpenAI Codex CLI by applying a different
-output format guide.
+Most AI context files are written from scratch for each project and quickly
+fall out of sync. This repository provides a reusable template system —
+structured like object-oriented design — where base rules are defined once
+and composed with stack-specific extensions to produce a complete, consistent
+context file for any project type.
 
 Works for new projects and refactoring alike — the generated context file
 describes how code *should be written*, giving your agent a consistent target
@@ -212,10 +217,13 @@ solid-ai-templates/
 ├── base/           # Cross-cutting rules — apply to every project
 ├── backend/        # Backend layer — HTTP, API, database, observability
 ├── frontend/       # Frontend layer — UX, accessibility, CSS, SEO
+├── platform/       # CI and security tool mappings (GitHub, GitLab)
 ├── stack/          # Concrete stacks — extend base + layer templates
 ├── formats/        # Output format guides per agent tool
 ├── examples/       # Complete generated context files (reference)
+├── tests/          # Smoke and E2E test runners and specs
 ├── tools/          # sync.py — generates tables from manifest.yaml
+├── docs/           # Onboarding, playbook, decision logs
 ├── INTERVIEW.md    # Agent-driven project setup interview
 ├── SPEC.md         # System design, composition rules, precedence
 └── ROADMAP.md      # Project status and planned work
@@ -235,8 +243,8 @@ No build step or runtime dependencies — all templates are plain Markdown.
 1. Create `stack/<name>.md` following the structure of an existing stack.
 2. Declare `DEPENDS ON` at the top referencing the base and layer templates
    it builds on.
-3. Add the stack to the supported stacks table in this README.
-4. Add an entry to `CONCEPTS.md`.
+3. Register in `manifest.yaml` under `stacks:`.
+4. Run `py tools/sync.py` to update generated tables.
 5. Add a `examples/<name>/CLAUDE.md` to demonstrate the output.
 
 **To verify your changes:** open your agent, attach the new template alongside
@@ -294,6 +302,9 @@ See `formats/agents.md` for structure, models, and formatting rules.
 - [System design and composition rules](SPEC.md)
 - [Project status and roadmap](ROADMAP.md)
 - [Example generated context files](examples/)
+- [Onboarding guide](docs/ONBOARDING.md)
+- [Operational playbook](docs/PLAYBOOK.md)
+- [Architecture decision records](docs/decisions/)
 
 ## License
 
