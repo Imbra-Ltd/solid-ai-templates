@@ -141,7 +141,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ## Phase 13 — Language-specific base templates
 
-- [ ] `base/typescript.md` — new: type design, discriminated unions, naming, strictness
+- [x] `base/typescript.md` — new: type design, discriminated unions, naming, strictness
 
 ## Phase 14 — Content stacks
 
@@ -182,7 +182,18 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [ ] Claude Code skill integration (first target)
 - [ ] Document skill authoring in `docs/PLAYBOOK.md`
 
-## Phase 16 — Validation
+## Phase 16 — Assessment and governance
+
+- [x] `base/360.md` — new: four-category project assessment (Value, Quality, Viability, Discovery)
+- [x] `base/issues.md` — updated: platform-agnostic issue types and priorities
+- [x] `platform/github.md` — updated: canonical label set (12 labels, Atlassian colors)
+- [x] `base/readme.md` — updated: capability list requirement, dual-audience
+- [x] `docs/decisions/` — new: 3 ADRs (inheritance, labels, 360 analysis)
+- [x] `LICENSE` — new: CC BY 4.0
+- [x] `docs/ONBOARDING.md` — updated: bus factor documentation
+- [x] `README.md` — updated: capability list, structure, links
+
+## Phase 17 — Validation
 
 - [ ] Use the system on a real new project end-to-end (see examples)
 - [ ] Use the system on a real refactoring project end-to-end
