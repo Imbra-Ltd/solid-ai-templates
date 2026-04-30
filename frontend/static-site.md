@@ -131,6 +131,7 @@ to change.
 ---
 
 ## SEO
+[ID: static-site-seo]
 [EXTEND: frontend-quality]
 
 - `robots.txt` required
