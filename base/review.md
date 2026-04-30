@@ -49,11 +49,16 @@ completeness. Run a structure audit after:
 Verify every MUST from:
 
 - `base/docs.md` — standard documents (README, ONBOARDING, PLAYBOOK, ADRs)
-- `base/readme.md` — README has all 9 required sections
+- `base/readme.md` — README has all 8 required sections
 - `base/git.md` — .gitignore, README exist
 - The relevant frontend or backend layer template — required assets,
   config files, SEO files
 - The relevant stack template — framework-specific files and conventions
+
+When a section contains multiple MUST sub-clauses, verify each sub-clause
+independently — do not pass the section as a whole. For example,
+`base/readme.md` Usage requires both usage examples AND expected output
+per example — these are two separate checks.
 
 ## Deviations
 - Deviating from a SHOULD rule requires a written explanation in the pull
