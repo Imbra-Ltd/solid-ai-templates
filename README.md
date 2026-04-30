@@ -30,7 +30,7 @@ to work toward whether starting from scratch or improving existing code.
 (Claude Code, Cursor, GitHub Copilot, or OpenAI Codex CLI).
 
 ```bash
-git clone https://github.com/Imbra-Ltd/solid-ai-templates.git
+git clone https://github.com/braboj/solid-ai-templates.git
 ```
 
 ### Direct — attach a stack template
@@ -109,7 +109,7 @@ Check the templates into your project so your agent file can reference them
 directly:
 
 ```bash
-git submodule add https://github.com/Imbra-Ltd/solid-ai-templates.git docs/solid-ai-templates
+git submodule add https://github.com/braboj/solid-ai-templates.git docs/solid-ai-templates
 ```
 
 Then reference the base rules from your `CLAUDE.md` (or equivalent) and add
@@ -232,7 +232,7 @@ solid-ai-templates/
 ## Development setup
 
 ```bash
-git clone https://github.com/Imbra-Ltd/solid-ai-templates.git
+git clone https://github.com/braboj/solid-ai-templates.git
 cd solid-ai-templates
 ```
 

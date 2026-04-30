@@ -31,7 +31,7 @@ Read `SPEC.md` for the full composition model before contributing.
 ## First steps
 
 ```bash
-git clone https://github.com/Imbra-Ltd/solid-ai-templates.git
+git clone https://github.com/braboj/solid-ai-templates.git
 cd solid-ai-templates
 ```
 
