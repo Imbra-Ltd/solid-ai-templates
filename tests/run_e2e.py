@@ -10,6 +10,16 @@ Usage:
   py tests/run_e2e.py STK-01             # run one test by short ID
   py tests/run_e2e.py STK-01 FMT-01      # run multiple
   py tests/run_e2e.py --dry-run          # print prompt, skip claude call
+  py tests/run_e2e.py --offline          # validate test infrastructure without API
+
+Offline mode validates:
+  - All referenced template files exist and are non-empty
+  - Each test has required fields (id, spec, stack, answers, required)
+  - Prompts build successfully from templates + answers
+  - No structural issues in the test suite
+
+API cost estimate (live mode): ~$0.50–1.00 per full run (30 tests,
+each sending ~10–20K tokens to Claude).
 """
 
 import datetime
@@ -809,11 +819,66 @@ SKIP = "SKIP"
 ERR  = "ERR "
 
 
-def run_test(test, dry_run=False):
+def validate_test_offline(test):
+    """Validate test infrastructure without calling Claude."""
+    failures = []
+    tid = test["id"]
+
+    # Required fields
+    for field in ("id", "spec", "stack", "answers", "required"):
+        if field not in test:
+            failures.append(f"  missing field: {field!r}")
+
+    if failures:
+        return FAIL, "\n".join(failures)
+
+    # Template files exist and are non-empty
+    stack_file = os.path.join(ROOT, test["stack"])
+    if not os.path.isfile(stack_file):
+        failures.append(f"  stack file missing: {test['stack']}")
+    elif os.path.getsize(stack_file) == 0:
+        failures.append(f"  stack file empty: {test['stack']}")
+
+    output_file = test.get("output_file", "formats/agents.md")
+    out_path = os.path.join(ROOT, output_file)
+    if not os.path.isfile(out_path):
+        failures.append(f"  output format missing: {output_file}")
+
+    for ef in test.get("extra_files", ()):
+        ef_path = os.path.join(ROOT, ef)
+        if not os.path.isfile(ef_path):
+            failures.append(f"  extra file missing: {ef}")
+
+    # Assertions are non-empty
+    if not test.get("required"):
+        failures.append("  required list is empty")
+
+    # Prompt builds without error
+    if not failures:
+        try:
+            prompt = build_prompt(
+                test["stack"], test["answers"],
+                output_file, test.get("extra_files", ()),
+            )
+            if len(prompt) < 100:
+                failures.append(f"  prompt suspiciously short: {len(prompt)} chars")
+        except Exception as e:
+            failures.append(f"  prompt build failed: {e}")
+
+    if failures:
+        return FAIL, "\n".join(failures)
+    return PASS, f"prompt {len(prompt)} chars, {len(test['required'])} assertions"
+
+
+def run_test(test, dry_run=False, offline=False):
     tid = test["id"]
 
     if "skip" in test:
         return SKIP, test["skip"], None, None
+
+    if offline:
+        status, detail = validate_test_offline(test)
+        return status, detail, None, None
 
     prompt = build_prompt(
         test["stack"], test["answers"],
@@ -918,6 +983,7 @@ def main():
 
     args = sys.argv[1:]
     dry_run = "--dry-run" in args
+    offline = "--offline" in args
     filter_ids = [a for a in args if not a.startswith("--")]
 
     tests = TESTS
@@ -934,7 +1000,7 @@ def main():
 
     for test in tests:
         tid = test["id"]
-        status, detail, elapsed, output = run_test(test, dry_run=dry_run)
+        status, detail, elapsed, output = run_test(test, dry_run=dry_run, offline=offline)
         results[status] += 1
         run_results.append({
             "id": tid, "status": status,
@@ -958,7 +1024,7 @@ def main():
         f"{results[ERR]} errors"
     )
 
-    write_report(run_results, started_at, dry_run)
+    write_report(run_results, started_at, dry_run or offline)
 
     sys.exit(0 if results[FAIL] == 0 and results[ERR] == 0 else 1)
 
