@@ -136,4 +136,11 @@ to change.
 - `robots.txt` required
 - Open Graph and Twitter Card meta tags required
 - Canonical URLs required
+- Sitemap MUST be generated at build time and referenced in `robots.txt`
+- Every content page MUST have a unique `description` in frontmatter — used
+  for `<meta name="description">`, OG description, and Twitter Card
+- Meta descriptions MUST read as a pitch, not a summary — answer "why
+  should I click this?"
+- JSON-LD structured data SHOULD be present on content pages (Article,
+  Course, or appropriate schema type)
 - Privacy-friendly analytics only (no consent banner required)

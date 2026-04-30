@@ -225,3 +225,24 @@ npm run preview  # verify — preview the production build locally
 - Hook framework: `husky` + `lint-staged` — config in `package.json`
 - Lighthouse thresholds: accessibility ≥ 90 (error), performance / SEO /
   best practices ≥ 90 (warn)
+
+---
+
+## SEO
+[EXTEND: static-site-seo]
+
+- `@astrojs/sitemap` MUST be installed as an Astro integration — generates
+  `sitemap-index.xml` at build time
+- Content collections MUST include a `description` field in the Zod schema:
+  ```typescript
+  z.object({
+    title: z.string(),
+    description: z.string(),
+    // ...
+  })
+  ```
+- Layouts MUST render the description as `<meta name="description">`, OG
+  description, and Twitter Card description
+- JSON-LD structured data SHOULD be rendered in a `<script type="application/ld+json">`
+  tag in the layout — use `JSON.stringify()` with `set:html` (acceptable
+  exception to the `set:html` ban since the input is fully server-controlled)
