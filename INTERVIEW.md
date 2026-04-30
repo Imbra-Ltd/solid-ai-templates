@@ -91,7 +91,7 @@ inlining them. The output file:
 
 Tell the user to add the submodule:
 ```
-git submodule add https://github.com/Imbra-Ltd/solid-ai-templates.git docs/solid-ai-templates
+git submodule add https://github.com/braboj/solid-ai-templates.git docs/solid-ai-templates
 ```
 
 Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
@@ -112,7 +112,7 @@ templates for the rest. Follow the hybrid model structure in
 
 Tell the user to add the submodule:
 ```
-git submodule add https://github.com/Imbra-Ltd/solid-ai-templates.git docs/solid-ai-templates
+git submodule add https://github.com/braboj/solid-ai-templates.git docs/solid-ai-templates
 ```
 
 Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
