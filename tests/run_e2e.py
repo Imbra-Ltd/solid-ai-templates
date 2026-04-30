@@ -813,7 +813,7 @@ def run_test(test, dry_run=False):
     tid = test["id"]
 
     if "skip" in test:
-        return SKIP, test["skip"], None
+        return SKIP, test["skip"], None, None
 
     prompt = build_prompt(
         test["stack"], test["answers"],

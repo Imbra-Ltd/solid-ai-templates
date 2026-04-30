@@ -45,7 +45,6 @@ No build step, no dependencies to install. All templates are plain Markdown.
 | `CLAUDE.md` | Rules for contributing to this repo |
 | `ROADMAP.md` | What has been done and what is planned |
 | `manifest.yaml` | Machine-readable dependency graph |
-| `CONCEPTS.md` | Concept-to-file navigation index |
 | `examples/` | Complete generated CLAUDE.md files — the target output |
 
 ## How templates relate

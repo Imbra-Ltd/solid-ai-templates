@@ -66,7 +66,7 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 - [x] `frontend/quality.md` — added state management decision guide
 - [x] `frontend/ux.md` — added accessibility testing (axe, Lighthouse, screen reader, keyboard)
 - [x] `SPEC.md` — documented precedence rules and OVERRIDE/EXTEND conflict resolution
-- [x] `CONCEPTS.md` — new: concept-to-file navigation index
+- [x] ~`CONCEPTS.md`~ — removed; `manifest.yaml` serves as the concept-to-file index
 - [x] `examples/` — new: three complete generated context files (FastAPI, React SPA, Astro)
 
 ## Phase 7 — Quality improvements (post-assessment)

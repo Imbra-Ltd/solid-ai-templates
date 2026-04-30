@@ -64,7 +64,8 @@ base/
 ├── issues.md       # Issue templates — epic, task, bug, incident, spike
 ├── scope.md        # Scope guard, session protocol, drift prevention
 ├── quality-gates.md # Three-layer gate model (editor, pre-commit, CI), thresholds
-└── ai-workflow.md  # AI-assisted development lifecycle, work item hierarchy
+├── ai-workflow.md  # AI-assisted development lifecycle, work item hierarchy
+└── 360.md          # 360-degree project analysis — four stakeholder perspectives, grading
 ```
 
 ```
