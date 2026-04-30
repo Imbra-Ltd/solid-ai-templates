@@ -113,8 +113,8 @@ Triage labels are terminal — applied when closing without action.
 | Label | Color | When to use |
 |-------|-------|-------------|
 | `bug` | `#C9372C` | Defect in existing functionality |
-| `epic` | `#8270DB` | Large initiative spanning multiple tasks |
-| `task` | `#357DE8` | Atomic implementable work |
+| `epic` | `#9F8FEF` | Large initiative spanning multiple tasks |
+| `task` | `#579DFF` | Atomic implementable work |
 | `spike` | `#6CC3E0` | Research or exploration — output is a decision |
 | `incident` | `#AE2E24` | Production outage or degradation affecting users now |
 
@@ -186,27 +186,37 @@ Triage labels are terminal — applied when closing without action.
 
 ### 3.1 Testing
 
-Two test runners live in `tests/`:
+Four files in `tests/`:
+
+| File | Purpose |
+|------|---------|
+| `tests/lib.py` | Shared utilities (constants, file reading, report writing, arg parsing) |
+| `tests/cases.py` | E2E test case definitions, grouped by area (STK, FMT, ITV, DPL) |
+| `tests/run_smoke.py` | Smoke test runner (7 structural checks) |
+| `tests/run_e2e.py` | E2E test runner (30 tests) |
 
 ```bash
 py tests/run_smoke.py              # 7 structural checks
 py tests/run_smoke.py SYS-01       # run one check by ID
 
-py tests/run_e2e.py                # 30 agent-based tests
-py tests/run_e2e.py STK-01 FMT-01  # run specific tests
-py tests/run_e2e.py --dry-run      # build prompts only
+py tests/run_e2e.py                # 30 agent-based tests (live, needs API key)
+py tests/run_e2e.py --offline      # validate test infrastructure without API
+py tests/run_e2e.py --area=STK     # run all stack tests
+py tests/run_e2e.py STK-01 FMT-01  # run specific tests by ID
+py tests/run_e2e.py --fail-fast    # stop on first failure
+py tests/run_e2e.py --dry-run      # print prompts, skip execution
 ```
 
 - Both runners write a timestamped Markdown report to
   `tests/reports/` after every run (gitignored)
 - Spec files live in `tests/specs/` — see `tests/CODIFICATION.md`
   for the ID scheme and `tests/INDEX.md` for the full list
+- CI runs smoke + gitleaks on PRs, e2e offline on push to main
+- Live e2e mode (without `--offline`) calls Claude via the API —
+  run manually on the dev machine for functional validation
 - To validate a new template: run `py tests/run_smoke.py` and
   attach `INTERVIEW.md` + the new stack to an agent to confirm
   coherent output
-- To validate a structural change: run `py tests/run_smoke.py` —
-  it checks all `[DEPENDS ON: ...]`, `[EXTEND: ...]`,
-  `[OVERRIDE: ...]`, and `manifest.yaml` references automatically
 
 ## 4. Documentation
 
