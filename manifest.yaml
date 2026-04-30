@@ -67,6 +67,9 @@ base:
   - id: base-ai-workflow
     file: base/ai-workflow.md
     description: AI-assisted development lifecycle, work item hierarchy
+  - id: base-360
+    file: base/360.md
+    description: 360-degree project analysis — four stakeholder perspectives, grading
 
 platform:
   - id: platform-github

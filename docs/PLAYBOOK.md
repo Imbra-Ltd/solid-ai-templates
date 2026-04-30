@@ -26,8 +26,7 @@ composition model.
 4. Add to the stack list in `SPEC.md` (alphabetical within category)
 5. Add a row to the stacks table in `README.md`
 6. Add an entry to `ROADMAP.md` under the current phase
-7. Add to `CONCEPTS.md` if the stack introduces new concepts
-8. Validate: attach `INTERVIEW.md` + new stack to an agent and confirm output
+7. Validate: attach `INTERVIEW.md` + new stack to an agent and confirm output
 
 ---
 
@@ -56,7 +55,7 @@ composition model.
 1. `git mv <old-path> <new-path>`
 2. Update every `[DEPENDS ON: ...]` header that references the old path
 3. Update `manifest.yaml` — change the `file:` field for the entry
-4. Update `SPEC.md`, `README.md`, `ROADMAP.md`, `CONCEPTS.md`, `INTERVIEW.md`
+4. Update `SPEC.md`, `README.md`, `ROADMAP.md`, `INTERVIEW.md`
    — search for the old filename and replace
 5. Update any `examples/` files that reference the old path
 6. Verify with `git status` that no old references remain
@@ -69,7 +68,7 @@ composition model.
 2. Search all template files for `[EXTEND: <old>]` and `[OVERRIDE: <old>]`
    — update every occurrence
 3. Update `manifest.yaml` if the ID is referenced in `depends_on` lists
-4. Update `CONCEPTS.md` if the concept is indexed there
+4. Update `manifest.yaml` if the concept maps to a template entry
 
 ---
 
@@ -133,7 +132,7 @@ check.
 1. Ensure you are on a feature branch — never commit to `main` directly
 2. Run the validation steps above for every changed template
 3. Update all affected documents (`SPEC.md`, `README.md`, `ROADMAP.md`,
-   `manifest.yaml`, `CONCEPTS.md`) before committing
+   `manifest.yaml`) before committing
 4. Commit with a conventional message:
    ```
    feat(stack): add python-celery-worker template
