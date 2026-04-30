@@ -103,12 +103,12 @@ py tools/sync.py --check    # exit 1 if any file is out of sync
   new work
 - Do not commit `.idea/`, editor config, or any generated output
 
-## Issue labels
+### 2.2 Issue labels
 
 Every issue MUST have exactly one type label and one priority label.
 Triage labels are terminal — applied when closing without action.
 
-### Type labels (pick one)
+#### Type labels (pick one)
 
 | Label | Color | When to use |
 |-------|-------|-------------|
@@ -118,7 +118,7 @@ Triage labels are terminal — applied when closing without action.
 | `spike` | `#6CC3E0` | Research or exploration — output is a decision |
 | `incident` | `#AE2E24` | Production outage or degradation affecting users now |
 
-### Priority labels (pick one)
+#### Priority labels (pick one)
 
 | Label | Color | Meaning |
 |-------|-------|---------|
@@ -128,14 +128,14 @@ Triage labels are terminal — applied when closing without action.
 | `P3` | `#4BCE97` | Low — nice to have |
 | `P4` | `#8590A2` | Backlog — someday |
 
-### Triage labels
+#### Triage labels
 
 | Label | Color | When to use |
 |-------|-------|-------------|
 | `duplicate` | `#C1C7D0` | Already tracked by another issue |
 | `wontdo` | `#C1C7D0` | Acknowledged but will not be addressed |
 
-### 2.2 Adding a new stack template
+### 2.3 Adding a new stack template
 
 1. Create `stack/<prefix>-<name>.md` following an existing file of
    the same category
@@ -150,7 +150,7 @@ Triage labels are terminal — applied when closing without action.
 7. Add an example in `examples/<name>/CLAUDE.md` if the stack is
    concrete
 
-### 2.3 Adding a new base or layer template
+### 2.4 Adding a new base or layer template
 
 1. Create `base/<name>.md`, `backend/<name>.md`,
    `frontend/<name>.md`, or `platform/<name>.md`
@@ -161,7 +161,7 @@ Triage labels are terminal — applied when closing without action.
 5. Run `py tools/sync.py` — updates SPEC.md directory listings
 6. Reference from dependent stack templates via `[DEPENDS ON: ...]`
 
-### 2.4 Template authoring rules
+### 2.5 Template authoring rules
 
 - Sections use imperative, direct language: "Use X", "Never Y",
   "Always Z"
@@ -172,7 +172,7 @@ Triage labels are terminal — applied when closing without action.
 - Keep line length under 80 characters
 - No HTML — Markdown only
 
-### 2.5 manifest.yaml
+### 2.6 manifest.yaml
 
 - Every template file MUST have a corresponding entry in
   `manifest.yaml`
