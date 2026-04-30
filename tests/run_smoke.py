@@ -20,18 +20,15 @@ import os
 import re
 import sys
 
+from lib import ROOT, PASS, FAIL, ERR, write_report
+
 try:
     import yaml
     HAS_YAML = True
 except ImportError:
     HAS_YAML = False
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIRS = ["base", "backend", "frontend", "stack"]
-
-PASS = "PASS"
-FAIL = "FAIL"
-ERR  = "ERR "
 
 
 # ---------------------------------------------------------------------------
@@ -81,7 +78,7 @@ def check_sys_01():
 def check_sys_02():
     failures = []
     pattern = re.compile(r'\[ID:\s*([^\]]+)\]')
-    seen = {}  # id -> first file
+    seen = {}
 
     for filepath in all_template_files():
         content = read(filepath)
@@ -108,14 +105,12 @@ def check_tpl_04():
     id_pattern  = re.compile(r'\[ID:\s*([^\]]+)\]')
     ref_pattern = re.compile(r'\[(EXTEND|OVERRIDE):\s*([^\]]+)\]')
 
-    # collect all declared IDs
     declared = set()
     for filepath in all_template_files():
         content = read(filepath)
         for match in id_pattern.finditer(content):
             declared.add(match.group(1).strip())
 
-    # check all refs
     for filepath in all_template_files():
         content = read(filepath)
         rel = os.path.relpath(filepath, ROOT)
@@ -149,7 +144,6 @@ def check_mnf_01():
     declared_ids = set()
     entries = []
 
-    # collect all entries
     for section in manifest.values():
         if isinstance(section, list):
             for entry in section:
@@ -158,13 +152,11 @@ def check_mnf_01():
                     if "id" in entry:
                         declared_ids.add(entry["id"])
 
-    # check file paths exist
     for entry in entries:
         path = entry.get("file", "")
         if path and not os.path.isfile(os.path.join(ROOT, path)):
             failures.append(f"  file not found: '{path}' (id: {entry.get('id', '?')})")
 
-    # check depends_on references resolve to declared IDs
     for entry in entries:
         for dep in entry.get("depends_on", []):
             if dep not in declared_ids:
@@ -181,7 +173,6 @@ def check_mnf_01():
 # ---------------------------------------------------------------------------
 
 def _collect_chain(rel_path, visited=None):
-    """Recursively collect all files reachable via DEPENDS ON."""
     if visited is None:
         visited = set()
     if rel_path in visited:
@@ -223,12 +214,9 @@ def check_tpl_01():
 
 # ---------------------------------------------------------------------------
 # TPL-02 — EXTEND adds rules without removing base rules
-# Verify that [EXTEND: base-testing] in python-flask.md has non-empty content
-# and that base/testing.md [ID: base-testing] also has non-empty content.
 # ---------------------------------------------------------------------------
 
 def _extract_section(filepath, section_id):
-    """Extract content lines immediately following an [ID: X] or [EXTEND: X] tag."""
     content = read(filepath)
     lines = content.splitlines()
     result = []
@@ -242,7 +230,6 @@ def _extract_section(filepath, section_id):
             in_section = True
             continue
         if in_section:
-            # stop at next heading or next [ID/EXTEND/OVERRIDE] or end
             has_content = any(l.strip() for l in result)
             if re.match(r'^#{1,4} ', line) and has_content:
                 break
@@ -276,8 +263,6 @@ def check_tpl_02():
 
 # ---------------------------------------------------------------------------
 # TPL-03 — OVERRIDE replaces parent section entirely
-# Verify that go-service.md [OVERRIDE: go-lib-stack] has different content
-# than go-lib.md [ID: go-lib-stack] — the parent section is truly replaced.
 # ---------------------------------------------------------------------------
 
 def check_tpl_03():
@@ -310,105 +295,43 @@ def check_tpl_03():
 # ---------------------------------------------------------------------------
 
 CHECKS = [
-    {
-        "id": "SYS-01",
-        "spec": "SAIT-SMK-SYS-01-001A",
-        "title": "DEPENDS ON paths resolve to existing files",
-        "fn": check_sys_01,
-    },
-    {
-        "id": "SYS-02",
-        "spec": "SAIT-SMK-SYS-02-001A",
-        "title": "All section IDs unique across templates",
-        "fn": check_sys_02,
-    },
-    {
-        "id": "TPL-04",
-        "spec": "SAIT-SMK-TPL-04-001A",
-        "title": "All EXTEND/OVERRIDE refs point to existing IDs",
-        "fn": check_tpl_04,
-    },
-    {
-        "id": "MNF-01",
-        "spec": "SAIT-INT-MNF-01-001A",
-        "title": "Manifest entries reference valid paths and IDs",
-        "fn": check_mnf_01,
-    },
-    {
-        "id": "TPL-01",
-        "spec": "SAIT-INT-TPL-01-001A",
-        "title": "DEPENDS ON chain from python-fastapi.md is complete",
-        "fn": check_tpl_01,
-    },
-    {
-        "id": "TPL-02",
-        "spec": "SAIT-INT-TPL-02-001A",
-        "title": "EXTEND adds rules without removing base rules",
-        "fn": check_tpl_02,
-    },
-    {
-        "id": "TPL-03",
-        "spec": "SAIT-INT-TPL-03-001A",
-        "title": "OVERRIDE replaces parent section with different content",
-        "fn": check_tpl_03,
-    },
+    {"id": "SYS-01", "spec": "SAIT-SMK-SYS-01-001A",
+     "title": "DEPENDS ON paths resolve to existing files", "fn": check_sys_01},
+    {"id": "SYS-02", "spec": "SAIT-SMK-SYS-02-001A",
+     "title": "All section IDs unique across templates", "fn": check_sys_02},
+    {"id": "TPL-04", "spec": "SAIT-SMK-TPL-04-001A",
+     "title": "All EXTEND/OVERRIDE refs point to existing IDs", "fn": check_tpl_04},
+    {"id": "MNF-01", "spec": "SAIT-INT-MNF-01-001A",
+     "title": "Manifest entries reference valid paths and IDs", "fn": check_mnf_01},
+    {"id": "TPL-01", "spec": "SAIT-INT-TPL-01-001A",
+     "title": "DEPENDS ON chain from python-fastapi.md is complete", "fn": check_tpl_01},
+    {"id": "TPL-02", "spec": "SAIT-INT-TPL-02-001A",
+     "title": "EXTEND adds rules without removing base rules", "fn": check_tpl_02},
+    {"id": "TPL-03", "spec": "SAIT-INT-TPL-03-001A",
+     "title": "OVERRIDE replaces parent section with different content", "fn": check_tpl_03},
 ]
 
 
 # ---------------------------------------------------------------------------
-# Report
+# Report renderers
 # ---------------------------------------------------------------------------
 
-def write_report(run_results, started_at):
-    reports_dir = os.path.join(ROOT, "tests", "reports")
-    os.makedirs(reports_dir, exist_ok=True)
+def render_pass(r):
+    return [f"### {r['status']}  {r['id']} — {r['title']}", ""]
 
-    ts = started_at.strftime("%Y-%m-%dT%H-%M-%S")
-    report_path = os.path.join(reports_dir, f"{ts}-smoke.md")
 
-    passed  = sum(1 for r in run_results if r["status"] == PASS)
-    failed  = sum(1 for r in run_results if r["status"] == FAIL)
-    errored = sum(1 for r in run_results if r["status"] == ERR)
-    total   = len(run_results)
+def render_fail(r):
+    lines = [f"### {r['status']}  {r['id']} — {r['title']}", "",
+             "**Expected**: all assertions pass with no violations", "",
+             "**Observed**:", "", "```"]
+    lines.extend(r["failures"])
+    lines.extend(["```", ""])
+    return lines
 
-    lines = [
-        "# Smoke Test Report",
-        "",
-        f"**Date**: {started_at.strftime('%Y-%m-%d %H:%M:%S')}  ",
-        f"**Runner**: run_smoke.py  ",
-        f"**Checks run**: {total}",
-        "",
-        "## Summary",
-        "",
-        f"{total} checks — {passed} passed  {failed} failed  {errored} errors",
-        "",
-        "---",
-        "",
-        "## Results",
-        "",
-    ]
 
-    for r in run_results:
-        lines.append(f"### {r['status']}  {r['id']} — {r['title']}")
-        lines.append("")
-        if r["status"] == FAIL:
-            lines.append("**Expected**: all assertions pass with no violations")
-            lines.append("")
-            lines.append("**Observed**:")
-            lines.append("")
-            lines.append("```")
-            for line in r["failures"]:
-                lines.append(line)
-            lines.append("```")
-            lines.append("")
-        elif r["status"] == ERR:
-            lines.append(f"**Error**: {r['error']}")
-            lines.append("")
-
-    with io.open(report_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
-
-    print(f"\nReport: {os.path.relpath(report_path, ROOT)}")
+def render_err(r):
+    return [f"### {r['status']}  {r['id']} — {r['title']}", "",
+            f"**Error**: {r['error']}", ""]
 
 
 # ---------------------------------------------------------------------------
@@ -462,15 +385,21 @@ def main():
                 "status": PASS, "failures": [], "error": None,
             })
 
+    elapsed = (datetime.datetime.now() - started_at).total_seconds()
     total = sum(results.values())
     print(
         f"\n{total} checks — "
         f"{results[PASS]} passed  "
         f"{results[FAIL]} failed  "
         f"{results[ERR]} errors"
+        f"  ({elapsed:.1f}s)"
     )
 
-    write_report(run_results, started_at)
+    write_report(run_results, started_at, "smoke", {
+        PASS: render_pass,
+        FAIL: render_fail,
+        ERR: render_err,
+    })
 
     sys.exit(0 if results[FAIL] == 0 and results[ERR] == 0 else 1)
 
