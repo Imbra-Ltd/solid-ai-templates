@@ -18,3 +18,9 @@ jobs:
         run: pip install pyyaml
       - name: Run smoke tests
         run: python tests/run_smoke.py
+      - name: Install gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz | tar -xz
+          sudo mv gitleaks /usr/local/bin/
+      - name: Secret detection (gitleaks)
+        run: gitleaks detect --source . --verbose
