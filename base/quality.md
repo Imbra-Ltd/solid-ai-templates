@@ -3,6 +3,8 @@
 
 ## Architecture
 - All editable content in a data directory — never hardcoded in components
+- Never hardcode derived counts or statistics — compute them from the data
+  source; a hardcoded number is a stale number
 - Default to the simplest component type; only reach for heavier abstractions
   when genuinely needed
 - No dead code — remove unused components, styles, and data files promptly
