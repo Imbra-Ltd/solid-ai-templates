@@ -1,4 +1,4 @@
-name: E2E tests
+name: E2E tests (offline)
 
 on:
   push:
@@ -17,10 +17,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: pip install pyyaml anthropic
-      - name: Install Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code
-      - name: Run E2E tests
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python tests/run_e2e.py
+        run: pip install pyyaml
+      - name: Run E2E tests (offline)
+        run: python tests/run_e2e.py --offline
