@@ -1,5 +1,5 @@
 ---
-id: SAIT-E2E-FMT-05-001A
+id: SAIT-E2E-FMT-02-001A
 uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567811
 title: Full interview produces a correct AGENTS.md for a FastAPI project
 product: sait
