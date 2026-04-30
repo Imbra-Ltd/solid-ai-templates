@@ -1,5 +1,52 @@
 # Dev Journal
 
+## 2026-04-30 — v1.0.0 release, repo transfer, CI hardening
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**Key changes:**
+- Tagged v1.0.0 release
+- Transferred repo from Imbra-Ltd to braboj
+- Added `base/quality.md` rule: never hardcode derived counts
+- Added audit decomposition guidance to `base/review.md`
+- Added SEO conventions to `frontend/static-site.md` and
+  `stack/static-site-astro.md` (sitemap, description, JSON-LD)
+- Fixed stale references in SPEC.md, ROADMAP.md, ONBOARDING.md,
+  PLAYBOOK.md (CONCEPTS.md, format files, section ordering)
+- Fixed e2e crash bug (3-tuple return on skipped tests)
+- Added `base/360.md` to manifest.yaml
+- Fixed test spec frontmatter ID mismatch
+- Added `--offline` mode to e2e runner — validates test
+  infrastructure without API calls
+- Refactored test runners: extracted `tests/lib.py` (shared
+  utilities) and `tests/cases.py` (30 test cases grouped by area)
+- Added `--area` and `--fail-fast` flags to e2e runner
+- CI hardened: enforce_admins, require PR before merge, gitleaks
+  in smoke workflow, push protection enabled, e2e switched to
+  offline mode in CI
+- Updated label colors: task `#579DFF`, epic `#9F8FEF`
+- Added 8 GitHub topics for discoverability
+- Updated all in-repo URLs and submodule pointers after transfer
+
+**PRs merged:** #80, #81, #91, #92, #93, #94, #95, #96, #97, #98, #99
+
+**Issues closed:** #79, #78, #55, #15, #16, #82, #83, #84, #85,
+#86, #87, #88, #89, #69, #72, #10
+
+**Issues created:** #82–#90, #100
+
+**Issues remaining (3):**
+- #90 task P2 — Write launch post and submit to awesome lists
+- #100 task P2 — Replace claude CLI with Anthropic SDK in e2e runner
+- #13 task P3 — Regenerate examples
+
+**Decisions:**
+- Repo transferred to braboj for better OSS discoverability
+- E2E CI runs offline mode — live mode is manual/nightly only
+- gitleaks CLI preferred over gitleaks-action (no license key needed)
+- Label colors updated for accessibility (task, epic were too dark)
+- pytest adoption deferred — hand-rolled runners are sufficient
+
 ## 2026-04-28 — 360 analysis, labels, ADRs, license
 
 **Tool:** Claude Code (Opus 4.6, 1M context)
