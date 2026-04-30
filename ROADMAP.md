@@ -49,11 +49,10 @@ See `SPEC.md` for design decisions and `README.md` for an overview.
 
 ## Phase 5 — Agent output coverage
 
-- [x] `formats/claude.md` — Claude Code → `CLAUDE.md`
-- [x] `formats/cursorrules.md` — Cursor → `.cursor/rules/project.mdc`
-- [x] `formats/copilot.md` — GitHub Copilot → `.github/copilot-instructions.md`
-- [x] `formats/codex.md` — OpenAI Codex CLI → `AGENTS.md`
-- [x] `formats/generic.md` — fallback → `AI_CONTEXT.md`
+- [x] `formats/agents.md` — consolidated output format template covering all
+  agents (Claude Code, Cursor, Copilot, Codex CLI); original per-agent files
+  (`formats/claude.md`, `formats/cursorrules.md`, `formats/copilot.md`,
+  `formats/codex.md`, `formats/generic.md`) were merged into a single file
 
 ## Phase 6 — Quality pass
 

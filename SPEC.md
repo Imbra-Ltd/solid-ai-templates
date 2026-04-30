@@ -137,7 +137,17 @@ stack/
 ```
 <!-- /generated:spec-directories -->
 
-### 6. Interview template (orchestrator)
+### 6. Output format template
+
+Rendering rules for the generated output. Describes structure, model
+selection (inline/reference/hybrid), and formatting constraints.
+
+```
+formats/
+└── agents.md    # Output structure, models, formatting rules
+```
+
+### 7. Interview template (orchestrator)
 
 A single file any agent uses to ask the user the required questions before
 generating the output context file. Questions are grouped by concern and
@@ -147,19 +157,7 @@ reference the relevant base/stack templates.
 INTERVIEW.md
 ```
 
-### 4. Output format templates
-
-Rendering rules for each output format. Describe structure, formatting
-constraints, and tone.
-
-```
-formats/
-├── shared.md    # Shared structure, model selection (inline/reference/hybrid)
-├── claude.md    # Claude Code → CLAUDE.md
-└── codex.md     # Codex CLI / Devin / Cursor → AGENTS.md
-```
-
-### 5. Profile (generated output)
+### 8. Profile (generated output)
 
 The context file generated for a specific project by combining interview
 answers + base templates + stack template + output format template.
@@ -181,7 +179,7 @@ base/git.md ──────────────────────�
 base/docs.md ───────────────────────────────────────────┤
 base/quality.md ────────────────────────────────────────┤
                                                         ▼
-frontend/ux.md ─────────────────────────────► stack/static-site.md
+frontend/ux.md ─────────────────────────────► frontend/static-site.md
 frontend/quality.md ────────────────────────►          │
                                                         ▼
                                              stack/static-site-astro.md
