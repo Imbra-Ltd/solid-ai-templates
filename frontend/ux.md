@@ -7,6 +7,8 @@
 - No dark patterns — no misleading UI, no forced actions, no hidden costs
 - Consistency — same interaction patterns throughout the product
 - Performance is UX — slow interfaces are bad user experience
+- **Least Surprise**: components and interactions should behave as users
+  expect; if a pattern looks like a button it must act like a button
 
 ## Accessibility — WCAG 2.1 AA
 - Target standard: WCAG 2.1 AA

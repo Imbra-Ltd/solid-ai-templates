@@ -10,6 +10,16 @@
 - No dead code — remove unused components, styles, and data files promptly
 - No over-engineering — build the minimum needed for the current requirement
 
+## Core principles
+
+- **DRY — Don't Repeat Yourself**: every piece of knowledge must have
+  a single, authoritative representation; the third copy is a bug
+- **KISS — Keep It Simple**: prefer the simplest solution that works;
+  complexity must be justified by a requirement, not by elegance
+- **YAGNI — You Aren't Gonna Need It**: do not build for hypothetical
+  future requirements; build what is needed now, refactor when the
+  need is real
+
 ## SOLID principles
 
 Apply SOLID at the class, module, and service level:
@@ -101,6 +111,22 @@ Apply SOLID at the class, module, and service level:
   comment referencing the replacement; remove it in a follow-up change
 - Magic numbers and magic strings must be named constants — unnamed literals
   scattered across the codebase are a maintenance hazard
+- No substantial duplication across sibling modules — if the same code
+  appears in two or more places, extract a shared module; the third
+  copy is a bug
+- Consistent naming across modules — the same concept must use the same
+  name everywhere; divergent names for the same thing (e.g. `clearButton`
+  vs `clearBtn`) signal missing abstraction
+- When a pattern repeats across three or more call sites, extract it —
+  three similar blocks of code is no longer acceptable as "not worth
+  abstracting"
+- **Fail Fast**: validate inputs at boundaries and throw immediately on
+  invalid state; do not propagate bad data through the system
+- **Law of Demeter**: a module should only talk to its direct
+  dependencies; chaining through objects (`a.b.c.d`) signals missing
+  abstraction
+- **High Cohesion**: modules that change together should live together;
+  a module whose parts serve unrelated concerns should be split
 
 ## Automated enforcement
 - Quality conventions in this document are enforced automatically via

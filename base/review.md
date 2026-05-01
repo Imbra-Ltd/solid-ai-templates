@@ -60,6 +60,10 @@ independently — do not pass the section as a whole. For example,
 `base/readme.md` Usage requires both usage examples AND expected output
 per example — these are two separate checks.
 
+SHOULD also check:
+- No substantial duplication across sibling components — if two or more
+  components share the same code, extract a shared module
+
 ## Deviations
 - Deviating from a SHOULD rule requires a written explanation in the pull
   request
