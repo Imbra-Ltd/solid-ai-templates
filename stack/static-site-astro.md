@@ -173,6 +173,25 @@ files into `src/content/`.
 
 ---
 
+## View Transitions
+[ID: astro-view-transitions]
+
+- SHOULD enable Astro View Transitions via `<ClientRouter />` from
+  `astro:transitions` in the base layout — eliminates full-page flash
+  between navigations; static site feels like a SPA with zero
+  client-side routing JS (~244 bytes gzip overhead per page)
+- When using `<ClientRouter />`, MUST NOT use `DOMContentLoaded` in
+  page scripts — it only fires on full page loads, not on client-side
+  navigations
+- Use `astro:page-load` instead — it fires on every navigation
+  including View Transitions
+- Scripts in `<script>` tags (not `is:inline`) are re-executed on
+  navigation by default; `is:inline` scripts are not
+- Gracefully degrades to full page loads if JS is disabled — no
+  framework lock-in
+
+---
+
 ## Reveal animations
 - Use a single `IntersectionObserver` script in the base layout for
   `.reveal` → `.reveal.visible` transitions
