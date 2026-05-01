@@ -101,6 +101,11 @@ Before every commit, update all relevant documentation:
 - Structure: architecture overview at the top, then chronological session
   entries (newest last)
 - Each session entry records: date, tool used, key changes, decisions made
+- Session entry heading format: `### Session N — Short Theme Description`
+  (3-6 words describing what was done; no dates or tool names in the
+  heading)
+- When milestones or phases are renamed or renumbered in the issue tracker,
+  the dev journal architecture overview MUST be updated in the same PR
 - Do not duplicate content that belongs elsewhere — link to ADRs for
   decisions, link to issues for task tracking, do not repeat data model
   specs that live in code

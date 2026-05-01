@@ -47,10 +47,12 @@
 
 ## Release process
   1. `git checkout -b chore/release-vX.Y.Z`
-  2. `git commit --allow-empty -m "chore: release vX.Y.Z"`
-  3. Push, open PR, merge
-  4. `git checkout main && git pull`
-  5. `git tag vX.Y.Z && git push origin vX.Y.Z`
+  2. Bump version in the project manifest (`package.json`, `pyproject.toml`,
+     `Cargo.toml`, or equivalent) to `X.Y.Z`
+  3. `git commit -m "chore: release vX.Y.Z"`
+  4. Push, open PR, merge
+  5. `git checkout main && git pull`
+  6. `git tag vX.Y.Z && git push origin vX.Y.Z`
 
 ## General
 - Do not commit build output, secrets, or dependency directories
