@@ -1,5 +1,32 @@
 # Dev Journal
 
+## 2026-05-01 — Session protocol hardening
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**PRs:** #120
+
+**Issues closed:** #105, #106, #107, #110, #119
+
+**Key changes:**
+- Hardened `base/scope.md` session startup with branch check, git
+  status, issue review, and mandatory startup block requirement
+- Added build-after-change rule to during-work section
+- End-of-session audit now requires visible sequential execution with
+  documented trigger phrases
+- `formats/agents.md` — all three models (inline, reference, hybrid)
+  now reference `base/scope.md` instead of inlining an incomplete
+  6-step checklist
+- Added `examples/hybrid-astro/CLAUDE.md` — first reference/hybrid
+  mode example demonstrating the startup block pattern
+
+**Key decisions:**
+- Startup block is only required for reference/hybrid modes — inline
+  models are self-contained and exempt
+- Examples use anonymized fictional projects to avoid maintenance burden
+
+---
+
 ## 2026-04-30 — v1.0.0 release, repo transfer, CI hardening
 
 **Tool:** Claude Code (Opus 4.6, 1M context)
