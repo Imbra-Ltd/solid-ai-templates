@@ -117,9 +117,10 @@ Apply SOLID at the class, module, and service level:
 - Consistent naming across modules — the same concept must use the same
   name everywhere; divergent names for the same thing (e.g. `clearButton`
   vs `clearBtn`) signal missing abstraction
-- When a pattern repeats across three or more call sites, extract it —
-  three similar blocks of code is no longer acceptable as "not worth
-  abstracting"
+- When the same logic block repeats across three or more modules,
+  extract a shared module; short inline repetition (e.g. three similar
+  assignments) does not warrant extraction — only substantial
+  duplicated logic
 - **Fail Fast**: validate inputs at boundaries and throw immediately on
   invalid state; do not propagate bad data through the system
 - **Law of Demeter**: a module should only talk to its direct
