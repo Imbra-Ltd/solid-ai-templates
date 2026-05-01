@@ -97,16 +97,13 @@ them*.
 [Which templates to verify, when to run]
 
 ## 6. Session protocol
-### 6.1 Startup
-[base/scope.md — Session startup: read referenced docs, confirm scope]
-### 6.2 End of session
-Before ending a session, verify all of the following:
-1. Dev journal — add a session entry to docs/dev-journal.md
-2. CLAUDE.md — update if project structure or conventions changed
-3. README.md — update if public-facing info changed
-4. ONBOARDING.md — update if setup steps or structure changed
-5. PLAYBOOK.md — update if workflows or file paths changed
-6. Open issues — close resolved issues, create issues for remaining work
+Follow `base/scope.md` for scope guard and end-of-session audit.
+### 6.1 Start of session
+[base/scope.md — Session startup + Mandatory startup block]
+### 6.2 During the session
+[base/scope.md — During work]
+### 6.3 End of session
+[base/scope.md — End of session audit (full checklist)]
 ```
 
 Omit sections that are not applicable to the project (e.g. omit section 4
@@ -169,17 +166,13 @@ relevant layer/stack templates. Run after: new project, migration,
 new layer, or pre-release.
 
 ## 6. Session protocol
-### 6.1 Startup
-Read all referenced template documents before starting work.
-Confirm session scope with the user.
-### 6.2 End of session
-Before ending a session, verify all of the following:
-1. Dev journal — add a session entry to docs/dev-journal.md
-2. CLAUDE.md — update if project structure or conventions changed
-3. README.md — update if public-facing info changed
-4. ONBOARDING.md — update if setup steps or structure changed
-5. PLAYBOOK.md — update if workflows or file paths changed
-6. Open issues — close resolved issues, create issues for remaining work
+Follow `base/scope.md` for scope guard and end-of-session audit.
+### 6.1 Start of session
+[base/scope.md — Session startup + Mandatory startup block]
+### 6.2 During the session
+[base/scope.md — During work]
+### 6.3 End of session
+[base/scope.md — End of session audit (full checklist)]
 ```
 
 ---
@@ -260,11 +253,13 @@ Follow base/review.md priority order, apply base/quality.md and
 language-specific templates as the standard.
 
 ## 6. Session protocol
-### 6.1 Startup
-Read all referenced template documents before starting work.
-Confirm session scope with the user.
-### 6.2 End of session
-[Same checklist as inline/reference models]
+Follow `base/scope.md` for scope guard and end-of-session audit.
+### 6.1 Start of session
+[base/scope.md — Session startup + Mandatory startup block]
+### 6.2 During the session
+[base/scope.md — During work]
+### 6.3 End of session
+[base/scope.md — End of session audit (full checklist)]
 ```
 
 ---

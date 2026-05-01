@@ -13,11 +13,36 @@ Before starting any work, the agent MUST:
    `docs/solid-ai-templates/base/git.md`, `base/docs.md`, etc.)
 2. These contain binding conventions that CLAUDE.md inherits — do not
    proceed until you have read and understood them
-3. Confirm the scope with the user before making changes
-4. If the task is ambiguous, ask: "What is the specific deliverable for
+3. Check which branch you are on — if not `main`, ask why before
+   proceeding
+4. Check `git status` — if uncommitted changes exist, resolve before
+   starting new work
+5. Confirm the scope with the user before making changes
+6. If the task is ambiguous, ask: "What is the specific deliverable for
    this session?"
-5. Write down the agreed scope — refer back to it when the session
+7. Write down the agreed scope — refer back to it when the session
    drifts
+8. Review open issues related to the agreed scope before writing code
+
+## Mandatory startup block
+Every project CLAUDE.md MUST include a prominent startup block at the
+top of the file listing all referenced template files with an explicit
+instruction to read them before the first response. This applies to both
+reference mode and hybrid mode.
+
+The startup block MUST:
+- Appear before section 1 (Project)
+- List every template file the project depends on
+- Use imperative language: "You MUST read every file listed below IN
+  FULL using the Read tool before you respond"
+- State the consequence: "If you respond without reading them, you are
+  violating project rules"
+
+This requirement exists because `base/scope.md` says "read all documents
+referenced in CLAUDE.md" — but `scope.md` is one of the files that needs
+to be read first. The startup block breaks this chicken-and-egg problem
+by placing the instruction directly in CLAUDE.md, the one file that is
+always loaded into context automatically.
 
 ## During work
 - If a task grows beyond the original scope, flag it explicitly:
@@ -26,6 +51,8 @@ Before starting any work, the agent MUST:
 - Do not silently absorb new requests into the current work stream
 - Finishing and committing the current work SHOULD take priority over
   starting something new
+- Build after every change — do not accumulate multiple changes without
+  verifying the build still passes
 
 ## Default scope boundaries
 - One logical unit of work per session (one feature, one chapter, one
@@ -48,22 +75,30 @@ When the user requests something out of scope:
 4. If switching, commit current progress before starting the new task
 
 ## End of session audit
-Before ending a session, verify all of the following:
-1. **Dev journal** — add a session entry to `docs/dev-journal.md`
-   (date, tool, key changes, PRs merged, issues closed/created, open issues)
-2. **CLAUDE.md** — update if project structure or conventions changed
-3. **README.md** — update if public-facing info (setup, links, structure) changed
-4. **ONBOARDING.md** — update `docs/ONBOARDING.md` if prerequisites,
+When the user signals end of session ("wrap up", "let's finish",
+"end session", "close out", or similar), the agent MUST print the full
+checklist below and execute each item sequentially. Mark each item done
+(with result) before moving to the next. Do not batch, skip, or
+summarize — visible sequential execution prevents missed steps.
+
+1. **Commits and push** — all changes committed and pushed (via PR if
+   branch-protected)
+2. **Close issues** — close completed issues (verify auto-close worked)
+3. **Epic checklists** — update epic checklists if relevant
+4. **Dev journal** — add a session entry to `docs/dev-journal.md`
+   (date, tool, key changes, PRs merged, issues closed/created)
+5. **ADRs** — record any architectural decisions in `docs/decisions/`
+6. **CLAUDE.md** — update if project structure or conventions changed
+7. **README.md** — update if public-facing info changed
+8. **ONBOARDING.md** — update `docs/ONBOARDING.md` if prerequisites,
    setup steps, or project structure changed
-5. **PLAYBOOK.md** — update `docs/PLAYBOOK.md` if operational
+9. **PLAYBOOK.md** — update `docs/PLAYBOOK.md` if operational
    workflows or file paths changed
-6. **ADRs** — record any decisions made during the session in
-   `docs/decisions/`
-7. **Open issues** — close resolved issues, create issues for remaining work
-8. **Submodules** — check if upstream submodules need updates
-   (`git submodule update --remote`); commit the pointer bump if needed
-9. **Template feedback** — flag any conventions discovered or changed
-   during the session that should be contributed back to
-   solid-ai-templates
-10. **Flag gaps** — if any of the above cannot be completed, flag it
+10. **Submodules** — check if upstream submodules need updates
+    (`git submodule update --remote`); commit the pointer bump if needed
+11. **Template feedback** — flag any conventions discovered or changed
+    during the session that should be contributed back to
+    solid-ai-templates
+12. **Flag gaps** — if any of the above cannot be completed, flag it
     to the user before closing
+13. **Summary** — summarize what was done and what's next
