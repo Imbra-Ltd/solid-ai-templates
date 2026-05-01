@@ -1,6 +1,35 @@
 # Dev Journal
 
-## 2026-05-01 — Session protocol hardening
+## 2026-05-01 — Convention hardening sweep
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**PRs:** #120, #121, #122, #123, #124
+
+**Issues closed:** #105, #106, #107, #108, #109, #110, #111, #112,
+#113, #114, #115, #116, #118, #119
+
+**Key changes:**
+- Session protocol: mandatory startup block, startup hygiene (branch/
+  status/issues), build-after-change, visible sequential audit execution
+- formats/agents.md: all 3 models reference base/scope.md (no more
+  incomplete inlined checklists)
+- Quality: DRY/KISS/YAGNI core principles, Fail Fast/Law of Demeter/
+  High Cohesion in maintainability, duplication erosion audit check
+- Astro: View Transitions section with ClientRouter recommendation and
+  DOMContentLoaded warning
+- Docs: version bump in release process, session naming convention,
+  milestone sync rule
+- Added hybrid-mode example (examples/hybrid-astro/CLAUDE.md)
+- Clarified extraction threshold: substantial logic blocks vs short
+  inline repetition
+
+**Also:** fixed 3 issue titles (removed commit-style prefixes), added
+missing priority labels to #104, #105, #106
+
+---
+
+## 2026-05-01 — Session protocol hardening (superseded)
 
 **Tool:** Claude Code (Opus 4.6, 1M context)
 
