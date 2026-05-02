@@ -131,6 +131,9 @@ predefined expected outcome. It is not part of any regression suite.
 
 ## General rules
 
+- Code MUST be designed for testability from the start — see the
+  Testability section in `base/quality.md` for architectural patterns
+  (pure functions, boundary architecture, SOLID, design patterns)
 - Test behaviour, not implementation details
 - Each test MUST be independent — no shared mutable state between tests
 - A failing test MUST trigger an investigation before any other action —

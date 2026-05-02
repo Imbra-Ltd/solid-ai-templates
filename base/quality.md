@@ -129,6 +129,57 @@ Apply SOLID at the class, module, and service level:
 - **High Cohesion**: modules that change together should live together;
   a module whose parts serve unrelated concerns should be split
 
+## Testability
+
+Testability is a first-class design concern, not an afterthought. Code that
+is hard to test is hard to test because it is poorly designed — fixing the
+design fixes the testability.
+
+### Pure functions over side effects
+- Business logic SHOULD be implemented as pure functions — same input,
+  same output, no side effects (no I/O, no mutation of external state)
+- Side effects (database, API, filesystem, DOM) SHOULD be pushed to
+  the boundary — thin adapters that call pure logic
+- Pure functions are trivially unit-testable with no mocks, stubs, or setup
+- A function that mixes logic and side effects is a signal to split it:
+  extract the logic into a pure function, keep the side effect in a
+  thin wrapper
+
+### Architecture for testability
+- Push side effects to the edges:
+  `[boundary: I/O] → [pure: logic] → [boundary: I/O]`
+- The pure center is unit-testable; the thin boundaries are
+  integration-testable
+- If a function needs more than two mocks to test, it has too many
+  responsibilities — split it
+
+### SOLID enables testability
+- **SRP** — a function with one responsibility has one reason to test;
+  multiple responsibilities require combinatorial test cases
+- **OCP** — new behaviour via extension means existing tests stay green
+- **LSP** — subtypes that honour contracts can be tested against the base
+  type's tests
+- **ISP** — small interfaces mean fewer dependencies to mock
+- **DIP** — depend on abstractions, inject dependencies; code that
+  instantiates its own dependencies cannot be tested in isolation
+
+### Design patterns for testability
+- **Strategy** — swap algorithms in tests without modifying the caller
+- **Factory** — isolate object creation; test factories return predictable
+  instances
+- **Adapter / Facade** — wrap third-party dependencies behind a
+  project-owned interface; mock the interface, not the library
+- **Observer** — decouple event producers from consumers; test each side
+  independently
+
+### Rules
+- Design for testability from the start — do not write code first and
+  struggle to test later
+- If code is hard to test, treat it as a design problem, not a testing
+  problem
+- See `base/testing.md` for test types, coverage targets, and execution
+  rules
+
 ## Automated enforcement
 - Quality conventions in this document are enforced automatically via
   quality gates — see `base/quality-gates.md` for the three-layer model

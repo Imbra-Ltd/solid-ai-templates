@@ -220,11 +220,35 @@ files into `src/content/`.
 ---
 
 ## Commands
+
+### Core (MUST)
 ```
-npm run dev      # develop — hot reload at localhost:4321
-npm run build    # compile — production build to dist/
-npm run preview  # verify — preview the production build locally
+npm run dev      # astro dev — hot reload at localhost:4321
+npm run build    # astro build — production build to dist/
+npm run preview  # astro preview — serve production build locally
+npm run prepare  # husky — auto-installs git hooks on npm install
 ```
+
+### Quality (SHOULD — omit if the tool is not in the stack)
+```
+npm run lint     # eslint .
+npm run format   # prettier --check .
+npm run check    # astro check — validate .astro files, types, content schemas
+npm test         # test runner in single-run mode (e.g. vitest run)
+npm run validate # lint + format + check + test + build — full quality gate
+```
+
+### Development (MAY)
+```
+npm run test:watch  # test runner in watch mode (e.g. vitest)
+```
+
+Rules:
+- `validate` SHOULD compose named scripts: each step callable individually
+  and as part of the full gate
+- `test` MUST run in single-run mode (exit after completion) — watch mode
+  belongs in `test:watch`
+- `prepare` is an npm lifecycle hook — runs automatically after `npm install`
 ---
 
 ## Quality gates
