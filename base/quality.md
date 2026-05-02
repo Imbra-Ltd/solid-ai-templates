@@ -163,14 +163,13 @@ design fixes the testability.
 - **DIP** — depend on abstractions, inject dependencies; code that
   instantiates its own dependencies cannot be tested in isolation
 
-### Design patterns for testability
-- **Strategy** — swap algorithms in tests without modifying the caller
-- **Factory** — isolate object creation; test factories return predictable
-  instances
-- **Adapter / Facade** — wrap third-party dependencies behind a
-  project-owned interface; mock the interface, not the library
-- **Observer** — decouple event producers from consumers; test each side
-  independently
+### Design patterns and composition
+- Design patterns enable testability by enforcing separation of concerns,
+  loose coupling, and clear contracts — any correctly applied pattern
+  from the Design patterns section improves testability as a side effect
+- Prefer composition over inheritance (see OOP section) — composed
+  dependencies can be injected and swapped in tests; inherited behaviour
+  drags the entire class hierarchy into every test
 
 ### Rules
 - Design for testability from the start — do not write code first and
