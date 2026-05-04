@@ -40,10 +40,13 @@ base:
     file: base/devsecops-patterns.md
     description: Pipeline security patterns — break-build gate, triage, SBOM, rotation, hardening loop
     depends_on: [base-devsecops, base-cicd]
+  - id: base-security
+    file: base/security.md
+    description: Application security rules — input, output, injection, auth, sessions, TLS, headers
   - id: base-security-patterns
     file: base/security-patterns.md
     description: Application security patterns — validation, encoding, CSRF, rate limiting, headers
-    depends_on: [base-quality]
+    depends_on: [base-security]
   - id: base-release
     file: base/release.md
     description: Semver, version bump propagation, backward compat, cut-over

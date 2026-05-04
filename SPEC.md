@@ -56,6 +56,7 @@ base/
 ├── testing-patterns.md # Reusable test patterns — factory, AAA, builder, parameterized, fixtures, mocks
 ├── devsecops.md    # SAST, SCA, SBOM, secret detection, license compliance
 ├── devsecops-patterns.md # Pipeline security patterns — break-build gate, triage, SBOM, rotation, hardening loop
+├── security.md     # Application security rules — input, output, injection, auth, sessions, TLS, headers
 ├── security-patterns.md # Application security patterns — validation, encoding, CSRF, rate limiting, headers
 ├── release.md      # Semver, version bump propagation, backward compat, cut-over
 ├── cicd.md         # Pipeline stages, triggers, environments, IaC, deployment
