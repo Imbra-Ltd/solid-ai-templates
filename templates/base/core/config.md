@@ -18,6 +18,29 @@ store config in the environment, not in code.
 - Validate all required config at load time — fail fast if anything
   is missing or invalid
 
+## Naming conventions
+
+- Use `SCREAMING_SNAKE_CASE` for all environment variables
+- Prefix with the app or service name to avoid collisions
+  (e.g. `MYAPP_DATABASE_URL`, not `DATABASE_URL`)
+- Group related variables with a common prefix
+  (e.g. `MYAPP_DB_HOST`, `MYAPP_DB_PORT`, `MYAPP_DB_NAME`)
+- Boolean variables use `ENABLE_` or `DISABLE_` prefix
+  (e.g. `MYAPP_ENABLE_CACHE`)
+
+## Config precedence
+
+Sources override in this order (highest wins):
+
+1. **Hardcoded defaults** — in code, lowest priority
+2. **Config file** — `config.yaml`, `appsettings.json`, etc.
+3. **Environment variables** — override file values
+4. **CLI flags / arguments** — override everything
+
+- Document the precedence model for the project
+- Never let a lower-priority source silently override a
+  higher-priority one
+
 ## Build-time vs runtime config
 
 - **Build-time** — values baked into the artifact at build (API base
