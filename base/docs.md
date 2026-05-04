@@ -44,7 +44,11 @@ levels. Every rule MUST use one of these words:
 1. **Prerequisites** — required tools and versions (Node, Python, Docker, etc.)
 2. **First-time setup** — clone, install, configure (copy-pasteable commands)
 3. **Verify the setup** — how to confirm everything works (run dev server,
-   run tests, expected output)
+   run tests, expected output). Verify step descriptions SHOULD be
+   re-checked when the default route (`/`) or landing page changes —
+   a content change can invalidate the expected output without triggering
+   a "setup changed" check. Structure audits MUST verify that verify
+   steps produce the described output.
 4. **Key files** — table of files a new contributor should read first
 5. **Project context** — brief domain overview and links to architecture docs
 6. **Daily workflow** — cross-reference PLAYBOOK sections, do not duplicate
