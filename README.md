@@ -24,191 +24,77 @@ Works for new projects and refactoring alike — the generated context file
 describes how code *should be written*, giving your agent a consistent target
 to work toward whether starting from scratch or improving existing code.
 
-## Quick start
+## How to use
 
-**Prerequisites:** an AI agent that accepts a Markdown context file
-(Claude Code, Cursor, GitHub Copilot, or OpenAI Codex CLI).
+**Prerequisites:** an AI coding agent (Claude Code, Cursor, Copilot,
+Codex CLI) and a project you want to generate conventions for.
+
+**Output:** a `CLAUDE.md` or `AGENTS.md` file placed at your project
+root, containing coding conventions tailored to your stack.
+
+### Try it — attach one file
+
+No install required. Download a stack template from GitHub and attach
+it to your agent:
+
+1. Find your stack in the [supported stacks](#supported-stacks) table
+2. Open the raw file on GitHub and save it (or copy the contents)
+3. Open your agent in your project directory
+4. Attach the stack template and provide your project details:
+
+```
+Attach: python-fastapi.md
+
+Generate a CLAUDE.md for this project.
+Name: my-service, owner: Acme, repo: github.com/acme/my-service,
+database: PostgreSQL, auth: JWT.
+```
+
+The agent generates a context file immediately. Place it at your
+project root.
+
+### Use it — clone and run the interview
+
+Clone the templates and let the agent guide you through setup:
 
 ```bash
 git clone https://github.com/braboj/solid-ai-templates.git
 ```
 
-### Direct — attach a stack template
+1. Open your agent in your project directory
+2. Tell the agent to read `solid-ai-templates/templates/INTERVIEW.md`
+3. The agent asks about your project, proposes a stack, and reads
+   the relevant templates
+4. Confirm the stack — the agent generates `CLAUDE.md` or `AGENTS.md`
+5. Place the generated file at your project root
 
-Attach the stack template, e.g. for a Go service:
+The interview produces a more complete output than attaching a single
+file, because the agent resolves the full dependency chain (base rules,
+layer rules, stack rules).
 
-```
-solid-ai-templates/templates/stack/go-service.md
-```
+### Adopt it — vendor as a submodule
 
-Then provide an instruction with your project details:
-
-> "Generate a CLAUDE.md. Name: my-service, owner: Acme,
-> repo: github.com/acme/my-service, database: PostgreSQL, auth: JWT."
-
-To save typing for a setup your team uses repeatedly, create a Markdown file
-with pre-filled answers and attach it alongside the stack template:
-
-```markdown
-# My project defaults
-
-- Language: Go 1.22
-- Framework: Echo
-- Deployment target: cloud
-- Distribution: Docker image
-- Database: PostgreSQL via pgx v5
-- Cache: Redis via go-redis
-- API style: REST / OpenAPI
-- Auth: JWT bearer tokens
-```
-
-Attach both files and say: *"Generate a CLAUDE.md. Name: X, owner: Y, repo: Z."*
-
-### Interview — let the agent guide you
-
-To explore your project requirements interactively, attach the interview 
-template:
-
-```
-solid-ai-templates/templates/INTERVIEW.md
-```
-
-The agent explores what you want to build, proposes a stack, and generates
-the file once you confirm.
-
-**Available output formats:** `CLAUDE.md` (Claude Code),
-`AGENTS.md` (Codex CLI, Devin, Cursor, Windsurf)
-
-## Usage
-
-### Generate a context file via interview
-
-1. Open your agent (Claude Code, Cursor, etc.).
-2. Attach `templates/INTERVIEW.md`.
-3. The agent explores what you want to build, asks a few clarifying questions,
-   proposes a stack, and generates the file once you confirm.
-
-Expected output: a `CLAUDE.md` (or equivalent) ready to place at your project root.
-
-### Generate a context file directly
-
-1. Open your agent.
-2. Attach the relevant stack template (e.g. `templates/stack/python-fastapi.md`).
-3. Provide your answers inline:
-
-```
-Generate a CLAUDE.md. Name: my-service, owner: Acme,
-repo: github.com/acme/my-service, database: PostgreSQL, auth: JWT.
-```
-
-No questions asked — the agent generates immediately.
-
-### Vendor as a git submodule
-
-Check the templates into your project so your agent file can reference them
-directly:
+For teams that want version-pinned templates inside their repo:
 
 ```bash
-git submodule add https://github.com/braboj/solid-ai-templates.git docs/solid-ai-templates
+cd my-project
+git submodule add https://github.com/braboj/solid-ai-templates.git .ai-templates
 ```
 
-Then reference the base rules from your `CLAUDE.md` (or equivalent) and add
-project-specific overrides inline:
+1. Open your agent in your project directory
+2. Tell the agent to read `.ai-templates/templates/INTERVIEW.md`
+3. Follow the interview — the agent reads templates from the
+   submodule and generates your context file
+4. Commit the generated file alongside the submodule
 
-```markdown
-Quality conventions defined in `docs/solid-ai-templates/templates/base/core/quality.md`.
+To update templates across all projects:
+
+```bash
+git submodule update --remote
 ```
 
-To pull template updates across all projects: `git submodule update --remote`.
-
-### Compose templates manually
-
-Each template declares its dependencies with `DEPENDS ON` and can override
-base rules with `OVERRIDE`. See `docs/SPEC.md` for the full composition rules.
-
-
-## Examples
-
-The examples below use Claude Code. For other agents, replace the `Attach:` step
-with the equivalent file attachment mechanism for your tool.
-
-### Start a new project
-
-```
-Attach: templates/INTERVIEW.md
-
-I want to build a new project. Guide me through the setup and generate a CLAUDE.md.
-```
-
-Or directly if you already know your stack:
-
-```
-Attach: templates/stack/python-fastapi.md
-
-Generate a CLAUDE.md for a new project.
-Name: my-service, owner: Acme, repo: github.com/acme/my-service,
-database: PostgreSQL, auth: JWT.
-```
-
-### Refactor an existing project
-
-```
-Attach: templates/stack/python-fastapi.md
-
-Generate a CLAUDE.md for an existing project I want to refactor.
-Name: my-service, owner: Acme, repo: github.com/acme/my-service,
-database: PostgreSQL, auth: JWT.
-```
-
-### Apply a hotfix
-
-If the project already has a `CLAUDE.md`:
-
-```
-Read the repository and fix the following bug: <describe the bug>.
-Follow the conventions in CLAUDE.md — keep the change minimal,
-add a regression test, and use the correct error handling and git conventions.
-```
-
-If the project has no `CLAUDE.md` yet (legacy code):
-
-```
-Attach: templates/stack/<your-stack>.md
-
-Generate a CLAUDE.md for this project first.
-Name: <name>, owner: <owner>, repo: <repo>.
-Then read the repository and fix the following bug: <describe the bug>.
-Keep the change minimal and add a regression test.
-```
-
-### Review code against project conventions
-
-If the project already has a `CLAUDE.md`:
-
-```
-Review this file against the conventions in CLAUDE.md and list any violations.
-```
-
-If the project has no `CLAUDE.md` yet (legacy code):
-
-```
-Attach: templates/stack/<your-stack>.md
-
-Generate a CLAUDE.md for this project first.
-Name: <name>, owner: <owner>, repo: <repo>.
-Then review this file against the generated conventions and list any violations.
-```
-
-### Migrate to a new stack
-
-```
-Attach: templates/stack/<target-stack>.md
-
-Generate a CLAUDE.md for the target stack I am migrating to.
-Name: <name>, owner: <owner>, repo: <repo>.
-Then read the repository and migrate one module at a time toward
-the conventions in the generated CLAUDE.md.
-```
+The agent picks up new rules automatically on the next session —
+no manual editing of your context file needed.
 
 ## Project structure
 
@@ -220,7 +106,6 @@ solid-ai-templates/
 │   ├── frontend/   # Frontend layer — UX, accessibility, CSS, SEO
 │   ├── platform/   # CI and security tool mappings (GitHub, GitLab)
 │   ├── stack/      # Concrete stacks — extend base + layer templates
-│   ├── formats/    # Output format guides per agent tool
 │   ├── INTERVIEW.md
 │   └── manifest.yaml
 ├── docs/           # Onboarding, playbook, decision logs, SPEC.md
@@ -296,7 +181,7 @@ confirm the generated output is coherent and complete.
 | Claude Code | `CLAUDE.md` |
 | Codex CLI, Devin, Cursor, Windsurf | `AGENTS.md` |
 
-See `templates/formats/agents.md` for structure, models, and formatting rules.
+See `templates/base/core/agents.md` for structure, models, and formatting rules.
 
 ## Links
 
