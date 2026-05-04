@@ -87,14 +87,9 @@ git submodule add https://github.com/braboj/solid-ai-templates.git .ai-templates
    submodule and generates your context file
 4. Commit the generated file alongside the submodule
 
-To update templates across all projects:
-
-```bash
-git submodule update --remote
-```
-
-The agent picks up new rules automatically on the next session —
-no manual editing of your context file needed.
+To update templates: `git submodule update --remote`. Then
+re-run the interview to regenerate your context file with the
+latest rules.
 
 ## Supported stacks
 
