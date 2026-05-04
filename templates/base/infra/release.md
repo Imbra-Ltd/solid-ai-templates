@@ -2,10 +2,9 @@
 [ID: base-release]
 
 ## Versioning
-- All packages and services MUST follow semantic versioning (`MAJOR.MINOR.BUILD.PATCH`)
+- All packages and services MUST follow semantic versioning (`MAJOR.MINOR.PATCH`)
 - MAJOR — breaking changes
 - MINOR — new backward-compatible functionality
-- BUILD - increments that belong to the next release
 - PATCH — backward-compatible bug fixes
 
 ## Version bump propagation
