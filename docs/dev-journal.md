@@ -364,3 +364,17 @@ recorded in ADR-004.
 - 12-factor and OWASP are methodologies codified across base templates
 - Milestones map 1:1 to minor releases (v2.1, v2.2, etc.)
 - No-build projects skip chore PR, use tag + GitHub Releases
+
+---
+
+## 2026-05-04 — v2.2 milestone closure
+
+- PR #232: made end-of-session audit steps explicit in CLAUDE.md §6.3
+  (closes #139)
+- Closed #137 (post-mortem convention) — already in docs.md
+- Closed #136 (code review checks) — already in review.md
+- Closed #132 (test factory conventions) — already in testing.md
+- Moved #224, #203 from v2.2 to v2.5 (better fit for Templates &
+  Content)
+- Created #233 (spike: naming conventions for issues and PRs) in v2.5
+- v2.2 — Quality milestone fully closed
