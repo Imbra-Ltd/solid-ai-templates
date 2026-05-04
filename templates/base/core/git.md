@@ -59,6 +59,8 @@ remaining commits are silently lost.
 - Pre-release versions: `v1.0.0-alpha.1`, `v1.0.0-rc.1`
 
 ## Release process
+
+### Pre-release checks
   1. Check for unmerged branches: `git branch --no-merged main`
      — investigate any results before proceeding
   2. Check for orphaned commits: `git fsck --unreachable --no-reflogs
@@ -66,6 +68,8 @@ remaining commits are silently lost.
   3. Run a 360-degree analysis if the project uses
      `templates/base/workflow/360.md` — the project SHOULD NOT
      ship with critical findings unresolved
+
+### Projects with a version manifest
   4. `git checkout -b chore/release-vX.Y.Z`
   5. Bump version in the project manifest (`package.json`,
      `pyproject.toml`, `Cargo.toml`, or equivalent) to `X.Y.Z`
@@ -73,6 +77,13 @@ remaining commits are silently lost.
   7. Push, open PR, merge
   8. `git checkout main && git pull`
   9. `git tag vX.Y.Z && git push origin vX.Y.Z`
+
+### Projects without a version manifest (no-build)
+  4. `git checkout main && git pull`
+  5. `git tag -a vX.Y.Z -m "vX.Y.Z — <milestone name>"`
+  6. `git push origin vX.Y.Z`
+  7. Create a GitHub Release with auto-generated notes:
+     `gh release create vX.Y.Z --title "vX.Y.Z — <milestone name>" --generate-notes`
 
 ## General
 - Do not commit build output, secrets, or dependency directories
