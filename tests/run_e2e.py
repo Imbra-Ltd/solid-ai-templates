@@ -2,15 +2,18 @@
 """
 E2E test runner for solid-ai-templates.
 
-Calls `claude -p` with prepared interview answers and stack templates,
+Sends prepared interview answers and stack templates to an LLM,
 then asserts required strings are present (and forbidden strings absent).
+
+Provider is selected via E2E_PROVIDER env var (default: gemini).
+See tests/providers.py for available backends.
 
 Usage:
   py tests/run_e2e.py                    # run all non-skipped tests
   py tests/run_e2e.py STK-01             # run one test by short ID
   py tests/run_e2e.py STK-01 FMT-01      # run multiple
   py tests/run_e2e.py --area=STK          # run all stack tests
-  py tests/run_e2e.py --dry-run          # print prompt, skip claude call
+  py tests/run_e2e.py --dry-run          # print prompt, skip LLM call
   py tests/run_e2e.py --offline          # validate test infrastructure without API
   py tests/run_e2e.py --fail-fast        # stop on first failure
 
@@ -19,19 +22,17 @@ Offline mode validates:
   - Each test has required fields (id, spec, stack, answers, required)
   - Prompts build successfully from templates + answers
   - No structural issues in the test suite
-
-API cost estimate (live mode): ~$0.50–1.00 per full run (30 tests,
-each sending ~10–20K tokens to Claude).
 """
 
 import datetime
 import os
-import subprocess
 import sys
 import time
 
-from lib import ROOT, PASS, FAIL, SKIP, ERR, REPORT_TRUNCATION, read, parse_args
+from lib import ROOT, PASS, FAIL, SKIP, ERR, read, parse_args, load_dotenv
 from cases import ALL_TESTS
+
+load_dotenv()
 
 
 def build_prompt(stack_file, answers, output_file="templates/base/core/agents.md",
@@ -58,17 +59,9 @@ def build_prompt(stack_file, answers, output_file="templates/base/core/agents.md
     )
 
 
-def run_claude(prompt, timeout=180):
-    result = subprocess.run(
-        "claude -p --no-session-persistence",
-        input=prompt,
-        capture_output=True,
-        timeout=timeout,
-        encoding="utf-8",
-        errors="replace",
-        shell=True,
-    )
-    return result.stdout
+def _get_provider():
+    from providers import get_provider
+    return get_provider()
 
 
 def check_assertions(output, required=(), forbidden=()):
@@ -151,13 +144,13 @@ def run_test(test, dry_run=False, offline=False):
         print(prompt[:400], "...")
         return SKIP, "dry-run", None, None
 
+    provider_name, provider_fn = _get_provider()
+
     t0 = time.time()
     try:
-        output = run_claude(prompt)
-    except subprocess.TimeoutExpired:
-        return ERR, "claude timed out after 180s", None, None
-    except FileNotFoundError:
-        return ERR, "claude not found — is Claude Code installed?", None, None
+        output = provider_fn(prompt)
+    except Exception as e:
+        return ERR, f"{provider_name} error: {e}", None, None
     elapsed = time.time() - t0
 
     failures = check_assertions(
@@ -168,7 +161,7 @@ def run_test(test, dry_run=False, offline=False):
 
     if failures:
         return FAIL, "\n".join(failures), elapsed, output
-    return PASS, f"{elapsed:.1f}s", elapsed, None
+    return PASS, f"{elapsed:.1f}s", elapsed, output
 
 
 def render_fail(r):
@@ -183,11 +176,10 @@ def render_fail(r):
         lines.append(line)
     lines.append("```")
     lines.append("")
-    lines.append(f"**Observed** (first {REPORT_TRUNCATION} chars of model output):")
+    lines.append("**Output**:")
     lines.append("")
     lines.append("```")
-    observed = (r["output"] or "")[:REPORT_TRUNCATION].replace("```", "~~~")
-    lines.append(observed)
+    lines.append((r["output"] or "").replace("```", "~~~"))
     lines.append("```")
     lines.append("")
     return lines
@@ -203,7 +195,15 @@ def render_skip(r):
 
 def render_pass(r):
     elapsed_str = f"  ({r['detail']})" if r["detail"] else ""
-    return [f"### {r['status']}  {r['id']}{elapsed_str}", ""]
+    lines = [f"### {r['status']}  {r['id']}{elapsed_str}", ""]
+    if r.get("output"):
+        lines.append("**Output**:")
+        lines.append("")
+        lines.append("```")
+        lines.append(r["output"].replace("```", "~~~"))
+        lines.append("```")
+        lines.append("")
+    return lines
 
 
 def write_report(run_results, started_at, dry_run):
@@ -240,6 +240,9 @@ def main():
     run_results = []
 
     total = len(tests)
+    if not offline and not dry_run:
+        name, _ = _get_provider()
+        print(f"Provider: {name}")
     print(f"Running {total} test(s)...\n")
 
     for i, test in enumerate(tests, 1):

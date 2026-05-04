@@ -6,12 +6,25 @@ import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+def load_dotenv():
+    """Load .env from repo root into os.environ (no dependencies)."""
+    env_path = os.path.join(ROOT, ".env")
+    if not os.path.isfile(env_path):
+        return
+    with io.open(env_path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            os.environ.setdefault(key.strip(), value.strip())
+
 PASS = "PASS"
 FAIL = "FAIL"
 SKIP = "SKIP"
 ERR  = "ERR "
 
-REPORT_TRUNCATION = 1000
 
 
 def read(rel_path):
