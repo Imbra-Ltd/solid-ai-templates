@@ -267,7 +267,8 @@ py tests/run_e2e.py --dry-run      # print prompts, skip execution
   `tests/reports/` after every run (gitignored)
 - Spec files live in `tests/specs/` — see `tests/CODIFICATION.md`
   for the ID scheme and `tests/INDEX.md` for the full list
-- CI runs smoke + gitleaks on PRs, e2e offline on push to main
+- CI runs smoke + gitleaks + e2e offline on PRs (and on push
+  to main)
 - Live e2e mode (without `--offline`) calls Claude via the API —
   run manually on the dev machine for functional validation
 - To validate a new template: run `py tests/run_smoke.py` and
@@ -300,8 +301,11 @@ Run `py tests/run_smoke.py` before every PR. It checks:
 ### 5.1 Startup
 
 1. Read `CLAUDE.md` (this file) and `docs/SPEC.md`
-2. Confirm the scope with the user before making changes
-3. If the task is ambiguous, ask: "What is the specific deliverable
+2. Check for stale branches: run `git branch --no-merged main`
+   and flag any unmerged branches to the user — they may contain
+   lost work
+3. Confirm the scope with the user before making changes
+4. If the task is ambiguous, ask: "What is the specific deliverable
    for this session?"
 
 ### 5.2 During the session
@@ -325,3 +329,6 @@ Before ending a session, verify:
    changed
 6. **templates/manifest.yaml** — update if any template was added,
    removed, or re-depended
+7. **Branch cleanup** — delete local branches that have been merged
+   via PR: `git branch --merged main | grep -v main | xargs git
+   branch -d`
