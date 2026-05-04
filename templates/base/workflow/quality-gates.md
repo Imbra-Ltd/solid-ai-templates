@@ -49,6 +49,9 @@ Runs automatically before every commit. Blocks bad commits locally.
 Runs on every PR. The final gate before merge.
 
 - Every project MUST have a CI workflow that runs on PRs
+- CI checks MUST be configured as required status checks in branch
+  protection — a passing CI run that does not block merge is
+  informational, not a gate
 - CI MUST duplicate Layer 2 checks — pre-commit hooks can be bypassed
   with `--no-verify`
 - CI adds checks that cannot run locally: deep security analysis (SAST),

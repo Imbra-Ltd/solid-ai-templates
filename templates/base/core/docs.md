@@ -30,6 +30,7 @@ levels. Every rule MUST use one of these words:
 | `docs/ONBOARDING.md`  | Onboarding guide for new contributors                                  |
 | `docs/PLAYBOOK.md`    | Operational reference for common tasks                                 |
 | `docs/dev-journal.md` | Development history and session log (MUST for agent-assisted projects) |
+| `docs/SPEC.md`        | System design, architecture rules, composition model (SHOULD for complex projects) |
 
 ## Numbering
 

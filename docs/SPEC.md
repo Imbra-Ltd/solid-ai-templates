@@ -148,11 +148,8 @@ stack/
 
 Rendering rules for the generated output. Describes structure, model
 selection (inline/reference/hybrid), and formatting constraints.
-
-```
-formats/
-└── agents.md    # Output structure, models, formatting rules
-```
+Lives in `templates/base/core/agents.md` alongside the other core
+templates.
 
 ### 7. Interview template (orchestrator)
 
@@ -440,18 +437,18 @@ Resolved (17 files):
   templates/base/core/quality.md
   templates/base/workflow/quality-gates.md
   templates/base/core/testing.md
-  base/testing-patterns.md        ← full resolution
+  docs/patterns/testing.md            ← full resolution
   templates/base/language/typescript.md
-  frontend/ux.md
-  frontend/quality.md
-  frontend/patterns.md            ← full resolution
-  frontend/static-site.md
+  templates/frontend/ux.md
+  templates/frontend/quality.md
+  docs/patterns/frontend.md           ← full resolution
+  templates/frontend/static-site.md
   templates/stack/static-site-astro.md
-  base/data-quality.md            ← extra
-  base/360.md                     ← extra
-  base/issues.md                  ← extra
-  base/scope.md                   ← extra
-  platform/github.md              ← platform
+  templates/base/language/data-quality.md  ← extra
+  templates/base/workflow/360.md           ← extra
+  templates/base/workflow/issues.md        ← extra
+  templates/base/workflow/scope.md         ← extra
+  templates/platform/github.md             ← platform
 ```
 
 ### Example: python-flask (Resolution: rules)
@@ -467,20 +464,20 @@ Resolved (17 files):
   templates/base/core/git.md
   templates/base/core/docs.md
   templates/base/core/quality.md
-  stack/python-lib.md
-  backend/config.md
-  backend/http.md
-  backend/database.md
-  backend/observability.md
-  backend/quality.md
-  backend/features.md
-  backend/messaging.md
-  stack/python-service.md
-  stack/python-flask.md
-  base/scope.md                   ← extra
-  base/issues.md                  ← extra
-  platform/github.md              ← platform
-  templates/base/core/agents.md               ← output format
+  templates/stack/python-lib.md
+  templates/backend/config.md
+  templates/backend/http.md
+  templates/backend/database.md
+  templates/backend/observability.md
+  templates/backend/quality.md
+  templates/backend/features.md
+  templates/backend/messaging.md
+  templates/stack/python-service.md
+  templates/stack/python-flask.md
+  templates/base/workflow/scope.md       ← extra
+  templates/base/workflow/issues.md      ← extra
+  templates/platform/github.md           ← platform
+  templates/base/core/agents.md          ← output format
 ```
 
 ### Current vs target
@@ -502,9 +499,9 @@ templates/frontend/[concern].md           # frontend layer — UI projects only
 templates/backend/[concern].md            # backend layer — services and APIs only
 templates/stack/[framework].md            # concrete — extends base + frontend or backend
 templates/stack/[framework]-[variant].md  # variant of a framework (e.g. astro-ssr.md)
-templates/formats/[tool].md               # rendering rules for a specific output format
-templates/INTERVIEW.md          # orchestrator — always one file
-SPEC.md                         # this file
+templates/base/core/agents.md    # output format — structure, models, formatting rules
+templates/INTERVIEW.md           # orchestrator — always one file
+docs/SPEC.md                     # this file
 ```
 
 ---
