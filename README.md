@@ -1,15 +1,18 @@
 # SOLID-AI Templates
 
-Composable, SOLID-inspired templates for generating AI agent context files.
+Your AI agent writes better code when it has good instructions — but most
+teams write CLAUDE.md and AGENTS.md files from scratch, and they quickly
+fall out of sync.
+
+This repo gives you composable, SOLID-inspired templates that generate
+consistent context files for any stack and any agent.
 
 ## What it does
 
-- Generate consistent `CLAUDE.md` or `AGENTS.md` files for any project
-- Compose rules from reusable layers — base, backend/frontend, stack
+- Generate `CLAUDE.md` or `AGENTS.md` from reusable layers — base, backend/frontend, stack
 - Cover Python, Go, Java, Node, Rust, mobile, and DevOps stacks
 - Output for any agent — Claude Code, Cursor, Copilot, Codex CLI
-- Run a 360-degree project assessment across four perspectives (user,
-  engineer, analyst, marketer)
+- Run a 360-degree project assessment across four perspectives
 - Enforce standardized issue labels, quality gates, and review processes
 
 ## Overview
