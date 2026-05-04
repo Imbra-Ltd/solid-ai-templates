@@ -150,3 +150,9 @@ predefined expected outcome. It is not part of any regression suite.
   concluding the code under test is at fault
 - Integration tests MUST use real dependencies for the boundary under test —
   not hand-written mocks
+- Test factory defaults for optional fields MUST be `undefined` (omitted),
+  not convenient values like `false` or `0` — explicit defaults mask bugs
+  that only appear with real data shapes
+- Data validation tests SHOULD flag boolean fields where one branch (`true`
+  or `false`) has zero occurrences across the dataset — this is a data
+  smell that can silently break sorting, filtering, and UI logic

@@ -1,4 +1,5 @@
 # Base — Quality Gates
+
 [ID: base-quality-gates]
 [DEPENDS ON: base/quality.md, base/git.md, base/testing.md, base/devsecops.md, base/cicd.md]
 
@@ -9,6 +10,7 @@ Platform templates extend with CI-specific integration.
 ---
 
 ## Shift-left principle
+
 [ID: quality-gates-principle]
 
 The earlier a defect is caught, the cheaper it is to fix. Every check
@@ -22,6 +24,7 @@ Editor (0s) → Pre-commit (1-5s) → CI (1-5min) → Code review (hours)
 ---
 
 ## Three-layer gate model
+
 [ID: quality-gates-layers]
 
 ### Layer 1 — Editor (instant feedback)
@@ -55,39 +58,47 @@ Runs on every PR. The final gate before merge.
 ---
 
 ## Gate categories
+
 [ID: quality-gates-categories]
 
 Every project MUST enforce checks in the following categories. Stack
 templates map each category to a concrete tool.
 
-| Category | Layer 1 | Layer 2 | Layer 3 | Description |
-|----------|---------|---------|---------|-------------|
-| Lint | MUST | MUST | MUST | Code smells, unused variables, complexity |
-| Format | MUST | MUST | MUST | Consistent style (indentation, spacing, line length) |
-| Type check | SHOULD | SHOULD | MUST | Type errors before runtime |
-| Secret detection | — | MUST | MUST | API keys, tokens, passwords |
-| File hygiene | — | MUST | — | Trailing whitespace, merge conflicts, large files |
-| Security (SAST) | — | — | MUST | Static analysis for vulnerabilities |
-| Tests | — | — | MUST | Unit and integration tests |
-| Coverage | — | — | MUST | Percentage of code exercised by tests |
-| Build | — | — | MUST | Does it compile / build successfully |
+| Category         | Layer 1 | Layer 2 | Layer 3 | Description                                          |
+| ---------------- | ------- | ------- | ------- | ---------------------------------------------------- |
+| Lint             | MUST    | MUST    | MUST    | Code smells, unused variables, complexity            |
+| Format           | MUST    | MUST    | MUST    | Consistent style (indentation, spacing, line length) |
+| Type check       | SHOULD  | SHOULD  | MUST    | Type errors before runtime                           |
+| Secret detection | —       | MUST    | MUST    | API keys, tokens, passwords                          |
+| File hygiene     | —       | MUST    | —       | Trailing whitespace, merge conflicts, large files    |
+| Security (SAST)  | —       | —       | MUST    | Static analysis for vulnerabilities                  |
+| Tests            | —       | —       | MUST    | Unit and integration tests                           |
+| Coverage         | —       | —       | MUST    | Percentage of code exercised by tests                |
+| Build            | —       | —       | MUST    | Does it compile / build successfully                 |
 
 Stack templates MAY add additional categories (e.g. link checking, site
 quality scoring for web projects, docstring enforcement for Python).
 
+### Recommended lint plugins
+
+- **eslint-plugin-sonarjs** — detects cognitive complexity, duplicate
+  branches, identical expressions, and other code smells that standard
+  ESLint rules miss; SHOULD be added to any TypeScript/JavaScript project
+
 ---
 
 ## Thresholds
+
 [ID: quality-gates-thresholds]
 
-| Metric | Threshold | Enforcement |
-|--------|-----------|-------------|
-| Lint errors | 0 | CI fails |
-| Format compliance | 100% | CI fails |
-| Type errors | 0 | CI fails |
-| Security (high/critical) | 0 | CI fails |
-| Secrets detected | 0 | Pre-commit blocks + CI fails |
-| Build | Success | CI fails |
+| Metric                   | Threshold | Enforcement                  |
+| ------------------------ | --------- | ---------------------------- |
+| Lint errors              | 0         | CI fails                     |
+| Format compliance        | 100%      | CI fails                     |
+| Type errors              | 0         | CI fails                     |
+| Security (high/critical) | 0         | CI fails                     |
+| Secrets detected         | 0         | Pre-commit blocks + CI fails |
+| Build                    | Success   | CI fails                     |
 
 ### Coverage policy
 
@@ -101,6 +112,7 @@ Stack templates MAY add additional thresholds (e.g. Lighthouse scores).
 ---
 
 ## What NOT to gate
+
 [ID: quality-gates-exclusions]
 
 - **Docstring coverage for non-public functions** — enforcing docs on
@@ -115,6 +127,7 @@ Stack templates MAY add additional thresholds (e.g. Lighthouse scores).
 ---
 
 ## Tool constraints
+
 [ID: quality-gates-constraints]
 
 - All tools MUST be free for private repositories

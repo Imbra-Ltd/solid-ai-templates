@@ -1,7 +1,9 @@
 # Frontend — UX Principles
+
 [ID: frontend-ux]
 
 ## UX principles
+
 - Mobile-first — design for small screens first, enhance for larger ones
 - Progressive disclosure — show only what the user needs at each step
 - No dark patterns — no misleading UI, no forced actions, no hidden costs
@@ -11,13 +13,17 @@
   expect; if a pattern looks like a button it must act like a button
 
 ## Accessibility — WCAG 2.1 AA
+
 - Target standard: WCAG 2.1 AA
 - Minimum text contrast ratio: 4.5:1 (normal text), 3:1 (large text)
 - All interactive elements reachable and operable by keyboard
 - Any non-focusable element (`<th>`, `<div>`, `<span>`) with `onClick` MUST
   contain a `<button>` — `onClick` alone does not add the element to the tab
   order or provide keyboard activation
-- Focus indicators must be visible at all times
+- Use `:focus-visible` instead of `:focus` for focus indicators —
+  `:focus` shows outlines on mouse clicks (distracting), `:focus-visible`
+  shows them only for keyboard navigation
+- Focus indicators must be visible at all times during keyboard navigation
 - No content that relies on colour alone to convey meaning
 - Images must have descriptive `alt` text; decorative images use `alt=""`
 - Semantic HTML: correct landmark elements and heading hierarchy
@@ -56,17 +62,27 @@ tools catch ~30–40% of issues; the rest require human judgment.
 ### Criteria for done
 
 A feature is not complete until:
+
 - [ ] `axe-core` reports zero violations in component tests
 - [ ] Lighthouse accessibility score ≥ 90
 - [ ] Keyboard navigation verified manually
 - [ ] Screen reader walkthrough completed for new interactive elements
 
+## Sortable tables
+
+- Boolean columns SHOULD sort descending (true first) on first click ���
+  users click a boolean column to find items that have a feature, not
+  items that lack it; ascending puts `false` first, which looks
+  identical to unsorted and appears broken
+
 ## Responsive breakpoints
+
 - Tablet: max-width 1024px
 - Mobile: max-width 768px
 - Small mobile: max-width 480px
 
 ## Design system
+
 - Use a design system if one exists for the project — never design ad-hoc
   components that duplicate established patterns
 - Design tokens (colours, spacing, typography, radii) MUST come from the
@@ -76,6 +92,7 @@ A feature is not complete until:
 - New components SHOULD be documented with usage examples before shipping
 
 ## Browser support
+
 [ID: frontend-ux-browsers]
 
 - Default target: last 2 versions of Chrome, Firefox, Safari, and Edge
