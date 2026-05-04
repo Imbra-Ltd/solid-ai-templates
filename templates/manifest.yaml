@@ -60,8 +60,17 @@ base:
     description: Type design, naming, strictness — applies to all TypeScript projects
     depends_on: [base-quality]
   - id: base-data-quality
-    file: templates/base/language/data-quality.md
+    file: templates/base/data/data-quality.md
     description: Data sourcing, completeness, freshness, scoring — data-heavy projects
+  - id: base-data-modeling
+    file: templates/base/data/data-modeling.md
+    description: Schema design, naming, normalization, relationships, data types
+  - id: base-data-governance
+    file: templates/base/data/data-governance.md
+    description: Classification, PII handling, retention, ownership, audit trail
+  - id: base-data-migration
+    file: templates/base/data/data-migration.md
+    description: Versioned migrations, zero-downtime, rollback strategies
   - id: base-issues
     file: templates/base/workflow/issues.md
     description: Issue templates — epic, task, bug, incident, spike

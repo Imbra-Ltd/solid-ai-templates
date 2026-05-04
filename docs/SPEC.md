@@ -70,9 +70,13 @@ base/
 │   ├── cicd.md         # Pipeline stages, triggers, environments, IaC, deployment
 │   ├── containers.md   # Dockerfile, runtime security, resource limits, Kubernetes
 │   └── deployment.md   # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
-└── language/
-    ├── typescript.md   # Type design, naming, strictness — applies to all TypeScript projects
-    └── data-quality.md # Data sourcing, completeness, freshness, scoring — data-heavy projects
+├── language/
+│   └── typescript.md   # Type design, naming, strictness — applies to all TypeScript projects
+└── data/
+    ├── data-quality.md # Data sourcing, completeness, freshness, scoring — data-heavy projects
+    ├── data-modeling.md # Schema design, naming, normalization, relationships, data types
+    ├── data-governance.md # Classification, PII handling, retention, ownership, audit trail
+    └── data-migration.md # Versioned migrations, zero-downtime, rollback strategies
 ```
 
 ```
