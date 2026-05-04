@@ -198,3 +198,48 @@ missing priority labels to #104, #105, #106
 - Renamed existing Phase 15 (Validation) to Phase 16
 - Key insight: skills (dynamic, on-demand actions) complement static
   context files (CLAUDE.md/AGENTS.md) — they don't replace them
+
+## 2026-05-04 — Composition over inheritance
+
+Issues closed: #151, #149, #150
+Issues created: #154 (implementation), #155 (repo org spike)
+
+Three architecture spikes resolved in a single session. All decisions
+recorded in ADR-004.
+
+**#151 — Composition over inheritance (P1):**
+- quality-gates.md depends on devsecops + cicd but never references
+  their content — ISP violation. Remove both from depends_on.
+- Core tier (5 files: quality, git, docs, readme, testing) always loaded.
+  Manifest gets a top-level `core:` list.
+- Stacks compose opt-in tiers explicitly — no transitive surprises.
+- Stack classification: deployed services need devsecops + cicd; static
+  sites, libraries, and mobile do not.
+- Platform templates are facades — platform-github does not depend on
+  devsecops.
+- File headers must match manifest (direct deps only). 3 stale headers
+  found: astro, hugo, tutorial.
+
+**#149 — Pattern file integration (P2):**
+- Evaluated 4 options (forward ref, manifest includes, auto-convention,
+  resolution depth). All add complexity to the resolution algorithm.
+- Deeper question: do agents need pattern tutorials? No — LLMs know
+  standard patterns from training data. Agent context needs conventions,
+  not recipes.
+- Decision: remove all 5 pattern files from manifest and dependency
+  graph. Move to docs/patterns/ as human reference. Parent rules files
+  keep one-line summaries.
+
+**#150 — Agent-side dependency resolution (P2):**
+- Resolution algorithm: core → stack deps → extras → platform. All
+  steps use RESOLVE_DEPS (recursive). Extras are recursive for safety.
+- Algorithm runs at build time (tools/sync.py, interview), not at agent
+  startup. Generates explicit file lists for CLAUDE.md startup blocks.
+- Full IDs everywhere — explicit over implicit.
+
+**Decisions (all in ADR-004):**
+- ADR-004: Composition over inheritance in dependency model
+- Manifest `core:` field for core tier
+- Pattern files removed from dependency graph (~1700 lines saved)
+- Build-time resolution, not runtime
+- No profiles, no auto-convention, no pattern resolution logic
