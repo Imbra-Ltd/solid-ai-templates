@@ -154,6 +154,7 @@ base/ ──┬── frontend/ ──┐
    - `templates/base/infra/` — CI/CD, containers, deployment
    - `templates/base/workflow/` — session protocol, issues, gates
    - `templates/base/language/` — language-specific rules
+   - `templates/base/data/` — data modeling, quality, governance, migration
    - `templates/backend/` — backend services
    - `templates/frontend/` — frontend/UI projects
    - `templates/platform/` — CI platform mappings
