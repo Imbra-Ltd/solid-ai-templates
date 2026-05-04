@@ -38,8 +38,12 @@ base:
     description: SAST, SCA, SBOM, secret detection, license compliance
   - id: base-devsecops-patterns
     file: base/devsecops-patterns.md
-    description: Reusable security patterns — validation, encoding, CSRF, rate limiting, headers
-    depends_on: [base-devsecops]
+    description: Pipeline security patterns — break-build gate, triage, SBOM, rotation, hardening loop
+    depends_on: [base-devsecops, base-cicd]
+  - id: base-security-patterns
+    file: base/security-patterns.md
+    description: Application security patterns — validation, encoding, CSRF, rate limiting, headers
+    depends_on: [base-quality]
   - id: base-release
     file: base/release.md
     description: Semver, version bump propagation, backward compat, cut-over

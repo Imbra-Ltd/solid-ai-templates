@@ -1,364 +1,378 @@
-# Base — Security Patterns
+# Base — DevSecOps Pipeline Patterns
 
 [ID: base-devsecops-patterns]
-[DEPENDS ON: base/devsecops.md]
+[DEPENDS ON: base/devsecops.md, base/cicd.md]
 
-Reusable structural patterns for application security. Each
-pattern describes a problem, solution structure, when to use it,
-and examples.
+Reusable structural patterns for security in CI/CD pipelines.
+Each pattern describes a problem, solution structure, when to
+use it, and examples.
 
 See `base/devsecops.md` for SAST, SCA, secret detection, and
 compliance rules.
+See `base/security-patterns.md` for application-level security
+patterns (input validation, encoding, CSRF, headers).
 
 ---
 
-## 1. Input validation at boundaries
+## 1. Break-the-build gate
 
-[ID: security-pattern-input-validation]
+[ID: devsecops-pattern-break-build]
 
-**Problem:** User input flows through multiple layers (controller,
-service, repository) with validation scattered across each.
-Some paths skip validation entirely. Invalid data reaches the
-database or external service.
+**Problem:** Security scans run in CI but findings are advisory.
+Developers see warnings, ignore them, and merge. Vulnerabilities
+accumulate because nothing enforces action.
 
-**Solution:** Validate all external input at the system boundary —
-the first point where untrusted data enters. Internal code trusts
-validated data. No redundant validation in inner layers.
+**Solution:** Security scan failures break the build — the PR
+cannot merge until findings are resolved or explicitly accepted.
+Same enforcement as lint or test failures.
 
 ```
-[boundary: validate] → [service: trust] → [repository: trust]
-         ↓ reject
-     400 Bad Request
+PR → build → test → security scan
+                        ├→ PASS → merge allowed
+                        └→ FAIL → merge blocked
 ```
 
 **When to use:**
 
-- Every HTTP endpoint, CLI argument, message consumer, file import
-- Any point where data crosses a trust boundary
+- Every pipeline — this is the default enforcement model
+- Apply to SAST, secret detection, SCA, and IaC scanning
 
-**Example (TypeScript + Zod):**
+**GitHub Actions:**
 
-```typescript
-const CreateUserSchema = z.object({
-  name: z.string().min(1).max(100),
-  email: z.string().email(),
-  role: z.enum(["admin", "user"]),
-});
-
-app.post("/users", (req, res) => {
-  const result = CreateUserSchema.safeParse(req.body);
-  if (!result.success) {
-    return res.status(400).json({ errors: result.error.issues });
-  }
-  // result.data is typed and validated — trust it downstream
-  userService.create(result.data);
-});
+```yaml
+security:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: github/codeql-action/analyze@v3
+    # Action exits non-zero on findings → job fails → gate fails
 ```
 
 **Rules:**
 
-- Validate at the boundary, trust internally — do not re-validate
-  in service or repository layers
-- Use schema validation libraries (Zod, Joi, Pydantic, JSON Schema)
-  — never hand-write validation for complex inputs
-- Reject invalid input with a clear error — do not silently coerce
-  or strip invalid fields
-- Allowlist, not blocklist — define what is valid, reject everything
-  else
+- Critical and high findings MUST block the build — no exceptions
+- Medium findings SHOULD block the build — deviations require
+  written justification in the PR
+- Low findings MAY be tracked as issues instead of blocking
+- False positives MUST be documented with a suppression comment
+  in code — not silenced in CI configuration
+- Never add `continue-on-error: true` to security scan steps
 
 ---
 
-## 2. Output encoding
+## 2. Vulnerability triage workflow
 
-[ID: security-pattern-output-encoding]
+[ID: devsecops-pattern-triage]
 
-**Problem:** Data stored in the database is rendered in HTML, JSON,
-or SQL without encoding. An attacker stores `<script>alert(1)</script>`
-as a username — it executes in every user's browser (XSS).
+**Problem:** SCA tools report dozens of vulnerabilities across
+transitive dependencies. The team has no process for deciding
+which to fix first. Everything is treated equally — so nothing
+gets fixed.
 
-**Solution:** Encode output for its context at the point of
-rendering. HTML context gets HTML encoding. URL context gets URL
-encoding. JavaScript context gets JS encoding. Never encode on
-input — store the raw value, encode on output.
+**Solution:** Triage vulnerabilities by exploitability and impact.
+Assign a priority and a deadline. Track in the issue tracker like
+any other bug.
 
 ```
-Store:  <script>alert(1)</script>     (raw in database)
-Render: &lt;script&gt;alert(1)&lt;/script&gt;  (HTML-encoded in page)
+SCA report → triage
+  ├→ Critical + exploitable → P0, fix immediately
+  ├→ High + reachable       �� P1, fix this sprint
+  ├→ Medium + deep transitive → P2, track and monitor
+  └→ Low + no path          → P4, accept risk
 ```
 
 **When to use:**
 
-- Every point where dynamic data is rendered in HTML, URLs,
-  JSON, SQL, or shell commands
-- Templates, API responses, log messages
+- After every SCA scan that produces new findings
+- During scheduled dependency review (weekly or bi-weekly)
 
 **Rules:**
 
-- Encode on output, not on input — input validation rejects bad
-  data, output encoding prevents injection
-- Use framework-provided encoding — React JSX, Jinja2 autoescape,
-  Go `html/template` all encode by default
-- Never use `innerHTML`, `set:html`, `dangerouslySetInnerHTML`,
-  or `| safe` with user-supplied data
-- Context matters — HTML encoding does not prevent URL injection;
-  use the right encoding for the right context
+- Triage MUST consider reachability — a vulnerability in an
+  unused code path is lower priority than one in a hot path
+- Every triaged finding MUST have an owner and a deadline
+- Accepted risks MUST be documented with rationale and review
+  date
+- Re-triage accepted risks quarterly — the threat landscape
+  changes
 
 ---
 
-## 3. Secret injection
+## 3. SBOM generation
 
-[ID: security-pattern-secret-injection]
+[ID: devsecops-pattern-sbom]
+
+**Problem:** A vulnerability is disclosed in a widely-used library.
+The team cannot determine which services use the affected version.
+Hours are spent auditing manually. Incident response is slow.
+
+**Solution:** Generate a Software Bill of Materials (SBOM) on every
+release. The SBOM lists every dependency and its version. When a
+vulnerability is disclosed, search across SBOMs to identify
+affected services in minutes.
+
+```
+build → generate SBOM → attach to release artifact
+                      → store in registry
+
+CVE disclosed → search SBOMs → list affected services → patch
+```
+
+**When to use:**
+
+- Every production release
+- Required for regulatory compliance (FDA, DoD, EU CRA)
+- Recommended for any project with more than 10 dependencies
+
+**GitHub Actions:**
+
+```yaml
+- name: Generate SBOM
+  uses: anchore/sbom-action@v0
+  with:
+    artifact-name: sbom.spdx.json
+    output-file: sbom.spdx.json
+
+- name: Attach to release
+  uses: softprops/action-gh-release@v2
+  with:
+    files: sbom.spdx.json
+```
+
+**Rules:**
+
+- Use standard formats: SPDX or CycloneDX
+- Generate from the lock file, not from declared dependencies —
+  transitive dependencies matter most
+- Store SBOMs alongside release artifacts — they must be
+  retrievable per version
+- Automate SBOM generation in CI — never generate manually
+
+---
+
+## 4. Secret rotation
+
+[ID: devsecops-pattern-secret-rotation]
 
 **Problem:** Secrets (API keys, database passwords, tokens) are
-hardcoded in source files, baked into container images, or passed
-as build-time environment variables. They end up in version
-control, logs, or container layers.
+created once and never rotated. A leaked secret from months ago
+still works. The blast radius of any breach extends indefinitely.
 
-**Solution:** Inject secrets at runtime from a dedicated vault.
-The application reads secrets on startup from environment
-variables or mounted files — never from source code or images.
-
-```
-Build time: no secrets — image is clean
-Runtime:    vault → env var / mounted file → application reads
-```
-
-**When to use:**
-
-- Every application that uses credentials, tokens, or API keys
-- No exceptions
-
-**Example (Kubernetes + Vault):**
-
-```yaml
-# Secret injected as env var from Kubernetes Secret
-env:
-  - name: DATABASE_URL
-    valueFrom:
-      secretKeyRef:
-        name: app-secrets
-        key: database-url
-```
-
-**Example (Docker Compose):**
-
-```yaml
-services:
-  app:
-    environment:
-      - DATABASE_URL # read from host env or .env file
-    # .env file is in .gitignore — never committed
-```
-
-**Rules:**
-
-- Secrets MUST NOT appear in source code, Dockerfiles, CI logs,
-  or commit history
-- Use `.env` files for local development — add to `.gitignore`
-- Provide `.env.example` with placeholder values — never real
-  secrets
-- Rotate secrets regularly — automate rotation where possible
-- If a secret is accidentally committed, rotate it immediately —
-  removing from git history is not sufficient
-
----
-
-## 4. CSRF token flow
-
-[ID: security-pattern-csrf]
-
-**Problem:** A malicious site submits a form to your application
-using the user's browser session. The server cannot distinguish
-between a legitimate form submission and a cross-site forgery.
-
-**Solution:** Generate a unique token per session. Embed it in
-every form as a hidden field. Verify the token on every state-
-changing request. Reject requests with missing or invalid tokens.
+**Solution:** Rotate secrets on a schedule. Automate the rotation
+so it requires no human intervention. Support overlapping validity
+windows so consumers can switch without downtime.
 
 ```
-Server generates token → stored in session
-Page renders token     → hidden field in form
-Form submits token     → server verifies against session
-Mismatch               → 403 Forbidden
+Day 0:  create secret v2 (both v1 and v2 valid)
+Day 1:  deploy consumers with v2
+Day 2:  revoke v1
+
+Timeline: [---v1 valid---][--overlap--][---v2 valid---]
 ```
 
 **When to use:**
 
-- Every state-changing endpoint (POST, PUT, DELETE) in
-  server-rendered applications
-- NOT needed for API-only backends using Bearer tokens — the
-  token itself prevents CSRF
-- NOT needed for SameSite=Strict cookies with no cross-origin
-  forms
+- All long-lived secrets (database passwords, API keys, tokens)
+- After any suspected compromise — rotate immediately, do not
+  wait for the schedule
 
 **Rules:**
 
-- One token per session — do not generate per request unless
-  the framework requires it
-- Token MUST be unpredictable — use a cryptographic random
-  generator
-- Verify on all state-changing methods (POST, PUT, PATCH, DELETE)
-  — never on GET
-- Use the framework's built-in CSRF protection — do not implement
-  from scratch
-- Double-submit cookie pattern is acceptable for SPAs that cannot
-  use server-side sessions
+- Rotation MUST be automated — manual rotation does not happen
+  on schedule
+- Support dual-validity during rotation — never revoke the old
+  secret before all consumers have switched
+- Rotation period: 90 days for most secrets, 30 days for
+  high-value secrets (production database, signing keys)
+- Test rotation in staging before enabling in production
+- Alert on rotation failure — a failed rotation is worse than
+  no rotation (the secret is stuck)
 
 ---
 
-## 5. Rate limiting
+## 5. Dependency update workflow
 
-[ID: security-pattern-rate-limit]
+[ID: devsecops-pattern-dep-update]
 
-**Problem:** An attacker or misbehaving client sends thousands of
-requests per second. Login endpoints are brute-forced. API
-endpoints are scraped. The server is overwhelmed.
+**Problem:** Dependencies are updated reactively — only when a
+vulnerability is reported. By then, the update may span multiple
+major versions, making it risky and time-consuming. Small frequent
+updates are safer than rare large ones.
 
-**Solution:** Limit the number of requests per client per time
-window. Return `429 Too Many Requests` with a `Retry-After`
-header when the limit is exceeded.
-
-```
-Client → [rate limiter] → allowed (under limit)
-                        → 429 + Retry-After (over limit)
-```
-
-**When to use:**
-
-- All public-facing endpoints
-- Authentication endpoints (stricter limits)
-- Expensive operations (search, export, report generation)
-
-**Rules:**
-
-- Apply rate limits at the reverse proxy or API gateway — not
-  in application code
-- Use sliding window or token bucket — fixed windows allow bursts
-  at window boundaries
-- Different limits for different endpoints: auth (5/min),
-  API (100/min), static (1000/min)
-- Identify clients by IP, API key, or authenticated user — not
-  by session cookie alone
-- Return `Retry-After` header — clients need to know when to
-  retry
-- Log rate limit hits — they may indicate an attack or a client
-  bug
-
----
-
-## 6. Dependency pinning
-
-[ID: security-pattern-dependency-pinning]
-
-**Problem:** A dependency uses a version range (`^1.2.3`). A
-compromised or buggy patch release is published. The next
-`npm install` or `pip install` pulls the bad version
-automatically. Supply chain attack succeeds.
-
-**Solution:** Pin exact versions in the lock file. Commit the lock
-file. Review dependency updates explicitly through Dependabot or
-Renovate PRs — never auto-install unknown versions.
+**Solution:** Automate dependency update PRs (Dependabot, Renovate).
+Review and merge weekly. Combine with CI and auto-merge for
+low-risk updates.
 
 ```
-package.json:     "lodash": "^4.17.0"   (range — dangerous alone)
-package-lock.json: "lodash": "4.17.21"  (pinned — safe)
+Weekly:
+  Dependabot → patch/minor PRs → CI passes → auto-merge
+  Dependabot → major PRs       → CI passes → human review → merge
+
+Monthly:
+  Review accepted vulnerability risks
+  Update base images and runtime versions
 ```
 
 **When to use:**
 
 - Every project with external dependencies
-- No exceptions
+- Combine with the auto-merge pattern from `base/cicd-patterns.md`
 
 **Rules:**
 
-- Commit the lock file (`package-lock.json`, `poetry.lock`,
-  `go.sum`, `Cargo.lock`)
-- Use `npm ci` (not `npm install`) in CI — respects the lock file
-  exactly
-- Review Dependabot/Renovate PRs — do not auto-merge major
-  updates without reading the changelog
-- Pin base images in Dockerfiles: `node:22.1.0-alpine`, not
-  `node:latest` or `node:22`
-- Audit dependencies regularly: `npm audit`, `pip-audit`,
-  `govulncheck`
+- Patch and minor updates: auto-merge if CI passes (see
+  `cicd-pattern-auto-merge`)
+- Major updates: require human review of changelog and breaking
+  changes
+- Group related updates (e.g. all `@typescript-eslint/*` packages)
+  into a single PR to reduce noise
+- Pin a schedule: review dependency PRs on a fixed day — do not
+  let them pile up
+- Track update frequency — if a dependency has not been updated
+  in 12 months, investigate whether it is abandoned
 
 ---
 
-## 7. Principle of least privilege
+## 6. Security smoke test
 
-[ID: security-pattern-least-privilege]
+[ID: devsecops-pattern-security-smoke]
 
-**Problem:** A service account has admin access to the database.
-A CI token can push to any branch. A container runs as root.
-When one component is compromised, the attacker has full access
-to everything.
+**Problem:** Security headers, CSP, CORS, and TLS configuration
+are set once and forgotten. A deployment change or proxy update
+silently removes a header. The misconfiguration is not caught
+until a pentest or an incident.
 
-**Solution:** Grant each component the minimum permissions it
-needs to function. Database accounts get access to specific
-tables. CI tokens are scoped to specific actions. Containers
-run as non-root.
+**Solution:** Run lightweight security assertions after every
+deployment. Verify that critical security controls are present
+in the live environment.
 
 ```
-Service A → read-only access to orders table
-Service B → read-write access to users table
-CI token  → push to feature branches only
-Container → non-root, read-only filesystem
+deploy → security smoke test
+  ├→ HSTS header present?
+  ├→ CSP header present?
+  ├→ TLS 1.2+ only?
+  ├→ No server version header?
+  └→ CORS restricted to allowed origins?
 ```
 
 **When to use:**
 
-- Every service account, CI token, API key, IAM role, container,
-  and database user
-- No exceptions
+- After every deployment to staging and production
+- As a post-deploy step in the CI/CD pipeline
+
+**Example (curl-based):**
+
+```bash
+URL="https://staging.example.com"
+FAIL=0
+
+check_header() {
+  if ! curl -sI "$URL" | grep -qi "$1"; then
+    echo "MISSING: $1"
+    FAIL=1
+  fi
+}
+
+check_header "strict-transport-security"
+check_header "content-security-policy"
+check_header "x-content-type-options"
+
+exit $FAIL
+```
 
 **Rules:**
 
-- Start with zero permissions and add only what is needed —
-  never start with admin and try to restrict
-- Separate read and write access — most services need only read
-- Use short-lived tokens over long-lived credentials
-- Review permissions regularly — remove what is no longer used
-- Document what each credential can do and why
+- Security smoke tests MUST run after deploy, not just in CI —
+  proxy and CDN configuration can strip headers
+- Keep tests fast (under 10 seconds) — they run on every deploy
+- Test the live URL, not the build output
+- Alert immediately on failure — a missing security header in
+  production is an incident
 
 ---
 
-## 8. Security headers
+## 7. Pre-merge security gate
 
-[ID: security-pattern-headers]
+[ID: devsecops-pattern-pre-merge-gate]
 
-**Problem:** The browser allows scripts from any origin, embeds
-the page in frames, and sends credentials with cross-origin
-requests. Default browser behavior is permissive — every missing
-header is an attack surface.
+**Problem:** SAST and SCA run on every PR, but DAST only runs
+after merge to staging. A vulnerability that SAST misses is not
+caught until the code is already deployed. The feedback loop is
+slow and the fix requires another PR.
 
-**Solution:** Set security headers on every HTTP response. The
-reverse proxy or framework middleware adds them globally — no
-per-endpoint configuration needed.
-
-**Essential headers:**
+**Solution:** Layer security checks at increasing depth before
+merge. Each layer catches what the previous one cannot.
 
 ```
-Content-Security-Policy: default-src 'self'; script-src 'self'
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-Strict-Transport-Security: max-age=31536000; includeSubDomains
-Referrer-Policy: strict-origin-when-cross-origin
-Permissions-Policy: camera=(), microphone=(), geolocation=()
+PR opened:
+  Layer 1 → SAST (code patterns)
+  Layer 2 → SCA (dependency vulnerabilities)
+  Layer 3 → Secret detection (leaked credentials)
+  Layer 4 → IaC scan (infrastructure misconfig)
+
+All pass → merge allowed
+
+Post-merge to staging:
+  Layer 5 → DAST (runtime vulnerabilities)
 ```
 
 **When to use:**
 
-- Every web application that serves HTML
-- API-only backends benefit from a subset (HSTS, nosniff)
+- Every project — the layers are additive; start with what
+  you have and add more over time
+- Minimum: SAST + secret detection (Layer 1 + 3)
 
 **Rules:**
 
-- Set headers at the reverse proxy or middleware level — not
-  per route
-- Start with a strict CSP and relax only as needed — document
-  every relaxation
-- Never use `unsafe-inline` or `unsafe-eval` in CSP without
-  a written justification
-- Test headers with `securityheaders.com` or `observatory.mozilla.org`
-- HSTS MUST be enabled on all production HTTPS sites — prevents
-  SSL stripping
+- Each layer runs independently — failure in one does not skip
+  others
+- Combine with the fan-out pattern from `base/cicd-patterns.md`
+  for parallel execution
+- DAST runs post-merge because it needs a running environment —
+  but DAST findings MUST still block production deployment
+- Track which layer catches each finding — if DAST consistently
+  catches issues SAST misses, improve SAST rules
+
+---
+
+## 8. Incident-to-hardening loop
+
+[ID: devsecops-pattern-hardening-loop]
+
+**Problem:** A security incident is resolved. The immediate fix
+is deployed. But the root cause is never addressed. The same
+class of vulnerability appears again in a different service.
+
+**Solution:** Every security incident produces a hardening action
+that prevents the same class of vulnerability. The action is
+tracked as a task, implemented, and verified in CI.
+
+```
+Incident → root cause → hardening action
+  ├→ New SAST rule
+  ├→ New CI check
+  ├→ New security smoke test
+  ├→ Updated template/convention
+  └→ ADR documenting the decision
+
+Same class → caught automatically next time
+```
+
+**When to use:**
+
+- After every security incident or pentest finding
+- After any vulnerability that was not caught by existing
+  automation
+
+**Rules:**
+
+- Every incident MUST produce at least one automation change —
+  a human process ("be more careful") is not a valid hardening
+  action
+- Hardening actions MUST be verifiable in CI — if the same
+  vulnerability is introduced again, CI fails
+- Track hardening actions in the issue tracker with a link to
+  the incident
+- Review hardening coverage quarterly — are the same classes
+  of vulnerabilities still appearing?
+- Update templates and conventions when a pattern is reusable
+  across projects
