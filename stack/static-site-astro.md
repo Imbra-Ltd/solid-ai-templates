@@ -1,5 +1,5 @@
 # Stack — Astro (Static Site)
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/quality-gates.md, base/typescript.md, frontend/ux.md, frontend/quality.md, frontend/static-site.md]
+[DEPENDS ON: frontend/static-site.md, base/typescript.md]
 
 Extends the static site stack with Astro-specific rules.
 

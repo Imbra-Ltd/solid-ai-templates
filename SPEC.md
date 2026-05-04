@@ -53,14 +53,10 @@ base/
 ├── quality.md      # Architecture, code style, security, testing
 ├── review.md       # Peer review priority, MUST/SHOULD checklists, deviation rules
 ├── testing.md      # Test pyramid, coverage thresholds, naming conventions
-├── testing-patterns.md # Reusable test patterns — factory, AAA, builder, parameterized, fixtures, mocks
 ├── devsecops.md    # SAST, SCA, SBOM, secret detection, license compliance
-├── devsecops-patterns.md # Pipeline security patterns — break-build gate, triage, SBOM, rotation, hardening loop
 ├── security.md     # Application security rules — input, output, injection, auth, sessions, TLS, headers
-├── security-patterns.md # Application security patterns — validation, encoding, CSRF, rate limiting, headers
 ├── release.md      # Semver, version bump propagation, backward compat, cut-over
 ├── cicd.md         # Pipeline stages, triggers, environments, IaC, deployment
-├── cicd-patterns.md # Reusable CI/CD patterns — gate, path filter, fan-out, caching, matrix
 ├── containers.md   # Dockerfile, runtime security, resource limits, Kubernetes
 ├── readme.md       # README structure, badges, quick start, contribution guide
 ├── deployment.md   # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
@@ -83,7 +79,6 @@ platform/
 frontend/
 ├── ux.md           # UX principles, WCAG 2.1 AA, responsive breakpoints
 ├── quality.md      # CSS conventions, performance, SEO & analytics
-├── patterns.md     # Reusable UI patterns — error boundary, skeleton, optimistic, virtual scroll, URL state
 └── static-site.md  # Abstract SSG rules — content, assets, SEO
 ```
 
@@ -204,6 +199,52 @@ Rules:
 - A stack template MAY add new rules not present in the base
 - The agent assembles the final output by merging base defaults + stack
   overrides + interview answers, then applies the output format template
+
+---
+
+## Composition model
+
+Stacks compose only the modules they need — no transitive surprises.
+See ADR-004 for the full rationale.
+
+### Core tier
+
+Five base templates apply to every project. They are declared in
+`manifest.yaml` under `core:` and loaded automatically during
+resolution — stacks do not need to list them in `depends_on`:
+
+- `base/quality.md`
+- `base/git.md`
+- `base/docs.md`
+- `base/readme.md`
+- `base/testing.md`
+
+### Opt-in tiers
+
+Everything else is explicit. Stacks declare what they need:
+
+| Tier | Modules |
+|------|---------|
+| Language | typescript |
+| CI | cicd, quality-gates |
+| Security (app) | security |
+| Security (pipeline) | devsecops |
+| Infrastructure | containers, deployment, release |
+| Session | scope, issues, review |
+| Specialized | data-quality, 360, ai-workflow |
+| Platform | github, gitlab |
+
+### File header policy
+
+`[DEPENDS ON: ...]` headers MUST list direct dependencies only —
+matching the manifest's `depends_on` for that entry. Headers MUST NOT
+expand transitive dependencies. The manifest is the source of truth.
+
+### Pattern files
+
+Pattern files (`docs/patterns/`) are human reference documentation.
+They are NOT part of the dependency graph or agent context. Parent
+rules files list which patterns to use as one-line conventions.
 
 ---
 
