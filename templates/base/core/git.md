@@ -33,6 +33,19 @@
   git checkout main && git pull
   ```
 
+### Squash-merge safety
+
+When using squash merge, the branch commits become orphaned after
+the PR merges — only the squash commit lands on main. If a branch
+contains multiple concerns and only one is merged via PR, the
+remaining commits are silently lost.
+
+- MUST NOT mix unrelated changes on a single branch
+- MUST verify that all branch commits are accounted for before
+  deleting a branch — compare the squash diff against the branch diff
+- SHOULD enable "automatically delete head branches" in repository
+  settings to prevent stale branches from accumulating
+
 ## README
 - Every repository MUST contain a `README.md`
 - The README MUST conform to the structure and rules defined in `templates/base/core/readme.md`
@@ -46,13 +59,20 @@
 - Pre-release versions: `v1.0.0-alpha.1`, `v1.0.0-rc.1`
 
 ## Release process
-  1. `git checkout -b chore/release-vX.Y.Z`
-  2. Bump version in the project manifest (`package.json`, `pyproject.toml`,
-     `Cargo.toml`, or equivalent) to `X.Y.Z`
-  3. `git commit -m "chore: release vX.Y.Z"`
-  4. Push, open PR, merge
-  5. `git checkout main && git pull`
-  6. `git tag vX.Y.Z && git push origin vX.Y.Z`
+  1. Check for unmerged branches: `git branch --no-merged main`
+     — investigate any results before proceeding
+  2. Check for orphaned commits: `git fsck --unreachable --no-reflogs
+     | grep commit` — verify no unique work is lost
+  3. Run a 360-degree analysis if the project uses
+     `templates/base/workflow/360.md` — the project SHOULD NOT
+     ship with critical findings unresolved
+  4. `git checkout -b chore/release-vX.Y.Z`
+  5. Bump version in the project manifest (`package.json`,
+     `pyproject.toml`, `Cargo.toml`, or equivalent) to `X.Y.Z`
+  6. `git commit -m "chore: release vX.Y.Z"`
+  7. Push, open PR, merge
+  8. `git checkout main && git pull`
+  9. `git tag vX.Y.Z && git push origin vX.Y.Z`
 
 ## General
 - Do not commit build output, secrets, or dependency directories
