@@ -6,10 +6,13 @@ Default: gemini (free tier available).
 
 import os
 import subprocess
+import time
 
 
 MAX_TOKENS = 8192
 TIMEOUT = 180
+MAX_RETRIES = 3
+INITIAL_DELAY = 10
 
 
 def _anthropic(prompt):
@@ -68,12 +71,35 @@ PROVIDERS = {
 DEFAULT_PROVIDER = "gemini"
 
 
+def _is_rate_limit(exc):
+    """Check if an exception is a rate limit or temporary overload."""
+    msg = str(exc).lower()
+    return any(k in msg for k in ("429", "503", "rate", "overloaded", "unavailable"))
+
+
+def _with_retry(fn):
+    """Wrap a provider function with exponential backoff on rate limits."""
+    def wrapper(prompt):
+        delay = INITIAL_DELAY
+        for attempt in range(MAX_RETRIES + 1):
+            try:
+                return fn(prompt)
+            except Exception as exc:
+                if attempt < MAX_RETRIES and _is_rate_limit(exc):
+                    print(f"  rate limited, retrying in {delay}s...")
+                    time.sleep(delay)
+                    delay *= 2
+                    continue
+                raise
+    return wrapper
+
+
 def get_provider():
-    """Return the configured provider function."""
+    """Return the configured provider function (with retry)."""
     name = os.environ.get("E2E_PROVIDER", DEFAULT_PROVIDER)
     if name not in PROVIDERS:
         raise ValueError(
             f"Unknown E2E_PROVIDER={name!r}. "
             f"Options: {', '.join(PROVIDERS)}"
         )
-    return name, PROVIDERS[name]
+    return name, _with_retry(PROVIDERS[name])
