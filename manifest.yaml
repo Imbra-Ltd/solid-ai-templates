@@ -29,9 +29,17 @@ base:
   - id: base-testing
     file: base/testing.md
     description: Test pyramid, coverage thresholds, naming conventions
+  - id: base-testing-patterns
+    file: base/testing-patterns.md
+    description: Reusable test patterns — factory, AAA, builder, parameterized, fixtures, mocks
+    depends_on: [base-testing]
   - id: base-devsecops
     file: base/devsecops.md
     description: SAST, SCA, SBOM, secret detection, license compliance
+  - id: base-devsecops-patterns
+    file: base/devsecops-patterns.md
+    description: Reusable security patterns — validation, encoding, CSRF, rate limiting, headers
+    depends_on: [base-devsecops]
   - id: base-release
     file: base/release.md
     description: Semver, version bump propagation, backward compat, cut-over
@@ -95,6 +103,10 @@ frontend:
     file: frontend/quality.md
     description: CSS conventions, performance, SEO & analytics
     depends_on: [base-quality]
+  - id: frontend-patterns
+    file: frontend/patterns.md
+    description: Reusable UI patterns — error boundary, skeleton, optimistic, virtual scroll, URL state
+    depends_on: [frontend-quality, frontend-ux]
   - id: frontend-static-site
     file: frontend/static-site.md
     description: Abstract SSG rules — content, assets, SEO
