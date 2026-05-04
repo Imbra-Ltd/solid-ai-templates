@@ -1,5 +1,5 @@
 # Stack — Static Site Tutorial
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, base/issues.md, base/scope.md, base/typescript.md, frontend/ux.md, frontend/quality.md, frontend/static-site.md, stack/static-site-astro.md]
+[DEPENDS ON: stack/static-site-astro.md, base/issues.md, base/scope.md]
 
 Extends the Astro static site stack with conventions for multi-chapter
 tutorial sites. Covers content structure, chapter format, diagram

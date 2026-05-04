@@ -13,6 +13,8 @@
 
 version: "1.0"
 
+core: [base-quality, base-git, base-docs, base-readme, base-testing]
+
 base:
   - id: base-git
     file: base/git.md
@@ -29,34 +31,18 @@ base:
   - id: base-testing
     file: base/testing.md
     description: Test pyramid, coverage thresholds, naming conventions
-  - id: base-testing-patterns
-    file: base/testing-patterns.md
-    description: Reusable test patterns — factory, AAA, builder, parameterized, fixtures, mocks
-    depends_on: [base-testing]
   - id: base-devsecops
     file: base/devsecops.md
     description: SAST, SCA, SBOM, secret detection, license compliance
-  - id: base-devsecops-patterns
-    file: base/devsecops-patterns.md
-    description: Pipeline security patterns — break-build gate, triage, SBOM, rotation, hardening loop
-    depends_on: [base-devsecops, base-cicd]
   - id: base-security
     file: base/security.md
     description: Application security rules — input, output, injection, auth, sessions, TLS, headers
-  - id: base-security-patterns
-    file: base/security-patterns.md
-    description: Application security patterns — validation, encoding, CSRF, rate limiting, headers
-    depends_on: [base-security]
   - id: base-release
     file: base/release.md
     description: Semver, version bump propagation, backward compat, cut-over
   - id: base-cicd
     file: base/cicd.md
     description: Pipeline stages, triggers, environments, IaC, deployment
-  - id: base-cicd-patterns
-    file: base/cicd-patterns.md
-    description: Reusable CI/CD patterns — gate, path filter, fan-out, caching, matrix
-    depends_on: [base-cicd]
   - id: base-containers
     file: base/containers.md
     description: Dockerfile, runtime security, resource limits, Kubernetes
@@ -82,8 +68,7 @@ base:
   - id: base-quality-gates
     file: base/quality-gates.md
     description: Three-layer gate model (editor, pre-commit, CI), thresholds
-    depends_on:
-      [base-quality, base-git, base-testing, base-devsecops, base-cicd]
+    depends_on: [base-quality, base-git, base-testing]
   - id: base-ai-workflow
     file: base/ai-workflow.md
     description: AI-assisted development lifecycle, work item hierarchy
@@ -110,10 +95,6 @@ frontend:
     file: frontend/quality.md
     description: CSS conventions, performance, SEO & analytics
     depends_on: [base-quality]
-  - id: frontend-patterns
-    file: frontend/patterns.md
-    description: Reusable UI patterns — error boundary, skeleton, optimistic, virtual scroll, URL state
-    depends_on: [frontend-quality, frontend-ux]
   - id: frontend-static-site
     file: frontend/static-site.md
     description: Abstract SSG rules — content, assets, SEO
@@ -238,6 +219,8 @@ stacks:
       - backend-http
       - backend-api
       - backend-auth
+      - base-cicd
+      - base-devsecops
 
   - id: stack-python-lib
     file: stack/python-lib.md
@@ -265,6 +248,8 @@ stacks:
       - backend-quality
       - backend-features
       - backend-messaging
+      - base-cicd
+      - base-devsecops
       - stack-python-lib
 
   - id: stack-flask
@@ -319,6 +304,8 @@ stacks:
       - backend-concurrency
       - backend-features
       - backend-messaging
+      - base-cicd
+      - base-devsecops
 
   - id: stack-go-echo
     file: stack/go-echo.md
@@ -371,6 +358,8 @@ stacks:
       - backend-http
       - backend-api
       - backend-auth
+      - base-cicd
+      - base-devsecops
 
   - id: stack-hugo
     file: stack/static-site-hugo.md
@@ -399,6 +388,8 @@ stacks:
       - backend-quality
       - backend-features
       - backend-messaging
+      - base-cicd
+      - base-devsecops
 
   - id: stack-nestjs
     file: stack/node-nestjs.md
@@ -419,6 +410,8 @@ stacks:
       - backend-quality
       - backend-features
       - backend-messaging
+      - base-cicd
+      - base-devsecops
 
   - id: stack-spring-boot
     file: stack/java-spring-boot.md
@@ -438,6 +431,8 @@ stacks:
       - backend-quality
       - backend-features
       - backend-messaging
+      - base-cicd
+      - base-devsecops
 
   - id: stack-celery-worker
     file: stack/python-celery-worker.md
@@ -453,6 +448,8 @@ stacks:
       - backend-observability
       - backend-messaging
       - backend-quality
+      - base-cicd
+      - base-devsecops
       - stack-python-lib
 
   - id: stack-grpc-go
@@ -465,6 +462,8 @@ stacks:
       - stack-go-service
       - backend-grpc
       - backend-concurrency
+      - base-cicd
+      - base-devsecops
 
   - id: stack-grpc-python
     file: stack/python-grpc.md
@@ -479,6 +478,8 @@ stacks:
       - backend-grpc
       - backend-concurrency
       - stack-python-lib
+      - base-cicd
+      - base-devsecops
 
   - id: stack-grpc-java
     file: stack/java-grpc.md
@@ -492,6 +493,8 @@ stacks:
       - backend-config
       - backend-grpc
       - backend-concurrency
+      - base-cicd
+      - base-devsecops
 
   - id: stack-react-native
     file: stack/mobile-react-native.md

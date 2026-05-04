@@ -16,9 +16,9 @@ merged PR and a deployed artifact — humans approve, machines execute.
 
 ## Patterns
 
-- See `base/cicd-patterns.md` for reusable structural patterns:
-  gate job, path filtering, fan-out/fan-in, artifact promotion,
-  caching, matrix builds, auto-merge, deploy previews
+- Use gate job, path filtering, fan-out/fan-in, artifact promotion,
+  caching, matrix builds, auto-merge, and deploy preview patterns
+  where appropriate
 
 ## Pipeline stages
 

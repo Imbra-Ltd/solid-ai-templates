@@ -4,9 +4,8 @@
 
 ## Patterns
 
-- See `base/testing-patterns.md` for reusable test patterns:
-  factory, AAA, builder, parameterized, fixtures, mock boundary,
-  snapshot, contract testing
+- Use factory, AAA, builder, parameterized, fixtures, mock boundary,
+  snapshot, and contract testing patterns where appropriate
 
 ## Taxonomy
 

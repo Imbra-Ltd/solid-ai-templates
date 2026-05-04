@@ -1,7 +1,7 @@
 # Base — Quality Gates
 
 [ID: base-quality-gates]
-[DEPENDS ON: base/quality.md, base/git.md, base/testing.md, base/devsecops.md, base/cicd.md]
+[DEPENDS ON: base/quality.md, base/git.md, base/testing.md]
 
 Stack-agnostic quality gate model. Defines the layers, categories,
 thresholds, and constraints. Stack templates extend with concrete tools.

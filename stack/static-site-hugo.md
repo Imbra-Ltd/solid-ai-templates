@@ -1,5 +1,5 @@
 # Stack — Hugo Static Site
-[DEPENDS ON: base/git.md, base/docs.md, base/quality.md, frontend/ux.md, frontend/quality.md, frontend/static-site.md]
+[DEPENDS ON: frontend/static-site.md]
 
 Extends the static site stack with Hugo-specific rules. Covers content
 organisation, archetypes, shortcodes, themes, and deployment.

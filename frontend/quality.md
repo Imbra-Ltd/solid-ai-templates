@@ -4,10 +4,9 @@
 
 ## Patterns
 
-- See `frontend/patterns.md` for reusable UI patterns:
-  error boundary, skeleton loading, optimistic update, virtual
-  scroll, debounced search, form validation, responsive switch,
-  URL state sync
+- Use error boundary, skeleton loading, optimistic update, virtual
+  scroll, debounced search, form validation, responsive switch, and
+  URL state sync patterns where appropriate
 
 ## Design patterns
 
