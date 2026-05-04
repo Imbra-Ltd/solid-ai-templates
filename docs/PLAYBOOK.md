@@ -42,7 +42,7 @@ composition model.
    - id: <layer>-<name>
      file: <layer>/<name>.md
    ```
-5. Update `SPEC.md` — add to the directory listing for the relevant layer
+5. Update `docs/SPEC.md` — add to the directory listing for the relevant layer
 6. Add `backend/<name>.md` (or frontend/) references in dependent stack
    `[DEPENDS ON: ...]` headers as appropriate
 
@@ -75,7 +75,7 @@ composition model.
 ### Interview path
 
 1. Open your agent (Claude Code recommended)
-2. Attach `INTERVIEW.md`
+2. Attach `templates/INTERVIEW.md`
 3. The agent explores what you want to build, asks a few clarifying questions,
    proposes a stack, and generates the file once you confirm
 4. Place the generated file at the project root
@@ -83,7 +83,7 @@ composition model.
 ### Direct path
 
 1. Open your agent
-2. Attach the relevant stack template (e.g. `stack/python-flask.md`)
+2. Attach the relevant stack template (e.g. `templates/stack/python-flask.md`)
 3. Provide your answers inline:
    ```
    Generate a CLAUDE.md. Name: X, owner: Y, repo: Z, database: PostgreSQL, auth: JWT.
