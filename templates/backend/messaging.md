@@ -87,12 +87,11 @@ Applies regardless of message broker (Kafka, RabbitMQ, SQS, or equivalent).
 ---
 
 ## Testing
+[EXTEND: base-testing]
 
-- Unit-test consumer business logic independently of the broker — pass a
-  constructed message object directly to the handler function
-- Integration tests MUST use a real broker instance (Kafka in Docker, LocalStack
-  for SQS, RabbitMQ in Docker) — do not mock the broker client
-- Test the DLQ path: publish a message designed to fail processing and assert
-  it reaches the DLQ after the expected retry count
-- Test idempotency: publish the same message twice and assert the consumer
-  produces the same result with no unintended side effects
+- Unit-test consumer business logic independently of the broker —
+  pass a constructed message object directly to the handler function
+- Test the DLQ path: publish a message designed to fail processing
+  and assert it reaches the DLQ after the expected retry count
+- Test idempotency: publish the same message twice and assert the
+  consumer produces the same result with no unintended side effects

@@ -82,10 +82,9 @@ cache technology (Redis, Memcached, in-process).
 ---
 
 ## Testing
+[EXTEND: base-testing]
 
-- Integration tests MUST run against a real cache instance (e.g. Redis
-  in Docker) — do not mock the cache client in integration tests
-- Unit tests for cache key construction and TTL logic may use an in-memory
-  fake or mock
-- Test the fallback path: assert that a cache miss or error still returns
-  correct data from the source
+- Unit tests for cache key construction and TTL logic MAY use an
+  in-memory fake
+- Test the fallback path: assert that a cache miss or error still
+  returns correct data from the source

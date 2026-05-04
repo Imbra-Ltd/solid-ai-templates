@@ -72,9 +72,11 @@ Applies regardless of technology (Celery, asynq, Sidekiq, BullMQ, etc.).
 ---
 
 ## Testing
+[EXTEND: base-testing]
 
-- Unit test the service function the job delegates to — not the job handler itself
-- Integration test at least the happy path end-to-end: enqueue → execute →
+- Unit test the service function the job delegates to — not the job
+  handler itself
+- Integration test the happy path end-to-end: enqueue → execute →
   assert side effect
 - Test the retry path: assert that a transient failure triggers a retry
 - Test the DLQ path: assert that a permanent failure ends up in the DLQ

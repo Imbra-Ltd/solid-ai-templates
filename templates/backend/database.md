@@ -57,10 +57,11 @@
 - Consider an append-only audit log table as an alternative to soft deletes
 
 ## Testing
+[EXTEND: base-testing]
 
-- Use a real database in integration tests — not an in-memory SQLite
-  substitute unless the production DB is also SQLite
 - Reset state between test runs — truncate tables or wrap each test in a
   transaction rolled back after completion
+- Do not substitute a different database engine in tests (e.g. SQLite
+  instead of PostgreSQL) — behaviour differences cause false passes
 - Never run schema migrations against a production database inside a test
   suite
