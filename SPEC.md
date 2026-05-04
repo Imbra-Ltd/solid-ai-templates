@@ -348,6 +348,146 @@ agent can follow them without tool-specific interpretation.
 
 ---
 
+## Consumption model (target)
+
+The current workflow (above) requires the agent to manually navigate
+template files. The target model replaces hand-curated file lists with
+a declarative header that the agent resolves automatically.
+
+### Lifecycle
+
+```
+┌─────────────────────────────────────────────────┐
+│  1. SETUP (once)                                │
+│     Agent runs INTERVIEW.md → generates         │
+│     CLAUDE.md with a declaration block          │
+├─────────────────────────────────────────────────┤
+│  2. STARTUP (every session)                     │
+│     Agent reads CLAUDE.md → reads               │
+│     manifest.yaml → resolves dependency chain   │
+├─────────────────────────────────────────────────┤
+│  3. DEVELOPMENT (during session)                │
+│     Full context loaded — agent applies rules   │
+│     and patterns without prompting              │
+├─────────────────────────────────────────────────┤
+│  4. UPDATE (on upstream change)                 │
+│     git submodule update --remote               │
+│     Next session resolves the same chain →      │
+│     picks up new/changed rules automatically    │
+└─────────────────────────────────────────────────┘
+```
+
+### Declaration block
+
+The generated CLAUDE.md contains a machine-readable header instead of
+a hand-curated file list:
+
+```markdown
+Stack: static-site-astro
+Extras: data-quality, 360, issues, scope, review, readme
+Platform: github
+Resolution: full
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `Stack` | MUST | Stack ID from `manifest.yaml` |
+| `Extras` | MAY | Comma-separated base template IDs not in the stack's dependency chain |
+| `Platform` | MAY | Platform ID (`github`, `gitlab`) |
+| `Resolution` | MAY | `full` (rules + patterns) or `rules` (rules only); default: `rules` |
+
+### Resolution algorithm
+
+Input: declaration block + `manifest.yaml`.
+Output: ordered list of template files to load.
+
+```
+1. Look up Stack ID in manifest.yaml
+2. Recursively resolve depends_on → collect all
+   transitive dependencies (depth-first, deduplicated)
+3. Append Extras (skip if already in the resolved set)
+4. Append Platform template (if declared)
+5. If Resolution = full → for each resolved rules file,
+   include its companion *-patterns.md (if it exists
+   in manifest.yaml with a depends_on pointing to
+   the rules file)
+6. Append formats/agents.md
+7. Return the ordered file list
+```
+
+Ordering: base → backend/frontend → stack (topological sort of
+the dependency graph). Within the same depth level, order follows
+the `depends_on` list declaration order.
+
+### Example: static-site-astro (Resolution: full)
+
+```
+Declaration:
+  Stack: stack-astro
+  Extras: data-quality, 360, issues, scope
+  Platform: github
+  Resolution: full
+
+Resolved (17 files):
+  base/git.md
+  base/docs.md
+  base/quality.md
+  base/quality-gates.md
+  base/testing.md
+  base/testing-patterns.md        ← full resolution
+  base/typescript.md
+  frontend/ux.md
+  frontend/quality.md
+  frontend/patterns.md            ← full resolution
+  frontend/static-site.md
+  stack/static-site-astro.md
+  base/data-quality.md            ← extra
+  base/360.md                     ← extra
+  base/issues.md                  ← extra
+  base/scope.md                   ← extra
+  platform/github.md              ← platform
+```
+
+### Example: python-flask (Resolution: rules)
+
+```
+Declaration:
+  Stack: stack-flask
+  Extras: scope, issues
+  Platform: github
+  Resolution: rules
+
+Resolved (17 files):
+  base/git.md
+  base/docs.md
+  base/quality.md
+  stack/python-lib.md
+  backend/config.md
+  backend/http.md
+  backend/database.md
+  backend/observability.md
+  backend/quality.md
+  backend/features.md
+  backend/messaging.md
+  stack/python-service.md
+  stack/python-flask.md
+  base/scope.md                   ← extra
+  base/issues.md                  ← extra
+  platform/github.md              ← platform
+  formats/agents.md               ← output format
+```
+
+### Current vs target
+
+| Step | Current | Target |
+|------|---------|--------|
+| Declaration | Hand-curated file list | `Stack: <id>` + extras |
+| Resolution | None — flat list is the resolution | Agent resolves from manifest.yaml |
+| Pattern inclusion | Manual — must list each file | Automatic via `Resolution: full` |
+| Upstream changes | Must edit startup block manually | Submodule bump is sufficient |
+
+---
+
 ## File naming conventions
 
 ```
