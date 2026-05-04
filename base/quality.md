@@ -1,7 +1,9 @@
 # Base — Quality Attributes
+
 [ID: base-quality]
 
 ## Architecture
+
 - All editable content in a data directory — never hardcoded in components
 - Never hardcode derived counts or statistics — compute them from the data
   source; a hardcoded number is a stale number
@@ -136,6 +138,7 @@ is hard to test is hard to test because it is poorly designed — fixing the
 design fixes the testability.
 
 ### Pure functions over side effects
+
 - Business logic SHOULD be implemented as pure functions — same input,
   same output, no side effects (no I/O, no mutation of external state)
 - Side effects (database, API, filesystem, DOM) SHOULD be pushed to
@@ -146,6 +149,7 @@ design fixes the testability.
   thin wrapper
 
 ### Architecture for testability
+
 - Push side effects to the edges:
   `[boundary: I/O] → [pure: logic] → [boundary: I/O]`
 - The pure center is unit-testable; the thin boundaries are
@@ -154,6 +158,7 @@ design fixes the testability.
   responsibilities — split it
 
 ### SOLID enables testability
+
 - **SRP** — a function with one responsibility has one reason to test;
   multiple responsibilities require combinatorial test cases
 - **OCP** — new behaviour via extension means existing tests stay green
@@ -164,6 +169,7 @@ design fixes the testability.
   instantiates its own dependencies cannot be tested in isolation
 
 ### Design patterns and composition
+
 - Design patterns enable testability by enforcing separation of concerns,
   loose coupling, and clear contracts — any correctly applied pattern
   from the Design patterns section improves testability as a side effect
@@ -172,6 +178,7 @@ design fixes the testability.
   drags the entire class hierarchy into every test
 
 ### Rules
+
 - Design for testability from the start — do not write code first and
   struggle to test later
 - If code is hard to test, treat it as a design problem, not a testing
@@ -180,11 +187,13 @@ design fixes the testability.
   rules
 
 ## Automated enforcement
+
 - Quality conventions in this document are enforced automatically via
   quality gates — see `base/quality-gates.md` for the three-layer model
   (editor → pre-commit → CI), categories, and thresholds
 
 ## Code style
+
 - Encode all source files in UTF-8; content MUST be restricted to ASCII
   characters
 - Line endings MUST be LF — CRLF is not acceptable in any committed file
@@ -204,12 +213,14 @@ design fixes the testability.
   gated behind a flag or environment variable, never on by default
 
 ## Security
-- Never hardcode secrets, API keys, or credentials in source files
-- Validate all user input at system boundaries
-- No `eval()`, no `innerHTML` with unsanitised input
-- Keep dependencies up to date — review for known vulnerabilities regularly
+
+- See `base/security.md` for comprehensive application security rules
+  (input validation, output encoding, injection prevention, auth,
+  sessions, TLS, headers, error handling, logging, CORS, uploads)
+- See `base/security-patterns.md` for reusable security patterns
 
 ## Testing
+
 - Write tests for business logic and edge cases
 - Do not test implementation details — test behaviour
 - Tests must pass before merging to `main`

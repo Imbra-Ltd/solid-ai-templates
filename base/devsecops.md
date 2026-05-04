@@ -10,7 +10,11 @@ not after deployment.
 
 ## Patterns
 
-- See `base/devsecops-patterns.md` for reusable security patterns:
+- See `base/devsecops-patterns.md` for pipeline security patterns:
+  break-the-build gate, vulnerability triage, SBOM generation,
+  secret rotation, dependency update workflow, security smoke test,
+  pre-merge security gate, incident-to-hardening loop
+- See `base/security-patterns.md` for application security patterns:
   input validation, output encoding, secret injection, CSRF,
   rate limiting, dependency pinning, least privilege, headers
 
