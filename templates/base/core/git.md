@@ -87,6 +87,20 @@ remaining commits are silently lost.
 
 ## General
 - Do not commit build output, secrets, or dependency directories
-- Do not commit generated files that can be reproduced by running a build command
-- Treat every repository as if it were public — no secrets, credentials, or
-  sensitive information in source files or history
+- Do not commit generated files that can be reproduced by running a
+  build command
+- Treat every repository as if it were public — no secrets,
+  credentials, or sensitive information in source files or history
+
+## `.gitignore`
+- Every repository MUST have a `.gitignore` file
+- Ignore at minimum:
+  - **Dependencies** — `node_modules/`, `.venv/`, `vendor/`
+  - **Build output** — `dist/`, `build/`, `out/`, `*.pyc`, `__pycache__/`
+  - **Secrets** — `.env`, `.env.local`, `*.pem`, `*.key`
+  - **IDE/editor** — `.idea/`, `.vscode/`, `*.swp`, `*.swo`
+  - **OS files** — `.DS_Store`, `Thumbs.db`, `desktop.ini`
+  - **Test/coverage** — `coverage/`, `.coverage`, `htmlcov/`
+- Use [gitignore.io](https://gitignore.io) or GitHub's templates as a
+  starting point — then trim to what the project actually needs
+- Do not ignore lockfiles — they MUST be committed
