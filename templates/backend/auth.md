@@ -30,9 +30,6 @@ security template with backend-specific depth.
   any required claim
 - Store refresh tokens server-side (database or cache) so they can be revoked —
   stateless refresh tokens cannot be invalidated before expiry
-- Never store passwords in plaintext — hash with bcrypt, scrypt, or Argon2id;
-  never MD5 or SHA-1
-- Enforce account lockout or exponential backoff after repeated failed logins
 
 ---
 
@@ -57,16 +54,6 @@ security template with backend-specific depth.
   a route that passes auth may call a service that operates on another user's data
 - Never trust client-supplied IDs for ownership checks — always verify that
   the authenticated user owns or has access to the requested resource
-
----
-
-## Session management (if using sessions instead of tokens)
-[EXTEND: security-sessions]
-
-- Use cryptographically random session IDs (≥ 128 bits)
-- Regenerate session ID on privilege escalation (login, sudo-style elevation)
-- Set `httpOnly`, `Secure`, `SameSite=Strict` on session cookies
-- Expire idle sessions — do not keep sessions alive indefinitely
 
 ---
 
