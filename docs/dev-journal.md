@@ -1,5 +1,50 @@
 # Dev Journal
 
+## 2026-05-04 — Pattern templates and quick wins batch
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**PRs:** #141, #142, #143, #144, #145, #148
+
+**Issues closed:** #117, #104, #131, #135, #136, #137, #132, #130,
+#133, #140, #139, #138
+
+**Issues created:** #146, #147, #149, #150, #151
+
+**Key changes:**
+- New `base/cicd-patterns.md` — 8 reusable CI/CD patterns (gate job,
+  path filtering, fan-out, artifact promotion, caching, matrix,
+  auto-merge, deploy preview)
+- New `base/testing-patterns.md` — 8 test patterns (factory, AAA,
+  builder, parameterized, fixtures, mock boundary, snapshot, contract)
+- New `frontend/patterns.md` — 8 UI patterns (error boundary, skeleton,
+  optimistic update, virtual scroll, debounced search, form validation,
+  responsive switch, URL state sync)
+- New `base/security.md` — application security rules (12 sections:
+  input, output, injection, auth, sessions, secrets, TLS, headers,
+  errors, logging, CORS, uploads)
+- New `base/security-patterns.md` — 8 app security patterns (slim,
+  structural only)
+- Rewrote `base/devsecops-patterns.md` — 8 pipeline security patterns
+  (break-build gate, triage, SBOM, secret rotation, dep updates,
+  security smoke, pre-merge gate, hardening loop)
+- Expanded grading scale in `base/360.md` to include +/- modifiers
+- Added audit tracking section to `base/360.md`
+- Added remediation references section to `base/360.md`
+- Batch quick wins: focus-visible, Dependabot, lychee root-dir,
+  3 review checks, post-mortems, test factory defaults, sonarjs,
+  boolean sort, explicit audit steps, ONBOARDING verify check
+
+**Key decisions:**
+- Pattern files are separate from rules files (rules say what,
+  patterns say how) — different purposes, different audiences
+- Security split: `security.md` (app rules) vs `devsecops.md`
+  (pipeline rules), each with its own patterns companion
+- Architecture spikes created for composition-over-inheritance
+  (#151), pattern resolution (#149), agent-side resolution (#150)
+
+---
+
 ## 2026-05-01 — Convention hardening sweep
 
 **Tool:** Claude Code (Opus 4.6, 1M context)
