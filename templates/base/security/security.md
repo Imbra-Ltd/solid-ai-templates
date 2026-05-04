@@ -186,6 +186,44 @@ See `base/security-patterns.md` for reusable structural patterns.
 
 ---
 
+## Deserialization and data integrity
+
+[ID: security-integrity]
+
+- Never deserialize untrusted data with native serialization
+  formats (Python `pickle`, Java `ObjectInputStream`, PHP
+  `unserialize`) — use safe formats (JSON, Protocol Buffers)
+- Validate the structure and types of deserialized data before
+  use — treat it as untrusted input
+- Verify integrity of downloaded artifacts, updates, and
+  dependencies — use checksums or digital signatures
+- Pin dependency versions and verify checksums in lockfiles —
+  do not trust upstream registries blindly
+- CI/CD pipelines MUST use pinned, verified actions and images —
+  never pull `latest` tags in production pipelines
+
+---
+
+## Server-Side Request Forgery (SSRF)
+
+[ID: security-ssrf]
+
+- Never pass user-supplied URLs directly to server-side HTTP
+  clients — validate and sanitize first
+- Allowlist permitted destination hosts and schemes — reject
+  anything not on the list
+- Block requests to internal networks (`127.0.0.0/8`,
+  `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `169.254.0.0/16`,
+  `::1`, `fc00::/7`) — even after DNS resolution
+- Resolve the hostname and validate the IP before making the
+  request — prevents DNS rebinding attacks
+- Disable HTTP redirects in server-side HTTP clients, or
+  re-validate the destination after each redirect
+- Limit response size and timeout for outbound requests to
+  prevent resource exhaustion
+
+---
+
 ## File uploads
 
 [ID: security-uploads]
