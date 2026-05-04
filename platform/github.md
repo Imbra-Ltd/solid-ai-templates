@@ -1,4 +1,5 @@
 # Platform — GitHub
+
 [ID: platform-github]
 [DEPENDS ON: base/quality-gates.md, base/issues.md]
 
@@ -8,6 +9,7 @@ gate categories to GitHub Actions workflows and GitHub-native features.
 ---
 
 ## CI
+
 [ID: platform-github-ci]
 
 - Pipeline definitions: `.github/workflows/*.yml`
@@ -17,6 +19,7 @@ gate categories to GitHub Actions workflows and GitHub-native features.
 ---
 
 ## SAST
+
 [ID: platform-github-sast]
 
 - **CodeQL** — GitHub-native, free for all repositories (public and private)
@@ -28,6 +31,7 @@ gate categories to GitHub Actions workflows and GitHub-native features.
 ---
 
 ## Secret detection
+
 [ID: platform-github-secrets]
 
 - **GitHub push protection** — native, blocks pushes containing known
@@ -38,22 +42,57 @@ gate categories to GitHub Actions workflows and GitHub-native features.
 
 ---
 
+## Dependency management
+
+[ID: platform-github-deps]
+
+- **Dependabot** SHOULD be enabled for automated dependency update PRs
+- Configure in `.github/dependabot.yml`:
+  ```yaml
+  version: 2
+  updates:
+    - package-ecosystem: npm # or pip, gomod, etc.
+      directory: /
+      schedule:
+        interval: weekly
+      groups:
+        dev-dependencies:
+          dependency-type: development
+  ```
+- Group related dependencies to reduce PR noise
+- Combine with the auto-merge pattern (`base/cicd-patterns.md`)
+  for patch and minor updates
+
+---
+
 ## Quality gate integration
+
 [ID: platform-github-gates]
 
-| Category | Tool / Integration |
-|----------|--------------------|
-| SAST | CodeQL (GitHub-native) |
-| SAST (Python) | + Bandit (CI step) |
-| SAST (Go) | + govulncheck (CI step) |
-| Secret detection | GitHub push protection + gitleaks action |
-| Site quality | `treosh/lighthouse-ci-action` |
-| Link checking | `lycheeverse/lychee-action` |
-| All lint/format/type/test | Language-specific CLI in CI steps |
+| Category                  | Tool / Integration                       |
+| ------------------------- | ---------------------------------------- |
+| SAST                      | CodeQL (GitHub-native)                   |
+| SAST (Python)             | + Bandit (CI step)                       |
+| SAST (Go)                 | + govulncheck (CI step)                  |
+| Secret detection          | GitHub push protection + gitleaks action |
+| Site quality              | `treosh/lighthouse-ci-action`            |
+| Link checking             | `lycheeverse/lychee-action` (see note)   |
+| All lint/format/type/test | Language-specific CLI in CI steps        |
+
+**Lychee note:** When checking internal links on static site build
+output, MUST use `--root-dir <build-dir>` to resolve root-relative
+paths. Without it, links like `/about` produce false errors:
+
+```yaml
+- uses: lycheeverse/lychee-action@v2
+  with:
+    args: --offline --no-progress --root-dir dist dist/
+```
 
 ---
 
 ## Issue labels
+
 [ID: platform-github-labels]
 [EXTEND: base-issues-types]
 
@@ -67,27 +106,27 @@ remain visually distinct when displayed side by side.
 
 ### Type labels (pick one)
 
-| Label | Color | Maps to |
-|-------|-------|---------|
-| `bug` | `#C9372C` | Bug |
-| `epic` | `#8270DB` | Epic |
-| `task` | `#357DE8` | Task |
-| `spike` | `#6CC3E0` | Spike |
+| Label      | Color     | Maps to  |
+| ---------- | --------- | -------- |
+| `bug`      | `#C9372C` | Bug      |
+| `epic`     | `#8270DB` | Epic     |
+| `task`     | `#357DE8` | Task     |
+| `spike`    | `#6CC3E0` | Spike    |
 | `incident` | `#AE2E24` | Incident |
 
 ### Priority labels (pick one)
 
-| Label | Color | Maps to |
-|-------|-------|---------|
-| `P0` | `#E06C00` | P0 — Critical |
-| `P1` | `#FCA700` | P1 — High |
-| `P2` | `#EED12B` | P2 — Medium |
-| `P3` | `#4BCE97` | P3 — Low |
-| `P4` | `#8590A2` | P4 — Backlog |
+| Label | Color     | Maps to       |
+| ----- | --------- | ------------- |
+| `P0`  | `#E06C00` | P0 — Critical |
+| `P1`  | `#FCA700` | P1 — High     |
+| `P2`  | `#EED12B` | P2 — Medium   |
+| `P3`  | `#4BCE97` | P3 — Low      |
+| `P4`  | `#8590A2` | P4 — Backlog  |
 
 ### Triage labels
 
-| Label | Color | When to use |
-|-------|-------|-------------|
-| `duplicate` | `#C1C7D0` | Already tracked by another issue |
-| `wontdo` | `#C1C7D0` | Acknowledged but will not be addressed |
+| Label       | Color     | When to use                            |
+| ----------- | --------- | -------------------------------------- |
+| `duplicate` | `#C1C7D0` | Already tracked by another issue       |
+| `wontdo`    | `#C1C7D0` | Acknowledged but will not be addressed |

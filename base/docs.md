@@ -1,50 +1,60 @@
 # Base — Documentation
+
 [ID: base-docs]
 
 ## Rule language
+
 All rules use the key words defined in **RFC 2119** to indicate requirement
 levels. Every rule MUST use one of these words:
 
-| Word | Meaning |
-|------|---------|
-| MUST | Absolute requirement — no exceptions without explicit rationale |
-| MUST NOT | Absolute prohibition |
-| SHOULD | Recommended — deviations require justification |
-| SHOULD NOT | Not recommended — may be ignored with justification |
-| MAY | Optional — developer decides without further discussion |
+| Word       | Meaning                                                         |
+| ---------- | --------------------------------------------------------------- |
+| MUST       | Absolute requirement — no exceptions without explicit rationale |
+| MUST NOT   | Absolute prohibition                                            |
+| SHOULD     | Recommended — deviations require justification                  |
+| SHOULD NOT | Not recommended — may be ignored with justification             |
+| MAY        | Optional — developer decides without further discussion         |
 
 ## Single source of truth
+
 - `README.md` is the single source of truth for project structure
 - Do not duplicate structure in other documents — reference `README.md` instead
 - No references to non-existent files, components, or services
 
 ## Standard documents
 
-| File | Purpose |
-|------|---------|
-| `README.md` | Project overview, structure, setup, commands |
-| `CLAUDE.md` | AI agent context and project rules |
-| `docs/ONBOARDING.md` | Onboarding guide for new contributors |
-| `docs/PLAYBOOK.md` | Operational reference for common tasks |
+| File                  | Purpose                                                                |
+| --------------------- | ---------------------------------------------------------------------- |
+| `README.md`           | Project overview, structure, setup, commands                           |
+| `CLAUDE.md`           | AI agent context and project rules                                     |
+| `docs/ONBOARDING.md`  | Onboarding guide for new contributors                                  |
+| `docs/PLAYBOOK.md`    | Operational reference for common tasks                                 |
 | `docs/dev-journal.md` | Development history and session log (MUST for agent-assisted projects) |
 
 ## Numbering
+
 - Use numbered headings (1, 1.1, 1.2, 2, 2.1, etc.) in PLAYBOOK and
   ONBOARDING — this enables cross-referencing between documents
   (e.g. "see PLAYBOOK 2.4")
 
 ## ONBOARDING structure
+
 `docs/ONBOARDING.md` MUST contain the following sections in order:
 
 1. **Prerequisites** — required tools and versions (Node, Python, Docker, etc.)
 2. **First-time setup** — clone, install, configure (copy-pasteable commands)
 3. **Verify the setup** — how to confirm everything works (run dev server,
-   run tests, expected output)
+   run tests, expected output). Verify step descriptions SHOULD be
+   re-checked when the default route (`/`) or landing page changes —
+   a content change can invalidate the expected output without triggering
+   a "setup changed" check. Structure audits MUST verify that verify
+   steps produce the described output.
 4. **Key files** — table of files a new contributor should read first
 5. **Project context** — brief domain overview and links to architecture docs
 6. **Daily workflow** — cross-reference PLAYBOOK sections, do not duplicate
 
 ## PLAYBOOK structure
+
 `docs/PLAYBOOK.md` MUST contain the following sections in order:
 
 1. **Git workflow** — branch, commit, PR, merge, issues
@@ -54,13 +64,16 @@ levels. Every rule MUST use one of these words:
 4. **Release and deploy** — release process, tagging, deployment
 
 ## Documentation rule
+
 Before every commit, update all relevant documentation:
+
 - **`CLAUDE.md`** — update if architecture, stack, design rules, or conventions change
 - **`README.md`** — update if project structure, stack, or setup steps change
 - **`docs/PLAYBOOK.md`** — update if commands, workflow, or release process change
 - **`docs/ONBOARDING.md`** — update if the contributor workflow changes
 
 ## Decision logs
+
 - Significant architectural decisions MUST be recorded as Architecture Decision
   Records (ADR) in `docs/decisions/`
 - Each ADR documents: context, decision, alternatives considered, consequences
@@ -76,15 +89,19 @@ Before every commit, update all relevant documentation:
 **Date:** YYYY-MM-DD
 
 ## Context
+
 [Why this decision was needed]
 
 ## Decision
+
 [What was decided]
 
 ## Alternatives considered
+
 [What was rejected and why]
 
 ## Consequences
+
 [What follows from this decision]
 ```
 
@@ -94,6 +111,7 @@ Before every commit, update all relevant documentation:
   dev journal or issue tracker
 
 ## Development journal
+
 - Projects using agent-assisted development MUST maintain a
   `docs/dev-journal.md`
 - Agents have no persistent memory across sessions — the journal provides
@@ -110,7 +128,23 @@ Before every commit, update all relevant documentation:
   decisions, link to issues for task tracking, do not repeat data model
   specs that live in code
 
+### Post-mortems
+
+P0/P1 bugs and all incidents MUST include a post-mortem in the dev
+journal session entry. Format:
+
+- **Symptom:** what the user saw
+- **Root cause:** what was actually wrong
+- **Why missed:** what review or test gap allowed it
+- **Fix:** PR reference
+- **Prevention:** what was changed to catch it next time
+
+Not needed for minor fixes or cosmetic bugs. The purpose is to produce
+actionable prevention steps — a post-mortem without a prevention action
+is incomplete.
+
 ## Writing style
+
 - Write in present tense — past or future tense indicates out-of-sync documentation
 - Write as little as necessary but as much as needed — documentation that goes
   out of sync is worse than no documentation
@@ -118,6 +152,7 @@ Before every commit, update all relevant documentation:
 - Use full, grammatically correct sentences — enumerations are exempt
 
 ## Diagrams and assets
+
 - Prefer text-based diagram formats: Mermaid for flowcharts, sequence diagrams,
   and Gantt charts; Draw.io for complex visual diagrams
 - Commit all raw editable sources alongside rendered outputs
@@ -125,16 +160,17 @@ Before every commit, update all relevant documentation:
 - Diagrams MUST be version-controlled — binary-only diagrams are not acceptable
 
 ## Docs-as-code
+
 - Technical documentation lives in the repository alongside the code
 - Documentation follows the same review process as code
 - All documentation MUST be written in Markdown
 
 ## Output file by agent
 
-| Agent | Context file |
-|-------|-------------|
-| Claude Code | `CLAUDE.md` |
-| Cursor | `.cursor/rules/project.mdc` |
-| GitHub Copilot | `.github/copilot-instructions.md` |
-| OpenAI Codex CLI | `AGENTS.md` |
-| Generic / other | `AI_CONTEXT.md` |
+| Agent            | Context file                      |
+| ---------------- | --------------------------------- |
+| Claude Code      | `CLAUDE.md`                       |
+| Cursor           | `.cursor/rules/project.mdc`       |
+| GitHub Copilot   | `.github/copilot-instructions.md` |
+| OpenAI Codex CLI | `AGENTS.md`                       |
+| Generic / other  | `AI_CONTEXT.md`                   |
