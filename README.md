@@ -6,7 +6,7 @@ Composable, SOLID-inspired templates for generating AI agent context files.
 
 - Generate consistent `CLAUDE.md` or `AGENTS.md` files for any project
 - Compose rules from reusable layers — base, backend/frontend, stack
-- Cover 30+ technology stacks (Python, Go, Java, Node, Rust, mobile, DevOps)
+- Cover Python, Go, Java, Node, Rust, mobile, and DevOps stacks
 - Output for any agent — Claude Code, Cursor, Copilot, Codex CLI
 - Run a 360-degree project assessment across four perspectives (user,
   engineer, analyst, marketer)
@@ -38,7 +38,7 @@ git clone https://github.com/braboj/solid-ai-templates.git
 Attach the stack template, e.g. for a Go service:
 
 ```
-solid-ai-templates/stack/go-service.md
+solid-ai-templates/templates/stack/go-service.md
 ```
 
 Then provide an instruction with your project details:
@@ -70,7 +70,7 @@ To explore your project requirements interactively, attach the interview
 template:
 
 ```
-solid-ai-templates/INTERVIEW.md
+solid-ai-templates/templates/INTERVIEW.md
 ```
 
 The agent explores what you want to build, proposes a stack, and generates
@@ -84,7 +84,7 @@ the file once you confirm.
 ### Generate a context file via interview
 
 1. Open your agent (Claude Code, Cursor, etc.).
-2. Attach `INTERVIEW.md`.
+2. Attach `templates/INTERVIEW.md`.
 3. The agent explores what you want to build, asks a few clarifying questions,
    proposes a stack, and generates the file once you confirm.
 
@@ -93,7 +93,7 @@ Expected output: a `CLAUDE.md` (or equivalent) ready to place at your project ro
 ### Generate a context file directly
 
 1. Open your agent.
-2. Attach the relevant stack template (e.g. `stack/python-fastapi.md`).
+2. Attach the relevant stack template (e.g. `templates/stack/python-fastapi.md`).
 3. Provide your answers inline:
 
 ```
@@ -116,7 +116,7 @@ Then reference the base rules from your `CLAUDE.md` (or equivalent) and add
 project-specific overrides inline:
 
 ```markdown
-Quality conventions defined in `docs/solid-ai-templates/base/quality.md`.
+Quality conventions defined in `docs/solid-ai-templates/templates/base/core/quality.md`.
 ```
 
 To pull template updates across all projects: `git submodule update --remote`.
@@ -124,7 +124,7 @@ To pull template updates across all projects: `git submodule update --remote`.
 ### Compose templates manually
 
 Each template declares its dependencies with `DEPENDS ON` and can override
-base rules with `OVERRIDE`. See `SPEC.md` for the full composition rules.
+base rules with `OVERRIDE`. See `docs/SPEC.md` for the full composition rules.
 
 
 ## Examples
@@ -135,7 +135,7 @@ with the equivalent file attachment mechanism for your tool.
 ### Start a new project
 
 ```
-Attach: INTERVIEW.md
+Attach: templates/INTERVIEW.md
 
 I want to build a new project. Guide me through the setup and generate a CLAUDE.md.
 ```
@@ -143,7 +143,7 @@ I want to build a new project. Guide me through the setup and generate a CLAUDE.
 Or directly if you already know your stack:
 
 ```
-Attach: stack/python-fastapi.md
+Attach: templates/stack/python-fastapi.md
 
 Generate a CLAUDE.md for a new project.
 Name: my-service, owner: Acme, repo: github.com/acme/my-service,
@@ -153,7 +153,7 @@ database: PostgreSQL, auth: JWT.
 ### Refactor an existing project
 
 ```
-Attach: stack/python-fastapi.md
+Attach: templates/stack/python-fastapi.md
 
 Generate a CLAUDE.md for an existing project I want to refactor.
 Name: my-service, owner: Acme, repo: github.com/acme/my-service,
@@ -173,7 +173,7 @@ add a regression test, and use the correct error handling and git conventions.
 If the project has no `CLAUDE.md` yet (legacy code):
 
 ```
-Attach: stack/<your-stack>.md
+Attach: templates/stack/<your-stack>.md
 
 Generate a CLAUDE.md for this project first.
 Name: <name>, owner: <owner>, repo: <repo>.
@@ -192,7 +192,7 @@ Review this file against the conventions in CLAUDE.md and list any violations.
 If the project has no `CLAUDE.md` yet (legacy code):
 
 ```
-Attach: stack/<your-stack>.md
+Attach: templates/stack/<your-stack>.md
 
 Generate a CLAUDE.md for this project first.
 Name: <name>, owner: <owner>, repo: <repo>.
@@ -202,7 +202,7 @@ Then review this file against the generated conventions and list any violations.
 ### Migrate to a new stack
 
 ```
-Attach: stack/<target-stack>.md
+Attach: templates/stack/<target-stack>.md
 
 Generate a CLAUDE.md for the target stack I am migrating to.
 Name: <name>, owner: <owner>, repo: <repo>.
