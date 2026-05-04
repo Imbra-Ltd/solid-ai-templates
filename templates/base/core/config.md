@@ -81,6 +81,26 @@ Sources override in this order (highest wins):
 | staging     | pre-production    | secrets manager / CI |
 | production  | live              | secrets manager      |
 
+## Dependencies
+
+- Declare all dependencies explicitly in a manifest (`package.json`,
+  `pyproject.toml`, `go.mod`, `Cargo.toml`, `requirements.txt`)
+- Commit the lockfile (`package-lock.json`, `poetry.lock`, `go.sum`,
+  `Cargo.lock`) — it pins exact versions for reproducible builds
+- Never rely on system-wide packages — the app MUST run with only
+  its declared dependencies installed
+- Separate production dependencies from dev/test dependencies
+
+## Port binding
+
+- The application exposes its service by binding to a port — it does
+  not depend on an external web server injecting itself at runtime
+- The port MUST be configurable via environment variable
+  (e.g. `PORT=8080`)
+- Do not hardcode port numbers in source code
+- In development, use a well-known default; in production, the
+  platform assigns the port
+
 ## `.env.example` structure
 
 ```
