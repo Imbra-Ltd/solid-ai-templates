@@ -1,5 +1,6 @@
 # Backend — Monitoring
 [ID: backend-monitoring]
+[DEPENDS ON: templates/backend/observability.md]
 
 ## Key metrics
 Every service MUST monitor at minimum:
