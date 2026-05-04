@@ -53,7 +53,9 @@ base/
 ├── quality.md      # Architecture, code style, security, testing
 ├── review.md       # Peer review priority, MUST/SHOULD checklists, deviation rules
 ├── testing.md      # Test pyramid, coverage thresholds, naming conventions
+├── testing-patterns.md # Reusable test patterns — factory, AAA, builder, parameterized, fixtures, mocks
 ├── devsecops.md    # SAST, SCA, SBOM, secret detection, license compliance
+├── devsecops-patterns.md # Reusable security patterns — validation, encoding, CSRF, rate limiting, headers
 ├── release.md      # Semver, version bump propagation, backward compat, cut-over
 ├── cicd.md         # Pipeline stages, triggers, environments, IaC, deployment
 ├── cicd-patterns.md # Reusable CI/CD patterns — gate, path filter, fan-out, caching, matrix
@@ -79,6 +81,7 @@ platform/
 frontend/
 ├── ux.md           # UX principles, WCAG 2.1 AA, responsive breakpoints
 ├── quality.md      # CSS conventions, performance, SEO & analytics
+├── patterns.md     # Reusable UI patterns — error boundary, skeleton, optimistic, virtual scroll, URL state
 └── static-site.md  # Abstract SSG rules — content, assets, SEO
 ```
 

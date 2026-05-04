@@ -1,18 +1,25 @@
 # Base — Testing
+
 [ID: base-testing]
+
+## Patterns
+
+- See `base/testing-patterns.md` for reusable test patterns:
+  factory, AAA, builder, parameterized, fixtures, mock boundary,
+  snapshot, contract testing
 
 ## Taxonomy
 
 Test types are classified by the **boundary crossed during execution** — not by
 who runs them, what tools are used, or what assets drive the test content.
 
-| Type | Boundary crossed | Primary focus |
-|------|-----------------|---------------|
-| **Unit** | None — single component in isolation | Correctness of individual functions and classes |
-| **Integration** | Process or component boundary | Behaviour and interaction across components |
-| **System** | System boundary | End-to-end behaviour from a user perspective |
-| **Regression** | Any — reuses existing tests | Protection against unintended change |
-| **Exploratory** | Any — unscripted | Discovery of unexpected behaviour |
+| Type            | Boundary crossed                     | Primary focus                                   |
+| --------------- | ------------------------------------ | ----------------------------------------------- |
+| **Unit**        | None — single component in isolation | Correctness of individual functions and classes |
+| **Integration** | Process or component boundary        | Behaviour and interaction across components     |
+| **System**      | System boundary                      | End-to-end behaviour from a user perspective    |
+| **Regression**  | Any — reuses existing tests          | Protection against unintended change            |
+| **Exploratory** | Any — unscripted                     | Discovery of unexpected behaviour               |
 
 ---
 
@@ -103,11 +110,11 @@ and system tests — they are not a separate test type.
 
 Regression suites are divided by scope and execution time:
 
-| Variant | Scope | Trigger | Target duration |
-|---------|-------|---------|----------------|
-| **Smoke** | Critical paths only | Every commit | < 15 minutes |
-| **Quick** | Core functionality | Every merge request | < 60 minutes |
-| **Full** | Complete suite | Release candidate | Unrestricted |
+| Variant   | Scope               | Trigger             | Target duration |
+| --------- | ------------------- | ------------------- | --------------- |
+| **Smoke** | Critical paths only | Every commit        | < 15 minutes    |
+| **Quick** | Core functionality  | Every merge request | < 60 minutes    |
+| **Full**  | Complete suite      | Release candidate   | Unrestricted    |
 
 - Smoke and Quick regression MUST be fully automated
 - Full regression SHOULD be fully automated; manual steps MUST be documented
