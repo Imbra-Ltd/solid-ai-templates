@@ -30,7 +30,6 @@
 
 ## Image hygiene
 - Scan all images for vulnerabilities in CI before pushing to a registry
-  (see `templates/base/security/devsecops.md`)
 - Never push an image with critical or high vulnerabilities to staging or
   production
 - Tag images with the git commit SHA or release version — never rely on

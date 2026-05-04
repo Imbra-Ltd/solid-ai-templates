@@ -5,9 +5,6 @@ Rules for server-rendered HTML applications. Covers template organisation,
 escaping, partials, layouts, caching, and testing. Applies to any backend
 language or framework that renders HTML on the server.
 
-See `templates/stack/htmx.md` for hypermedia-driven (HTMX) conventions.
-See `templates/backend/api.md` for protocol selection guidance.
-
 ---
 
 ## When to use server-side templating

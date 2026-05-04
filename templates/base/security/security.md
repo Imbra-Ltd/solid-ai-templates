@@ -5,8 +5,6 @@
 Cross-cutting security rules for application code. Applies to
 every project regardless of language or framework.
 
-See `templates/base/security/devsecops.md` for pipeline security (SAST, SCA, DAST).
-See `base/security-patterns.md` for reusable structural patterns.
 
 ---
 

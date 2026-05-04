@@ -48,7 +48,6 @@ Choose the communication style based on the interaction type:
 - Prefer **async messaging** for cross-service workflows — it decouples
   availability and reduces cascade failures
 - For synchronous calls, always set a timeout and wrap with a Circuit Breaker
-  (see `templates/backend/quality.md`)
 - Never chain more than two synchronous service calls in a single request path
   — each hop multiplies latency and failure probability
 
@@ -64,7 +63,7 @@ Choose the communication style based on the interaction type:
 - Duplicate read-only data across service boundaries via events rather than
   joining across service databases
 - Use the **Outbox pattern** to guarantee that database writes and event
-  publishing are atomic (see `templates/backend/quality.md`)
+  publishing are atomic
 
 ---
 

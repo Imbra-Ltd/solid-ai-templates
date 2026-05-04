@@ -36,7 +36,7 @@ Prefer these patterns for backend concerns:
 
 - Rate-limit public endpoints — never expose unbounded write operations
 - Apply authentication and authorisation before any business logic
-  executes — see `templates/backend/auth.md`
+  executes
 
 ## Performance
 - Prefer async I/O for network-bound operations

@@ -161,15 +161,10 @@ Apply SOLID at the class, module, and service level:
   code first and struggle to test later
 - If code is hard to test, treat it as a design problem, not a
   testing problem
-- See `templates/base/core/testing.md` for testability patterns (pure
-  functions, boundary architecture, SOLID), test types, coverage
-  targets, and execution rules
-
 ## Automated enforcement
 
 - Quality conventions in this document are enforced automatically via
-  quality gates — see `templates/base/workflow/quality-gates.md` for the three-layer model
-  (editor → pre-commit → CI), categories, and thresholds
+  quality gates (editor → pre-commit → CI)
 
 ## Code style
 
@@ -190,14 +185,6 @@ Apply SOLID at the class, module, and service level:
 - No commented-out code blocks — delete dead code; version control is the history
 - Debug tooling (profilers, REPL helpers, verbose loggers) MUST be
   gated behind a flag or environment variable, never on by default
-
-## Security
-
-- See `templates/base/security/security.md` for comprehensive application security rules
-  (input validation, output encoding, injection prevention, auth,
-  sessions, TLS, headers, error handling, logging, CORS, uploads)
-- See `templates/base/security/devsecops.md` for pipeline security
-  (SAST, SCA, DAST, secret detection)
 
 ## Testing
 
