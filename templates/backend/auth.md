@@ -1,8 +1,11 @@
 # Backend — Authentication and Authorization
 [ID: backend-auth]
+[DEPENDS ON: templates/base/security/security.md]
 
 Rules for identity verification (authn) and access control (authz).
 Applies to any backend service that has protected resources.
+Extends `security-authn` and `security-sessions` from the base
+security template with backend-specific depth.
 
 ---
 
@@ -17,6 +20,7 @@ Applies to any backend service that has protected resources.
 ---
 
 ## Authentication
+[EXTEND: security-authn]
 
 - Prefer delegating authentication to an identity provider (IdP) via
   OAuth 2.0 / OIDC (e.g. Auth0, Keycloak, Cognito) over rolling your own
@@ -57,6 +61,7 @@ Applies to any backend service that has protected resources.
 ---
 
 ## Session management (if using sessions instead of tokens)
+[EXTEND: security-sessions]
 
 - Use cryptographically random session IDs (≥ 128 bits)
 - Regenerate session ID on privilege escalation (login, sudo-style elevation)
