@@ -73,6 +73,7 @@ Select the matching stack template from the table below and load its
 DEPENDS ON chain. Apply any adjustments from Phase 3.
 Generate the output file using the format rules in `templates/base/core/agents.md`.
 All rules are inlined — the output file is self-contained.
+End the file with: `<!-- Generated with solid-ai-templates (github.com/braboj/solid-ai-templates) -->`
 
 Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
 required structures in `templates/base/core/docs.md`.
@@ -88,6 +89,8 @@ inlining them. The output file:
 3. Defines code review and structure audit scopes (which templates to
    read for each)
 4. Contains only project-specific overrides and additions inline
+
+End the file with: `<!-- Generated with solid-ai-templates (github.com/braboj/solid-ai-templates) -->`
 
 Tell the user to add the submodule:
 ```
@@ -109,6 +112,8 @@ templates for the rest. Follow the hybrid model structure in
    safety rules, and content rules
 4. References quality framework, review process, testing, a11y,
    SEO, and CI/CD from the templates
+
+End the file with: `<!-- Generated with solid-ai-templates (github.com/braboj/solid-ai-templates) -->`
 
 Tell the user to add the submodule:
 ```
