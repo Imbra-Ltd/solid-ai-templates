@@ -1,15 +1,35 @@
-# ADR-005: Reorganize base/ into subfolders
+# ADR-005: Apply Miller's law to repository structure
 
 **Status:** Accepted
 **Date:** 2026-05-04
 
 ## Context
 
-`base/` contains 23 files covering concerns from git conventions to
-360-degree analysis. A newcomer opening the folder sees a flat list
-with no indication of which files matter or how they relate.
+Miller's law (7±2): humans can hold roughly 7 items in working
+memory. Folder listings that exceed this range force sequential
+scanning instead of recognition.
 
-Usage analysis of the 23 files against all 29 stacks:
+### Root level: 12 directories
+
+The repository has 12 top-level directories — above 7±2. Six are
+template source, six are project infrastructure:
+
+| Template source | Project infrastructure |
+|-----------------|----------------------|
+| base/ | docs/ |
+| backend/ | tests/ |
+| frontend/ | tools/ |
+| stack/ | examples/ |
+| platform/ | generated/ |
+| formats/ | assets/ |
+
+A newcomer cannot tell at a glance what is the product vs what
+supports the product.
+
+### base/ level: 23 files
+
+`base/` contains 23 files covering concerns from git conventions to
+360-degree analysis. Usage analysis against all 29 stacks:
 
 | Tier | Files | Stack usage |
 |------|-------|-------------|
@@ -20,22 +40,36 @@ Usage analysis of the 23 files against all 29 stacks:
 
 14 of 23 files are never pulled in by any stack's dependency chain.
 They exist as opt-in extras, but nothing in the folder structure
-signals this.
-
-### Cognitive load
-
-Miller's law (7±2): humans can hold roughly 7 items in working
-memory. A 23-item flat list exceeds this by 3x, forcing sequential
-scanning instead of recognition. Subfolders that stay within the
-7±2 range allow instant orientation.
+signals this. A 23-item flat list exceeds 7±2 by 3x.
 
 ## Decision
 
-Split `base/` into 5 subfolders grouped by concern. The `base/`
-parent directory is retained — no top-level explosion.
+Two changes, both applying Miller's law.
+
+### 1. Nest template source under templates/
+
+Group the 6 template directories under a single `templates/` parent:
 
 ```
-base/
+templates/
+  base/
+  backend/
+  frontend/
+  stack/
+  platform/
+  formats/
+```
+
+Root level goes from 12 directories to 7: `templates/`, `docs/`,
+`tests/`, `tools/`, `examples/`, `generated/`, `assets/`. Within
+7±2. `templates/` has 6 children — also within 7±2.
+
+### 2. Split base/ into subfolders
+
+Split `base/` into 5 subfolders grouped by concern:
+
+```
+templates/base/
   core/       # Foundation — applies to every project
   security/   # Application and pipeline security
   infra/      # CI/CD, containers, deployment, release
@@ -107,7 +141,8 @@ All subfolders stay within the 7±2 range.
 
 ### Impact on manifest.yaml
 
-All `base-*` entries update their `file:` path:
+All entries update their `file:` path to include `templates/` prefix
+and (for base entries) the subfolder:
 
 ```yaml
 # Before
@@ -116,7 +151,7 @@ All `base-*` entries update their `file:` path:
 
 # After
 - id: base-git
-  file: base/core/git.md
+  file: templates/base/core/git.md
 ```
 
 IDs stay the same. Only `file:` fields change. The `depends_on`
@@ -132,7 +167,7 @@ These update to the new paths:
 [DEPENDS ON: base/quality.md]
 
 # After
-[DEPENDS ON: base/core/quality.md]
+[DEPENDS ON: templates/base/core/quality.md]
 ```
 
 ### Impact on agents
@@ -143,34 +178,37 @@ Agents never browse folders directly.
 
 ## Alternatives considered
 
-1. **Option A — Top-level split** (`core/`, `security/`, `infra/`
-   as top-level folders). Rejected: explodes the top level from 12
-   to 16+ directories. Moves the cognitive load problem up one level.
+1. **Top-level split without templates/** (`core/`, `security/`,
+   `infra/` as top-level folders). Rejected: explodes the top level
+   from 12 to 16+ directories.
 
-2. **Option B — core/ + extras/** (two-way split). Rejected:
-   `extras/` is a junk drawer. "Everything else" provides no
-   navigational signal. A reader still has to scan 17 files to find
-   what they need.
+2. **core/ + extras/** (two-way base split). Rejected: `extras/`
+   is a junk drawer. "Everything else" provides no navigational
+   signal. A reader still scans 17 files.
 
 3. **Keep flat, rely on naming** (prefix files like
    `security-*.md`). Rejected: prefixes help sorting but don't
    reduce the item count. 23 files is still 23 files.
 
-4. **Nest under templates/** (Option A from spike discussion).
-   Orthogonal to this decision — can be done independently later
-   if the top level grows. Not needed now.
+4. **templates/ without base subfolders**. Rejected: solves the
+   root level but leaves the 23-file `base/` problem untouched.
+
+5. **base subfolders without templates/**. Rejected: solves `base/`
+   but the root stays at 12 directories. Both problems should be
+   addressed together.
 
 ## Consequences
 
+- Root goes from 12 directories to 7 — within 7±2
 - `base/` goes from 23 items to 5 subfolders — within 7±2
-- All manifest `file:` paths for base entries change (mechanical)
-- All `[DEPENDS ON]` headers referencing base files change
-  (mechanical)
+- All manifest `file:` paths change (mechanical — `templates/`
+  prefix + base subfolder)
+- All `[DEPENDS ON]` headers update to new paths (mechanical)
 - `SPEC.md` directory listing updates (generated by sync.py)
 - `tools/sync.py` needs no logic changes — it reads manifest paths
 - Smoke tests pass without changes — they validate manifest paths
   against filesystem
 - If ADR-004 lands first, pattern files move to `docs/patterns/`
-  before this reorganization, reducing the file count to 18
+  before this reorganization, reducing base file count to 18
 - If this lands first, ADR-004 moves patterns from their new
   subfolder paths — order doesn't matter
