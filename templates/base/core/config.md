@@ -1,5 +1,8 @@
-# Backend — Configuration
+# Base — Configuration
 [ID: base-config]
+
+Follows the [12-factor app](https://12factor.net/config) principle:
+store config in the environment, not in code.
 
 ## Rules
 
