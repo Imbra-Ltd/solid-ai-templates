@@ -135,11 +135,61 @@ predefined expected outcome. It is not part of any regression suite.
 
 ---
 
+## Testability
+
+Testability is a first-class design concern, not an afterthought. Code
+that is hard to test is hard to test because it is poorly designed —
+fixing the design fixes the testability.
+
+### Pure functions over side effects
+
+- Business logic SHOULD be implemented as pure functions — same input,
+  same output, no side effects (no I/O, no mutation of external state)
+- Side effects (database, API, filesystem, DOM) SHOULD be pushed to
+  the boundary — thin adapters that call pure logic
+- Pure functions are trivially unit-testable with no mocks, stubs, or
+  setup
+- A function that mixes logic and side effects is a signal to split
+  it: extract the logic into a pure function, keep the side effect
+  in a thin wrapper
+
+### Architecture for testability
+
+- Push side effects to the edges:
+  `[boundary: I/O] → [pure: logic] → [boundary: I/O]`
+- The pure center is unit-testable; the thin boundaries are
+  integration-testable
+- If a function needs more than two mocks to test, it has too many
+  responsibilities — split it
+
+### SOLID enables testability
+
+- **SRP** — one responsibility = one reason to test; multiple
+  responsibilities require combinatorial test cases
+- **OCP** — new behaviour via extension means existing tests stay
+  green
+- **LSP** — subtypes that honour contracts can be tested against the
+  base type's tests
+- **ISP** — small interfaces mean fewer dependencies to mock
+- **DIP** — depend on abstractions, inject dependencies; code that
+  instantiates its own dependencies cannot be tested in isolation
+
+### Design patterns and composition
+
+- Design patterns enable testability by enforcing separation of
+  concerns, loose coupling, and clear contracts
+- Prefer composition over inheritance — composed dependencies can be
+  injected and swapped in tests; inherited behaviour drags the entire
+  class hierarchy into every test
+
+---
+
 ## General rules
 
-- Code MUST be designed for testability from the start — see the
-  Testability section in `templates/base/core/quality.md` for architectural patterns
-  (pure functions, boundary architecture, SOLID, design patterns)
+- Design for testability from the start — do not write code first and
+  struggle to test later
+- If code is hard to test, treat it as a design problem, not a testing
+  problem
 - Test behaviour, not implementation details
 - Each test MUST be independent — no shared mutable state between tests
 - A failing test MUST trigger an investigation before any other action —
