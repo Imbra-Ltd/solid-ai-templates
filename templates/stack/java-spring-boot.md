@@ -1,5 +1,5 @@
 # Stack — Spring Boot Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/backend/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/auth.md, templates/backend/quality.md, templates/backend/features.md, templates/backend/messaging.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/auth.md, templates/backend/quality.md, templates/backend/features.md, templates/backend/messaging.md]
 
 A Java or Kotlin backend built with Spring Boot. Covers project structure,
 layers, dependency injection, JPA, Spring Security, validation, and testing.
@@ -91,7 +91,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: backend-config]
+[EXTEND: base-config]
 
 - All config in `application.yml` — use Spring profiles (`dev`, `prod`, `test`)
   for environment-specific overrides

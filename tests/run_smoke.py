@@ -209,7 +209,7 @@ def check_tpl_01():
         "templates/base/core/git.md",
         "templates/base/core/docs.md",
         "templates/base/core/quality.md",
-        "templates/backend/config.md",
+        "templates/base/core/config.md",
         "templates/backend/http.md",
         "templates/backend/database.md",
         "templates/backend/observability.md",

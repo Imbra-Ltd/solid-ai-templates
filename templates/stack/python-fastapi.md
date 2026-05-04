@@ -65,7 +65,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: backend-config]
+[EXTEND: base-config]
 
 - Use `pydantic-settings` (`BaseSettings`) for all configuration
 - `Settings` instantiated once and injected as a dependency — never imported globally

@@ -62,7 +62,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: backend-config]
+[EXTEND: base-config]
 
 - Three config classes: `DevelopmentConfig`, `TestingConfig`, `ProductionConfig`
 - `FLASK_ENV` / `FLASK_DEBUG` must be `False` in production

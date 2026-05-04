@@ -1,5 +1,5 @@
 # Backend — Configuration
-[ID: backend-config]
+[ID: base-config]
 
 ## Rules
 

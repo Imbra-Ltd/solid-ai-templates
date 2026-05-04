@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh milestone:*)",
+      "Bash(python -c \":*)",
+      "Bash(py tests/run_smoke.py)",
+      "Bash(gh pr:*)",
+      "Bash(gh api:*)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f''''allow_auto_merge: {d.get\\(\"\"allow_auto_merge\"\"\\)}''''\\)\")",
+      "Bash(py tools/sync.py)",
+      "Bash(gh release:*)",
+      "Bash(gh issue:*)",
+      "Bash(gh run:*)",
+      "Bash(py tests/run_e2e.py --offline)",
+      "Bash(gh repo:*)",
+      "Bash(for branch:*)",
+      "Bash(do echo:*)",
+      "Bash(git log:*)",
+      "Bash(done)",
+      "Bash(git diff:*)",
+      "Bash(git checkout:*)",
+      "Bash(git mv:*)",
+      "Bash(py:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git fsck:*)",
+      "Bash(for issue:*)",
+      "Bash(do gh:*)",
+      "Bash(git tag:*)"
+    ]
+  }
+}

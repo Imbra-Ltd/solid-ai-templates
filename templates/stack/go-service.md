@@ -1,5 +1,5 @@
 # Stack — Go Service
-[DEPENDS ON: templates/stack/go-lib.md, templates/backend/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/quality.md, templates/backend/concurrency.md, templates/backend/features.md, templates/backend/messaging.md]
+[DEPENDS ON: templates/stack/go-lib.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/quality.md, templates/backend/concurrency.md, templates/backend/features.md, templates/backend/messaging.md]
 
 Extends the Go library stack with service-specific rules. Covers project
 structure, HTTP handlers, configuration, concurrency, graceful shutdown,
@@ -64,7 +64,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: backend-config]
+[EXTEND: base-config]
 
 - One `Config` struct in `internal/config/config.go` — loaded from env
   vars at startup; passed explicitly through the dependency graph
