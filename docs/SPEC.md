@@ -59,20 +59,20 @@ base/
 ├── security/
 │   ├── devsecops.md    # SAST, SCA, SBOM, secret detection, license compliance
 │   └── security.md     # Application security rules — input, output, injection, auth, sessions, TLS, headers
-├── infra/
+├── workflow/
 │   ├── release.md      # Semver, version bump propagation, backward compat, cut-over
+│   ├── issues.md       # Issue templates — epic, task, bug, incident, spike
+│   ├── scope.md        # Scope guard, session protocol, drift prevention
+│   ├── quality-gates.md # Three-layer gate model (editor, pre-commit, CI), thresholds
+│   ├── ai-workflow.md  # AI-assisted development lifecycle, work item hierarchy
+│   └── 360.md          # 360-degree project analysis — four stakeholder perspectives, grading
+├── infra/
 │   ├── cicd.md         # Pipeline stages, triggers, environments, IaC, deployment
 │   ├── containers.md   # Dockerfile, runtime security, resource limits, Kubernetes
 │   └── deployment.md   # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
-├── language/
-│   ├── typescript.md   # Type design, naming, strictness — applies to all TypeScript projects
-│   └── data-quality.md # Data sourcing, completeness, freshness, scoring — data-heavy projects
-└── workflow/
-    ├── issues.md       # Issue templates — epic, task, bug, incident, spike
-    ├── scope.md        # Scope guard, session protocol, drift prevention
-    ├── quality-gates.md # Three-layer gate model (editor, pre-commit, CI), thresholds
-    ├── ai-workflow.md  # AI-assisted development lifecycle, work item hierarchy
-    └── 360.md          # 360-degree project analysis — four stakeholder perspectives, grading
+└── language/
+    ├── typescript.md   # Type design, naming, strictness — applies to all TypeScript projects
+    └── data-quality.md # Data sourcing, completeness, freshness, scoring — data-heavy projects
 ```
 
 ```
