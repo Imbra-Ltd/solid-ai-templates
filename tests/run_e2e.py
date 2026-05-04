@@ -34,9 +34,9 @@ from lib import ROOT, PASS, FAIL, SKIP, ERR, REPORT_TRUNCATION, read, parse_args
 from cases import ALL_TESTS
 
 
-def build_prompt(stack_file, answers, output_file="formats/agents.md",
+def build_prompt(stack_file, answers, output_file="templates/base/core/agents.md",
                  extra_files=()):
-    interview = read("INTERVIEW.md")
+    interview = read("templates/INTERVIEW.md")
     stack = read(stack_file)
     output_fmt = read(output_file)
     answers_text = "\n".join(f"- {k}: {v}" for k, v in answers.items())
@@ -100,7 +100,7 @@ def validate_test_offline(test):
     elif os.path.getsize(stack_file) == 0:
         failures.append(f"  stack file empty: {test['stack']}")
 
-    output_file = test.get("output_file", "formats/agents.md")
+    output_file = test.get("output_file", "templates/base/core/agents.md")
     out_path = os.path.join(ROOT, output_file)
     if not os.path.isfile(out_path):
         failures.append(f"  output format missing: {output_file}")
@@ -141,7 +141,7 @@ def run_test(test, dry_run=False, offline=False):
 
     prompt = build_prompt(
         test["stack"], test["answers"],
-        test.get("output_file", "formats/agents.md"),
+        test.get("output_file", "templates/base/core/agents.md"),
         test.get("extra_files", ()),
     )
 

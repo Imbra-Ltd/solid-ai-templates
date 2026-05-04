@@ -6,7 +6,7 @@ Each test entry has these fields:
   spec        the spec file this test implements
   stack       stack template file fed to the agent
   answers     interview answers the agent receives
-  output_file output format template (defaults to formats/agents.md)
+  output_file output format template (defaults to templates/base/core/agents.md)
   extra_files additional template files to include in the prompt
   required    strings that MUST appear in the output
   forbidden   strings that MUST NOT appear in the output
@@ -21,7 +21,7 @@ STK_TESTS = [
     {
         "id": "STK-01",
         "spec": "SAIT-E2E-STK-01-001A",
-        "stack": "stack/python-fastapi.md",
+        "stack": "templates/stack/python-fastapi.md",
         "answers": {
             "Project name": "OrderService",
             "Owner": "Platform team",
@@ -49,7 +49,7 @@ STK_TESTS = [
     {
         "id": "STK-02",
         "spec": "SAIT-E2E-STK-02-001A",
-        "stack": "stack/go-echo.md",
+        "stack": "templates/stack/go-echo.md",
         "answers": {
             "Project name": "MetricsHub",
             "Owner": "Infrastructure team",
@@ -76,7 +76,7 @@ STK_TESTS = [
     {
         "id": "STK-03",
         "spec": "SAIT-E2E-STK-03-001A",
-        "stack": "stack/python-django.md",
+        "stack": "templates/stack/python-django.md",
         "answers": {
             "Project name": "CatalogService",
             "Framework": "Django 5.x + Django REST Framework",
@@ -99,7 +99,7 @@ STK_TESTS = [
     {
         "id": "STK-04",
         "spec": "SAIT-E2E-STK-04-001A",
-        "stack": "stack/node-express.md",
+        "stack": "templates/stack/node-express.md",
         "answers": {
             "Project name": "NotificationService",
             "Language": "TypeScript",
@@ -120,7 +120,7 @@ STK_TESTS = [
     {
         "id": "STK-05",
         "spec": "SAIT-E2E-STK-05-001A",
-        "stack": "stack/spa-react.md",
+        "stack": "templates/stack/spa-react.md",
         "answers": {
             "Project name": "DashboardApp",
             "Language": "TypeScript",
@@ -141,7 +141,7 @@ STK_TESTS = [
     {
         "id": "STK-06",
         "spec": "SAIT-E2E-STK-06-001A",
-        "stack": "stack/full-nextjs.md",
+        "stack": "templates/stack/full-nextjs.md",
         "answers": {
             "Project name": "StorefrontApp",
             "Language": "TypeScript",
@@ -163,7 +163,7 @@ STK_TESTS = [
     {
         "id": "STK-07",
         "spec": "SAIT-E2E-STK-07-001A",
-        "stack": "stack/static-site-astro.md",
+        "stack": "templates/stack/static-site-astro.md",
         "answers": {
             "Project name": "TechBlog",
             "Language": "TypeScript",
@@ -184,7 +184,7 @@ STK_TESTS = [
     {
         "id": "STK-08",
         "spec": "SAIT-E2E-STK-08-001A",
-        "stack": "stack/go-grpc.md",
+        "stack": "templates/stack/go-grpc.md",
         "answers": {
             "Project name": "PaymentGateway",
             "Language": "Go",
@@ -205,7 +205,7 @@ STK_TESTS = [
     {
         "id": "STK-09",
         "spec": "SAIT-E2E-STK-09-001A",
-        "stack": "stack/mobile-flutter.md",
+        "stack": "templates/stack/mobile-flutter.md",
         "answers": {
             "Project name": "FieldSurveyApp",
             "Language": "Dart",
@@ -225,7 +225,7 @@ STK_TESTS = [
     {
         "id": "STK-10",
         "spec": "SAIT-E2E-STK-10-001A",
-        "stack": "stack/go-lib.md",
+        "stack": "templates/stack/go-lib.md",
         "answers": {
             "Project name": "retrykit",
             "Language": "Go",
@@ -247,7 +247,7 @@ STK_TESTS = [
     {
         "id": "STK-11",
         "spec": "SAIT-E2E-STK-11-001A",
-        "stack": "stack/python-flask.md",
+        "stack": "templates/stack/python-flask.md",
         "answers": {
             "Project name": "ReportingAPI",
             "Language": "Python",
@@ -269,7 +269,7 @@ STK_TESTS = [
     {
         "id": "STK-12",
         "spec": "SAIT-E2E-STK-12-001A",
-        "stack": "stack/python-service.md",
+        "stack": "templates/stack/python-service.md",
         "answers": {
             "Project name": "DataPipelineWorker",
             "Language": "Python",
@@ -290,7 +290,7 @@ STK_TESTS = [
     {
         "id": "STK-13",
         "spec": "SAIT-E2E-STK-13-001A",
-        "stack": "stack/python-grpc.md",
+        "stack": "templates/stack/python-grpc.md",
         "answers": {
             "Project name": "MLInferenceService",
             "Language": "Python",
@@ -312,7 +312,7 @@ STK_TESTS = [
     {
         "id": "STK-14",
         "spec": "SAIT-E2E-STK-14-001A",
-        "stack": "stack/python-celery-worker.md",
+        "stack": "templates/stack/python-celery-worker.md",
         "answers": {
             "Project name": "EmailDispatchWorker",
             "Language": "Python",
@@ -334,7 +334,7 @@ STK_TESTS = [
     {
         "id": "STK-15",
         "spec": "SAIT-E2E-STK-15-001A",
-        "stack": "stack/python-lib.md",
+        "stack": "templates/stack/python-lib.md",
         "answers": {
             "Project name": "validify",
             "Language": "Python",
@@ -355,7 +355,7 @@ STK_TESTS = [
     {
         "id": "STK-16",
         "spec": "SAIT-E2E-STK-16-001A",
-        "stack": "stack/go-service.md",
+        "stack": "templates/stack/go-service.md",
         "answers": {
             "Project name": "HealthCheckService",
             "Language": "Go",
@@ -376,7 +376,7 @@ STK_TESTS = [
     {
         "id": "STK-17",
         "spec": "SAIT-E2E-STK-17-001A",
-        "stack": "stack/static-site-hugo.md",
+        "stack": "templates/stack/static-site-hugo.md",
         "answers": {
             "Project name": "DocumentationSite",
             "Language": "Markdown + Go templates",
@@ -396,7 +396,7 @@ STK_TESTS = [
     {
         "id": "STK-18",
         "spec": "SAIT-E2E-STK-18-001A",
-        "stack": "stack/nodejs-lib.md",
+        "stack": "templates/stack/nodejs-lib.md",
         "answers": {
             "Project name": "parsekit",
             "Language": "TypeScript",
@@ -417,7 +417,7 @@ STK_TESTS = [
     {
         "id": "STK-19",
         "spec": "SAIT-E2E-STK-19-001A",
-        "stack": "stack/rust-lib.md",
+        "stack": "templates/stack/rust-lib.md",
         "answers": {
             "Project name": "byteparser",
             "Language": "Rust",
@@ -439,7 +439,7 @@ STK_TESTS = [
     {
         "id": "STK-20",
         "spec": "SAIT-E2E-STK-20-001A",
-        "stack": "stack/htmx.md",
+        "stack": "templates/stack/htmx.md",
         "answers": {
             "Project name": "AdminDashboard",
             "Backend language": "Python (Flask)",
@@ -469,8 +469,8 @@ FMT_TESTS = [
     {
         "id": "FMT-01",
         "spec": "SAIT-E2E-FMT-01-001A",
-        "stack": "stack/python-fastapi.md",
-        "output_file": "formats/agents.md",
+        "stack": "templates/stack/python-fastapi.md",
+        "output_file": "templates/base/core/agents.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -489,8 +489,8 @@ FMT_TESTS = [
     {
         "id": "FMT-02",
         "spec": "SAIT-E2E-FMT-02-001A",
-        "stack": "stack/python-fastapi.md",
-        "output_file": "formats/agents.md",
+        "stack": "templates/stack/python-fastapi.md",
+        "output_file": "templates/base/core/agents.md",
         "answers": {
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
@@ -520,7 +520,7 @@ ITV_TESTS = [
     {
         "id": "ITV-02",
         "spec": "SAIT-INT-ITV-02-001A",
-        "stack": "stack/python-fastapi.md",
+        "stack": "templates/stack/python-fastapi.md",
         "answers": {
             "Project name": "InventoryService",
             "Owner": "Backend team",
@@ -540,7 +540,7 @@ ITV_TESTS = [
     {
         "id": "ITV-03",
         "spec": "SAIT-INT-ITV-03-001A",
-        "stack": "stack/python-fastapi.md",
+        "stack": "templates/stack/python-fastapi.md",
         "answers": {
             "Project name": "InventoryService",
             "Owner": "Backend team",
@@ -567,8 +567,8 @@ DPL_TESTS = [
     {
         "id": "DPL-01",
         "spec": "SAIT-E2E-DPL-01-001A",
-        "stack": "stack/node-express.md",
-        "extra_files": ["base/deployment.md"],
+        "stack": "templates/stack/node-express.md",
+        "extra_files": ["templates/base/infra/deployment.md"],
         "answers": {
             "Project name": "PublicAPIService",
             "Owner": "Platform team",
@@ -586,8 +586,8 @@ DPL_TESTS = [
     {
         "id": "DPL-02",
         "spec": "SAIT-E2E-DPL-02-001A",
-        "stack": "stack/java-spring-boot.md",
-        "extra_files": ["base/deployment.md"],
+        "stack": "templates/stack/java-spring-boot.md",
+        "extra_files": ["templates/base/infra/deployment.md"],
         "answers": {
             "Project name": "InternalPlatformAPI",
             "Owner": "Platform team",
@@ -604,8 +604,8 @@ DPL_TESTS = [
     {
         "id": "DPL-03",
         "spec": "SAIT-E2E-DPL-03-001A",
-        "stack": "stack/python-fastapi.md",
-        "extra_files": ["base/deployment.md"],
+        "stack": "templates/stack/python-fastapi.md",
+        "extra_files": ["templates/base/infra/deployment.md"],
         "answers": {
             "Project name": "SecureIngestService",
             "Owner": "Platform team",

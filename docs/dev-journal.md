@@ -94,7 +94,7 @@
 **Key changes:**
 - Session protocol: mandatory startup block, startup hygiene (branch/
   status/issues), build-after-change, visible sequential audit execution
-- formats/agents.md: all 3 models reference base/scope.md (no more
+- base/core/agents.md: all 3 models reference base/scope.md (no more
   incomplete inlined checklists)
 - Quality: DRY/KISS/YAGNI core principles, Fail Fast/Law of Demeter/
   High Cohesion in maintainability, duplication erosion audit check
@@ -125,7 +125,7 @@ missing priority labels to #104, #105, #106
 - Added build-after-change rule to during-work section
 - End-of-session audit now requires visible sequential execution with
   documented trigger phrases
-- `formats/agents.md` — all three models (inline, reference, hybrid)
+- `base/core/agents.md` — all three models (inline, reference, hybrid)
   now reference `base/scope.md` instead of inlining an incomplete
   6-step checklist
 - Added `examples/hybrid-astro/CLAUDE.md` — first reference/hybrid

@@ -31,6 +31,9 @@ base:
   - id: base-testing
     file: templates/base/core/testing.md
     description: Test pyramid, coverage thresholds, naming conventions
+  - id: base-agents
+    file: templates/base/core/agents.md
+    description: Output structure, models (inline/reference/hybrid), formatting rules
   - id: base-devsecops
     file: templates/base/security/devsecops.md
     description: SAST, SCA, SBOM, secret detection, license compliance
@@ -564,7 +567,3 @@ stacks:
       - base-quality
       - base-testing
 
-formats:
-  - id: output-agents
-    file: templates/formats/agents.md
-    description: Output structure, models (inline/reference/hybrid), formatting rules

@@ -42,7 +42,7 @@ tags: [e2e, output, celery, python, async, worker]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/python-celery-worker.md`, `formats/agents.md`
+2. Attach `INTERVIEW.md`, `stack/python-celery-worker.md`, `base/core/agents.md`
 3. Interview answers:
    - Project name: EmailDispatchWorker
    - Language: Python

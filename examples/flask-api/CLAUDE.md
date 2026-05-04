@@ -12,7 +12,7 @@ suppliers, and purchase orders.
 - **Repo**: github.com/acme/inventory-api
 - **Deployment**: Docker → Fly.io (production), Docker Compose (local)
 - **Stack source**: `stack/python-flask.md` + `backend/auth.md` + `backend/jobs.md`
-- **Output format**: `formats/agents.md`
+- **Output format**: `base/core/agents.md`
 
 ---
 

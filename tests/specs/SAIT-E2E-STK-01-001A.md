@@ -46,7 +46,7 @@ tags: [e2e, output, fastapi, claude-md]
 2. Attach the following files:
    - `INTERVIEW.md`
    - `stack/python-fastapi.md`
-   - `formats/agents.md`
+   - `base/core/agents.md`
 3. Prepare the following interview answers:
    - **Project name**: OrderService
    - **Owner**: Platform team
@@ -63,7 +63,7 @@ tags: [e2e, output, fastapi, claude-md]
 1. Ask the agent:
    ```
    Using INTERVIEW.md and stack/python-fastapi.md, generate a CLAUDE.md
-   for this project. Use formats/agents.md for formatting rules.
+   for this project. Use base/core/agents.md for formatting rules.
    ```
 2. Provide the prepared interview answers when the agent asks
 3. Save the generated output as `CLAUDE.md` in a temp directory
