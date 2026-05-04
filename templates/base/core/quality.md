@@ -156,6 +156,11 @@ Apply SOLID at the class, module, and service level:
 
 ## Testability
 
+- Testability is a first-class design concern, not an afterthought
+- Code MUST be designed for testability from the start — do not write
+  code first and struggle to test later
+- If code is hard to test, treat it as a design problem, not a
+  testing problem
 - See `templates/base/core/testing.md` for testability patterns (pure
   functions, boundary architecture, SOLID), test types, coverage
   targets, and execution rules
