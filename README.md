@@ -11,7 +11,7 @@ consistent context files for any stack and any agent.
 
 - Generate `CLAUDE.md` or `AGENTS.md` from reusable layers — base, backend/frontend, stack
 - Cover Python, Go, Java, Node, Rust, mobile, and DevOps stacks
-- Output for any agent — Claude Code, Cursor, Copilot, Codex CLI
+- Output `CLAUDE.md` for Claude Code or `AGENTS.md` for Cursor, Copilot, Codex CLI
 - Run a 360-degree project assessment across four perspectives
 - Enforce standardized issue labels, quality gates, and review processes
 
