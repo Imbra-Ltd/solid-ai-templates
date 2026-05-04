@@ -19,7 +19,6 @@ Every README MUST contain the following sections, in this order:
   what the product can do, written as capabilities not counts (e.g.
   "browse and filter lenses by specs" not "240+ lenses"); this list
   is the product's contract and the primary input for value evaluation
-  (see `templates/base/workflow/360.md`)
 - A badges line SHOULD follow: build status, latest version, license
 
 ### 2. Quick start

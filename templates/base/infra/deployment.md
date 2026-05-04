@@ -5,9 +5,6 @@ Cross-cutting deployment rules. Covers deployment targets, certificates, load
 balancing, service discovery, registries, secrets, and network assumptions.
 Applies to every service regardless of language or framework.
 
-See `templates/base/infra/cicd.md` for pipeline and release process.
-See `templates/base/infra/containers.md` for image construction and Kubernetes resource specs.
-
 ---
 
 ## Deployment targets

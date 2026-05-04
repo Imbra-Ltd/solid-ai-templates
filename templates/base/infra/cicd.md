@@ -27,7 +27,7 @@ A pipeline MUST include, in order:
 1. **Build** — compile or package the application
 2. **Lint / format check** — fail on style violations
 3. **Test** — run unit and integration tests; fail on any failure
-4. **Security scan** — SAST, secret detection, SCA (see `templates/base/security/devsecops.md`)
+4. **Security scan** — SAST, secret detection, SCA
 5. **Package** — build the deployable artifact (container image, binary, package)
 6. **Deploy to staging** — automated deployment to a staging/QA environment
 7. **DAST** — automated security scan against the running staging environment
@@ -62,7 +62,7 @@ Each stage MUST fail fast — a failed stage stops the pipeline immediately.
 - MUST support zero-downtime deployments — use rolling updates or blue/green
 - MUST have a documented and tested rollback procedure
 - Health check endpoint MUST return healthy before traffic is routed to a
-  new instance (see `templates/backend/observability.md`)
+  new instance
 - Deploy small and often — large infrequent deployments increase risk
 
 ## Pipeline as code

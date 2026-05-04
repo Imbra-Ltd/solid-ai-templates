@@ -17,9 +17,8 @@ not after deployment.
 
 ## Tool selection
 
-- Specific SAST and secret detection tools are defined per platform in
-  `platform/github.md` (CodeQL) and `platform/gitlab.md` (Semgrep)
-- See `templates/base/workflow/quality-gates.md` for the three-layer enforcement model
+- Specific SAST and secret detection tools are defined per platform
+  (CodeQL for GitHub, Semgrep for GitLab)
 
 ## SAST (Static Application Security Testing)
 

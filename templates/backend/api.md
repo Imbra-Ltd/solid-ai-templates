@@ -19,7 +19,7 @@
 | gRPC      | Internal service-to-service, performance-critical paths, streaming, polyglot teams sharing a schema |
 | GraphQL   | Frontend-facing APIs where clients need flexible querying and over-fetching is a real problem       |
 | WebSocket | Real-time push, bidirectional streams where HTTP polling is not viable                              |
-| Messaging | Async, fire-and-forget, event-driven — see `templates/backend/messaging.md`                                   |
+| Messaging | Async, fire-and-forget, event-driven                                                                        |
 
 - Start with REST — only deviate with a stated reason in an ADR
 - REST + gRPC is valid: REST for external/ops endpoints, gRPC for internal hot paths
@@ -85,4 +85,3 @@ Sunset: <HTTP-date>
 - Collection endpoints MUST be paginated — never return unbounded lists
 - Use `limit` and `offset` (or cursor-based) pagination
 - Include navigation links (`next`, `prev`) in the response per HATEOAS
-  (see `templates/backend/http.md`)

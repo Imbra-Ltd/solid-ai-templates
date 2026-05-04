@@ -27,7 +27,7 @@
 [ID: base-typescript-comments]
 
 - Prefer self-documenting names — a field that needs a comment needs a
-  better name (see `templates/base/core/quality.md`)
+  better name
 - Use inline comments for units that cannot be encoded in the name:
   `weight: number; // grams` not a standalone `// Grams` above the field
 - Keep inline comments lowercase, short, and consistent across the interface
