@@ -12,6 +12,29 @@
 - No dead code — remove unused components, styles, and data files promptly
 - No over-engineering — build the minimum needed for the current requirement
 
+## Disposability
+
+- Processes MUST start fast — minimize initialization time
+- Processes MUST shut down gracefully on `SIGTERM` — finish
+  in-flight work, release resources, then exit
+- Set a shutdown timeout — if graceful shutdown exceeds the
+  deadline, force-exit
+- Design for crash safety — the system MUST recover cleanly if
+  a process is killed without warning (`SIGKILL`, power loss)
+- Do not store state in-process — use external stores (database,
+  cache, queue) so processes are disposable and replaceable
+
+## Admin processes
+
+- One-off tasks (migrations, data fixes, REPL sessions) MUST run
+  in the same environment as the application — same code, same
+  config, same dependencies
+- Admin scripts MUST be committed to the repository — not run
+  from ad-hoc shell commands
+- Prefer idempotent scripts — safe to re-run without side effects
+- Never run admin tasks directly against production without a
+  tested rollback plan
+
 ## Core principles
 
 - **DRY — Don't Repeat Yourself**: every piece of knowledge must have
