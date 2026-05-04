@@ -71,7 +71,7 @@ Before generating, collect any missing fields in a single question:
 
 Select the matching stack template from the table below and load its
 DEPENDS ON chain. Apply any adjustments from Phase 3.
-Generate the output file using the format rules in `templates/formats/agents.md`.
+Generate the output file using the format rules in `templates/base/core/agents.md`.
 All rules are inlined — the output file is self-contained.
 
 Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the
@@ -101,7 +101,7 @@ required structures in `templates/base/core/docs.md`.
 
 Generate an agent file that inlines critical rules and references the
 templates for the rest. Follow the hybrid model structure in
-`templates/formats/agents.md`. The output file:
+`templates/base/core/agents.md`. The output file:
 
 1. Points to `docs/solid-ai-templates/` as a submodule
 2. Lists ALL template files in the dependency chain

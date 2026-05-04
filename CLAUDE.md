@@ -25,7 +25,6 @@ templates/          # All template source files
   frontend/         # Frontend layer — UX, accessibility, CSS, SSG
   platform/         # CI and security tool mappings per hosting platform
   stack/            # Concrete stacks — extend base + layer templates
-  formats/          # Rendering rules per AI agent tool
   INTERVIEW.md      # Agent-driven project setup interview
   manifest.yaml     # Machine-readable dependency graph
 docs/               # Onboarding, playbook, decision logs, SPEC.md

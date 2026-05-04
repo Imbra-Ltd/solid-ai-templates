@@ -42,7 +42,7 @@ tags: [e2e, deployment, cloud, certificates, dns]
 ### Setup
 
 1. Open Claude Code
-2. Attach `INTERVIEW.md`, `stack/node-express.md`, `base/deployment.md`, `formats/agents.md`
+2. Attach `INTERVIEW.md`, `stack/node-express.md`, `base/deployment.md`, `base/core/agents.md`
 3. Interview answers:
    - Project name: PublicAPIService
    - Language: TypeScript

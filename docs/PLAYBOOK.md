@@ -143,6 +143,7 @@ check.
 ## Release a new version
 
 1. Create a release branch: `git checkout -b chore/release-vA.B.C`
-2. Commit: `git commit --allow-empty -m "chore: release vA.B.C"`
+2. Update `docs/dev-journal.md` with a release entry
+3. Commit: `git commit -m "chore: release vA.B.C"`
 4. Push, open PR, merge
 5. Tag on `main`: `git tag vA.B.C && git push origin vA.B.C`

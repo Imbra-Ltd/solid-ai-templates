@@ -54,6 +54,7 @@ base/
 │   ├── quality.md      # Architecture, code style, security, testing
 │   ├── review.md       # Peer review priority, MUST/SHOULD checklists, deviation rules
 │   ├── testing.md      # Test pyramid, coverage thresholds, naming conventions
+│   ├── agents.md       # Output structure, models (inline/reference/hybrid), formatting rules
 │   └── readme.md       # README structure, badges, quick start, contribution guide
 ├── security/
 │   ├── devsecops.md    # SAST, SCA, SBOM, secret detection, license compliance
@@ -192,7 +193,7 @@ frontend/quality.md ────────────────────
                                                         │
                                              + templates/INTERVIEW.md answers
                                                         │
-                                             + templates/formats/agents.md rules
+                                             + templates/base/core/agents.md rules
                                                         │
                                                         ▼
                                                    CLAUDE.md
@@ -416,7 +417,7 @@ Output: ordered list of template files to load.
    include its companion *-patterns.md (if it exists
    in manifest.yaml with a depends_on pointing to
    the rules file)
-6. Append templates/formats/agents.md
+6. Append templates/base/core/agents.md
 7. Return the ordered file list
 ```
 
@@ -479,7 +480,7 @@ Resolved (17 files):
   base/scope.md                   ← extra
   base/issues.md                  ← extra
   platform/github.md              ← platform
-  templates/formats/agents.md               ← output format
+  templates/base/core/agents.md               ← output format
 ```
 
 ### Current vs target

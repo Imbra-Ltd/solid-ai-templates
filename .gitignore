@@ -1,3 +1,5 @@
 .idea/
 tests/reports/
 generated/
+temp/
+__pycache__/

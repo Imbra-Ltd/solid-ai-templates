@@ -1,7 +1,7 @@
 # Tests
 
 Procedure specifications for solid-ai-templates following the
-[Imbra Procedure Specification Standard](https://github.com/Imbra-Ltd/imbra-knowledge/blob/main/standards/PROCEDURE-SPECIFICATION.md).
+Imbra Procedure Specification Standard.
 
 Spec files live in `tests/specs/`. See `CODIFICATION.md` for the ID scheme, area codes, and component group registry.
 

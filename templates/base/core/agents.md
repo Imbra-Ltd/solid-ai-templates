@@ -1,5 +1,5 @@
 # Output Format
-[ID: output-agents]
+[ID: base-agents]
 
 Structure, models, and formatting rules for generating project
 context files.

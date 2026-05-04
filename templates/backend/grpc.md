@@ -1,4 +1,3 @@
-yes
 # Backend — gRPC
 [ID: backend-grpc]
 
