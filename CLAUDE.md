@@ -321,19 +321,41 @@ Run `py tests/run_smoke.py` before every PR. It checks:
 
 ### 6.3 End of session
 
-Before ending a session, verify:
+When the user signals end of session ("wrap up", "let's finish",
+"end session", "close out", or similar), print the full checklist
+below and execute each item sequentially. Mark each item done
+(with result) before moving to the next. Do not batch, skip, or
+summarize — visible sequential execution prevents missed steps.
 
-1. **Dev journal** — add a session entry to `docs/dev-journal.md`
-2. **Smoke tests** — run `py tests/run_smoke.py` and confirm all
+1. **Commits and push** — all changes committed and pushed (via
+   PR if branch-protected)
+2. **Close issues** — close completed issues (verify auto-close
+   worked)
+3. **Epic checklists** — update epic checklists if relevant
+4. **Dev journal** — add a session entry to `docs/dev-journal.md`
+   (date, tool, key changes, PRs merged, issues closed/created)
+5. **ADRs** — record any architectural decisions in
+   `docs/decisions/`
+6. **Smoke tests** — run `py tests/run_smoke.py` and confirm all
    checks pass
-3. **CLAUDE.md** — update if architecture, naming, or authoring
-   rules changed
-4. **README.md** — update if the stacks table, structure, or quick
-   start changed
-5. **docs/SPEC.md** — update if composition model or ID system
-   changed
-6. **templates/manifest.yaml** — update if any template was added,
-   removed, or re-depended
-7. **Branch cleanup** — delete local branches that have been merged
-   via PR: `git branch --merged main | grep -v main | xargs git
-   branch -d`
+7. **CLAUDE.md** — for each new convention or rule introduced,
+   does it belong here? Name the section.
+8. **README.md** — for each new command, dependency, or structural
+   change, is it reflected? Name the section.
+9. **docs/SPEC.md** — for each change to composition model or ID
+   system, is it reflected? Name the section.
+10. **templates/manifest.yaml** — for each template added, removed,
+    or re-depended, is it registered? Name the entry.
+11. **docs/ONBOARDING.md** — for each new tool, prerequisite, or
+    setup step, is it documented? Name the section.
+12. **docs/PLAYBOOK.md** — for each new command, script, or
+    workflow added, is it documented? Name the section.
+13. **Template feedback** — for each new pattern or convention
+    introduced, explicitly state whether it is project-specific
+    or reusable; if reusable, name the upstream template file
+14. **Branch cleanup** — delete local branches that have been
+    merged via PR: `git branch --merged main | grep -v main |
+    xargs git branch -d`
+15. **Flag gaps** — if any of the above cannot be completed, flag
+    it to the user before closing
+16. **Summary** — summarize what was done and what's next
