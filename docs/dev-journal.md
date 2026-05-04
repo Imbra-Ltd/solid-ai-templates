@@ -1,5 +1,39 @@
 # Dev Journal
 
+## 2026-05-04 — Release v2.0.0
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**PRs:** #174, #175, #176
+
+**Issues closed:** #168, #169, #170, #171, #172, #173
+
+**Key changes:**
+- First 360-degree audit (`docs/360-audit.md`) — grades: Value B+,
+  Quality C+, Viability A-, Discovery D+
+- Recovered lost agents.md move from orphaned branch
+  `fix/claude-md-review` (formats/ → base/core/)
+- Fixed E2E test paths broken after ADR-005 restructuring (27/30
+  were failing, CI was red on main for 5+ merges)
+- Fixed grpc.md line-1 corruption, README wrong path, PLAYBOOK
+  step numbering, stale Imbra-Ltd link, DPL test paths
+- Aligned CLAUDE.md with 6-section format spec (added § 4 Identity,
+  renamed § 1.1 to Overview)
+- E2E tests now gate PRs (moved from push-to-main only)
+- Added stale-branch check to session startup and cleanup to
+  end-of-session protocol
+- Cleaned up 8 stale local/remote branches
+- Enabled delete-branch-on-merge, added e2e to required checks
+
+**Key decisions:**
+- v2.0.0 due to breaking structural changes: ADR-004 composition
+  model, ADR-005 folder restructuring, agents.md relocation,
+  6-section format alignment
+- Discovery (D+) identified as project bottleneck — needs launch
+  post, social card, community presence before v3
+
+---
+
 ## 2026-05-04 — Composition model, folder restructuring, roadmap removal
 
 **Tool:** Claude Code (Opus 4.6, 1M context)
