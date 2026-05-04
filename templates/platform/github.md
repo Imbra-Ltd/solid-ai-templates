@@ -60,8 +60,8 @@ gate categories to GitHub Actions workflows and GitHub-native features.
           dependency-type: development
   ```
 - Group related dependencies to reduce PR noise
-- Combine with the auto-merge pattern (`base/cicd-patterns.md`)
-  for patch and minor updates
+- Combine with auto-merge for patch and minor updates: a GitHub
+  Actions workflow that merges passing `dependabot/` branches
 
 ---
 
