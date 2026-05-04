@@ -31,7 +31,6 @@ tests/          # Smoke and e2e test runners, specs, reports
 docs/           # Onboarding, playbook, decision logs
 INTERVIEW.md    # Agent-driven project setup interview
 SPEC.md         # System design, composition rules, precedence
-ROADMAP.md      # Project status and planned work
 manifest.yaml   # Machine-readable dependency graph
 tools/          # sync.py — generates tables from manifest
 ```
@@ -146,8 +145,7 @@ Triage labels are terminal — applied when closing without action.
 4. Register in `manifest.yaml` under `stacks:` with `depends_on`,
    `description`, `label`, and `layer` fields
 5. Run `py tools/sync.py` — updates SPEC.md, README.md, INTERVIEW.md
-6. Add to `ROADMAP.md` under the current phase
-7. Add an example in `examples/<name>/CLAUDE.md` if the stack is
+6. Add an example in `examples/<name>/CLAUDE.md` if the stack is
    concrete
 
 ### 2.4 Adding a new base or layer template
@@ -227,7 +225,6 @@ py tests/run_e2e.py --dry-run      # print prompts, skip execution
 | `README.md` | Public-facing overview, quick start, stacks table, agents table |
 | `CLAUDE.md` | AI agent context and project rules (this file) |
 | `SPEC.md` | System design, composition rules, inheritance model, precedence |
-| `ROADMAP.md` | Project status and planned work — single source of truth for phase progress |
 | `manifest.yaml` | Machine-readable dependency graph for all templates (single source of truth for descriptions, labels, layers) |
 | `docs/ONBOARDING.md` | Onboarding guide for new contributors |
 | `docs/PLAYBOOK.md` | Operational reference — how to add templates, run interviews, validate output |
@@ -241,7 +238,6 @@ py tests/run_e2e.py --dry-run      # print prompts, skip execution
     start change
   - `SPEC.md` — if the composition model, inheritance rules, or ID
     system change
-  - `ROADMAP.md` — if a template is added, removed, or renamed
   - `manifest.yaml` — if any template is added, removed, renamed,
     or re-depended
   - `docs/PLAYBOOK.md` — if the workflow for generating or
@@ -315,7 +311,5 @@ Before ending a session, verify:
 4. **README.md** — update if the stacks table, structure, or quick
    start changed
 5. **SPEC.md** — update if composition model or ID system changed
-6. **ROADMAP.md** — update if a template was added, removed, or
-   renamed
-7. **manifest.yaml** — update if any template was added, removed,
+6. **manifest.yaml** — update if any template was added, removed,
    or re-depended

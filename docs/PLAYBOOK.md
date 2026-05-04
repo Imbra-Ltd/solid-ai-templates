@@ -25,8 +25,7 @@ composition model.
    ```
 4. Add to the stack list in `SPEC.md` (alphabetical within category)
 5. Add a row to the stacks table in `README.md`
-6. Add an entry to `ROADMAP.md` under the current phase
-7. Validate: attach `INTERVIEW.md` + new stack to an agent and confirm output
+6. Validate: attach `INTERVIEW.md` + new stack to an agent and confirm output
 
 ---
 
@@ -46,7 +45,6 @@ composition model.
 5. Update `SPEC.md` — add to the directory listing for the relevant layer
 6. Add `backend/<name>.md` (or frontend/) references in dependent stack
    `[DEPENDS ON: ...]` headers as appropriate
-7. Update `ROADMAP.md`
 
 ---
 
@@ -55,7 +53,7 @@ composition model.
 1. `git mv <old-path> <new-path>`
 2. Update every `[DEPENDS ON: ...]` header that references the old path
 3. Update `manifest.yaml` — change the `file:` field for the entry
-4. Update `SPEC.md`, `README.md`, `ROADMAP.md`, `INTERVIEW.md`
+4. Update `SPEC.md`, `README.md`, `INTERVIEW.md`
    — search for the old filename and replace
 5. Update any `examples/` files that reference the old path
 6. Verify with `git status` that no old references remain
@@ -131,8 +129,7 @@ check.
 
 1. Ensure you are on a feature branch — never commit to `main` directly
 2. Run the validation steps above for every changed template
-3. Update all affected documents (`SPEC.md`, `README.md`, `ROADMAP.md`,
-   `manifest.yaml`) before committing
+3. Update all affected documents (`SPEC.md`, `README.md`, `manifest.yaml`) before committing
 4. Commit with a conventional message:
    ```
    feat(stack): add python-celery-worker template
@@ -146,7 +143,6 @@ check.
 ## Release a new version
 
 1. Create a release branch: `git checkout -b chore/release-vA.B.C`
-2. Update `ROADMAP.md` — mark the new phase complete
-3. Commit: `git commit --allow-empty -m "chore: release vA.B.C"`
+2. Commit: `git commit --allow-empty -m "chore: release vA.B.C"`
 4. Push, open PR, merge
 5. Tag on `main`: `git tag vA.B.C && git push origin vA.B.C`

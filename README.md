@@ -225,8 +225,7 @@ solid-ai-templates/
 ├── tools/          # sync.py — generates tables from manifest.yaml
 ├── docs/           # Onboarding, playbook, decision logs
 ├── INTERVIEW.md    # Agent-driven project setup interview
-├── SPEC.md         # System design, composition rules, precedence
-└── ROADMAP.md      # Project status and planned work
+└── SPEC.md         # System design, composition rules, precedence
 ```
 
 ## Development setup
@@ -300,7 +299,7 @@ See `formats/agents.md` for structure, models, and formatting rules.
 ## Links
 
 - [System design and composition rules](SPEC.md)
-- [Project status and roadmap](ROADMAP.md)
+- [Project status and roadmap](https://github.com/braboj/solid-ai-templates/milestones)
 - [Example generated context files](examples/)
 - [Onboarding guide](docs/ONBOARDING.md)
 - [Operational playbook](docs/PLAYBOOK.md)

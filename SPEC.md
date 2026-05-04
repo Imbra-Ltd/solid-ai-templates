@@ -318,11 +318,10 @@ stack/[framework]-[variant].md  # variant of a framework (e.g. astro-ssr.md)
 formats/[tool].md               # rendering rules for a specific output format
 INTERVIEW.md                    # orchestrator — always one file
 SPEC.md                         # this file
-ROADMAP.md                      # project status and planned work
 ```
 
 ---
 
 ## Roadmap
 
-See `ROADMAP.md`.
+See [GitHub milestones](https://github.com/braboj/solid-ai-templates/milestones).
