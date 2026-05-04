@@ -96,47 +96,6 @@ git submodule update --remote
 The agent picks up new rules automatically on the next session —
 no manual editing of your context file needed.
 
-## Project structure
-
-```
-solid-ai-templates/
-├── templates/      # All template source files
-│   ├── base/       # Cross-cutting rules (core, security, infra, workflow, language)
-│   ├── backend/    # Backend layer — HTTP, API, database, observability
-│   ├── frontend/   # Frontend layer — UX, accessibility, CSS, SEO
-│   ├── platform/   # CI and security tool mappings (GitHub, GitLab)
-│   ├── stack/      # Concrete stacks — extend base + layer templates
-│   ├── INTERVIEW.md
-│   └── manifest.yaml
-├── docs/           # Onboarding, playbook, decision logs, SPEC.md
-├── examples/       # Complete generated context files (reference)
-├── tests/          # Smoke and E2E test runners and specs
-└── tools/          # sync.py — generates tables from manifest
-```
-
-## Development setup
-
-```bash
-git clone https://github.com/braboj/solid-ai-templates.git
-cd solid-ai-templates
-```
-
-No build step or runtime dependencies — all templates are plain Markdown.
-
-**To add a new stack template:**
-
-1. Create `templates/stack/<name>.md` following the structure of an
-   existing stack.
-2. Declare `DEPENDS ON` at the top referencing the base and layer
-   templates it builds on.
-3. Register in `templates/manifest.yaml` under `stacks:`.
-4. Run `py tools/sync.py` to update generated tables.
-5. Add a `examples/<name>/CLAUDE.md` to demonstrate the output.
-
-**To verify your changes:** open your agent, attach the new template
-alongside `templates/INTERVIEW.md`, run through the interview, and
-confirm the generated output is coherent and complete.
-
 ## Supported stacks
 
 <!-- generated:readme-stacks -->
