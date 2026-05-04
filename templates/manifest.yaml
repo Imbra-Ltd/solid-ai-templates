@@ -41,7 +41,7 @@ base:
     file: templates/base/security/security.md
     description: Application security rules — input, output, injection, auth, sessions, TLS, headers
   - id: base-release
-    file: templates/base/infra/release.md
+    file: templates/base/workflow/release.md
     description: Semver, version bump propagation, backward compat, cut-over
   - id: base-cicd
     file: templates/base/infra/cicd.md
