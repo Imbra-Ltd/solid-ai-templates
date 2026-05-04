@@ -1,17 +1,27 @@
 # Base — CI/CD and Delivery
+
 [ID: base-cicd]
 
 ## Principle
+
 Every project MUST have an automated pipeline. No manual steps between a
 merged PR and a deployed artifact — humans approve, machines execute.
 
 ## Quality gates
+
 - Stages 2–4 (lint, test, security scan) are defined in detail in
   `base/quality-gates.md` — categories, thresholds, and tool constraints
 - Platform-specific CI integration is in `platform/github.md` or
   `platform/gitlab.md`
 
+## Patterns
+
+- See `base/cicd-patterns.md` for reusable structural patterns:
+  gate job, path filtering, fan-out/fan-in, artifact promotion,
+  caching, matrix builds, auto-merge, deploy previews
+
 ## Pipeline stages
+
 A pipeline MUST include, in order:
 
 1. **Build** — compile or package the application
@@ -26,11 +36,13 @@ A pipeline MUST include, in order:
 Each stage MUST fail fast — a failed stage stops the pipeline immediately.
 
 ## Triggers
+
 - Every push to a feature branch: run stages 1–4
 - Every merge to `main`: run all stages through staging deployment
 - Every release tag: run full pipeline through production deployment
 
 ## Environment separation
+
 - MUST maintain at least three environments: development, staging, production
 - Never test against production — staging MUST mirror production as closely
   as possible
@@ -39,12 +51,14 @@ Each stage MUST fail fast — a failed stage stops the pipeline immediately.
 - Promote the same artifact through environments — never rebuild per environment
 
 ## Infrastructure as code
+
 - All infrastructure MUST be defined in code (Terraform, Pulumi, etc.)
 - No manual changes to any environment — all changes go through the pipeline
 - IaC changes follow the same review process as application code
 - Destroy and recreate environments from IaC to verify correctness periodically
 
 ## Deployment strategy
+
 - MUST support zero-downtime deployments — use rolling updates or blue/green
 - MUST have a documented and tested rollback procedure
 - Health check endpoint MUST return healthy before traffic is routed to a
@@ -52,6 +66,7 @@ Each stage MUST fail fast — a failed stage stops the pipeline immediately.
 - Deploy small and often — large infrequent deployments increase risk
 
 ## Pipeline as code
+
 - Pipeline definitions MUST live in the repository alongside the application code
 - Pipeline changes follow the same review process as application code
 - Shared pipeline logic MUST be extracted into reusable templates — never
