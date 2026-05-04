@@ -240,7 +240,8 @@ design fixes the testability.
 - See `templates/base/security/security.md` for comprehensive application security rules
   (input validation, output encoding, injection prevention, auth,
   sessions, TLS, headers, error handling, logging, CORS, uploads)
-- See `base/security-patterns.md` for reusable security patterns
+- See `templates/base/security/devsecops.md` for pipeline security
+  (SAST, SCA, DAST, secret detection)
 
 ## Testing
 
