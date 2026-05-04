@@ -1,5 +1,6 @@
 # Backend — Quality Attributes
 [ID: backend-quality]
+[DEPENDS ON: templates/base/core/quality.md, templates/base/security/security.md]
 
 ## Layered architecture
 - Enforce a strict handler → service → repository separation
@@ -31,11 +32,11 @@ Prefer these patterns for backend concerns:
   requirements diverge significantly; do not apply by default
 
 ## Security
-- Validate and sanitise all input at the boundary before passing it inward
-- Apply authentication and authorisation before any business logic executes
-- Set security headers on all responses (CORS, HSTS if applicable)
+[EXTEND: security-input]
+
 - Rate-limit public endpoints — never expose unbounded write operations
-- Rotate secrets regularly; invalidate compromised tokens immediately
+- Apply authentication and authorisation before any business logic
+  executes — see `templates/backend/auth.md`
 
 ## Performance
 - Prefer async I/O for network-bound operations
