@@ -43,7 +43,6 @@ No build step, no dependencies to install. All templates are plain Markdown.
 |---------------|------------------------|
 | `SPEC.md` | The full composition model — inheritance, OVERRIDE, EXTEND, IDs |
 | `CLAUDE.md` | Rules for contributing to this repo |
-| `ROADMAP.md` | What has been done and what is planned |
 | `manifest.yaml` | Machine-readable dependency graph |
 | `examples/` | Complete generated CLAUDE.md files — the target output |
 
