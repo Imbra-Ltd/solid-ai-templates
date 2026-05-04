@@ -15,7 +15,7 @@ from pathlib import Path
 # since manifest.yaml only uses simple scalars and lists.
 
 ROOT = Path(__file__).resolve().parent.parent
-MANIFEST = ROOT / "manifest.yaml"
+MANIFEST = ROOT / "templates" / "manifest.yaml"
 
 
 # ---- minimal YAML parser (no pyyaml dependency) ----
@@ -107,11 +107,53 @@ def _tree(entries, dirname):
     return "\n".join(lines)
 
 
+def _base_tree(entries):
+    """Generate base/ tree with subfolder grouping."""
+    from collections import OrderedDict
+    groups = OrderedDict()
+    for e in entries:
+        # file: templates/base/<subfolder>/<name>.md
+        parts = Path(e["file"]).parts
+        # parts: ('templates', 'base', '<subfolder>', '<name>.md')
+        subfolder = parts[2] if len(parts) > 3 else ""
+        groups.setdefault(subfolder, []).append(e)
+
+    lines = ["base/"]
+    group_keys = list(groups.keys())
+    for gi, subfolder in enumerate(group_keys):
+        group = groups[subfolder]
+        is_last_group = gi == len(group_keys) - 1
+        if subfolder:
+            g_prefix = "└──" if is_last_group else "├──"
+            lines.append(f"{g_prefix} {subfolder}/")
+            for i, e in enumerate(group):
+                fname = Path(e["file"]).name
+                desc = e.get("description", "")
+                is_last = i == len(group) - 1
+                if is_last_group:
+                    c_prefix = "    └──" if is_last else "    ├──"
+                else:
+                    c_prefix = "│   └──" if is_last else "│   ├──"
+                pad = " " * max(1, 16 - len(fname))
+                lines.append(f"{c_prefix} {fname}{pad}# {desc}")
+        else:
+            for i, e in enumerate(group):
+                fname = Path(e["file"]).name
+                desc = e.get("description", "")
+                prefix = "└──" if is_last_group and i == len(group) - 1 else "├──"
+                pad = " " * max(1, 16 - len(fname))
+                lines.append(f"{prefix} {fname}{pad}# {desc}")
+    return "\n".join(lines)
+
+
 def _spec_sections(manifest):
     """Generate SPEC.md directory listings."""
     parts = []
+    # base gets special subfolder treatment
+    base_entries = manifest.get("base", [])
+    if base_entries:
+        parts.append("```\n" + _base_tree(base_entries) + "\n```")
     for section, dirname in [
-        ("base", "base"),
         ("platform", "platform"),
         ("frontend", "frontend"),
         ("backend", "backend"),
@@ -212,9 +254,9 @@ def main():
     interview_content = _interview_stacks(manifest)
 
     targets = [
-        (ROOT / "SPEC.md", {"spec-directories": spec_content}),
+        (ROOT / "docs" / "SPEC.md", {"spec-directories": spec_content}),
         (ROOT / "README.md", {"readme-stacks": readme_content}),
-        (ROOT / "INTERVIEW.md", {"interview-stacks": interview_content}),
+        (ROOT / "templates" / "INTERVIEW.md", {"interview-stacks": interview_content}),
     ]
 
     changed = []

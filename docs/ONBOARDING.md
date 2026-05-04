@@ -10,16 +10,16 @@ files. Instead of writing a `CLAUDE.md` or `AGENTS.md` from scratch for every
 project, you compose templates from three layers:
 
 ```
-base/       → rules that apply to every project
-backend/    → rules for backend services and APIs
-frontend/   → rules for frontend and UI projects
-stack/      → concrete, technology-specific rules
+templates/base/       → rules that apply to every project
+templates/backend/    → rules for backend services and APIs
+templates/frontend/   → rules for frontend and UI projects
+templates/stack/      → concrete, technology-specific rules
 ```
 
 An agent reads the relevant templates, asks a short interview, and outputs
 a ready-to-use context file for Claude Code, Cursor, Copilot, or Codex CLI.
 
-Read `SPEC.md` for the full composition model before contributing.
+Read `docs/SPEC.md` for the full composition model before contributing.
 
 ## Prerequisites
 
@@ -41,9 +41,9 @@ No build step, no dependencies to install. All templates are plain Markdown.
 
 | File / folder | Read this to understand |
 |---------------|------------------------|
-| `SPEC.md` | The full composition model — inheritance, OVERRIDE, EXTEND, IDs |
+| `docs/SPEC.md` | The full composition model — inheritance, OVERRIDE, EXTEND, IDs |
 | `CLAUDE.md` | Rules for contributing to this repo |
-| `manifest.yaml` | Machine-readable dependency graph |
+| `templates/manifest.yaml` | Machine-readable dependency graph |
 | `examples/` | Complete generated CLAUDE.md files — the target output |
 
 ## How templates relate
@@ -54,13 +54,13 @@ what differs from the parent.
 
 Example chain:
 ```
-base/git.md + base/quality.md + ...
+templates/base/core/git.md + templates/base/core/quality.md + ...
     ↓
-stack/python-lib.md
+templates/stack/python-lib.md
     ↓
-stack/python-service.md
+templates/stack/python-service.md
     ↓
-stack/python-flask.md
+templates/stack/python-flask.md
 ```
 
 ## Validate your understanding
@@ -74,8 +74,8 @@ py tests/run_smoke.py
 Then run the system end-to-end with an agent:
 
 1. Open Claude Code in any project directory
-2. Attach `INTERVIEW.md` and `stack/python-flask.md`
-3. Ask: "Generate a CLAUDE.md for this project using formats/agents.md format"
+2. Attach `templates/INTERVIEW.md` and `templates/stack/python-flask.md`
+3. Ask: "Generate a CLAUDE.md for this project using templates/formats/agents.md format"
 4. Review the output — this is what users get
 
 Or use the automated E2E runner:
@@ -94,14 +94,14 @@ fixing content, and submitting a PR.
 - Rules use RFC 2119 keywords: MUST, MUST NOT, SHOULD, MAY
 - Every section that another template might reference needs `[ID: ...]`
 - Stack files follow the `<prefix>-<name>.md` naming convention (see `CLAUDE.md`)
-- `manifest.yaml` must be updated whenever a file is added, removed, or renamed
+- `templates/manifest.yaml` must be updated whenever a file is added, removed, or renamed
 
 ## Maintainership
 
 This project has a bus factor of 1 — Branimir Georgiev is the sole
 author and maintainer. The mitigation is documentation: everything
 needed to understand, maintain, and extend the project is in the
-repository (SPEC.md, CLAUDE.md, PLAYBOOK.md, ADRs in docs/decisions/,
+repository (docs/SPEC.md, CLAUDE.md, PLAYBOOK.md, ADRs in docs/decisions/,
 dev journal). No oral knowledge transfer is required.
 
 If the maintainer becomes unavailable, the project can be forked and
@@ -109,5 +109,5 @@ continued from the repository alone.
 
 ## Getting help
 
-- `SPEC.md` — answers most "how does X work" questions
+- `docs/SPEC.md` — answers most "how does X work" questions
 - Open a GitHub Discussion if something is unclear

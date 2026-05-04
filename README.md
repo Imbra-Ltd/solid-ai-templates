@@ -214,18 +214,19 @@ the conventions in the generated CLAUDE.md.
 
 ```
 solid-ai-templates/
-├── base/           # Cross-cutting rules — apply to every project
-├── backend/        # Backend layer — HTTP, API, database, observability
-├── frontend/       # Frontend layer — UX, accessibility, CSS, SEO
-├── platform/       # CI and security tool mappings (GitHub, GitLab)
-├── stack/          # Concrete stacks — extend base + layer templates
-├── formats/        # Output format guides per agent tool
+├── templates/      # All template source files
+│   ├── base/       # Cross-cutting rules (core, security, infra, workflow, language)
+│   ├── backend/    # Backend layer — HTTP, API, database, observability
+│   ├── frontend/   # Frontend layer — UX, accessibility, CSS, SEO
+│   ├── platform/   # CI and security tool mappings (GitHub, GitLab)
+│   ├── stack/      # Concrete stacks — extend base + layer templates
+│   ├── formats/    # Output format guides per agent tool
+│   ├── INTERVIEW.md
+│   └── manifest.yaml
+├── docs/           # Onboarding, playbook, decision logs, SPEC.md
 ├── examples/       # Complete generated context files (reference)
 ├── tests/          # Smoke and E2E test runners and specs
-├── tools/          # sync.py — generates tables from manifest.yaml
-├── docs/           # Onboarding, playbook, decision logs
-├── INTERVIEW.md    # Agent-driven project setup interview
-└── SPEC.md         # System design, composition rules, precedence
+└── tools/          # sync.py — generates tables from manifest
 ```
 
 ## Development setup
@@ -239,52 +240,53 @@ No build step or runtime dependencies — all templates are plain Markdown.
 
 **To add a new stack template:**
 
-1. Create `stack/<name>.md` following the structure of an existing stack.
-2. Declare `DEPENDS ON` at the top referencing the base and layer templates
-   it builds on.
-3. Register in `manifest.yaml` under `stacks:`.
+1. Create `templates/stack/<name>.md` following the structure of an
+   existing stack.
+2. Declare `DEPENDS ON` at the top referencing the base and layer
+   templates it builds on.
+3. Register in `templates/manifest.yaml` under `stacks:`.
 4. Run `py tools/sync.py` to update generated tables.
 5. Add a `examples/<name>/CLAUDE.md` to demonstrate the output.
 
-**To verify your changes:** open your agent, attach the new template alongside
-`INTERVIEW.md`, run through the interview, and confirm the generated output
-is coherent and complete.
+**To verify your changes:** open your agent, attach the new template
+alongside `templates/INTERVIEW.md`, run through the interview, and
+confirm the generated output is coherent and complete.
 
 ## Supported stacks
 
 <!-- generated:readme-stacks -->
 | Template | Layer | Description |
 |----------|-------|-------------|
-| `stack/htmx.md` | hypermedia | HTMX 2.x, Alpine.js, SSE, OOB swaps, partial responses |
-| `stack/static-site-astro.md` | static | Islands architecture, client directives, content collections |
-| `stack/static-site-tutorial.md` | static | Multi-chapter tutorial, diagrams, CC BY-NC-SA |
-| `stack/spa-react.md` | frontend | Client-side app, TypeScript, RTL, a11y |
-| `stack/full-nextjs.md` | full-stack | App Router, Server/Client Components, API routes |
-| `stack/python-lib.md` | library | Installable package or CLI tool, mypy, ruff, pytest |
-| `stack/python-service.md` | abstract | Generic Python web service, SQLAlchemy, Alembic |
-| `stack/python-flask.md` | backend | Sync REST API, factory pattern, blueprints |
-| `stack/python-fastapi.md` | backend | Async REST API, Pydantic v2, DI, OpenAPI |
-| `stack/python-django.md` | backend | Full web framework, ORM, DRF, admin |
-| `stack/go-lib.md` | library | Importable library or CLI binary |
-| `stack/go-service.md` | abstract | Generic Go HTTP service, chi, structured logging |
-| `stack/go-echo.md` | backend | REST API, Echo v4, middleware, validation |
-| `stack/spa-vue.md` | frontend | Client-side app, Composition API, Pinia, Vitest |
-| `stack/spa-svelte.md` | frontend | Client-side app, Svelte 5 runes, Vitest |
-| `stack/full-sveltekit.md` | full-stack | File-based routing, form actions, SSR |
-| `stack/static-site-hugo.md` | static | Go templates, archetypes, content structure |
-| `stack/node-express.md` | backend | Minimal REST API, Zod validation, Supertest |
-| `stack/node-nestjs.md` | backend | Modules, controllers, providers, guards, pipes, DI |
-| `stack/java-spring-boot.md` | backend | REST API, JPA, Spring Security, Flyway |
-| `stack/python-celery-worker.md` | backend | Background tasks, retry/backoff, Beat scheduling |
-| `stack/go-grpc.md` | backend | gRPC service, bufconn, errgroup |
-| `stack/python-grpc.md` | backend | gRPC service, grpcio-aio, proto design |
-| `stack/java-grpc.md` | backend | gRPC service, grpc-java lifecycle |
-| `stack/mobile-react-native.md` | mobile | iOS/Android, Expo, file-based routing, Maestro |
-| `stack/mobile-flutter.md` | mobile | iOS/Android, Riverpod, go_router, freezed |
-| `stack/iac-terraform.md` | DevOps | Infrastructure as code, modules, remote state |
-| `stack/nodejs-lib.md` | library | TypeScript npm package or CLI, tsup, Vitest |
-| `stack/rust-lib.md` | library | Rust crate or CLI, thiserror/anyhow, crates.io |
-| `stack/c-embedded.md` | embedded | GCC + CMake, Unity tests, HAL, binary + .a |
+| `templates/stack/htmx.md` | hypermedia | HTMX 2.x, Alpine.js, SSE, OOB swaps, partial responses |
+| `templates/stack/static-site-astro.md` | static | Islands architecture, client directives, content collections |
+| `templates/stack/static-site-tutorial.md` | static | Multi-chapter tutorial, diagrams, CC BY-NC-SA |
+| `templates/stack/spa-react.md` | frontend | Client-side app, TypeScript, RTL, a11y |
+| `templates/stack/full-nextjs.md` | full-stack | App Router, Server/Client Components, API routes |
+| `templates/stack/python-lib.md` | library | Installable package or CLI tool, mypy, ruff, pytest |
+| `templates/stack/python-service.md` | abstract | Generic Python web service, SQLAlchemy, Alembic |
+| `templates/stack/python-flask.md` | backend | Sync REST API, factory pattern, blueprints |
+| `templates/stack/python-fastapi.md` | backend | Async REST API, Pydantic v2, DI, OpenAPI |
+| `templates/stack/python-django.md` | backend | Full web framework, ORM, DRF, admin |
+| `templates/stack/go-lib.md` | library | Importable library or CLI binary |
+| `templates/stack/go-service.md` | abstract | Generic Go HTTP service, chi, structured logging |
+| `templates/stack/go-echo.md` | backend | REST API, Echo v4, middleware, validation |
+| `templates/stack/spa-vue.md` | frontend | Client-side app, Composition API, Pinia, Vitest |
+| `templates/stack/spa-svelte.md` | frontend | Client-side app, Svelte 5 runes, Vitest |
+| `templates/stack/full-sveltekit.md` | full-stack | File-based routing, form actions, SSR |
+| `templates/stack/static-site-hugo.md` | static | Go templates, archetypes, content structure |
+| `templates/stack/node-express.md` | backend | Minimal REST API, Zod validation, Supertest |
+| `templates/stack/node-nestjs.md` | backend | Modules, controllers, providers, guards, pipes, DI |
+| `templates/stack/java-spring-boot.md` | backend | REST API, JPA, Spring Security, Flyway |
+| `templates/stack/python-celery-worker.md` | backend | Background tasks, retry/backoff, Beat scheduling |
+| `templates/stack/go-grpc.md` | backend | gRPC service, bufconn, errgroup |
+| `templates/stack/python-grpc.md` | backend | gRPC service, grpcio-aio, proto design |
+| `templates/stack/java-grpc.md` | backend | gRPC service, grpc-java lifecycle |
+| `templates/stack/mobile-react-native.md` | mobile | iOS/Android, Expo, file-based routing, Maestro |
+| `templates/stack/mobile-flutter.md` | mobile | iOS/Android, Riverpod, go_router, freezed |
+| `templates/stack/iac-terraform.md` | DevOps | Infrastructure as code, modules, remote state |
+| `templates/stack/nodejs-lib.md` | library | TypeScript npm package or CLI, tsup, Vitest |
+| `templates/stack/rust-lib.md` | library | Rust crate or CLI, thiserror/anyhow, crates.io |
+| `templates/stack/c-embedded.md` | embedded | GCC + CMake, Unity tests, HAL, binary + .a |
 <!-- /generated:readme-stacks -->
 
 ## Supported agents
@@ -294,11 +296,11 @@ is coherent and complete.
 | Claude Code | `CLAUDE.md` |
 | Codex CLI, Devin, Cursor, Windsurf | `AGENTS.md` |
 
-See `formats/agents.md` for structure, models, and formatting rules.
+See `templates/formats/agents.md` for structure, models, and formatting rules.
 
 ## Links
 
-- [System design and composition rules](SPEC.md)
+- [System design and composition rules](docs/SPEC.md)
 - [Project status and roadmap](https://github.com/braboj/solid-ai-templates/milestones)
 - [Example generated context files](examples/)
 - [Onboarding guide](docs/ONBOARDING.md)

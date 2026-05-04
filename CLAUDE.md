@@ -19,20 +19,19 @@ project type.
 ### 1.2 Architecture
 
 ```
-base/           # Cross-cutting rules — apply to every project
-backend/        # Backend layer — HTTP, API, database, observability
-frontend/       # Frontend layer — UX, accessibility, CSS, SSG
-platform/       # CI and security tool mappings per hosting platform
-stack/          # Concrete stacks — extend base + layer templates
-formats/        # Rendering rules per AI agent tool
-examples/       # Complete generated context files (reference)
-generated/      # Agent output directory (gitignored)
-tests/          # Smoke and e2e test runners, specs, reports
-docs/           # Onboarding, playbook, decision logs
-INTERVIEW.md    # Agent-driven project setup interview
-SPEC.md         # System design, composition rules, precedence
-manifest.yaml   # Machine-readable dependency graph
-tools/          # sync.py — generates tables from manifest
+templates/          # All template source files
+  base/             # Cross-cutting rules (core, security, infra, workflow, language)
+  backend/          # Backend layer — HTTP, API, database, observability
+  frontend/         # Frontend layer — UX, accessibility, CSS, SSG
+  platform/         # CI and security tool mappings per hosting platform
+  stack/            # Concrete stacks — extend base + layer templates
+  formats/          # Rendering rules per AI agent tool
+  INTERVIEW.md      # Agent-driven project setup interview
+  manifest.yaml     # Machine-readable dependency graph
+docs/               # Onboarding, playbook, decision logs, SPEC.md
+examples/           # Complete generated context files (reference)
+tests/              # Smoke and e2e test runners, specs, reports
+tools/              # sync.py — generates tables from manifest
 ```
 
 ### 1.3 Template naming convention
@@ -136,26 +135,33 @@ Triage labels are terminal — applied when closing without action.
 
 ### 2.3 Adding a new stack template
 
-1. Create `stack/<prefix>-<name>.md` following an existing file of
-   the same category
+1. Create `templates/stack/<prefix>-<name>.md` following an existing
+   file of the same category
 2. Add `[DEPENDS ON: ...]` at the top — list every template this
    extends
 3. Tag every section with `[ID: <name>]` or `[EXTEND: <id>]` /
    `[OVERRIDE: <id>]`
-4. Register in `manifest.yaml` under `stacks:` with `depends_on`,
-   `description`, `label`, and `layer` fields
+4. Register in `templates/manifest.yaml` under `stacks:` with
+   `depends_on`, `description`, `label`, and `layer` fields
 5. Run `py tools/sync.py` — updates SPEC.md, README.md, INTERVIEW.md
 6. Add an example in `examples/<name>/CLAUDE.md` if the stack is
    concrete
 
 ### 2.4 Adding a new base or layer template
 
-1. Create `base/<name>.md`, `backend/<name>.md`,
-   `frontend/<name>.md`, or `platform/<name>.md`
+1. Create the file in the correct directory:
+   - `templates/base/core/` — foundation (git, docs, quality, etc.)
+   - `templates/base/security/` — security rules
+   - `templates/base/infra/` — CI/CD, containers, deployment
+   - `templates/base/workflow/` — session protocol, issues, gates
+   - `templates/base/language/` — language-specific rules
+   - `templates/backend/` — backend services
+   - `templates/frontend/` — frontend/UI projects
+   - `templates/platform/` — CI platform mappings
 2. Tag the file with `[ID: <layer>-<name>]`
 3. Tag every section with a unique `[ID: ...]`
-4. Register in `manifest.yaml` under the correct layer key with
-   a `description` field
+4. Register in `templates/manifest.yaml` under the correct layer
+   key with a `description` field
 5. Run `py tools/sync.py` — updates SPEC.md directory listings
 6. Reference from dependent stack templates via `[DEPENDS ON: ...]`
 
@@ -173,7 +179,7 @@ Triage labels are terminal — applied when closing without action.
 ### 2.6 manifest.yaml
 
 - Every template file MUST have a corresponding entry in
-  `manifest.yaml`
+  `templates/manifest.yaml`
 - IDs MUST be unique across all layers
 - `depends_on` lists MUST reference valid IDs — no dangling
   references
@@ -213,8 +219,8 @@ py tests/run_e2e.py --dry-run      # print prompts, skip execution
 - Live e2e mode (without `--offline`) calls Claude via the API —
   run manually on the dev machine for functional validation
 - To validate a new template: run `py tests/run_smoke.py` and
-  attach `INTERVIEW.md` + the new stack to an agent to confirm
-  coherent output
+  attach `templates/INTERVIEW.md` + the new stack to an agent to
+  confirm coherent output
 
 ## 4. Documentation
 
@@ -224,8 +230,8 @@ py tests/run_e2e.py --dry-run      # print prompts, skip execution
 |------|---------|
 | `README.md` | Public-facing overview, quick start, stacks table, agents table |
 | `CLAUDE.md` | AI agent context and project rules (this file) |
-| `SPEC.md` | System design, composition rules, inheritance model, precedence |
-| `manifest.yaml` | Machine-readable dependency graph for all templates (single source of truth for descriptions, labels, layers) |
+| `docs/SPEC.md` | System design, composition rules, inheritance model, precedence |
+| `templates/manifest.yaml` | Machine-readable dependency graph for all templates (single source of truth for descriptions, labels, layers) |
 | `docs/ONBOARDING.md` | Onboarding guide for new contributors |
 | `docs/PLAYBOOK.md` | Operational reference — how to add templates, run interviews, validate output |
 

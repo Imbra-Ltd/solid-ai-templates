@@ -28,7 +28,16 @@ try:
 except ImportError:
     HAS_YAML = False
 
-TEMPLATE_DIRS = ["base", "backend", "frontend", "stack"]
+TEMPLATE_DIRS = [
+    os.path.join("templates", "base", "core"),
+    os.path.join("templates", "base", "security"),
+    os.path.join("templates", "base", "infra"),
+    os.path.join("templates", "base", "workflow"),
+    os.path.join("templates", "base", "language"),
+    os.path.join("templates", "backend"),
+    os.path.join("templates", "frontend"),
+    os.path.join("templates", "stack"),
+]
 
 
 # ---------------------------------------------------------------------------
@@ -133,7 +142,7 @@ def check_mnf_01():
     if not HAS_YAML:
         return ["  PyYAML not installed — run: pip install pyyaml"]
 
-    manifest_path = os.path.join(ROOT, "manifest.yaml")
+    manifest_path = os.path.join(ROOT, "templates", "manifest.yaml")
     if not os.path.isfile(manifest_path):
         return ["  manifest.yaml not found"]
 
@@ -191,20 +200,20 @@ def _collect_chain(rel_path, visited=None):
 
 def check_tpl_01():
     failures = []
-    chain = _collect_chain("stack/python-fastapi.md")
+    chain = _collect_chain("templates/stack/python-fastapi.md")
     required = [
-        "stack/python-lib.md",
-        "stack/python-service.md",
-        "base/git.md",
-        "base/docs.md",
-        "base/quality.md",
-        "backend/config.md",
-        "backend/http.md",
-        "backend/database.md",
-        "backend/observability.md",
-        "backend/quality.md",
-        "backend/features.md",
-        "backend/messaging.md",
+        "templates/stack/python-lib.md",
+        "templates/stack/python-service.md",
+        "templates/base/core/git.md",
+        "templates/base/core/docs.md",
+        "templates/base/core/quality.md",
+        "templates/backend/config.md",
+        "templates/backend/http.md",
+        "templates/backend/database.md",
+        "templates/backend/observability.md",
+        "templates/backend/quality.md",
+        "templates/backend/features.md",
+        "templates/backend/messaging.md",
     ]
     for req in required:
         if req not in chain:
@@ -244,13 +253,13 @@ def check_tpl_02():
     failures = []
 
     base_content = _extract_section(
-        os.path.join(ROOT, "base/testing.md"), "base-testing"
+        os.path.join(ROOT, "templates", "base", "core", "testing.md"), "base-testing"
     )
     if not base_content:
-        failures.append("  base/testing.md [ID: base-testing] section is empty")
+        failures.append("  base/core/testing.md [ID: base-testing] section is empty")
 
     flask_content = _extract_section(
-        os.path.join(ROOT, "stack/python-flask.md"), "base-testing"
+        os.path.join(ROOT, "templates", "stack", "python-flask.md"), "base-testing"
     )
     if not flask_content:
         failures.append(
@@ -269,10 +278,10 @@ def check_tpl_03():
     failures = []
 
     original = _extract_section(
-        os.path.join(ROOT, "stack/go-lib.md"), "go-lib-stack"
+        os.path.join(ROOT, "templates", "stack", "go-lib.md"), "go-lib-stack"
     )
     override = _extract_section(
-        os.path.join(ROOT, "stack/go-service.md"), "go-lib-stack"
+        os.path.join(ROOT, "templates", "stack", "go-service.md"), "go-lib-stack"
     )
 
     if not original:
