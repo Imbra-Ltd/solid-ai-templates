@@ -21,6 +21,7 @@ import re
 import sys
 
 from lib import ROOT, PASS, FAIL, ERR, write_report
+from cases import ALL_TESTS
 
 try:
     import yaml
@@ -300,6 +301,42 @@ def check_tpl_03():
 
 
 # ---------------------------------------------------------------------------
+# E2E-01 — all cases.py paths resolve to existing files
+# ---------------------------------------------------------------------------
+
+def check_e2e_01():
+    failures = []
+
+    interview = os.path.join(ROOT, "templates", "INTERVIEW.md")
+    if not os.path.isfile(interview):
+        failures.append("  INTERVIEW.md not found: templates/INTERVIEW.md")
+
+    for test in ALL_TESTS:
+        if "skip" in test:
+            continue
+
+        tid = test.get("id", "?")
+
+        stack = test.get("stack", "")
+        if stack:
+            path = os.path.join(ROOT, stack)
+            if not os.path.isfile(path):
+                failures.append(f"  {tid}: stack file missing: {stack}")
+
+        output_file = test.get("output_file", "templates/base/core/agents.md")
+        path = os.path.join(ROOT, output_file)
+        if not os.path.isfile(path):
+            failures.append(f"  {tid}: output_file missing: {output_file}")
+
+        for ef in test.get("extra_files", []):
+            path = os.path.join(ROOT, ef)
+            if not os.path.isfile(path):
+                failures.append(f"  {tid}: extra_file missing: {ef}")
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
 # Test registry
 # ---------------------------------------------------------------------------
 
@@ -318,6 +355,8 @@ CHECKS = [
      "title": "EXTEND adds rules without removing base rules", "fn": check_tpl_02},
     {"id": "TPL-03", "spec": "SAIT-INT-TPL-03-001A",
      "title": "OVERRIDE replaces parent section with different content", "fn": check_tpl_03},
+    {"id": "E2E-01", "spec": "SAIT-SMK-E2E-01-001A",
+     "title": "All cases.py paths resolve to existing files", "fn": check_e2e_01},
 ]
 
 

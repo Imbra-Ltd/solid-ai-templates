@@ -11,6 +11,12 @@ Each test entry has these fields:
   required    strings that MUST appear in the output
   forbidden   strings that MUST NOT appear in the output
   skip        if present, the test is skipped with this message
+
+Maintenance contract:
+  When a template is added or moved, update:
+  - stack paths in this file (STK_TESTS, DPL_TESTS extra_files)
+  - output_file paths if the format template moves
+  - run `py tests/run_smoke.py E2E-01` to verify all paths resolve
 """
 
 # -------------------------------------------------------------------------
@@ -506,10 +512,6 @@ FMT_TESTS = [
         # AGENTS.md has no Cursor-specific directives
         "forbidden": ["alwaysApply", "applyTo", "frontmatter"],
     },
-    # FMT-03, FMT-04, FMT-05 removed — formats consolidated
-    {"id": "FMT-03", "spec": "SAIT-E2E-FMT-03-001A", "skip": True},
-    {"id": "FMT-04", "spec": "SAIT-E2E-FMT-04-001A", "skip": True},
-    {"id": "FMT-05", "spec": "SAIT-E2E-FMT-05-001A", "skip": True},
 ]
 
 # -------------------------------------------------------------------------
