@@ -1,5 +1,42 @@
 # Dev Journal
 
+## 2026-05-04 — Composition model, folder restructuring, roadmap removal
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**PRs:** #157, #158, #159, #160, #161
+
+**Issues closed:** #153, #154, #155
+
+**Key changes:**
+- Removed `ROADMAP.md` — planned work tracked via GitHub milestones
+- Added consumption model section to SPEC.md (declaration block,
+  resolution algorithm, lifecycle diagram, two worked examples)
+- ADR-005: apply Miller's law (7±2) to repo structure
+- Implemented composition model from ADR-004: trimmed quality-gates
+  deps, added `core:` tier to manifest, moved 5 pattern files to
+  `docs/patterns/`, fixed 3 stale file headers, added explicit
+  cicd+devsecops to 13 backend stacks
+- Implemented ADR-005 folder restructuring: created `templates/`
+  parent (root 12→6 dirs), split `base/` into 5 subfolders
+  (core, security, infra, workflow, language), moved SPEC.md to
+  `docs/`, moved INTERVIEW.md and manifest.yaml to `templates/`
+- Removed `generated/` directory from tracking
+- Fixed remote URL (Imbra-Ltd → braboj)
+- Enabled auto-merge on repo
+- Triaged 6 unlabeled issues with priority labels
+
+**Key decisions:**
+- ROADMAP.md replaced by GitHub milestones (no closed milestones
+  for completed phases — dev journal covers history)
+- Miller's law as organizing principle for folder structure
+- SPEC.md belongs in docs/ (documentation, not template source)
+- INTERVIEW.md and manifest.yaml belong in templates/ (part of
+  the template system)
+- Pattern files are human reference docs, not agent context
+
+---
+
 ## 2026-05-04 — Pattern templates and quick wins batch
 
 **Tool:** Claude Code (Opus 4.6, 1M context)
