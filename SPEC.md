@@ -56,6 +56,7 @@ base/
 ├── devsecops.md    # SAST, SCA, SBOM, secret detection, license compliance
 ├── release.md      # Semver, version bump propagation, backward compat, cut-over
 ├── cicd.md         # Pipeline stages, triggers, environments, IaC, deployment
+├── cicd-patterns.md # Reusable CI/CD patterns — gate, path filter, fan-out, caching, matrix
 ├── containers.md   # Dockerfile, runtime security, resource limits, Kubernetes
 ├── readme.md       # README structure, badges, quick start, contribution guide
 ├── deployment.md   # Deployment targets (cloud/hybrid/offline), certs, LB, registries, secrets
