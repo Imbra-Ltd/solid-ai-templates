@@ -248,14 +248,14 @@ Four files in `tests/`:
 |------|---------|
 | `tests/lib.py` | Shared utilities (constants, file reading, report writing, arg parsing) |
 | `tests/cases.py` | E2E test case definitions, grouped by area (STK, FMT, ITV, DPL) |
-| `tests/run_smoke.py` | Smoke test runner (7 structural checks) |
-| `tests/run_e2e.py` | E2E test runner (30 tests) |
+| `tests/run_smoke.py` | Smoke test runner (structural checks) |
+| `tests/run_e2e.py` | E2E test runner (agent-based tests) |
 
 ```bash
-py tests/run_smoke.py              # 7 structural checks
+py tests/run_smoke.py              # structural checks
 py tests/run_smoke.py SYS-01       # run one check by ID
 
-py tests/run_e2e.py                # 30 agent-based tests (live, needs API key)
+py tests/run_e2e.py                # agent-based tests (live, needs API key)
 py tests/run_e2e.py --offline      # validate test infrastructure without API
 py tests/run_e2e.py --area=STK     # run all stack tests
 py tests/run_e2e.py STK-01 FMT-01  # run specific tests by ID
