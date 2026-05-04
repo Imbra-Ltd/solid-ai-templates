@@ -1,5 +1,5 @@
 # Stack — SvelteKit Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-svelte.md, templates/backend/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-svelte.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md]
 
 Extends the Svelte stack with SvelteKit-specific rules. Covers file-based
 routing, server-side rendering, API routes, form actions, and deployment
@@ -109,7 +109,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: backend-config]
+[EXTEND: base-config]
 
 - Environment variables via SvelteKit's env modules:
   - `$env/static/private` — server-only, inlined at build time

@@ -1,5 +1,5 @@
 # Stack — Next.js Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-react.md, templates/backend/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-react.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md]
 
 Extends the React SPA stack with Next.js-specific rules. Covers the App
 Router, Server and Client Components, data fetching, API routes, metadata,
@@ -119,7 +119,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: backend-config]
+[EXTEND: base-config]
 
 - Environment variables in `.env.local` (local dev) and platform env (production)
 - `NEXT_PUBLIC_` prefix only for variables the browser must access —

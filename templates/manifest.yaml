@@ -114,8 +114,8 @@ frontend:
       [base-git, base-docs, base-quality, frontend-ux, frontend-quality]
 
 backend:
-  - id: backend-config
-    file: templates/backend/config.md
+  - id: base-config
+    file: templates/base/core/config.md
     description: Env vars, secrets, fail-fast validation
   - id: backend-http
     file: templates/backend/http.md
@@ -227,7 +227,7 @@ stacks:
       - frontend-ux
       - frontend-quality
       - stack-react-spa
-      - backend-config
+      - base-config
       - backend-http
       - backend-api
       - backend-auth
@@ -253,7 +253,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
-      - backend-config
+      - base-config
       - backend-http
       - backend-database
       - backend-observability
@@ -308,7 +308,7 @@ stacks:
     description: Generic Go HTTP service, chi, structured logging
     depends_on:
       - stack-go-lib
-      - backend-config
+      - base-config
       - backend-http
       - backend-database
       - backend-observability
@@ -366,7 +366,7 @@ stacks:
       - frontend-ux
       - frontend-quality
       - stack-svelte
-      - backend-config
+      - base-config
       - backend-http
       - backend-api
       - backend-auth
@@ -391,7 +391,7 @@ stacks:
       - base-docs
       - base-quality
       - base-typescript
-      - backend-config
+      - base-config
       - backend-http
       - backend-api
       - backend-database
@@ -413,7 +413,7 @@ stacks:
       - base-docs
       - base-quality
       - base-typescript
-      - backend-config
+      - base-config
       - backend-http
       - backend-api
       - backend-database
@@ -434,7 +434,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
-      - backend-config
+      - base-config
       - backend-http
       - backend-api
       - backend-database
@@ -455,7 +455,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
-      - backend-config
+      - base-config
       - backend-jobs
       - backend-observability
       - backend-messaging
@@ -486,7 +486,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
-      - backend-config
+      - base-config
       - backend-grpc
       - backend-concurrency
       - stack-python-lib
@@ -502,7 +502,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
-      - backend-config
+      - base-config
       - backend-grpc
       - backend-concurrency
       - base-cicd

@@ -1,0 +1,94 @@
+# Base — Configuration
+[ID: base-config]
+
+Follows the [12-factor app](https://12factor.net/config) principle:
+store config in the environment, not in code.
+
+## Rules
+
+- All configuration from environment variables — no hardcoded values
+  in source
+- Never hardcode secrets, API keys, or credentials — environment only
+- `.env.example` committed with placeholder values; `.env` in
+  `.gitignore`
+- Separate configuration per environment (development, testing,
+  production)
+- Pass config explicitly to components — no global config objects
+  accessed from arbitrary locations
+- Validate all required config at load time — fail fast if anything
+  is missing or invalid
+
+## Naming conventions
+
+- Use `SCREAMING_SNAKE_CASE` for all environment variables
+- Prefix with the app or service name to avoid collisions
+  (e.g. `MYAPP_DATABASE_URL`, not `DATABASE_URL`)
+- Group related variables with a common prefix
+  (e.g. `MYAPP_DB_HOST`, `MYAPP_DB_PORT`, `MYAPP_DB_NAME`)
+- Boolean variables use `ENABLE_` or `DISABLE_` prefix
+  (e.g. `MYAPP_ENABLE_CACHE`)
+
+## Config precedence
+
+Sources override in this order (highest wins):
+
+1. **Hardcoded defaults** — in code, lowest priority
+2. **Config file** — `config.yaml`, `appsettings.json`, etc.
+3. **Environment variables** — override file values
+4. **CLI flags / arguments** — override everything
+
+- Document the precedence model for the project
+- Never let a lower-priority source silently override a
+  higher-priority one
+
+## Build-time vs runtime config
+
+- **Build-time** — values baked into the artifact at build (API base
+  URLs, feature flags, public keys). Changing them requires a rebuild.
+- **Runtime** — values read when the process starts or on each
+  request (secrets, database URLs, log levels). Changing them
+  requires a restart or hot-reload.
+- Never put secrets in build-time config — they end up in the
+  artifact and are visible to anyone who inspects it
+- Document which variables are build-time and which are runtime
+
+## Validation
+
+- Validate types, ranges, and formats at load time — not at first use
+- Use a typed config object or schema — never scatter raw environment
+  variable reads across the codebase
+- Provide sensible defaults only for optional, non-sensitive settings
+- Mark all secrets as required — no defaults for passwords, tokens,
+  or keys
+
+## Secrets management
+
+- In production, source secrets from a dedicated secrets manager or
+  CI/CD secret store — not from flat `.env` files
+- Design secret loading to support rotation without a full
+  redeployment
+- Never log config values — redact or omit secrets from logs and
+  diagnostic output
+- Reference secrets by name or path, not by embedding them in config
+  files
+
+## Environment separation
+
+| Environment | Purpose           | Secrets source       |
+|-------------|-------------------|----------------------|
+| development | local work        | `.env` file          |
+| testing     | automated tests   | hardcoded stubs      |
+| staging     | pre-production    | secrets manager / CI |
+| production  | live              | secrets manager      |
+
+## `.env.example` structure
+
+```
+# Required
+API_BASE_URL=http://localhost:8000
+SECRET_KEY=change-me
+
+# Optional — defaults shown
+LOG_LEVEL=info
+DEBUG=false
+```
