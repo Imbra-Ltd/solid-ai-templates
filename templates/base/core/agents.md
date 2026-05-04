@@ -63,7 +63,7 @@ them*.
 - Model: inline
 
 ## 1. Project
-### 1.1 Stack
+### 1.1 Overview
 [Stack template — Stack section]
 ### 1.2 Project structure
 [Stack template — architecture/structure sections]
@@ -134,7 +134,7 @@ Key references:
 Project-specific overrides and additions follow below.
 
 ## 1. Project
-### 1.1 Stack
+### 1.1 Overview
 [Stack template — Stack section]
 ### 1.2 Project structure
 [Planned or actual directory tree]

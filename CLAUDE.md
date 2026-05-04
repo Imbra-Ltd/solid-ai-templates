@@ -6,7 +6,7 @@ project type.
 
 ## 1. Project
 
-### 1.1 Identity
+### 1.1 Overview
 
 - **Name**: solid-ai-templates
 - **Owner**: Imbra Ltd — Branimir Georgiev
@@ -275,9 +275,13 @@ py tests/run_e2e.py --dry-run      # print prompts, skip execution
   attach `templates/INTERVIEW.md` + the new stack to an agent to
   confirm coherent output
 
-## 4. Review process
+## 4. Identity
 
-### 4.1 Code review
+Not applicable — this project has no design system or brand voice.
+
+## 5. Review process
+
+### 5.1 Code review
 
 Priority order (highest first):
 1. **Correctness** — do `[DEPENDS ON]`, `[EXTEND]`, `[OVERRIDE]`
@@ -287,7 +291,7 @@ Priority order (highest first):
 4. **Conventions** — does the template follow authoring rules
    (see 2.7)?
 
-### 4.2 Structure audit
+### 5.2 Structure audit
 
 Run `py tests/run_smoke.py` before every PR. It checks:
 - All `[DEPENDS ON: ...]` reference existing files
@@ -296,9 +300,9 @@ Run `py tests/run_smoke.py` before every PR. It checks:
 - All template files have a manifest entry
 - No duplicate IDs across layers
 
-## 5. Session protocol
+## 6. Session protocol
 
-### 5.1 Startup
+### 6.1 Startup
 
 1. Read `CLAUDE.md` (this file) and `docs/SPEC.md`
 2. Check for stale branches: run `git branch --no-merged main`
@@ -308,13 +312,13 @@ Run `py tests/run_smoke.py` before every PR. It checks:
 4. If the task is ambiguous, ask: "What is the specific deliverable
    for this session?"
 
-### 5.2 During the session
+### 6.2 During the session
 
 - Run `py tests/run_smoke.py` after any template or manifest change
 - If a change affects multiple documents, update all in the same PR
 - Do not drift from the agreed scope without checking with the user
 
-### 5.3 End of session
+### 6.3 End of session
 
 Before ending a session, verify:
 
