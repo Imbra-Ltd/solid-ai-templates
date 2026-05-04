@@ -1,5 +1,63 @@
 # Dev Journal
 
+## 2026-05-04 — v2.1.0 Polish + Quality sprint
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**PRs merged:** #194, #195, #196, #197, #201, #202, #204, #205,
+#207, #209, #212, #214, #216, #223, #225, #226, #227, #228, #229
+
+**Issues closed:** #188, #189, #190, #187, #183, #200, #178, #198,
+#199, #206, #208, #211, #213, #215, #217, #218, #219, #220, #221,
+#222
+
+**Issues created:** #193–#224
+
+**Releases:** v2.1.0 — Polish
+
+**Key changes:**
+- Created 7 milestones (v2.1–v2.5, v3.0, Backlog), assigned all
+  29 open issues
+- v2.1 Polish: README SEO rewrite, repo description with CLAUDE.md
+  keywords, powered-by attribution in INTERVIEW.md, multi-agent
+  output clarification, report-an-issue link
+- ADR-006: standardized on 3-digit SemVer, added no-build release
+  process (GitHub Releases), milestone = minor bump
+- Moved release.md from base/infra to base/workflow
+- Created base/data/ layer: data-modeling, data-governance,
+  data-migration (moved data-quality from base/language)
+- Moved config.md from backend to base/core, made stack-agnostic
+  (added build-time vs runtime, naming conventions, config
+  precedence, 12-factor reference)
+- Covered all 12-factor app principles: added dependencies and
+  port binding to config.md, disposability and admin processes
+  to quality.md
+- Covered OWASP Top 10 fully: added deserialization/data integrity
+  (A08) and SSRF (A10) to security.md
+- Fixed security doc hierarchy: added DEPENDS ON and EXTEND links
+  to backend/auth.md, removed duplicated rules
+- Template audit (3 parallel agents): found and fixed duplication,
+  stale refs, missing DEPENDS ON headers, manifest mismatches
+- Moved testability section from quality.md to testing.md
+- Refactored backend-quality.md: added EXTEND for security overlap
+- Consolidated duplicated testing rules in 4 backend templates
+- Stripped all 18 inline "see templates/..." prose references —
+  relationships tracked via [DEPENDS ON] headers only
+- Added .gitignore guidance to git.md
+- Added E2E-01 smoke check (validates cases.py paths resolve)
+- Removed dead skipped tests FMT-03/04/05 (27 e2e tests now)
+- Disabled wiki on repo
+
+**Key decisions:**
+- Inline cross-references are maintenance debt — use [DEPENDS ON]
+  headers (machine-validated) instead of scattered prose refs
+- Config is a foundational concern (base/core), not backend-specific
+- 12-factor and OWASP are methodologies codified across base templates
+- Milestones map 1:1 to minor releases (v2.1, v2.2, etc.)
+- No-build projects skip chore PR, use tag + GitHub Releases
+
+---
+
 ## 2026-05-04 — Release v2.0.0
 
 **Tool:** Claude Code (Opus 4.6, 1M context)
