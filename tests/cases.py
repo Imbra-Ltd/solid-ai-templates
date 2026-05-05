@@ -37,7 +37,7 @@ STK_TESTS = [
             "Auth": "JWT bearer tokens",
             "Feature flags": "no",
             "Messaging": "no",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -65,7 +65,7 @@ STK_TESTS = [
             "Auth": "JWT bearer tokens",
             "Feature flags": "yes — OpenFeature Go SDK",
             "Messaging": "no",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -88,7 +88,7 @@ STK_TESTS = [
             "Framework": "Django 5.x + Django REST Framework",
             "Database": "PostgreSQL via Django ORM",
             "Auth": "JWT via djangorestframework-simplejwt",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -111,7 +111,7 @@ STK_TESTS = [
             "Language": "TypeScript",
             "Database": "PostgreSQL",
             "Auth": "JWT",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -131,7 +131,7 @@ STK_TESTS = [
             "Project name": "DashboardApp",
             "Language": "TypeScript",
             "State management": "Zustand",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -153,7 +153,7 @@ STK_TESTS = [
             "Language": "TypeScript",
             "Rendering strategy": "App Router with Server Components",
             "Database": "Prisma + PostgreSQL",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -175,7 +175,7 @@ STK_TESTS = [
             "Language": "TypeScript",
             "Content": "Markdown + MDX",
             "Integrations": "React islands for interactive components",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -196,7 +196,7 @@ STK_TESTS = [
             "Language": "Go",
             "Communication": "gRPC (internal service-to-service)",
             "Auth": "mTLS",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -217,7 +217,7 @@ STK_TESTS = [
             "Language": "Dart",
             "State management": "Riverpod",
             "Platforms": "iOS and Android",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -236,7 +236,7 @@ STK_TESTS = [
             "Project name": "retrykit",
             "Language": "Go",
             "Distribution": "Go module (pkg.go.dev)",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands",
@@ -259,7 +259,7 @@ STK_TESTS = [
             "Language": "Python",
             "Database": "PostgreSQL via Flask-SQLAlchemy",
             "Auth": "JWT",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -280,7 +280,7 @@ STK_TESTS = [
             "Project name": "DataPipelineWorker",
             "Language": "Python",
             "Framework": "none (plain Python service)",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands",
@@ -302,7 +302,7 @@ STK_TESTS = [
             "Language": "Python",
             "Communication": "gRPC (internal service-to-service)",
             "Auth": "mTLS",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands",
@@ -324,7 +324,7 @@ STK_TESTS = [
             "Language": "Python",
             "Broker": "Redis",
             "Result backend": "Redis",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands",
@@ -345,7 +345,7 @@ STK_TESTS = [
             "Project name": "validify",
             "Language": "Python",
             "Distribution": "PyPI package",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands",
@@ -366,7 +366,7 @@ STK_TESTS = [
             "Project name": "HealthCheckService",
             "Language": "Go",
             "HTTP framework": "none (standard library only)",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -387,7 +387,7 @@ STK_TESTS = [
             "Project name": "DocumentationSite",
             "Language": "Markdown + Go templates",
             "Theme": "custom",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -407,7 +407,7 @@ STK_TESTS = [
             "Project name": "parsekit",
             "Language": "TypeScript",
             "Distribution": "npm package",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands",
@@ -428,7 +428,7 @@ STK_TESTS = [
             "Project name": "byteparser",
             "Language": "Rust",
             "Distribution": "crates.io",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands",
@@ -451,7 +451,7 @@ STK_TESTS = [
             "Backend language": "Python (Flask)",
             "Templating engine": "Jinja2",
             "Client-side state": "Alpine.js",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands",
@@ -481,7 +481,7 @@ FMT_TESTS = [
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
             "Auth": "JWT bearer tokens",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Project structure", "Commands",
@@ -501,7 +501,7 @@ FMT_TESTS = [
             "Project name": "OrderService",
             "Database": "PostgreSQL via SQLAlchemy 2",
             "Auth": "JWT bearer tokens",
-            "Output format": "AGENTS.md",
+            "Output format": "AGENTS.md (inline model)",
         },
         "required": [
             "1. Project", "Commands", "Code conventions",
@@ -529,7 +529,7 @@ ITV_TESTS = [
             "Deployment": "Docker",
             "Database": "PostgreSQL via SQLAlchemy 2",
             "Auth": "JWT bearer tokens",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "Git",
@@ -550,7 +550,7 @@ ITV_TESTS = [
             "Database": "PostgreSQL via SQLAlchemy 2",
             "Auth": "JWT bearer tokens",
             "Test runner override": "Use unittest instead of pytest for all tests",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "1. Project", "Commands", "Git",
@@ -576,7 +576,7 @@ DPL_TESTS = [
             "Owner": "Platform team",
             "Language": "TypeScript",
             "Deployment target": "cloud",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "Deployment",
@@ -595,7 +595,7 @@ DPL_TESTS = [
             "Owner": "Platform team",
             "Language": "Java",
             "Deployment target": "hybrid (on-premises + cloud)",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "Deployment",
@@ -613,7 +613,7 @@ DPL_TESTS = [
             "Owner": "Platform team",
             "Language": "Python",
             "Deployment target": "offline (air-gapped, no internet access)",
-            "Output format": "CLAUDE.md",
+            "Output format": "CLAUDE.md (inline model)",
         },
         "required": [
             "Deployment",

@@ -9,7 +9,7 @@ import subprocess
 import time
 
 
-MAX_TOKENS = 8192
+MAX_TOKENS = 65536
 TIMEOUT = 180
 MAX_RETRIES = 3
 INITIAL_DELAY = 10

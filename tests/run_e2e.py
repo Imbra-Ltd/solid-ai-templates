@@ -35,27 +35,127 @@ from cases import ALL_TESTS
 load_dotenv()
 
 
+def _load_manifest():
+    """Load manifest.yaml and build lookup tables."""
+    import yaml
+    manifest_path = os.path.join(ROOT, "templates", "manifest.yaml")
+    with open(manifest_path, encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    # Build id -> entry lookup
+    entries = {}
+    for section in ("base", "platform", "frontend", "backend", "stacks"):
+        for entry in data.get(section, []):
+            entries[entry["id"]] = entry
+
+    # Build file -> id reverse lookup
+    file_to_id = {e["file"]: e["id"] for e in entries.values()}
+
+    return data.get("core", []), entries, file_to_id
+
+
+_manifest_cache = None
+
+
+def _get_manifest():
+    global _manifest_cache
+    if _manifest_cache is None:
+        _manifest_cache = _load_manifest()
+    return _manifest_cache
+
+
+def resolve_deps(stack_file):
+    """Resolve full dependency chain per ADR-004 algorithm.
+
+    RESOLVE(manifest, stack_id, extras):
+      1. for id in core: ADD(id)
+      2. RESOLVE_DEPS(stack_id)
+      3. for id in extras: RESOLVE_DEPS(id)
+    """
+    core_ids, entries, file_to_id = _get_manifest()
+
+    resolved = set()
+    files = []
+
+    def add(entry_id):
+        if entry_id in resolved:
+            return
+        resolved.add(entry_id)
+        entry = entries.get(entry_id)
+        if entry:
+            files.append(entry["file"])
+
+    def resolve(entry_id):
+        if entry_id in resolved:
+            return
+        entry = entries.get(entry_id)
+        if not entry:
+            return
+        for dep in entry.get("depends_on", []):
+            resolve(dep)
+        add(entry_id)
+
+    # Step 1: core tier
+    for cid in core_ids:
+        add(cid)
+
+    # Step 2: stack chain
+    stack_id = file_to_id.get(stack_file)
+    if stack_id:
+        resolve(stack_id)
+
+    return files
+
+
 def build_prompt(stack_file, answers, output_file="templates/base/core/agents.md",
                  extra_files=()):
-    interview = read("templates/INTERVIEW.md")
-    stack = read(stack_file)
+    chain = resolve_deps(stack_file)
+
+    # Step 3: resolve extras via manifest if possible
+    _, entries, file_to_id = _get_manifest()
+    resolved_ids = {file_to_id.get(f) for f in chain}
+    extra_resolved = []
+    for ef in extra_files:
+        eid = file_to_id.get(ef)
+        if eid and eid not in resolved_ids:
+            extra_resolved.append(ef)
+        elif not eid:
+            extra_resolved.append(ef)
+
     output_fmt = read(output_file)
     answers_text = "\n".join(f"- {k}: {v}" for k, v in answers.items())
-    extra_sections = "".join(
-        f"--- {f} ---\n{read(f)}\n\n" for f in extra_files
+
+    templates_section = ""
+    for f in chain:
+        templates_section += f"--- {f} ---\n{read(f)}\n\n"
+
+    extra_section = "".join(
+        f"--- {f} ---\n{read(f)}\n\n" for f in extra_resolved
     )
+
     return (
-        f"You are generating a context file for a software project.\n\n"
-        "Use the templates and interview answers below to compose the output.\n"
-        f"Follow the output format rules in the output format file exactly.\n"
-        "Output ONLY the file content — no preamble, no explanation, "
+        "You are generating a context file for a software project.\n\n"
+        "The interview is complete. The final answers are provided below.\n"
+        "Use the templates and output format to compose the file.\n\n"
+        "Rules:\n"
+        "- Follow the output format structure exactly.\n"
+        "- Reproduce conventions from the templates VERBATIM — do not "
+        "paraphrase, substitute synonyms, or use your own defaults. "
+        "If a template says `feat/`, write `feat/` not `feature/`. "
+        "If a template says `feat:`, write `feat:` not `feat,`.\n"
+        "- Replace ALL placeholders (e.g. [project], [owner], [platform]) "
+        "with concrete values from the interview answers.\n"
+        "- Output ONLY the file content — no preamble, no explanation, "
         "no markdown fences around the whole document.\n\n"
-        f"--- INTERVIEW.md ---\n{interview}\n\n"
-        f"--- Stack template ({stack_file}) ---\n{stack}\n\n"
-        f"{extra_sections}"
+        f"--- Templates (full dependency chain) ---\n\n{templates_section}"
+        f"{extra_section}"
         f"--- Output format ({output_file}) ---\n{output_fmt}\n\n"
         f"--- Interview answers ---\n{answers_text}\n\n"
-        f"Generate the output file now."
+        "Generate the output file now.\n\n"
+        "IMPORTANT REMINDER: Do NOT summarize. Include the exact language "
+        "version (e.g. 'Python 3.11+'), exact branch prefixes (e.g. "
+        "'feat/'), and exact commit prefixes (e.g. 'feat:') from the "
+        "stack template. Every convention must appear verbatim in your output."
     )
 
 
@@ -126,11 +226,11 @@ def run_test(test, dry_run=False, offline=False):
     tid = test["id"]
 
     if "skip" in test:
-        return SKIP, test["skip"], None, None
+        return SKIP, test["skip"], None, None, None
 
     if offline:
         status, detail = validate_test_offline(test)
-        return status, detail, None, None
+        return status, detail, None, None, None
 
     prompt = build_prompt(
         test["stack"], test["answers"],
@@ -142,7 +242,7 @@ def run_test(test, dry_run=False, offline=False):
         print(f"\n{'='*60}")
         print(f"[{tid}] DRY RUN — prompt length: {len(prompt)} chars")
         print(prompt[:400], "...")
-        return SKIP, "dry-run", None, None
+        return SKIP, "dry-run", None, None, None
 
     provider_name, provider_fn = _get_provider()
 
@@ -150,7 +250,7 @@ def run_test(test, dry_run=False, offline=False):
     try:
         output = provider_fn(prompt)
     except Exception as e:
-        return ERR, f"{provider_name} error: {e}", None, None
+        return ERR, f"{provider_name} error: {e}", None, None, None
     elapsed = time.time() - t0
 
     failures = check_assertions(
@@ -160,8 +260,20 @@ def run_test(test, dry_run=False, offline=False):
     )
 
     if failures:
-        return FAIL, "\n".join(failures), elapsed, output
-    return PASS, f"{elapsed:.1f}s", elapsed, output
+        return FAIL, "\n".join(failures), elapsed, output, prompt
+    return PASS, f"{elapsed:.1f}s", elapsed, output, prompt
+
+
+def _render_prompt(r, lines):
+    if r.get("prompt"):
+        lines.append("<details><summary>Prompt</summary>")
+        lines.append("")
+        lines.append("```")
+        lines.append(r["prompt"].replace("```", "~~~"))
+        lines.append("```")
+        lines.append("")
+        lines.append("</details>")
+        lines.append("")
 
 
 def render_fail(r):
@@ -182,6 +294,7 @@ def render_fail(r):
     lines.append((r["output"] or "").replace("```", "~~~"))
     lines.append("```")
     lines.append("")
+    _render_prompt(r, lines)
     return lines
 
 
@@ -203,6 +316,7 @@ def render_pass(r):
         lines.append(r["output"].replace("```", "~~~"))
         lines.append("```")
         lines.append("")
+    _render_prompt(r, lines)
     return lines
 
 
@@ -250,11 +364,12 @@ def main():
         if not dry_run and not offline:
             print(f"  [{i}/{total}] {tid} running...", end="\r", flush=True)
 
-        status, detail, elapsed, output = run_test(test, dry_run=dry_run, offline=offline)
+        status, detail, elapsed, output, prompt = run_test(test, dry_run=dry_run, offline=offline)
         results[status] += 1
         run_results.append({
             "id": tid, "status": status,
-            "detail": detail, "elapsed": elapsed, "output": output,
+            "detail": detail, "elapsed": elapsed,
+            "output": output, "prompt": prompt,
         })
 
         if status == PASS:
