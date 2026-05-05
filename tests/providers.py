@@ -1,6 +1,6 @@
 """LLM provider backends for e2e tests.
 
-Select via E2E_PROVIDER env var: anthropic, gemini, claude-cli.
+Select via E2E_PROVIDER env var: anthropic, gemini, deepseek, groq, claude-cli.
 Default: gemini (free tier available).
 """
 
@@ -43,6 +43,37 @@ def _gemini(prompt):
     return response.text
 
 
+def _deepseek(prompt):
+    """Call DeepSeek API. Requires DEEPSEEK_API_KEY."""
+    from openai import OpenAI
+    model = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+    client = OpenAI(
+        api_key=os.environ["DEEPSEEK_API_KEY"],
+        base_url="https://api.deepseek.com",
+    )
+    response = client.chat.completions.create(
+        model=model,
+        max_tokens=MAX_TOKENS,
+        temperature=0,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.choices[0].message.content
+
+
+def _groq(prompt):
+    """Call Groq API. Requires GROQ_API_KEY."""
+    from groq import Groq
+    model = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+    client = Groq(api_key=os.environ["GROQ_API_KEY"])
+    response = client.chat.completions.create(
+        model=model,
+        max_tokens=min(MAX_TOKENS, 32768),
+        temperature=0,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.choices[0].message.content
+
+
 def _claude_cli(prompt):
     """Call Claude via CLI. Uses Pro subscription, no API credits."""
     result = subprocess.run(
@@ -65,6 +96,8 @@ def _claude_cli(prompt):
 PROVIDERS = {
     "anthropic": _anthropic,
     "gemini": _gemini,
+    "deepseek": _deepseek,
+    "groq": _groq,
     "claude-cli": _claude_cli,
 }
 
