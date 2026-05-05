@@ -378,3 +378,30 @@ recorded in ADR-004.
   Content)
 - Created #233 (spike: naming conventions for issues and PRs) in v2.5
 - v2.2 — Quality milestone fully closed
+
+---
+
+## 2026-05-05 — E2E provider infrastructure and product clarity
+
+- PR #235: provider-agnostic e2e runner (closes #100)
+  - 5 providers: anthropic, gemini, deepseek, groq, claude-cli
+  - Manifest-based dependency resolution (ADR-004 algorithm)
+  - Retry with exponential backoff on rate limits
+  - Full LLM output + prompt in reports
+  - load_dotenv support, .env in .gitignore
+- Tagged v2.2.0 (GitHub Release)
+- Created #236 (resolve.py script for dependency resolution)
+- Created #237 (document all user paths: web, API, agent)
+- Created #238 (ADR: generation out of scope, templates are the product)
+- Created #239 (expand smoke tests for structure/resolution)
+- Created #240 (reduce live e2e to one canary test)
+- Created #241 (drop --offline mode)
+- Created #242 (audit docs for unsustainable claims)
+
+**Key decisions:**
+- Generation is not the product — the template library is
+- Local agents (Claude Code, Codex) are the primary user path
+- API-based generation has inherent limitations (model fidelity,
+  token limits, rate limits) — document, don't guarantee
+- Live e2e tests are internal quality tools, not a product feature
+- One canary test (python-lib) is more valuable than 27 flaky tests
