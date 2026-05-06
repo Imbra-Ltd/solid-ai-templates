@@ -31,8 +31,9 @@ model and prompt size.
 
 ## How to use
 
-**Prerequisites:** an AI coding agent (Claude Code, Cursor, Copilot,
-Codex CLI) and a project you want to generate conventions for.
+**Prerequisites:** any LLM interface — local agent (Claude Code,
+Cursor, Codex CLI), web portal (Claude.ai, ChatGPT, Gemini), or
+REST API (Anthropic, OpenAI).
 
 **Output:** a `CLAUDE.md` or `AGENTS.md` file placed at your project
 root, containing coding conventions tailored to your stack.
@@ -57,6 +58,11 @@ database: PostgreSQL, auth: JWT.
 
 The agent drafts a context file. Review it, adjust as needed, and
 place it at your project root.
+
+> **Web portal or API?** Use a pre-resolved file from `generated/`
+> instead of a single stack template — it includes the full
+> dependency chain in one file. See
+> [model limitations](#model-limitations) for token guidance.
 
 ### Use it — clone and run the interview
 
@@ -96,6 +102,22 @@ git submodule add https://github.com/braboj/solid-ai-templates.git .ai-templates
 To update templates: `git submodule update --remote`. Then
 re-run the interview to regenerate your context file with the
 latest rules.
+
+## Model limitations
+
+| Stack category | Prompt size | Min context window |
+|----------------|-------------|-------------------|
+| Library / CLI | ~12K tokens | 32K |
+| Static site | ~15K tokens | 32K |
+| Backend service | ~25–50K tokens | 128K |
+| Full-stack | ~40–60K tokens | 128K |
+
+- **Output token limit < 16K** (e.g. GPT-4o default): generated file
+  may be truncated — generate section by section or set `max_tokens`
+  to the model maximum
+- **Output token limit 32K+**: full inline file fits in one pass
+- **Free tier rate limits**: use a local agent or a pre-resolved file
+  to minimise round trips
 
 ## Supported stacks
 
