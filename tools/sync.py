@@ -270,6 +270,18 @@ def main():
         else:
             print(f"  OK    {path.name}")
 
+    # Check generated/ files via resolve.py
+    from resolve import load_manifest as _load, check_generated, generate_all
+    core_ids, entries, stacks = _load()
+    stale = check_generated(core_ids, entries, stacks)
+    if stale:
+        if check_mode:
+            print(f"  STALE {len(stale)} generated file(s)")
+            changed.append("generated/")
+        else:
+            generate_all(core_ids, entries, stacks)
+            changed.append("generated/")
+
     if check_mode and changed:
         print(f"\n{len(changed)} file(s) out of sync.")
         sys.exit(1)

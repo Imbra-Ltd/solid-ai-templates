@@ -1,0 +1,1798 @@
+<!-- templates/base/core/quality.md -->
+# Base — Quality Attributes
+
+[ID: base-quality]
+
+## Architecture
+
+- All editable content in a data directory — never hardcoded in components
+- Never hardcode derived counts or statistics — compute them from the data
+  source; a hardcoded number is a stale number
+- Default to the simplest component type; only reach for heavier abstractions
+  when genuinely needed
+- No dead code — remove unused components, styles, and data files promptly
+- No over-engineering — build the minimum needed for the current requirement
+
+## Disposability
+
+- Processes MUST start fast — minimize initialization time
+- Processes MUST shut down gracefully on `SIGTERM` — finish
+  in-flight work, release resources, then exit
+- Set a shutdown timeout — if graceful shutdown exceeds the
+  deadline, force-exit
+- Design for crash safety — the system MUST recover cleanly if
+  a process is killed without warning (`SIGKILL`, power loss)
+- Do not store state in-process — use external stores (database,
+  cache, queue) so processes are disposable and replaceable
+
+## Admin processes
+
+- One-off tasks (migrations, data fixes, REPL sessions) MUST run
+  in the same environment as the application — same code, same
+  config, same dependencies
+- Admin scripts MUST be committed to the repository — not run
+  from ad-hoc shell commands
+- Prefer idempotent scripts — safe to re-run without side effects
+- Never run admin tasks directly against production without a
+  tested rollback plan
+
+## Core principles
+
+- **DRY — Don't Repeat Yourself**: every piece of knowledge must have
+  a single, authoritative representation; the third copy is a bug
+- **KISS — Keep It Simple**: prefer the simplest solution that works;
+  complexity must be justified by a requirement, not by elegance
+- **YAGNI — You Aren't Gonna Need It**: do not build for hypothetical
+  future requirements; build what is needed now, refactor when the
+  need is real
+
+## SOLID principles
+
+Apply SOLID at the class, module, and service level:
+
+- **S — Single Responsibility**: every class or module has exactly one reason
+  to change; split anything that serves more than one concern
+- **O — Open/Closed**: extend behaviour by adding new code, not by modifying
+  existing code; use interfaces, abstract base classes, or composition
+- **L — Liskov Substitution**: subtypes must be fully substitutable for their
+  base type without altering correctness; never override a method in a way
+  that weakens its contract
+- **I — Interface Segregation**: prefer many small, focused interfaces over
+  one large general-purpose one; callers should not depend on methods they
+  do not use
+- **D — Dependency Inversion**: depend on abstractions, not concretions;
+  inject dependencies rather than instantiating them inside a class
+
+## OOP
+
+- Prefer **composition over inheritance** — inherit only to model a true
+  is-a relationship; compose for code reuse
+- **Encapsulate** implementation details — expose behaviour through a public
+  interface, hide state and implementation
+- Design to interfaces (or protocols / abstract base classes), not concrete types
+- Keep class hierarchies shallow — more than two levels of inheritance is a
+  signal to refactor towards composition
+
+## Design patterns
+
+- Apply established **GoF design patterns** where they fit the problem —
+  do not invent ad-hoc solutions for problems that have named solutions
+- Favour **behavioural patterns** for algorithm variation:
+  Strategy, Command, Observer, Template Method
+- Favour **structural patterns** for object composition:
+  Adapter, Decorator, Facade, Proxy
+- Use **creational patterns** to decouple object creation:
+  Factory Method, Abstract Factory, Builder
+- Use **Singleton** only for stateless services or infrastructure objects
+  (logger, config) — never for mutable shared state
+- Name the pattern in code when you use one: a class named `OrderExportStrategy`
+  communicates intent; a class named `OrderHelper` does not
+
+## Aspect-Oriented Programming (AOP)
+
+- **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
+  interception, bytecode weaving, runtime proxies) makes code hard to read,
+  debug, and test
+- Implement cross-cutting concerns explicitly:
+  - Logging → call the logger directly in the function
+  - Auth → explicit middleware or guard in the call chain
+  - Transactions → explicit context manager or decorator with visible call site
+  - Validation → explicit call at the boundary
+- Transparent decorators (a decorator that wraps and clearly delegates) are
+  acceptable; opaque interceptors that inject hidden behaviour are not
+
+## Readability
+
+- **Names are the primary documentation** — a name that requires a comment to
+  explain is a name that needs to be changed
+- Functions and methods: verb or verb phrase (`calculateTotal`, `fetchUser`)
+- Classes and modules: noun or noun phrase (`OrderRepository`, `AuthService`)
+- Booleans: prefix with `is`, `has`, or `can` (`isActive`, `hasPermission`)
+- No single-letter names except loop counters (`i`, `j`) and well-established
+  conventions (`err` in Go, `e` in except clauses)
+- No abbreviations unless universally understood in the domain (`url`, `id`,
+  `http` are fine; `mgr`, `proc`, `obj` are not)
+- A function's name must make reading its body unnecessary — if you need to
+  read the implementation to understand what a call site does, the function
+  needs a better name or needs to be split
+- Cognitive complexity ≤ 15 per function — enforced by static analysis
+  (SonarQube, Codacy, or equivalent); each nesting level and decision point
+  increases the score
+- Maximum nesting depth of three levels — use early returns and guard clauses
+  to reduce indentation rather than adding else branches
+- No boolean flag parameters — they force the caller to read the implementation
+  to understand what `true` means; use an enum or two named functions instead
+- Avoid negative conditions in `if` statements where possible —
+  `if isEnabled` reads better than `if !isDisabled`
+
+## Maintainability
+
+- No circular dependencies between modules or packages — dependency graphs
+  must be acyclic; restructure or introduce an interface to break cycles
+- Keep the dependency graph shallow — if changing module A requires reading
+  modules B, C, and D to understand the impact, the coupling is too high
+- Changes to one module's internals must not require changes in unrelated
+  modules — if they do, the abstraction boundary is wrong
+- Before removing or renaming a public symbol, mark it deprecated with a
+  comment referencing the replacement; remove it in a follow-up change
+- Magic numbers and magic strings must be named constants — unnamed literals
+  scattered across the codebase are a maintenance hazard
+- No substantial duplication across sibling modules — if the same code
+  appears in two or more places, extract a shared module; the third
+  copy is a bug
+- Consistent naming across modules — the same concept must use the same
+  name everywhere; divergent names for the same thing (e.g. `clearButton`
+  vs `clearBtn`) signal missing abstraction
+- When the same logic block repeats across three or more modules,
+  extract a shared module; short inline repetition (e.g. three similar
+  assignments) does not warrant extraction — only substantial
+  duplicated logic
+- **Fail Fast**: validate inputs at boundaries and throw immediately on
+  invalid state; do not propagate bad data through the system
+- **Law of Demeter**: a module should only talk to its direct
+  dependencies; chaining through objects (`a.b.c.d`) signals missing
+  abstraction
+- **High Cohesion**: modules that change together should live together;
+  a module whose parts serve unrelated concerns should be split
+
+## Testability
+
+- Testability is a first-class design concern, not an afterthought
+- Code MUST be designed for testability from the start — do not write
+  code first and struggle to test later
+- If code is hard to test, treat it as a design problem, not a
+  testing problem
+## Automated enforcement
+
+- Quality conventions in this document are enforced automatically via
+  quality gates (editor → pre-commit → CI)
+
+## Code style
+
+- Encode all source files in UTF-8; content MUST be restricted to ASCII
+  characters
+- Line endings MUST be LF — CRLF is not acceptable in any committed file
+- A linter SHOULD enforce formatting automatically on save; keep manual style
+  rules to a minimum
+- Prefer self-documenting code — if a comment feels necessary, treat it as a
+  signal that the code needs restructuring before the comment is added
+- Add comments only where the intent cannot be expressed in code
+
+## Debug code
+
+- No debug statements in committed code: no `print()`, `console.log()`,
+  `fmt.Println()`, or equivalent used for debugging
+- No hardcoded breakpoints (`debugger`, `pdb.set_trace()`) in committed code
+- No commented-out code blocks — delete dead code; version control is the history
+- Debug tooling (profilers, REPL helpers, verbose loggers) MUST be
+  gated behind a flag or environment variable, never on by default
+
+## Testing
+
+- Write tests for business logic and edge cases
+- Do not test implementation details — test behaviour
+- Tests must pass before merging to `main`
+- Tests MUST be runnable from CI without human intervention
+
+
+<!-- templates/base/core/git.md -->
+# Base — Git Conventions
+[ID: base-git]
+
+## Committer identity
+- Configure git with your full name and a consistent, professional email address
+- Do not use private or personal email addresses for work repositories
+- Identity must not change — git history and tooling depend on consistent authorship
+
+## Commit messages
+- Use conventional commit prefixes:
+  `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `style:`, `test:`
+- Keep the subject line under 80 characters
+- Use the imperative mood: "add feature" not "added feature"
+
+## Branching
+- Always work on a branch — never commit directly to `main`
+- Branch naming: `feat/description`, `fix/description`, `chore/description`,
+  `docs/description`
+
+## Pull requests
+- PRs should be small and focused — one concern per PR
+- Always test locally before committing
+- **Before merging**, review the diff against the base branch. Follow
+  `templates/base/core/review.md` priority order: security → correctness → clarity →
+  conventions. Check CI passes. Only merge after the review passes.
+- **Before pushing or creating a PR**, check `git status` and list open PRs.
+  If the previous PR is closed or merged, create a new branch rather than
+  pushing to a stale one.
+- **After a PR is merged**, delete both remote and local branch, then pull main:
+  ```
+  git branch -d <branch>
+  git push origin --delete <branch>
+  git checkout main && git pull
+  ```
+
+### Squash-merge safety
+
+When using squash merge, the branch commits become orphaned after
+the PR merges — only the squash commit lands on main. If a branch
+contains multiple concerns and only one is merged via PR, the
+remaining commits are silently lost.
+
+- MUST NOT mix unrelated changes on a single branch
+- MUST verify that all branch commits are accounted for before
+  deleting a branch — compare the squash diff against the branch diff
+- SHOULD enable "automatically delete head branches" in repository
+  settings to prevent stale branches from accumulating
+
+## README
+- Every repository MUST contain a `README.md`
+- The README MUST conform to the structure and rules defined in `templates/base/core/readme.md`
+
+## Versioning
+- Use [Semantic Versioning](https://semver.org/) — `MAJOR.MINOR.PATCH`
+  - **MAJOR** — incompatible API or breaking changes
+  - **MINOR** — new functionality, backwards-compatible
+  - **PATCH** — backwards-compatible bug fixes
+- Tags use the `v` prefix: `v1.0.0`, `v0.3.1`
+- Pre-release versions: `v1.0.0-alpha.1`, `v1.0.0-rc.1`
+
+## Release process
+
+### Pre-release checks
+  1. Check for unmerged branches: `git branch --no-merged main`
+     — investigate any results before proceeding
+  2. Check for orphaned commits: `git fsck --unreachable --no-reflogs
+     | grep commit` — verify no unique work is lost
+  3. Run a 360-degree analysis if the project uses
+     `templates/base/workflow/360.md` — the project SHOULD NOT
+     ship with critical findings unresolved
+
+### Projects with a version manifest
+  4. `git checkout -b chore/release-vX.Y.Z`
+  5. Bump version in the project manifest (`package.json`,
+     `pyproject.toml`, `Cargo.toml`, or equivalent) to `X.Y.Z`
+  6. `git commit -m "chore: release vX.Y.Z"`
+  7. Push, open PR, merge
+  8. `git checkout main && git pull`
+  9. `git tag vX.Y.Z && git push origin vX.Y.Z`
+
+### Projects without a version manifest (no-build)
+  4. `git checkout main && git pull`
+  5. `git tag -a vX.Y.Z -m "vX.Y.Z — <milestone name>"`
+  6. `git push origin vX.Y.Z`
+  7. Create a GitHub Release with auto-generated notes:
+     `gh release create vX.Y.Z --title "vX.Y.Z — <milestone name>" --generate-notes`
+
+## General
+- Do not commit build output, secrets, or dependency directories
+- Do not commit generated files that can be reproduced by running a
+  build command
+- Treat every repository as if it were public — no secrets,
+  credentials, or sensitive information in source files or history
+
+## `.gitignore`
+- Every repository MUST have a `.gitignore` file
+- Ignore at minimum:
+  - **Dependencies** — `node_modules/`, `.venv/`, `vendor/`
+  - **Build output** — `dist/`, `build/`, `out/`, `*.pyc`, `__pycache__/`
+  - **Secrets** — `.env`, `.env.local`, `*.pem`, `*.key`
+  - **IDE/editor** — `.idea/`, `.vscode/`, `*.swp`, `*.swo`
+  - **OS files** — `.DS_Store`, `Thumbs.db`, `desktop.ini`
+  - **Test/coverage** — `coverage/`, `.coverage`, `htmlcov/`
+- Use [gitignore.io](https://gitignore.io) or GitHub's templates as a
+  starting point — then trim to what the project actually needs
+- Do not ignore lockfiles — they MUST be committed
+
+
+<!-- templates/base/core/docs.md -->
+# Base — Documentation
+
+[ID: base-docs]
+
+## Rule language
+
+All rules use the key words defined in **RFC 2119** to indicate requirement
+levels. Every rule MUST use one of these words:
+
+| Word       | Meaning                                                         |
+| ---------- | --------------------------------------------------------------- |
+| MUST       | Absolute requirement — no exceptions without explicit rationale |
+| MUST NOT   | Absolute prohibition                                            |
+| SHOULD     | Recommended — deviations require justification                  |
+| SHOULD NOT | Not recommended — may be ignored with justification             |
+| MAY        | Optional — developer decides without further discussion         |
+
+## Single source of truth
+
+- `README.md` is the single source of truth for project structure
+- Do not duplicate structure in other documents — reference `README.md` instead
+- No references to non-existent files, components, or services
+
+## Standard documents
+
+| File                  | Purpose                                                                |
+| --------------------- | ---------------------------------------------------------------------- |
+| `README.md`           | Project overview, structure, setup, commands                           |
+| `CLAUDE.md`           | AI agent context and project rules                                     |
+| `docs/ONBOARDING.md`  | Onboarding guide for new contributors                                  |
+| `docs/PLAYBOOK.md`    | Operational reference for common tasks                                 |
+| `docs/dev-journal.md` | Development history and session log (MUST for agent-assisted projects) |
+| `docs/SPEC.md`        | System design, architecture rules, composition model (SHOULD for complex projects) |
+
+## Numbering
+
+- Use numbered headings (1, 1.1, 1.2, 2, 2.1, etc.) in PLAYBOOK and
+  ONBOARDING — this enables cross-referencing between documents
+  (e.g. "see PLAYBOOK 2.4")
+
+## ONBOARDING structure
+
+`docs/ONBOARDING.md` MUST contain the following sections in order:
+
+1. **Prerequisites** — required tools and versions (Node, Python, Docker, etc.)
+2. **First-time setup** — clone, install, configure (copy-pasteable commands)
+3. **Verify the setup** — how to confirm everything works (run dev server,
+   run tests, expected output). Verify step descriptions SHOULD be
+   re-checked when the default route (`/`) or landing page changes —
+   a content change can invalidate the expected output without triggering
+   a "setup changed" check. Structure audits MUST verify that verify
+   steps produce the described output.
+4. **Key files** — table of files a new contributor should read first
+5. **Project context** — brief domain overview and links to architecture docs
+6. **Daily workflow** — cross-reference PLAYBOOK sections, do not duplicate
+
+## PLAYBOOK structure
+
+`docs/PLAYBOOK.md` MUST contain the following sections in order:
+
+1. **Git workflow** — branch, commit, PR, merge, issues
+2. **Domain operations** — how to add/modify the project's core data or
+   entities (project-specific — e.g. "add a new lens", "add a migration")
+3. **Maintenance** — update dependencies, quality conventions, ADRs
+4. **Release and deploy** — release process, tagging, deployment
+
+## Documentation rule
+
+Before every commit, update all relevant documentation:
+
+- **`CLAUDE.md`** — update if architecture, stack, design rules, or conventions change
+- **`README.md`** — update if project structure, stack, or setup steps change
+- **`docs/PLAYBOOK.md`** — update if commands, workflow, or release process change
+- **`docs/ONBOARDING.md`** — update if the contributor workflow changes
+
+## Decision logs
+
+- Significant architectural decisions MUST be recorded as Architecture Decision
+  Records (ADR) in `docs/decisions/`
+- Each ADR documents: context, decision, alternatives considered, consequences
+- ADRs are immutable once merged — create a new ADR to supersede an old one
+- File naming: `NNN-slug.md` — zero-padded sequence number + kebab-case slug
+  (e.g. `001-data-storage.md`, `002-hosting.md`)
+- ADR file format:
+
+```markdown
+# ADR-NNN: [Decision title]
+
+**Status:** Accepted | Superseded by ADR-NNN
+**Date:** YYYY-MM-DD
+
+## Context
+
+[Why this decision was needed]
+
+## Decision
+
+[What was decided]
+
+## Alternatives considered
+
+[What was rejected and why]
+
+## Consequences
+
+[What follows from this decision]
+```
+
+- Do NOT maintain a monolithic architecture document that mixes decisions,
+  data model specs, and migration tracking — decisions go in ADRs, data
+  model is the code (`src/types/`), migration tracking belongs in the
+  dev journal or issue tracker
+
+## Development journal
+
+- Projects using agent-assisted development MUST maintain a
+  `docs/dev-journal.md`
+- Agents have no persistent memory across sessions — the journal provides
+  continuity by recording what was done, what changed, and why
+- Structure: architecture overview at the top, then chronological session
+  entries (newest last)
+- Each session entry records: date, tool used, key changes, decisions made
+- Session entry heading format: `### Session N — Short Theme Description`
+  (3-6 words describing what was done; no dates or tool names in the
+  heading)
+- When milestones or phases are renamed or renumbered in the issue tracker,
+  the dev journal architecture overview MUST be updated in the same PR
+- Do not duplicate content that belongs elsewhere — link to ADRs for
+  decisions, link to issues for task tracking, do not repeat data model
+  specs that live in code
+
+### Post-mortems
+
+P0/P1 bugs and all incidents MUST include a post-mortem in the dev
+journal session entry. Format:
+
+- **Symptom:** what the user saw
+- **Root cause:** what was actually wrong
+- **Why missed:** what review or test gap allowed it
+- **Fix:** PR reference
+- **Prevention:** what was changed to catch it next time
+
+Not needed for minor fixes or cosmetic bugs. The purpose is to produce
+actionable prevention steps — a post-mortem without a prevention action
+is incomplete.
+
+## Writing style
+
+- Write in present tense — past or future tense indicates out-of-sync documentation
+- Write as little as necessary but as much as needed — documentation that goes
+  out of sync is worse than no documentation
+- Remove redundant, inconsistent, or outdated documentation promptly
+- Use full, grammatically correct sentences — enumerations are exempt
+
+## Diagrams and assets
+
+- Prefer text-based diagram formats: Mermaid for flowcharts, sequence diagrams,
+  and Gantt charts; Draw.io for complex visual diagrams
+- Commit all raw editable sources alongside rendered outputs
+- Do not use proprietary formats (Word, Illustrator, Affinity Designer)
+- Diagrams MUST be version-controlled — binary-only diagrams are not acceptable
+
+## Docs-as-code
+
+- Technical documentation lives in the repository alongside the code
+- Documentation follows the same review process as code
+- All documentation MUST be written in Markdown
+
+## Output file by agent
+
+| Agent            | Context file                      |
+| ---------------- | --------------------------------- |
+| Claude Code      | `CLAUDE.md`                       |
+| Cursor           | `.cursor/rules/project.mdc`       |
+| GitHub Copilot   | `.github/copilot-instructions.md` |
+| OpenAI Codex CLI | `AGENTS.md`                       |
+| Generic / other  | `AI_CONTEXT.md`                   |
+
+
+<!-- templates/base/core/readme.md -->
+# Base — README
+[ID: base-readme]
+
+## Principle
+A README is the front door of a repository. It MUST answer the three
+questions a new reader asks within the first 30 seconds:
+what is this, why does it exist, and how do I start using it.
+
+## Required sections
+
+Every README MUST contain the following sections, in this order:
+
+### 1. Title and summary
+- The repository name MUST appear as a top-level heading
+- 2–4 sentences MUST follow the title: what the project does, for whom,
+  what problem it solves, and why this solution exists — no preamble, no
+  marketing language
+- A capability list MUST follow the summary — bullet points stating
+  what the product can do, written as capabilities not counts (e.g.
+  "browse and filter lenses by specs" not "240+ lenses"); this list
+  is the product's contract and the primary input for value evaluation
+- A badges line SHOULD follow: build status, latest version, license
+
+### 2. Quick start
+- MUST be copy-pasteable: a reader MUST be able to go from zero to running
+  in under five minutes by following this section alone
+- Prerequisites MUST be listed before the first command
+- Every command MUST be shown in a fenced code block with the shell indicated
+- MUST NOT assume environment-specific context (paths, credentials, ports)
+  without stating them explicitly
+
+### 3. Usage
+- MUST show the most common real-world usage — not every option, not
+  contrived examples
+- Each example MUST include the expected output or outcome
+- If the project has multiple usage modes, each MUST have its own example
+
+### 4. Project structure
+- MUST include a directory tree covering the top two levels
+- Each entry MUST have a one-line description of its purpose
+- Generated directories (`dist/`, `__pycache__/`, `.venv/`) MUST be omitted
+
+### 5. Development setup
+- MUST cover: cloning, installing dependencies, running tests, running the
+  application locally
+- MUST list every external tool or service required (database, message
+  broker, etc.) and how to start it
+- If a `.env.example` file exists, MUST reference it here
+
+### 6. Configuration reference
+- SHOULD list every environment variable or configuration key the project
+  reads, with type, default value, and a one-line description
+- Sensitive keys (secrets, tokens) MUST be noted as such — never show
+  real values as defaults
+
+### 7. Links
+- SHOULD link to: full API / library reference, CHANGELOG, contribution
+  guide, and any deployed environments (staging, docs site)
+- Internal links MUST use relative paths — not absolute URLs pointing to
+  a specific branch or host
+
+### 8. License
+- MUST state the license name and include a link to the full license text
+- MUST appear as the last section
+
+## Rules
+
+### Accuracy
+- Every command MUST be tested and known to work at the time of writing
+- A README that describes functionality not yet implemented MUST mark that
+  section with a `> Note: planned for vX.Y` callout
+- README MUST be updated in the same commit that changes the behaviour it
+  describes — a stale README is a defect
+
+### Length and tone
+- Write in present tense — past or future tense signals out-of-sync content
+- SHOULD NOT exceed what a reader needs to evaluate or use the project —
+  move deep reference content to `docs/`
+- Avoid superlatives and filler phrases ("easy", "simple", "just run") —
+  describe what the project does, not how good it is
+
+### Audience
+- A README serves two audiences. The first three sections (title,
+  quick start, usage) are user-facing — what the product does and
+  how to use it. The remaining sections (structure, setup, config)
+  are developer-facing — how to build and contribute. Write each
+  section for its audience.
+- Write for a reader who has not seen this project before — MUST
+  NOT assume familiarity with internal terminology
+- Acronyms MUST be expanded on first use
+
+### Maintenance
+- When a dependency version, command, or configuration key changes, the
+  README MUST be updated in the same PR
+- Sections that have not been updated in over six months SHOULD be reviewed
+  for accuracy
+
+<!-- templates/base/core/testing.md -->
+# Base — Testing
+
+[ID: base-testing]
+
+## Patterns
+
+- Use factory, AAA, builder, parameterized, fixtures, mock boundary,
+  snapshot, and contract testing patterns where appropriate
+
+## Taxonomy
+
+Test types are classified by the **boundary crossed during execution** — not by
+who runs them, what tools are used, or what assets drive the test content.
+
+| Type            | Boundary crossed                     | Primary focus                                   |
+| --------------- | ------------------------------------ | ----------------------------------------------- |
+| **Unit**        | None — single component in isolation | Correctness of individual functions and classes |
+| **Integration** | Process or component boundary        | Behaviour and interaction across components     |
+| **System**      | System boundary                      | End-to-end behaviour from a user perspective    |
+| **Regression**  | Any — reuses existing tests          | Protection against unintended change            |
+| **Exploratory** | Any — unscripted                     | Discovery of unexpected behaviour               |
+
+---
+
+## Unit tests
+
+Unit tests verify the correctness of individual functions and classes in
+isolation. Dependencies MUST be replaced with mocks or stubs. The primary
+driver is TDD — tests are written alongside or before the code.
+
+- MUST cover all happy paths defined by functional requirements
+- MUST achieve 90% coverage of new code before merging
+- SHOULD cover negative scenarios and edge cases
+- The total codebase SHOULD maintain 80% unit test coverage — see
+  `templates/base/workflow/quality-gates.md` for the coverage policy (80% for new projects,
+  warn-only for legacy)
+- Coverage MUST NOT regress between releases
+- MUST be runnable from CI without human intervention
+- Names are not part of any external report or traceability system — they
+  SHOULD be chosen freely, provided the name alone communicates the unit under
+  test, the input condition, and the expected outcome; each stack template
+  defines its own naming convention
+
+---
+
+## Integration tests
+
+Integration tests verify behaviour and interactions across a process or
+component boundary using real dependencies (database, message queue, filesystem,
+communication partner). Mocks MUST NOT substitute the dependency being
+integrated — they MAY be used for unrelated dependencies outside the scope
+of the test.
+
+Configuration MAY be sourced from the product manual when the integration
+requires a formally defined input (e.g. a communication configuration packet).
+This does not change the classification — the boundary crossed determines the
+type, not the asset used.
+
+- MUST verify the primary interaction path between the integrated components
+- SHOULD cover fault scenarios — dependency unavailable, malformed response,
+  timeout, boundary violations
+- SHOULD cover cases where a behaviour is only valid under specific conditions
+- MUST NOT rely on shared mutable state between test runs
+- Names MUST follow the codification scheme defined in the Imbra knowledge
+  repository under `standards/` — the scheme provides a structured format
+  that enables filtering, traceability, and maintenance across projects
+
+---
+
+## System tests
+
+System tests verify the complete product against its documented requirements
+from a user perspective, crossing the system boundary (interacting with
+external systems, users, or interfaces).
+
+- MUST be driven by the product manual or system specification
+- MUST cover the primary user scenarios defined in the requirements
+- SHOULD cover fault and degraded-mode scenarios at the system level
+- MUST be executed in an environment representative of production
+
+### E2E tests (subset of system)
+
+E2E tests are automated system tests that simulate complete user journeys
+through the full product stack.
+
+- MUST cover the critical user journeys defined in the product requirements
+- SHOULD cover non-happy paths and system-level edge cases
+- MAY provide data-agnostic scenarios to reduce environment coupling
+
+### Acceptance tests (subset of system)
+
+Acceptance tests are always executed manually, typically by the QA department
+or the customer, to determine whether the product satisfies its acceptance
+criteria.
+
+- MUST be executed in the target environment with production-representative
+  configuration
+- MUST be driven by documented acceptance criteria — not improvised
+- Automated tests MAY support acceptance testing but MUST NOT replace manual
+  sign-off
+
+---
+
+## Regression tests
+
+Regression tests protect against unintended change by re-executing a defined
+subset of existing tests after a modification. They reuse unit, integration,
+and system tests — they are not a separate test type.
+
+Regression suites are divided by scope and execution time:
+
+| Variant   | Scope               | Trigger             | Target duration |
+| --------- | ------------------- | ------------------- | --------------- |
+| **Smoke** | Critical paths only | Every commit        | < 15 minutes    |
+| **Quick** | Core functionality  | Every merge request | < 60 minutes    |
+| **Full**  | Complete suite      | Release candidate   | Unrestricted    |
+
+- Smoke and Quick regression MUST be fully automated
+- Full regression SHOULD be fully automated; manual steps MUST be documented
+- A regression failure MUST trigger an investigation:
+  1. Review the test logic first — if incorrect, refactor the test
+  2. If the test logic is correct, investigate the code under test
+
+---
+
+## Exploratory tests
+
+Exploratory testing is unscripted, experience-driven investigation with no
+predefined expected outcome. It is not part of any regression suite.
+
+- MAY be triggered by a discovered bug, a release candidate, or intuition
+- Findings that reveal a defect SHOULD result in a new regression test to
+  prevent recurrence
+- Results SHOULD be documented informally (session notes, bug reports)
+
+---
+
+## Testability
+
+Testability is a first-class design concern, not an afterthought. Code
+that is hard to test is hard to test because it is poorly designed —
+fixing the design fixes the testability.
+
+### Pure functions over side effects
+
+- Business logic SHOULD be implemented as pure functions — same input,
+  same output, no side effects (no I/O, no mutation of external state)
+- Side effects (database, API, filesystem, DOM) SHOULD be pushed to
+  the boundary — thin adapters that call pure logic
+- Pure functions are trivially unit-testable with no mocks, stubs, or
+  setup
+- A function that mixes logic and side effects is a signal to split
+  it: extract the logic into a pure function, keep the side effect
+  in a thin wrapper
+
+### Architecture for testability
+
+- Push side effects to the edges:
+  `[boundary: I/O] → [pure: logic] → [boundary: I/O]`
+- The pure center is unit-testable; the thin boundaries are
+  integration-testable
+- If a function needs more than two mocks to test, it has too many
+  responsibilities — split it
+
+### SOLID enables testability
+
+- **SRP** — one responsibility = one reason to test; multiple
+  responsibilities require combinatorial test cases
+- **OCP** — new behaviour via extension means existing tests stay
+  green
+- **LSP** — subtypes that honour contracts can be tested against the
+  base type's tests
+- **ISP** — small interfaces mean fewer dependencies to mock
+- **DIP** — depend on abstractions, inject dependencies; code that
+  instantiates its own dependencies cannot be tested in isolation
+
+### Design patterns and composition
+
+- Design patterns enable testability by enforcing separation of
+  concerns, loose coupling, and clear contracts
+- Prefer composition over inheritance — composed dependencies can be
+  injected and swapped in tests; inherited behaviour drags the entire
+  class hierarchy into every test
+
+---
+
+## General rules
+
+- Design for testability from the start — do not write code first and
+  struggle to test later
+- If code is hard to test, treat it as a design problem, not a testing
+  problem
+- Test behaviour, not implementation details
+- Each test MUST be independent — no shared mutable state between tests
+- A failing test MUST trigger an investigation before any other action —
+  never suppress or skip a failing test without a documented reason
+- Tests are code and MUST be treated as such — they MAY contain bugs; when
+  a test behaves unexpectedly, the test logic MUST be verified before
+  concluding the code under test is at fault
+- Integration tests MUST use real dependencies for the boundary under test —
+  not hand-written mocks
+- Test factory defaults for optional fields MUST be `undefined` (omitted),
+  not convenient values like `false` or `0` — explicit defaults mask bugs
+  that only appear with real data shapes
+- Data validation tests SHOULD flag boolean fields where one branch (`true`
+  or `false`) has zero occurrences across the dataset — this is a data
+  smell that can silently break sorting, filtering, and UI logic
+
+
+<!-- templates/frontend/static-site.md -->
+# Frontend — Static Site
+[ID: frontend-static-site]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/frontend/ux.md, templates/frontend/quality.md]
+
+Abstract rules for any static site generated at build time and served as
+plain HTML, CSS, and minimal JavaScript. Never used directly — always
+extended by a framework-specific stack (Astro, Hugo, Eleventy, etc.).
+
+---
+
+## Stack
+[ID: static-site-stack]
+
+- Output: static HTML generated at build time
+- Serving: CDN or plain web server — no server-side runtime required
+- JavaScript: minimal and opt-in — zero-JS by default where possible
+
+---
+
+## Architecture principle
+[ID: static-site-architecture]
+
+```
+data files  →  components  →  build output (HTML)
+    ↑                               ↓
+Edit here                    Deployed here
+```
+
+- Separation of content and code — editable content lives in a data directory
+- Default to static components; only reach for an interactive framework when
+  client-side state is genuinely required
+- One stylesheet — no inline styles except dynamic/computed values
+
+---
+
+## Content structure
+[ID: static-site-content]
+[EXTEND: base-docs]
+
+All editable content lives in a data directory as structured files (JSON,
+YAML, or Markdown). Never hardcode content that a non-developer might want
+to change.
+
+| File | Controls |
+|------|----------|
+| `[data path]/site.[ext]` | Nav links, hero text, contact links, footer |
+| `[data path]/[section].[ext]` | [what it controls] |
+
+---
+
+## Assets
+[ID: static-site-assets]
+
+- Images: `public/images/` — reference as `/images/filename.ext`
+- Documents: `public/docs/` — reference as `/docs/filename.ext`
+- No assets outside `public/` — only files in `public/` are served statically
+
+---
+
+## Pages
+[ID: static-site-pages]
+
+| Page     | Path    | Notes             |
+|----------|---------|-------------------|
+| Homepage | `/`     | All main sections |
+| 404      | `/404`  | Custom error page |
+
+---
+
+## Code conventions
+[ID: static-site-code]
+
+- **ESLint** for any JS/TS code — configured in `eslint.config.js`, run on save
+- **Prettier** owns all formatting — commit `.prettierrc`; no style debates
+  in code review
+- If no JS/TS is present in the project, skip ESLint
+
+---
+
+## CSS conventions
+[EXTEND: frontend-quality]
+
+- All CSS in a single global stylesheet
+- Use CSS custom properties from `:root` for all colours and spacing
+- BEM-like naming: `.component-element` (e.g. `.hero-grid`, `.nav-link`)
+- No CSS-in-JS, no utility frameworks unless explicitly chosen in stack
+
+---
+
+## Typography
+[ID: static-site-typography]
+
+- Prefer system font stacks over web fonts — eliminates font FOUC and
+  external dependencies:
+  ```css
+  --font-text: system-ui, -apple-system, sans-serif;
+  --font-code: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  ```
+- If web fonts are required, self-host them as woff2 files in `public/fonts/`
+  and declare `@font-face` in CSS — never depend on external CDNs at runtime
+- Use `font-display: block` for self-hosted fonts to prevent layout shift
+
+---
+
+## Theme persistence
+[ID: static-site-theme]
+
+- If the site supports dark mode via a `data-theme` attribute, initialize
+  the theme from `localStorage` in a `<script>` tag inside `<head>` —
+  before any content renders:
+  ```html
+  <script>
+    document.documentElement.setAttribute(
+      "data-theme",
+      localStorage.getItem("theme") || "light"
+    );
+  </script>
+  ```
+- MUST NOT set the theme in a body script or deferred module — this causes
+  a visible flash from light to dark on every page load
+
+---
+
+## Performance
+[EXTEND: frontend-quality]
+
+- Preload critical above-the-fold assets (hero image, primary font)
+- Static generation by default — no client-side rendering unless necessary
+- Defer non-critical scripts
+
+---
+
+## SEO
+[ID: static-site-seo]
+[EXTEND: frontend-quality]
+
+- `robots.txt` required
+- Open Graph and Twitter Card meta tags required
+- Canonical URLs required
+- Sitemap MUST be generated at build time and referenced in `robots.txt`
+- Every content page MUST have a unique `description` in frontmatter — used
+  for `<meta name="description">`, OG description, and Twitter Card
+- Meta descriptions MUST read as a pitch, not a summary — answer "why
+  should I click this?"
+- JSON-LD structured data SHOULD be present on content pages (Article,
+  Course, or appropriate schema type)
+- Privacy-friendly analytics only (no consent banner required)
+
+<!-- templates/base/language/typescript.md -->
+# Base — TypeScript
+[ID: base-typescript]
+[DEPENDS ON: templates/base/core/quality.md]
+
+## Type design
+[ID: base-typescript-type-design]
+
+- Use `interface` for object shapes; use `type` for unions and aliases
+- Use discriminated unions (tagged unions) for type families — a literal
+  `type` or `kind` field plus a union is safer than class hierarchies
+- Compose sub-interfaces when a domain has multiple categories with
+  different fields; keep single-purpose types flat
+- When declaring data arrays that use a discriminated union, type each
+  section with its specific sub-interface (`FlashItem[]`), not the
+  broad union (`Item[]`) — spread into the union array at the end
+- No enums — use `as const` objects or string literal unions
+- No `any` — use `unknown` and narrow, or define a proper type
+
+## Naming
+[ID: base-typescript-naming]
+
+- Booleans: prefix with `is`, `has`, or `can` (`isActive`, `hasPermission`)
+- Import types with `import type { ... }`
+- Explicit return types on non-trivial functions
+
+## Comments
+[ID: base-typescript-comments]
+
+- Prefer self-documenting names — a field that needs a comment needs a
+  better name
+- Use inline comments for units that cannot be encoded in the name:
+  `weight: number; // grams` not a standalone `// Grams` above the field
+- Keep inline comments lowercase, short, and consistent across the interface
+
+## Strictness
+[ID: base-typescript-strictness]
+
+- `strict: true` — no exceptions
+- Follow `@typescript-eslint/recommended`
+
+
+<!-- templates/stack/static-site-astro.md -->
+# Stack — Astro (Static Site)
+[DEPENDS ON: templates/frontend/static-site.md, templates/base/language/typescript.md]
+
+Extends the static site stack with Astro-specific rules.
+
+---
+
+## Stack
+[OVERRIDE: static-site-stack]
+
+- Framework: Astro (static site generator, output: static / GitHub Pages)
+- Interactive components: [React / Vue / Svelte / plain JS / none] — islands only
+- CSS: [plain CSS / Tailwind / CSS modules]
+- Content: [JSON files in `src/data/` / CMS / Markdown / hardcoded]
+- Deployed via GitHub Actions on push to `main`
+
+---
+
+## Component architecture
+[OVERRIDE: static-site-architecture]
+
+- Default to `.astro` components — they are static by default, zero JS shipped
+- Only reach for the chosen JS framework (React, Vue, Svelte) when client-side
+  state is genuinely required
+- Interactive components live in `src/components/interactive/`
+- See `README.md` for the full project structure
+
+## Astro islands (client directives)
+- `client:visible` — below-the-fold components, defers hydration until in view
+- `client:load` — above-the-fold components that must be interactive immediately
+- `client:only` — avoid unless SSR is enabled; skips server rendering entirely
+- Never hydrate a component that does not need interactivity
+
+---
+
+## Content structure
+[OVERRIDE: static-site-content]
+
+All editable content lives in `src/data/` as JSON.
+
+| File | Controls |
+|------|----------|
+| `src/data/site.json` | Nav links, hero text, contact links, footer |
+| `src/data/[section].json` | [what it controls] |
+
+Note: `src/content/` is intentionally avoided — Astro reserves that path
+for Content Collections. See the next section for when to migrate.
+
+---
+
+## Content Collections
+[ID: astro-content-collections]
+
+Use Astro Content Collections when data outgrows `src/data/` files:
+
+### When to migrate
+- A single data file exceeds ~200 entries or ~500 lines
+- Entries need rich text (Markdown body, not just fields)
+- Per-entry git diffs become hard to review in a single file
+- Non-developers need to author or edit content
+
+### Schema definition
+- Define collection schemas in `src/content.config.ts` using Zod
+- Every field that affects rendering or sorting MUST be in the schema
+- Use `z.enum()` for constrained values, not free strings
+- Mark optional fields explicitly with `.optional()`
+
+### File structure
+```
+src/content/
+  [collection]/
+    entry-slug.md       # frontmatter + optional Markdown body
+src/content.config.ts   # schema definitions
+```
+
+### Rendering patterns
+- Query with `getCollection()` / `getEntry()` — never read files
+  directly
+- Sort and filter in the page component, not in the data files
+- Use `render()` for Markdown body content — it returns compiled
+  HTML with full remark/rehype pipeline support
+
+### Migration checklist
+1. Create `src/content.config.ts` with Zod schema matching existing
+   data shape
+2. Convert each entry to a Markdown file with typed frontmatter
+3. Update components to use `getCollection()` instead of JSON imports
+4. Verify build passes — Astro validates frontmatter against schema
+   at build time
+5. Delete the old `src/data/` files
+
+### Single-source content pattern
+[ID: astro-single-source-content]
+
+When content MUST remain SSG-agnostic (e.g. tutorial chapters that
+work as plain Markdown on GitHub, in ebooks, and in other SSGs), point
+the content collection at an external directory instead of duplicating
+files into `src/content/`.
+
+**Setup:**
+
+1. Set the glob loader `base` to the external directory:
+   ```typescript
+   // src/content.config.ts
+   const docs = defineCollection({
+     loader: glob({
+       pattern: "**/*.md",
+       base: "../chapters",  // relative to astro project root
+     }),
+     schema: z.object({ ... }),
+   });
+   ```
+
+2. Add a remark plugin to rewrite cross-reference links at build time.
+   Chapters use `[Link](02-slug.md)` for GitHub compatibility; the
+   plugin rewrites to `../slug/` for Astro routing:
+   ```typescript
+   // src/plugins/remark-rewrite-links.ts
+   import { visit } from "unist-util-visit";
+   import type { Root, Link } from "mdast";
+
+   const CHAPTER_LINK = /^(\d{2}-)(.+)\.md(#.*)?$/;
+
+   export function remarkRewriteLinks() {
+     return (tree: Root) => {
+       visit(tree, "link", (node: Link) => {
+         const match = node.url.match(CHAPTER_LINK);
+         if (match) {
+           node.url = `../${match[2]}/${match[3] || ""}`;
+         }
+       });
+     };
+   }
+   ```
+
+3. Register the plugin in `astro.config.mjs`:
+   ```javascript
+   import { remarkRewriteLinks } from
+     './src/plugins/remark-rewrite-links.ts';
+
+   export default defineConfig({
+     markdown: {
+       remarkPlugins: [remarkRewriteLinks],
+     },
+   });
+   ```
+
+4. In CI, create a symlink for shared assets if chapters reference
+   them via relative paths:
+   ```yaml
+   - name: Create assets symlink
+     run: >
+       mkdir -p astro-site/src/content &&
+       ln -s ../../../assets astro-site/src/content/assets
+   ```
+
+**Rules:**
+- MUST NOT duplicate content files into `src/content/` — the external
+  directory is the single source of truth
+- The remark plugin MUST handle all link patterns used in the source
+  Markdown (numbered prefixes, anchors)
+- Image paths from the source directory MUST resolve correctly in both
+  GitHub rendering and the Astro build
+
+---
+
+## Assets
+[OVERRIDE: static-site-assets]
+
+- Images: `public/images/` — reference as `/images/filename.ext`
+- Documents: `public/docs/` — reference as `/docs/filename.ext`
+- No assets outside `public/` — Astro only serves static files from there
+
+---
+
+## View Transitions
+[ID: astro-view-transitions]
+
+- SHOULD enable Astro View Transitions via `<ClientRouter />` from
+  `astro:transitions` in the base layout — eliminates full-page flash
+  between navigations; static site feels like a SPA with zero
+  client-side routing JS (~244 bytes gzip overhead per page)
+- When using `<ClientRouter />`, MUST NOT use `DOMContentLoaded` in
+  page scripts — it only fires on full page loads, not on client-side
+  navigations
+- Use `astro:page-load` instead — it fires on every navigation
+  including View Transitions
+- Scripts in `<script>` tags (not `is:inline`) are re-executed on
+  navigation by default; `is:inline` scripts are not
+- Gracefully degrades to full page loads if JS is disabled — no
+  framework lock-in
+
+---
+
+## Reveal animations
+- Use a single `IntersectionObserver` script in the base layout for
+  `.reveal` → `.reveal.visible` transitions
+- Do not add per-component reveal scripts
+
+---
+
+## Code conventions
+
+- **ESLint** with `@typescript-eslint/recommended` for any `.ts` / `.tsx`
+  files — configured in `eslint.config.js`, run on save
+- **Prettier** owns all formatting — commit `.prettierrc`; no style debates
+  in code review
+- `.astro` files formatted with the official Prettier Astro plugin
+- MUST NOT use `set:html` — it is Astro's equivalent of `innerHTML` and
+  bypasses escaping; use `{expression}` for text content instead
+
+---
+
+## Git conventions
+[EXTEND: base-git]
+
+- Do not commit `dist/` or `node_modules/`
+- Always test with `npm run dev` before committing
+
+---
+
+## Commands
+
+### Core (MUST)
+```
+npm run dev      # astro dev — hot reload at localhost:4321
+npm run build    # astro build — production build to dist/
+npm run preview  # astro preview — serve production build locally
+npm run prepare  # husky — auto-installs git hooks on npm install
+```
+
+### Quality (SHOULD — omit if the tool is not in the stack)
+```
+npm run lint     # eslint .
+npm run format   # prettier --check .
+npm run check    # astro check — validate .astro files, types, content schemas
+npm test         # test runner in single-run mode (e.g. vitest run)
+npm run validate # lint + format + check + test + build — full quality gate
+```
+
+### Development (MAY)
+```
+npm run test:watch  # test runner in watch mode (e.g. vitest)
+```
+
+Rules:
+- `validate` SHOULD compose named scripts: each step callable individually
+  and as part of the full gate
+- `test` MUST run in single-run mode (exit after completion) — watch mode
+  belongs in `test:watch`
+- `prepare` is an npm lifecycle hook — runs automatically after `npm install`
+---
+
+## Quality gates
+[EXTEND: base-quality-gates]
+
+| Category | Layer 1 (editor) | Layer 2 (pre-commit) | Layer 3 (CI) | Config |
+|----------|-----------------|---------------------|-------------|--------|
+| Lint | ESLint | ESLint | ESLint | `eslint.config.js` |
+| Format | Prettier | Prettier | Prettier --check | `.prettierrc` |
+| Type check | TypeScript | tsc --noEmit | tsc --noEmit | `tsconfig.json` |
+| Security | — | — | Platform SAST | — |
+| Secrets | — | gitleaks | gitleaks | — |
+| Build | — | — | astro build | — |
+| Links | — | — | lychee | `lychee.toml` |
+| Site quality | — | — | Lighthouse CI ≥ 90 | `lighthouserc.json` |
+
+- Hook framework: `husky` + `lint-staged` — config in `package.json`
+- Lighthouse thresholds: accessibility ≥ 90 (error), performance / SEO /
+  best practices ≥ 90 (warn)
+
+---
+
+## SEO
+[EXTEND: static-site-seo]
+
+- `@astrojs/sitemap` MUST be installed as an Astro integration — generates
+  `sitemap-index.xml` at build time
+- Content collections MUST include a `description` field in the Zod schema:
+  ```typescript
+  z.object({
+    title: z.string(),
+    description: z.string(),
+    // ...
+  })
+  ```
+- Layouts MUST render the description as `<meta name="description">`, OG
+  description, and Twitter Card description
+- JSON-LD structured data SHOULD be rendered in a `<script type="application/ld+json">`
+  tag in the layout — use `JSON.stringify()` with `set:html` (acceptable
+  exception to the `set:html` ban since the input is fully server-controlled)
+
+
+<!-- templates/base/workflow/issues.md -->
+# Issue Formats
+[ID: base-issues]
+
+Standard formats for work items in GitHub Issues. Each type has a label,
+a title convention, and a body template.
+
+---
+
+## Issue types
+[ID: base-issues-types]
+
+Every issue MUST have exactly one type and one priority.
+
+| Type | When to use |
+|------|-------------|
+| Bug | Defect in existing functionality |
+| Epic | Large initiative spanning multiple tasks |
+| Task | Atomic implementable work |
+| Spike | Research or exploration — output is a decision |
+| Incident | Production outage or degradation affecting users now |
+
+| Priority | Meaning |
+|----------|---------|
+| P0 | Critical — blocks everything |
+| P1 | High — must fix before next milestone |
+| P2 | Medium — important but not blocking |
+| P3 | Low — nice to have |
+| P4 | Backlog — someday |
+
+Platform-specific label implementation (names, colors) is defined in
+the platform template (e.g. `platform/github.md`).
+
+---
+
+## Epic
+
+A large initiative too big for one task. Tracks progress via child issue checklist.
+
+**Title:** descriptive goal (no prefix — the `epic` label identifies the type)
+
+```markdown
+## Goal
+[One sentence — what does success look like?]
+
+## Tasks
+- [ ] #XX — task description
+- [ ] #YY — task description
+
+## Out of scope
+[What this epic does NOT cover]
+
+## Definition of done
+[Measurable criteria for closing]
+```
+
+**Rules:**
+- Every epic MUST have a tasks checklist with issue references
+- Check off children as they close — do not let checkboxes go stale
+- Close the epic when the goal is met, even if stretch items remain
+- Epics span phases — do not force them into one milestone
+
+---
+
+## Task
+
+An atomic, implementable unit of work. One task = one branch = one PR.
+Embeds a user story line for user context.
+
+**Title:** descriptive action (no prefix — commit messages carry the
+`feat:/fix:/data:/docs:/chore:/refactor:/test:` prefix, not issue titles)
+
+```markdown
+As a [user type], I want [capability] so that [benefit].
+
+## What
+[Clear description of the change]
+
+## Why
+[Motivation — which epic does this serve?]
+
+## Acceptance criteria
+- [ ] [Observable behavior 1]
+- [ ] [Observable behavior 2]
+```
+
+**Rules:**
+- Scoped to a single concern — do not mix refactoring with features
+- The agent SHOULD be able to complete it in one conversation turn
+- If a task needs multiple sub-tasks, it is an epic
+- Acceptance criteria MUST be verifiable (build passes, page renders, score matches)
+
+---
+
+## Bug
+
+A defect in existing functionality.
+
+**Title:** what is broken (no prefix — the `bug` label identifies the type)
+
+```markdown
+**Severity:** critical | major | minor | trivial
+
+## Expected
+[What should happen]
+
+## Actual
+[What happens instead]
+
+## Reproduce
+1. [Step 1]
+2. [Step 2]
+3. [Result]
+
+## Environment
+[dev/preview/production, browser, branch]
+```
+
+**Severity guide:**
+
+| Level | Meaning | Example |
+|-------|---------|---------|
+| critical | Page broken, data loss, deploy blocked | Blank page, build fails, wrong data shown |
+| major | Feature does not work but site is usable | Filters return 0 results, sort broken |
+| minor | Works but wrong behavior in edge case | Discontinued item not sorted last |
+| trivial | Visual only, no functional impact | Alignment off, color slightly wrong |
+
+**Rules:**
+- Every bug MUST include reproduction steps
+- Environment MUST specify dev, preview, or production
+- Do not open a bug without attempting to reproduce it first
+
+---
+
+## Incident
+
+A production outage or degradation affecting users now. Different from a
+bug — a bug is a defect you discover, an incident is something burning.
+
+**Title:** what is down (no prefix — the `incident` label identifies the type)
+
+```markdown
+**Severity:** critical | major
+**Status:** investigating | identified | mitigating | resolved
+
+## Impact
+[Who is affected, how severely]
+
+## Timeline
+- [HH:MM UTC] — [event]
+- [HH:MM UTC] — [event]
+
+## Root cause
+[What caused it — fill in after identified]
+
+## Resolution
+[What fixed it — fill in after resolved]
+
+## Prevention
+[What changes prevent recurrence — fill in after postmortem]
+```
+
+**Rules:**
+- Only critical or major — if it is minor, it is a bug, not an incident
+- Update the status field as you work through it
+- Timeline MUST capture the sequence of events
+- Prevention is mandatory — every incident MUST produce a change
+- Create a follow-up task or ADR from the prevention section
+
+---
+
+## Spike
+
+Research or exploration where the output is a decision, not code.
+
+**Title:** the question being investigated (no prefix — the `spike`
+label identifies the type)
+
+**Format:** use the task format. The acceptance criteria describe what the
+spike should produce (an ADR, a recommendation, a prototype).
+
+```markdown
+As a [role], I want to understand [topic] so that [decision can be made].
+
+## What
+[Question or area to explore]
+
+## Why
+[What decision is blocked without this research?]
+
+## Acceptance criteria
+- [ ] ADR documenting the decision
+- [ ] Recommendation with alternatives considered
+```
+
+
+<!-- templates/base/workflow/scope.md -->
+# Base — Scope Guard
+
+[ID: base-scope]
+
+## Purpose
+
+Prevent scope creep during agent-assisted work sessions. Agents tend to
+agree with expansions rather than pushing back, leading to sessions that
+start with one task and end with five unrelated changes — none fully
+finished.
+
+## Session startup
+
+Before starting any work, the agent MUST:
+
+1. Read all documents referenced in the project's CLAUDE.md (e.g.
+   `docs/solid-ai-templates/templates/base/core/git.md`, `templates/base/core/docs.md`, etc.)
+2. These contain binding conventions that CLAUDE.md inherits — do not
+   proceed until you have read and understood them
+3. Check which branch you are on — if not `main`, ask why before
+   proceeding
+4. Check `git status` — if uncommitted changes exist, resolve before
+   starting new work
+5. Confirm the scope with the user before making changes
+6. If the task is ambiguous, ask: "What is the specific deliverable for
+   this session?"
+7. Write down the agreed scope — refer back to it when the session
+   drifts
+8. Review open issues related to the agreed scope before writing code
+
+## Mandatory startup block
+
+Every project CLAUDE.md MUST include a prominent startup block at the
+top of the file listing all referenced template files with an explicit
+instruction to read them before the first response. This applies to both
+reference mode and hybrid mode.
+
+The startup block MUST:
+
+- Appear before section 1 (Project)
+- List every template file the project depends on
+- Use imperative language: "You MUST read every file listed below IN
+  FULL using the Read tool before you respond"
+- State the consequence: "If you respond without reading them, you are
+  violating project rules"
+
+This requirement exists because `templates/base/workflow/scope.md` says "read all documents
+referenced in CLAUDE.md" — but `scope.md` is one of the files that needs
+to be read first. The startup block breaks this chicken-and-egg problem
+by placing the instruction directly in CLAUDE.md, the one file that is
+always loaded into context automatically.
+
+## During work
+
+- If a task grows beyond the original scope, flag it explicitly:
+  "This is expanding beyond the original task — should I continue or
+  finish the current work first?"
+- Do not silently absorb new requests into the current work stream
+- Finishing and committing the current work SHOULD take priority over
+  starting something new
+- Build after every change — do not accumulate multiple changes without
+  verifying the build still passes
+
+## Default scope boundaries
+
+- One logical unit of work per session (one feature, one chapter, one
+  component, one bug fix)
+- Changes that support the current unit (tests, docs, formatting) are
+  in scope
+- Restructuring unrelated code, creating new projects, or adding
+  infrastructure is out of scope unless explicitly requested
+
+## When in doubt
+
+- Finish the current task
+- Commit the current work
+- Then ask whether to start the new task
+
+## Scope expansion protocol
+
+When the user requests something out of scope:
+
+1. Acknowledge the request
+2. State what the current scope is
+3. Ask: "Should I finish the current work first, or switch to this?"
+4. If switching, commit current progress before starting the new task
+
+## End of session audit
+
+When the user signals end of session ("wrap up", "let's finish",
+"end session", "close out", or similar), the agent MUST print the full
+checklist below and execute each item sequentially. Mark each item done
+(with result) before moving to the next. Do not batch, skip, or
+summarize — visible sequential execution prevents missed steps.
+
+1. **Commits and push** — all changes committed and pushed (via PR if
+   branch-protected)
+2. **Close issues** — close completed issues (verify auto-close worked)
+3. **Epic checklists** — update epic checklists if relevant
+4. **Dev journal** — add a session entry to `docs/dev-journal.md`
+   (date, tool, key changes, PRs merged, issues closed/created)
+5. **ADRs** — record any architectural decisions in `docs/decisions/`
+6. **CLAUDE.md** — for each new convention or rule introduced, does it
+   belong here? Name the section.
+7. **README.md** — for each new command, dependency, or structural
+   change, is it reflected? Name the section.
+8. **ONBOARDING.md** — for each new tool, prerequisite, or setup step,
+   is it documented in `docs/ONBOARDING.md`? Name the section.
+9. **PLAYBOOK.md** — for each new command, script, or workflow added,
+   is it documented in `docs/PLAYBOOK.md`? Name the section.
+10. **Submodules** — check if upstream submodules need updates
+    (`git submodule update --remote`); commit the pointer bump if needed
+11. **Template feedback** — for each new pattern or convention
+    introduced, explicitly state whether it is project-specific or
+    reusable; if reusable, name the upstream template file it would
+    go in
+12. **Flag gaps** — if any of the above cannot be completed, flag it
+    to the user before closing
+13. **Summary** — summarize what was done and what's next
+
+
+<!-- templates/stack/static-site-tutorial.md -->
+# Stack — Static Site Tutorial
+[DEPENDS ON: templates/stack/static-site-astro.md, templates/base/workflow/issues.md, templates/base/workflow/scope.md]
+
+Extends the Astro static site stack with conventions for multi-chapter
+tutorial sites. Covers content structure, chapter format, diagram
+pipeline, CI/CD, and licensing.
+
+---
+
+## Content layer
+[OVERRIDE: static-site-content]
+
+Canonical tutorial content lives in `chapters/` as SSG-agnostic
+Markdown. The Astro site imports from this directory — never edit
+content inside `astro-site/` directly.
+
+```
+chapters/
+  01-introduction.md
+  02-topic-a.md
+  ...
+  NN-glossary.md
+```
+
+- Number-prefixed filenames control chapter order
+- Frontmatter MUST include `title`, `section`, `order`
+- Content is SSG-agnostic — no Astro-specific syntax in chapters
+
+---
+
+## Chapter structure
+
+Every chapter MUST follow this structure in order:
+
+1. Frontmatter (`title`, `section`, `order`)
+2. `## Overview` — what the chapter covers and why
+3. Content sections with `##` and `###` headings
+4. `## Exercises` — hands-on tasks with verification steps
+5. `## Quiz` — multiple-choice questions with answers at the bottom
+
+Reference chapters (playbook, appendix, glossary) MAY omit Exercises
+and Quiz sections.
+
+---
+
+## Quiz formatting
+
+- Each option on a bullet line: `- A) ...`, `- B) ...`
+- Vary the correct answer positions — never all the same letter
+- Answers section at the bottom: `1. C — explanation`
+
+---
+
+## Writing style
+[EXTEND: base-docs]
+
+- **American English** spelling (analyze, not analyse)
+- Concise, direct sentences — no filler, no preamble
+- Explain technical terms inline for beginners
+- No `---` separators between subsections — headings provide separation
+- No inline Practice sections — all practice goes in Exercises
+- No emojis unless explicitly requested
+
+---
+
+## Cross-references
+
+- Reference other chapters by file: `[Topic A](02-topic-a.md)`
+- Reference sections within a chapter by heading anchor:
+  `[Section Name](#section-name)`
+- The Astro build rewrites chapter cross-references automatically
+  via a remark plugin (see
+  [Single-source content pattern](static-site-astro.md#single-source-content-pattern))
+
+---
+
+## Assets
+[OVERRIDE: static-site-assets]
+
+```
+assets/
+  images/              # PNG exports used in chapters
+  drawio/              # draw.io source files (editable)
+  archive/             # Superseded images (kept for reference)
+  banners/             # Banner images
+```
+
+- Source files: `assets/drawio/<name>.drawio`
+- Exported PNGs: `assets/images/<name>.png`
+- Reference from chapters: `![Alt text](../assets/images/name.png)`
+- Superseded images move to `assets/archive/` — not deleted
+- `.bkp` files (draw.io temp) MUST be in `.gitignore`
+
+---
+
+## Project structure
+[OVERRIDE: static-site-architecture]
+
+```
+chapters/              # Canonical tutorial content (SSG-agnostic)
+assets/
+  images/              # PNG exports
+  drawio/              # draw.io source files
+  archive/             # Superseded images
+astro-site/            # Astro static site
+  src/
+    content/           # Content collection (imports from chapters/)
+    components/        # Astro components
+    layouts/           # Page layouts
+    pages/             # Route definitions
+    styles/            # Global CSS
+    data/              # Site configuration (site.json)
+docs/                  # Project docs
+  decisions/           # ADRs
+  solid-ai-templates/  # Submodule — quality conventions
+  dev-journal.md       # Session log
+  ONBOARDING.md        # Contributor setup
+  PLAYBOOK.md          # Operational reference
+```
+
+---
+
+## Navigation
+
+- Hamburger menu for mobile (breakpoint ≤768px)
+- All chapters visible when menu is open
+- Tab bar for desktop navigation
+- `rel="noopener noreferrer"` on all `target="_blank"` links
+
+---
+
+## CI/CD
+[EXTEND: base-git]
+
+Two workflows:
+
+**`build.yml`** — triggers on pull requests to `main`
+- Checkout, setup Node (pinned to match `engines` in package.json),
+  npm ci (with cache), build, link check
+
+**`deploy.yml`** — triggers on push to `main`
+- Same build steps as above, plus upload artifact and deploy to
+  GitHub Pages
+
+- Use `actions/setup-node` built-in cache (keyed on
+  `package-lock.json`)
+- Use lychee for link checking against built `dist/` output
+- Pin Node version to exact version matching `engines` in
+  `package.json`
+
+---
+
+## Release process
+[EXTEND: base-git]
+
+Follow `templates/base/core/git.md` release process:
+1. `git checkout -b chore/release-vX.Y.Z`
+2. `git commit --allow-empty -m "chore: release vX.Y.Z"`
+3. Push, open PR, merge
+4. `git checkout main && git pull`
+5. `git tag vX.Y.Z && git push origin vX.Y.Z`
+
+Tags use semver: `v1.0.0` (lowercase v, three segments).
+
+---
+
+## Issue templates
+
+Use 5 typed templates from `templates/base/workflow/issues.md`:
+- Epic, Task, Bug, Incident, Spike
+- Placed in `.github/ISSUE_TEMPLATE/`
+- No title prefix — labels identify the type
+
+---
+
+## Licensing
+
+- Tutorial content: CC BY-NC-SA 4.0
+- Allows copying and adapting with attribution
+- Prohibits commercial use without permission
+- Derivatives must use the same license
+
+---
+
+## Scope guard
+[EXTEND: base-scope]
+
+- One chapter per session is the default scope for content work
+- Diagram, exercise, and quiz changes within that chapter are in scope
+- Restructuring other chapters or adding infrastructure is out of scope
+  unless explicitly requested
+
+---
+
+## Commands
+```
+npm run dev      # develop — hot reload at localhost:4321/<base>/
+npm run build    # compile — production build to dist/
+npm run preview  # verify — preview the production build locally
+```

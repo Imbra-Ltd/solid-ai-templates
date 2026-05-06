@@ -70,7 +70,10 @@ Before generating, collect any missing fields in a single question:
 ### Inline model (default)
 
 Select the matching stack template from the table below and load its
-DEPENDS ON chain. Apply any adjustments from Phase 3.
+DEPENDS ON chain. If you have shell access, run
+`py tools/resolve.py <stack-id> --concat` to get the full resolved
+content. Otherwise, read the pre-resolved file from `generated/<stack-id>.md`.
+Apply any adjustments from Phase 3.
 Generate the output file using the format rules in `templates/base/core/agents.md`.
 All rules are inlined — the output file is self-contained.
 End the file with: `<!-- Generated with solid-ai-templates (github.com/braboj/solid-ai-templates) -->`

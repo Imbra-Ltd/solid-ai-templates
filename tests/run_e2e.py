@@ -33,27 +33,11 @@ import time
 from lib import ROOT, PASS, FAIL, SKIP, ERR, read, parse_args, load_dotenv
 from cases import ALL_TESTS, CANARY_TESTS
 
+# Import shared resolver from tools/
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+from resolve import load_manifest, resolve_chain, read_file  # noqa: E402
+
 load_dotenv()
-
-
-def _load_manifest():
-    """Load manifest.yaml and build lookup tables."""
-    import yaml
-    manifest_path = os.path.join(ROOT, "templates", "manifest.yaml")
-    with open(manifest_path, encoding="utf-8") as f:
-        data = yaml.safe_load(f)
-
-    # Build id -> entry lookup
-    entries = {}
-    for section in ("base", "platform", "frontend", "backend", "stacks"):
-        for entry in data.get(section, []):
-            entries[entry["id"]] = entry
-
-    # Build file -> id reverse lookup
-    file_to_id = {e["file"]: e["id"] for e in entries.values()}
-
-    return data.get("core", []), entries, file_to_id
-
 
 _manifest_cache = None
 
@@ -61,51 +45,19 @@ _manifest_cache = None
 def _get_manifest():
     global _manifest_cache
     if _manifest_cache is None:
-        _manifest_cache = _load_manifest()
+        core_ids, entries, stacks = load_manifest()
+        file_to_id = {e["file"]: e["id"] for e in entries.values()}
+        _manifest_cache = (core_ids, entries, file_to_id)
     return _manifest_cache
 
 
 def resolve_deps(stack_file):
-    """Resolve full dependency chain per ADR-004 algorithm.
-
-    RESOLVE(manifest, stack_id, extras):
-      1. for id in core: ADD(id)
-      2. RESOLVE_DEPS(stack_id)
-      3. for id in extras: RESOLVE_DEPS(id)
-    """
+    """Resolve full dependency chain for a stack file path."""
     core_ids, entries, file_to_id = _get_manifest()
-
-    resolved = set()
-    files = []
-
-    def add(entry_id):
-        if entry_id in resolved:
-            return
-        resolved.add(entry_id)
-        entry = entries.get(entry_id)
-        if entry:
-            files.append(entry["file"])
-
-    def resolve(entry_id):
-        if entry_id in resolved:
-            return
-        entry = entries.get(entry_id)
-        if not entry:
-            return
-        for dep in entry.get("depends_on", []):
-            resolve(dep)
-        add(entry_id)
-
-    # Step 1: core tier
-    for cid in core_ids:
-        add(cid)
-
-    # Step 2: stack chain
     stack_id = file_to_id.get(stack_file)
     if stack_id:
-        resolve(stack_id)
-
-    return files
+        return resolve_chain(stack_id, core_ids, entries)
+    return []
 
 
 def build_prompt(stack_file, answers, output_file="templates/base/core/agents.md",

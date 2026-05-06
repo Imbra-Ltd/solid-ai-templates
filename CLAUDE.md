@@ -30,7 +30,8 @@ templates/          # All template source files
 docs/               # Onboarding, playbook, decision logs, SPEC.md
 examples/           # Complete generated context files (reference)
 tests/              # Smoke and e2e test runners, specs, reports
-tools/              # sync.py — generates tables from manifest
+tools/              # sync.py, resolve.py — sync and resolution scripts
+generated/          # Pre-resolved template chains (one file per stack)
 ```
 
 ### 1.3 Commands
@@ -40,12 +41,19 @@ tools/              # sync.py — generates tables from manifest
 git clone https://github.com/braboj/solid-ai-templates.git
 
 # Sync generated sections after editing templates/manifest.yaml
-py tools/sync.py            # update SPEC.md, README.md, INTERVIEW.md
+py tools/sync.py            # update SPEC.md, README.md, INTERVIEW.md, generated/
 py tools/sync.py --check    # exit 1 if any file is out of sync
+
+# Resolve dependency chain for a stack
+py tools/resolve.py --list                    # list stack IDs
+py tools/resolve.py <stack-id>               # print resolved file list
+py tools/resolve.py <stack-id> --concat      # print concatenated content
+py tools/resolve.py --generate               # regenerate all cached files
 
 # To generate a context file for a project:
 # 1. Open your agent
 # 2. Attach templates/INTERVIEW.md and the relevant stack template
+#    (or use generated/<stack-id>.md for the pre-resolved chain)
 # 3. Ask the agent to generate CLAUDE.md (or AGENTS.md, etc.)
 ```
 
