@@ -90,6 +90,15 @@ composition model.
    ```
 4. Place the generated file at the project root
 
+### Pre-resolved path (no shell access)
+
+If the agent cannot run scripts, use the pre-resolved files in
+`generated/`. Each file contains the full template chain for one stack:
+
+1. Attach `generated/stack-flask.md` (or the relevant stack)
+2. Attach `templates/base/core/agents.md` (output format)
+3. Provide your answers and ask the agent to generate the file
+
 ---
 
 ## Validate a template change
@@ -113,8 +122,9 @@ composition model.
 ## Run the test suite
 
 ```bash
-py tests/run_smoke.py              # 7 structural checks — seconds
-py tests/run_e2e.py                # 30 agent tests — ~1-2 hours
+py tests/run_smoke.py              # 11 structural checks — seconds
+py tests/run_e2e.py                # canary test (python-lib)
+py tests/run_e2e.py --all          # all agent tests
 py tests/run_e2e.py STK-01 FMT-01  # specific tests only
 py tests/run_e2e.py --dry-run      # build prompts, skip agent calls
 ```
@@ -122,6 +132,22 @@ py tests/run_e2e.py --dry-run      # build prompts, skip agent calls
 See `tests/CODIFICATION.md` for the ID scheme and `tests/INDEX.md` for the
 full list of specs. Requires `py -m pip install pyyaml` for the manifest
 check.
+
+---
+
+## Regenerate pre-resolved files
+
+After editing any template or `manifest.yaml`, regenerate the cached
+files in `generated/`:
+
+```bash
+py tools/resolve.py --generate     # regenerate all 30 files
+py tools/resolve.py --check        # verify they are up to date
+py tools/sync.py                   # also regenerates via --check
+```
+
+The `generated/` files are committed to the repo so agents without
+shell access can use them directly.
 
 ---
 

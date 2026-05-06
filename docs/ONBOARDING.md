@@ -36,6 +36,7 @@ cd solid-ai-templates
 ```
 
 No build step, no dependencies to install. All templates are plain Markdown.
+Install PyYAML for the smoke tests: `pip install pyyaml`
 
 ## Understand the structure
 
@@ -44,6 +45,8 @@ No build step, no dependencies to install. All templates are plain Markdown.
 | `docs/SPEC.md` | The full composition model — inheritance, OVERRIDE, EXTEND, IDs |
 | `CLAUDE.md` | Rules for contributing to this repo |
 | `templates/manifest.yaml` | Machine-readable dependency graph |
+| `tools/resolve.py` | Dependency resolver — resolves a stack's full template chain |
+| `generated/` | Pre-resolved template chains — one file per stack |
 | `examples/` | Complete generated CLAUDE.md files — the target output |
 
 ## How templates relate
@@ -62,6 +65,14 @@ templates/stack/python-service.md
     ↓
 templates/stack/python-flask.md
 ```
+
+To see the full resolved chain for any stack, run:
+```bash
+py tools/resolve.py stack-flask          # print file list
+py tools/resolve.py stack-flask --concat # print concatenated content
+```
+
+Or read the pre-resolved file directly: `generated/stack-flask.md`
 
 ## Validate your understanding
 
