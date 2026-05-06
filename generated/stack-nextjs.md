@@ -116,8 +116,22 @@ Apply SOLID at the class, module, and service level:
   read the implementation to understand what a call site does, the function
   needs a better name or needs to be split
 - Cognitive complexity ≤ 15 per function — enforced by static analysis
-  (SonarQube, Codacy, or equivalent); each nesting level and decision point
-  increases the score
+  (SonarQube, Codacy, or `eslint-plugin-sonarjs` for ESLint); each
+  nesting level and decision point increases the score
+
+### eslint-plugin-sonarjs rules (if applicable)
+
+| sonarjs rule | Enforces |
+|---|---|
+| `cognitive-complexity` | Cognitive complexity ≤ 15 per function |
+| `no-nested-conditional` | Maximum nesting depth |
+| `no-duplicated-branches` | DRY — identical branches in if/switch |
+| `no-identical-expressions` | DRY — same expression on both sides of operator |
+| `no-identical-functions` | DRY — duplicated function bodies |
+| `no-collapsible-if` | KISS — collapse nested ifs |
+| `no-redundant-jump` | No dead code — unnecessary return/continue/break |
+| `no-unused-collection` | No dead code — collection populated but never read |
+| `no-inverted-boolean-check` | Readability — avoid negative conditions |
 - Maximum nesting depth of three levels — use early returns and guard clauses
   to reduce indentation rather than adding else branches
 - No boolean flag parameters — they force the caller to read the implementation
@@ -1087,8 +1101,9 @@ CLAUDE.md
 [ID: react-spa-typescript]
 
 - Follow the **TypeScript ESLint** recommended ruleset
-  (`@typescript-eslint/recommended`) — enforced by ESLint; do not suppress
-  lint errors without a documented reason
+  (`@typescript-eslint/recommended`) and `eslint-plugin-sonarjs` —
+  enforced by ESLint; do not suppress lint errors without a
+  documented reason
 - **Prettier** owns all formatting decisions — no style discussions in code
   review; configure once and commit the config
 - `strict: true` in `tsconfig.json` — no exceptions
@@ -1721,6 +1736,30 @@ every project regardless of language or framework.
   (path traversal risk)
 - Scan uploaded files for malware if the application serves them
   to other users
+
+---
+
+## Agent secrets handling
+
+[ID: security-agent-secrets]
+
+- MUST NOT read, print, or cat files that may contain secrets:
+  `.env`, `credentials.json`, `*-key*`, `*.pem`, `*.key`,
+  `serviceaccount.json`, `secrets.yaml`
+- MUST NOT echo, log, or display environment variable values —
+  use `printenv | grep -c KEY` to check presence without
+  revealing the value
+- MUST NOT include secret values in commit messages, PR
+  descriptions, or conversation output
+- MUST warn the user before committing files that commonly
+  contain secrets (`.env`, `credentials.json`, private keys)
+- Use targeted commands to verify secret presence without
+  exposure: `grep -c PATTERN file` (count matches),
+  `test -f .env && echo exists` (check file existence)
+- If secrets are accidentally exposed in a session, immediately
+  flag to the user: name the exposed secret, recommend
+  immediate rotation, and note that session history may be
+  cached or logged
 
 
 <!-- templates/backend/auth.md -->
