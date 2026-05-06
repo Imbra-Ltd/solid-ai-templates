@@ -722,119 +722,6 @@ fixing the design fixes the testability.
   not hand-written mocks
 
 
-<!-- templates/stack/go-lib.md -->
-# Stack — Go Library / CLI
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/testing.md, templates/base/workflow/quality-gates.md]
-
-Base Go conventions for any Go module — library, CLI tool, or service.
-Never used directly for services — always extended by `templates/stack/go-service.md`.
-Can be used directly for pure Go libraries or standalone CLI tools with
-no HTTP layer.
-
----
-
-## Stack
-[ID: go-lib-stack]
-
-- Language: Go 1.22+
-- CLI framework: [cobra / flag (stdlib)] — only for command packages
-- Test runner: go test (stdlib)
-- Distribution: [binary / GitHub Releases / Go module proxy]
-
----
-
-## Package and interface design
-[ID: go-lib-packages]
-
-- Small, focused packages — one domain concern per package
-- Define interfaces where the caller, not the implementer, owns them
-- Keep interfaces small: prefer 1–3 methods
-- Accept interfaces, return concrete types (in most cases)
-- Avoid package-level `init()` — use explicit initialisation in `main`
-- No `utils/` or `helpers/` packages — name packages by domain
-
----
-
-## Error handling
-[ID: go-lib-errors]
-
-- Always handle errors — never `_` discard an error return
-- Wrap errors with context: `fmt.Errorf("creating user: %w", err)`
-- Use `errors.Is()` and `errors.As()` for inspection — never string matching
-- Define sentinel errors (`var ErrNotFound = errors.New(...)`) in the package
-  that owns the concept
-- Log errors once — at the top of the call stack, not at every level
-
----
-
-## Code quality
-[ID: go-lib-quality]
-[EXTEND: base-quality]
-
-- Follow **Effective Go** (https://go.dev/doc/effective_go) for idioms and
-  design decisions — the canonical Go style reference
-- Follow **Go Code Review Comments** (https://go.dev/wiki/CodeReviewComments)
-  for common pitfalls and reviewer expectations
-- `gofmt` / `goimports` — code must be formatted; CI rejects unformatted code
-- Run `go vet ./...` — fix all warnings before committing
-- Run `staticcheck ./...` for additional static analysis
-- No unused imports or variables — the compiler rejects these
-- Exported symbols must have a doc comment
-
----
-
-## Testing
-[ID: go-lib-testing]
-[EXTEND: base-testing]
-
-- Use stdlib `testing` package — no third-party assertion libraries
-- Table-driven tests with `t.Run()` for parameterised cases
-- Test the public API of each package — not unexported functions
-- Use interfaces to inject dependencies in tests — no monkey-patching
-- Component test naming: `Test<UnitOfWork>_<State>_<Expected>`
-  e.g. `TestParseConfig_MissingField_ReturnsError`
-- Run before every commit: `go test ./... && go vet ./...`
-
----
-
-## Git conventions
-[ID: go-lib-git]
-[EXTEND: base-git]
-
-- Do not commit compiled binaries or `*.test` files
-- Do not commit `vendor/` unless vendoring is an explicit project decision —
-  document it in README if so
-- `go.sum` is committed — do not delete or regenerate without cause
-- Tag releases with `vX.Y.Z` — Go module proxy uses these
-
----
-
-## Commands
-```
-go build ./...        # compile all packages
-go test ./...         # run all tests
-go vet ./...          # static analysis
-goimports -w .        # format imports
-staticcheck ./...     # additional static analysis
-```
----
-
-## Quality gates
-[EXTEND: base-quality-gates]
-
-| Category | Layer 1 (editor) | Layer 2 (pre-commit) | Layer 3 (CI) | Config |
-|----------|-----------------|---------------------|-------------|--------|
-| Lint | golangci-lint | golangci-lint | golangci-lint | `.golangci.yml` |
-| Format | gofmt | gofmt | gofmt -l | built-in |
-| Type check | built-in | built-in | go vet | — |
-| Security | — | — | govulncheck + platform SAST | — |
-| Secrets | — | gitleaks | gitleaks | `.pre-commit-config.yaml` |
-| Tests | — | — | go test ./... | — |
-| Coverage | — | — | go test -cover ≥ 80% | — |
-
-- Hook framework: `pre-commit` or Makefile
-
-
 <!-- templates/base/core/config.md -->
 # Base — Configuration
 [ID: base-config]
@@ -950,6 +837,263 @@ SECRET_KEY=change-me
 LOG_LEVEL=info
 DEBUG=false
 ```
+
+
+<!-- templates/base/workflow/quality-gates.md -->
+# Base — Quality Gates
+
+[ID: base-quality-gates]
+[DEPENDS ON: templates/base/core/quality.md, templates/base/core/git.md, templates/base/core/testing.md]
+
+Stack-agnostic quality gate model. Defines the layers, categories,
+thresholds, and constraints. Stack templates extend with concrete tools.
+Platform templates extend with CI-specific integration.
+
+---
+
+## Shift-left principle
+
+[ID: quality-gates-principle]
+
+The earlier a defect is caught, the cheaper it is to fix. Every check
+that can run locally MUST run locally. CI is the backstop, not the first
+line of defense.
+
+```
+Editor (0s) → Pre-commit (1-5s) → CI (1-5min) → Code review (hours)
+```
+
+---
+
+## Three-layer gate model
+
+[ID: quality-gates-layers]
+
+### Layer 1 — Editor (instant feedback)
+
+Runs in the developer's IDE as they type. Zero friction.
+
+- Every project MUST provide config files that enable checks automatically
+  when the project is opened in a supported editor
+- Checks: lint, format, type check
+
+### Layer 2 — Pre-commit hooks (1–5 seconds)
+
+Runs automatically before every commit. Blocks bad commits locally.
+
+- Every project MUST have pre-commit hooks
+- The hook framework is stack-specific (see stack template)
+- Checks: lint, format, type check, secret detection, file hygiene
+  (trailing whitespace, merge conflict markers, large files)
+
+### Layer 3 — CI (1–5 minutes)
+
+Runs on every PR. The final gate before merge.
+
+- Every project MUST have a CI workflow that runs on PRs
+- CI checks MUST be configured as required status checks in branch
+  protection — a passing CI run that does not block merge is
+  informational, not a gate
+- CI MUST duplicate Layer 2 checks — pre-commit hooks can be bypassed
+  with `--no-verify`
+- CI adds checks that cannot run locally: deep security analysis (SAST),
+  test suite, coverage measurement, build verification
+- The CI platform is project-specific (see platform template)
+
+---
+
+## Gate categories
+
+[ID: quality-gates-categories]
+
+Every project MUST enforce checks in the following categories. Stack
+templates map each category to a concrete tool.
+
+| Category         | Layer 1 | Layer 2 | Layer 3 | Description                                          |
+| ---------------- | ------- | ------- | ------- | ---------------------------------------------------- |
+| Lint             | MUST    | MUST    | MUST    | Code smells, unused variables, complexity            |
+| Format           | MUST    | MUST    | MUST    | Consistent style (indentation, spacing, line length) |
+| Type check       | SHOULD  | SHOULD  | MUST    | Type errors before runtime                           |
+| Secret detection | —       | MUST    | MUST    | API keys, tokens, passwords                          |
+| File hygiene     | —       | MUST    | —       | Trailing whitespace, merge conflicts, large files    |
+| Security (SAST)  | —       | —       | MUST    | Static analysis for vulnerabilities                  |
+| Tests            | —       | —       | MUST    | Unit and integration tests                           |
+| Coverage         | —       | —       | MUST    | Percentage of code exercised by tests                |
+| Build            | —       | —       | MUST    | Does it compile / build successfully                 |
+
+Stack templates MAY add additional categories (e.g. link checking, site
+quality scoring for web projects, docstring enforcement for Python).
+
+### Recommended lint plugins
+
+- **eslint-plugin-sonarjs** — detects cognitive complexity, duplicate
+  branches, identical expressions, and other code smells that standard
+  ESLint rules miss; SHOULD be added to any TypeScript/JavaScript project
+
+---
+
+## Thresholds
+
+[ID: quality-gates-thresholds]
+
+| Metric                   | Threshold | Enforcement                  |
+| ------------------------ | --------- | ---------------------------- |
+| Lint errors              | 0         | CI fails                     |
+| Format compliance        | 100%      | CI fails                     |
+| Type errors              | 0         | CI fails                     |
+| Security (high/critical) | 0         | CI fails                     |
+| Secrets detected         | 0         | Pre-commit blocks + CI fails |
+| Build                    | Success   | CI fails                     |
+
+### Coverage policy
+
+- **New projects** — 80% from day one; CI fails below threshold
+- **Legacy projects** — coverage reported as warning only; CI shows the
+  number but never blocks; flip to error when the team has the mandate
+  to invest in testing
+
+Stack templates MAY add additional thresholds (e.g. Lighthouse scores).
+
+---
+
+## What NOT to gate
+
+[ID: quality-gates-exclusions]
+
+- **Docstring coverage for non-public functions** — enforcing docs on
+  internal helpers creates busywork
+- **Cyclomatic complexity thresholds** — too many false positives on
+  legitimate complex logic; rely on lint warnings instead
+- **100% test coverage** — incentivizes meaningless tests; 80% is the
+  practical sweet spot
+- **Commit message format** — enforce in PR title via repository settings,
+  not per-commit hooks; allow messy WIP commits on feature branches
+
+---
+
+## Tool constraints
+
+[ID: quality-gates-constraints]
+
+- All tools MUST be free for private repositories
+- Prefer open-source tools over SaaS — no vendor lock-in
+- Prefer tools with CI integration for the project's platform
+- Prefer one tool per category — no redundant linters
+- Stack templates define the specific tool per category
+- Platform templates define the CI integration and SAST tool
+
+
+<!-- templates/stack/go-lib.md -->
+# Stack — Go Library / CLI
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/testing.md, templates/base/workflow/quality-gates.md]
+
+Base Go conventions for any Go module — library, CLI tool, or service.
+Never used directly for services — always extended by `templates/stack/go-service.md`.
+Can be used directly for pure Go libraries or standalone CLI tools with
+no HTTP layer.
+
+---
+
+## Stack
+[ID: go-lib-stack]
+
+- Language: Go 1.22+
+- CLI framework: [cobra / flag (stdlib)] — only for command packages
+- Test runner: go test (stdlib)
+- Distribution: [binary / GitHub Releases / Go module proxy]
+
+---
+
+## Package and interface design
+[ID: go-lib-packages]
+
+- Small, focused packages — one domain concern per package
+- Define interfaces where the caller, not the implementer, owns them
+- Keep interfaces small: prefer 1–3 methods
+- Accept interfaces, return concrete types (in most cases)
+- Avoid package-level `init()` — use explicit initialisation in `main`
+- No `utils/` or `helpers/` packages — name packages by domain
+
+---
+
+## Error handling
+[ID: go-lib-errors]
+
+- Always handle errors — never `_` discard an error return
+- Wrap errors with context: `fmt.Errorf("creating user: %w", err)`
+- Use `errors.Is()` and `errors.As()` for inspection — never string matching
+- Define sentinel errors (`var ErrNotFound = errors.New(...)`) in the package
+  that owns the concept
+- Log errors once — at the top of the call stack, not at every level
+
+---
+
+## Code quality
+[ID: go-lib-quality]
+[EXTEND: base-quality]
+
+- Follow **Effective Go** (https://go.dev/doc/effective_go) for idioms and
+  design decisions — the canonical Go style reference
+- Follow **Go Code Review Comments** (https://go.dev/wiki/CodeReviewComments)
+  for common pitfalls and reviewer expectations
+- `gofmt` / `goimports` — code must be formatted; CI rejects unformatted code
+- Run `go vet ./...` — fix all warnings before committing
+- Run `staticcheck ./...` for additional static analysis
+- No unused imports or variables — the compiler rejects these
+- Exported symbols must have a doc comment
+
+---
+
+## Testing
+[ID: go-lib-testing]
+[EXTEND: base-testing]
+
+- Use stdlib `testing` package — no third-party assertion libraries
+- Table-driven tests with `t.Run()` for parameterised cases
+- Test the public API of each package — not unexported functions
+- Use interfaces to inject dependencies in tests — no monkey-patching
+- Component test naming: `Test<UnitOfWork>_<State>_<Expected>`
+  e.g. `TestParseConfig_MissingField_ReturnsError`
+- Run before every commit: `go test ./... && go vet ./...`
+
+---
+
+## Git conventions
+[ID: go-lib-git]
+[EXTEND: base-git]
+
+- Do not commit compiled binaries or `*.test` files
+- Do not commit `vendor/` unless vendoring is an explicit project decision —
+  document it in README if so
+- `go.sum` is committed — do not delete or regenerate without cause
+- Tag releases with `vX.Y.Z` — Go module proxy uses these
+
+---
+
+## Commands
+```
+go build ./...        # compile all packages
+go test ./...         # run all tests
+go vet ./...          # static analysis
+goimports -w .        # format imports
+staticcheck ./...     # additional static analysis
+```
+---
+
+## Quality gates
+[EXTEND: base-quality-gates]
+
+| Category | Layer 1 (editor) | Layer 2 (pre-commit) | Layer 3 (CI) | Config |
+|----------|-----------------|---------------------|-------------|--------|
+| Lint | golangci-lint | golangci-lint | golangci-lint | `.golangci.yml` |
+| Format | gofmt | gofmt | gofmt -l | built-in |
+| Type check | built-in | built-in | go vet | — |
+| Security | — | — | govulncheck + platform SAST | — |
+| Secrets | — | gitleaks | gitleaks | `.pre-commit-config.yaml` |
+| Tests | — | — | go test ./... | — |
+| Coverage | — | — | go test -cover ≥ 80% | — |
+
+- Hook framework: `pre-commit` or Makefile
 
 
 <!-- templates/backend/http.md -->

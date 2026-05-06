@@ -6,6 +6,7 @@ Implements:
   SAIT-SMK-SYS-01-001A  — all DEPENDS ON paths resolve to existing files
   SAIT-SMK-SYS-02-001A  — all section IDs are unique across all templates
   SAIT-SMK-TPL-04-001A  — all EXTEND/OVERRIDE directives reference existing IDs
+  SAIT-INT-TPL-06-001A  — EXTEND/OVERRIDE targets reachable in resolved chain
   SAIT-INT-MNF-01-001A  — all manifest entries reference valid paths and IDs
 
 Usage:
@@ -457,6 +458,49 @@ def check_mnf_04():
 
 
 # ---------------------------------------------------------------------------
+# TPL-06 — EXTEND/OVERRIDE targets reachable in resolved chain
+# ---------------------------------------------------------------------------
+
+def check_tpl_06():
+    if not HAS_YAML:
+        return ["  PyYAML not installed — run: pip install pyyaml"]
+
+    core_ids, entries, _ = _load_manifest()
+    id_pattern = re.compile(r'\[ID:\s*([^\]]+)\]')
+    ref_pattern = re.compile(r'\[(EXTEND|OVERRIDE):\s*([^\]]+)\]')
+    failures = []
+
+    stacks = [e for e in entries.values()
+              if e["file"].startswith("templates/stack/")]
+
+    for stack in stacks:
+        sid = stack["id"]
+        chain_files, _ = _resolve_stack(sid, core_ids, entries)
+
+        # Collect all IDs declared in chain files
+        chain_ids = set()
+        for f in chain_files:
+            content = read(os.path.join(ROOT, f))
+            for match in id_pattern.finditer(content):
+                chain_ids.add(match.group(1).strip())
+
+        # Check EXTEND/OVERRIDE targets in chain files
+        for f in chain_files:
+            content = read(os.path.join(ROOT, f))
+            rel = f.replace("\\", "/")
+            for match in ref_pattern.finditer(content):
+                directive = match.group(1)
+                ref_id = match.group(2).strip()
+                if ref_id not in chain_ids:
+                    failures.append(
+                        f"  {sid}: {rel} [{directive}: {ref_id}]"
+                        f" — target not in resolved chain"
+                    )
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
 # E2E-01 — all cases.py paths resolve to existing files
 # ---------------------------------------------------------------------------
 
@@ -529,6 +573,8 @@ CHECKS = [
      "title": "EXTEND adds rules without removing base rules", "fn": check_tpl_02},
     {"id": "TPL-03", "spec": "SAIT-INT-TPL-03-001A",
      "title": "OVERRIDE replaces parent section with different content", "fn": check_tpl_03},
+    {"id": "TPL-06", "spec": "SAIT-INT-TPL-06-001A",
+     "title": "EXTEND/OVERRIDE targets reachable in resolved chain", "fn": check_tpl_06},
     {"id": "E2E-01", "spec": "SAIT-SMK-E2E-01-001A",
      "title": "All cases.py paths resolve to existing files", "fn": check_e2e_01},
 ]

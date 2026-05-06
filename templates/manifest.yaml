@@ -255,6 +255,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-quality-gates
 
   - id: stack-python-service
     file: templates/stack/python-service.md
@@ -313,6 +314,7 @@ stacks:
       - base-docs
       - base-quality
       - base-testing
+      - base-quality-gates
 
   - id: stack-go-service
     file: templates/stack/go-service.md
