@@ -37,3 +37,13 @@
 
 - `strict: true` — no exceptions
 - Follow `@typescript-eslint/recommended`
+
+## Testing
+[ID: base-typescript-testing]
+
+- Test factory defaults for optional fields MUST be `undefined` (omitted),
+  not convenient values like `false` or `0` — explicit defaults mask bugs
+  that only appear with real data shapes
+- Data validation tests SHOULD flag boolean fields where one branch (`true`
+  or `false`) has zero occurrences across the dataset — this is a data
+  smell that can silently break sorting, filtering, and UI logic

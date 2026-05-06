@@ -77,6 +77,9 @@ base:
   - id: base-scope
     file: templates/base/workflow/scope.md
     description: Scope guard, session protocol, drift prevention
+  - id: base-oop
+    file: templates/base/core/oop.md
+    description: SOLID, OOP, GoF design patterns, AOP guidance
   - id: base-quality-gates
     file: templates/base/workflow/quality-gates.md
     description: Three-layer gate model (editor, pre-commit, CI), thresholds
@@ -168,7 +171,7 @@ backend:
   - id: backend-quality
     file: templates/backend/quality.md
     description: Layered architecture, security, performance, API stability
-    depends_on: [base-quality, base-security, base-containers]
+    depends_on: [base-quality, base-oop, base-security, base-containers]
   - id: backend-templating
     file: templates/backend/templating.md
     description: Server-side rendering, partials, escaping, caching, forms, testing
@@ -214,6 +217,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-oop
       - base-typescript
       - base-security
       - frontend-ux
@@ -344,6 +348,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-oop
       - base-typescript
       - base-security
       - frontend-ux
@@ -358,6 +363,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-oop
       - base-typescript
       - base-security
       - frontend-ux

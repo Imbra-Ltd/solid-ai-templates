@@ -5,36 +5,13 @@
 
 ## Architecture
 
-- All editable content in a data directory — never hardcoded in components
+- All editable content in a data directory — never hardcoded in source modules
 - Never hardcode derived counts or statistics — compute them from the data
   source; a hardcoded number is a stale number
-- Default to the simplest component type; only reach for heavier abstractions
+- Default to the simplest abstraction; only reach for heavier patterns
   when genuinely needed
-- No dead code — remove unused components, styles, and data files promptly
+- No dead code — remove unused modules, assets, and data files promptly
 - No over-engineering — build the minimum needed for the current requirement
-
-## Disposability
-
-- Processes MUST start fast — minimize initialization time
-- Processes MUST shut down gracefully on `SIGTERM` — finish
-  in-flight work, release resources, then exit
-- Set a shutdown timeout — if graceful shutdown exceeds the
-  deadline, force-exit
-- Design for crash safety — the system MUST recover cleanly if
-  a process is killed without warning (`SIGKILL`, power loss)
-- Do not store state in-process — use external stores (database,
-  cache, queue) so processes are disposable and replaceable
-
-## Admin processes
-
-- One-off tasks (migrations, data fixes, REPL sessions) MUST run
-  in the same environment as the application — same code, same
-  config, same dependencies
-- Admin scripts MUST be committed to the repository — not run
-  from ad-hoc shell commands
-- Prefer idempotent scripts — safe to re-run without side effects
-- Never run admin tasks directly against production without a
-  tested rollback plan
 
 ## Core principles
 
@@ -45,61 +22,6 @@
 - **YAGNI — You Aren't Gonna Need It**: do not build for hypothetical
   future requirements; build what is needed now, refactor when the
   need is real
-
-## SOLID principles
-
-Apply SOLID at the class, module, and service level:
-
-- **S — Single Responsibility**: every class or module has exactly one reason
-  to change; split anything that serves more than one concern
-- **O — Open/Closed**: extend behaviour by adding new code, not by modifying
-  existing code; use interfaces, abstract base classes, or composition
-- **L — Liskov Substitution**: subtypes must be fully substitutable for their
-  base type without altering correctness; never override a method in a way
-  that weakens its contract
-- **I — Interface Segregation**: prefer many small, focused interfaces over
-  one large general-purpose one; callers should not depend on methods they
-  do not use
-- **D — Dependency Inversion**: depend on abstractions, not concretions;
-  inject dependencies rather than instantiating them inside a class
-
-## OOP
-
-- Prefer **composition over inheritance** — inherit only to model a true
-  is-a relationship; compose for code reuse
-- **Encapsulate** implementation details — expose behaviour through a public
-  interface, hide state and implementation
-- Design to interfaces (or protocols / abstract base classes), not concrete types
-- Keep class hierarchies shallow — more than two levels of inheritance is a
-  signal to refactor towards composition
-
-## Design patterns
-
-- Apply established **GoF design patterns** where they fit the problem —
-  do not invent ad-hoc solutions for problems that have named solutions
-- Favour **behavioural patterns** for algorithm variation:
-  Strategy, Command, Observer, Template Method
-- Favour **structural patterns** for object composition:
-  Adapter, Decorator, Facade, Proxy
-- Use **creational patterns** to decouple object creation:
-  Factory Method, Abstract Factory, Builder
-- Use **Singleton** only for stateless services or infrastructure objects
-  (logger, config) — never for mutable shared state
-- Name the pattern in code when you use one: a class named `OrderExportStrategy`
-  communicates intent; a class named `OrderHelper` does not
-
-## Aspect-Oriented Programming (AOP)
-
-- **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
-  interception, bytecode weaving, runtime proxies) makes code hard to read,
-  debug, and test
-- Implement cross-cutting concerns explicitly:
-  - Logging → call the logger directly in the function
-  - Auth → explicit middleware or guard in the call chain
-  - Transactions → explicit context manager or decorator with visible call site
-  - Validation → explicit call at the boundary
-- Transparent decorators (a decorator that wraps and clearly delegates) are
-  acceptable; opaque interceptors that inject hidden behaviour are not
 
 ## Readability
 
@@ -650,19 +572,18 @@ communication partner). Mocks MUST NOT substitute the dependency being
 integrated — they MAY be used for unrelated dependencies outside the scope
 of the test.
 
-Configuration MAY be sourced from the product manual when the integration
-requires a formally defined input (e.g. a communication configuration packet).
-This does not change the classification — the boundary crossed determines the
-type, not the asset used.
+Configuration MAY be sourced from the product specification when the
+integration requires a formally defined input. This does not change the
+classification — the boundary crossed determines the type, not the asset
+used.
 
 - MUST verify the primary interaction path between the integrated components
 - SHOULD cover fault scenarios — dependency unavailable, malformed response,
   timeout, boundary violations
 - SHOULD cover cases where a behaviour is only valid under specific conditions
 - MUST NOT rely on shared mutable state between test runs
-- Names MUST follow the codification scheme defined in the Imbra knowledge
-  repository under `standards/` — the scheme provides a structured format
-  that enables filtering, traceability, and maintenance across projects
+- Names SHOULD follow a structured codification scheme that enables
+  filtering, traceability, and maintenance across projects
 
 ---
 
@@ -798,12 +719,70 @@ fixing the design fixes the testability.
   concluding the code under test is at fault
 - Integration tests MUST use real dependencies for the boundary under test —
   not hand-written mocks
-- Test factory defaults for optional fields MUST be `undefined` (omitted),
-  not convenient values like `false` or `0` — explicit defaults mask bugs
-  that only appear with real data shapes
-- Data validation tests SHOULD flag boolean fields where one branch (`true`
-  or `false`) has zero occurrences across the dataset — this is a data
-  smell that can silently break sorting, filtering, and UI logic
+
+
+<!-- templates/base/core/oop.md -->
+# Base — Object-Oriented Design
+
+[ID: base-oop]
+
+## SOLID principles
+
+Apply SOLID at the class, module, and service level:
+
+- **S — Single Responsibility**: every class or module has exactly one reason
+  to change; split anything that serves more than one concern
+- **O — Open/Closed**: extend behaviour by adding new code, not by modifying
+  existing code; use interfaces, abstract base classes, or composition
+- **L — Liskov Substitution**: subtypes must be fully substitutable for their
+  base type without altering correctness; never override a method in a way
+  that weakens its contract
+- **I — Interface Segregation**: prefer many small, focused interfaces over
+  one large general-purpose one; callers should not depend on methods they
+  do not use
+- **D — Dependency Inversion**: depend on abstractions, not concretions;
+  inject dependencies rather than instantiating them inside a class
+
+## OOP
+
+- Prefer **composition over inheritance** — inherit only to model a true
+  is-a relationship; compose for code reuse
+- **Encapsulate** implementation details — expose behaviour through a public
+  interface, hide state and implementation
+- Design to interfaces (or protocols / abstract base classes), not concrete
+  types
+- Keep class hierarchies shallow — more than two levels of inheritance is a
+  signal to refactor towards composition
+
+## Design patterns
+
+- Apply established **GoF design patterns** where they fit the problem —
+  do not invent ad-hoc solutions for problems that have named solutions
+- Favour **behavioural patterns** for algorithm variation:
+  Strategy, Command, Observer, Template Method
+- Favour **structural patterns** for object composition:
+  Adapter, Decorator, Facade, Proxy
+- Use **creational patterns** to decouple object creation:
+  Factory Method, Abstract Factory, Builder
+- Use **Singleton** only for stateless services or infrastructure objects
+  (logger, config) — never for mutable shared state
+- Name the pattern in code when you use one: a class named
+  `OrderExportStrategy` communicates intent; a class named `OrderHelper`
+  does not
+
+## Aspect-Oriented Programming (AOP)
+
+- **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
+  interception, bytecode weaving, runtime proxies) makes code hard to read,
+  debug, and test
+- Implement cross-cutting concerns explicitly:
+  - Logging: call the logger directly in the function
+  - Auth: explicit middleware or guard in the call chain
+  - Transactions: explicit context manager or decorator with visible
+    call site
+  - Validation: explicit call at the boundary
+- Transparent decorators (a decorator that wraps and clearly delegates) are
+  acceptable; opaque interceptors that inject hidden behaviour are not
 
 
 <!-- templates/base/language/typescript.md -->
@@ -846,6 +825,16 @@ fixing the design fixes the testability.
 
 - `strict: true` — no exceptions
 - Follow `@typescript-eslint/recommended`
+
+## Testing
+[ID: base-typescript-testing]
+
+- Test factory defaults for optional fields MUST be `undefined` (omitted),
+  not convenient values like `false` or `0` — explicit defaults mask bugs
+  that only appear with real data shapes
+- Data validation tests SHOULD flag boolean fields where one branch (`true`
+  or `false`) has zero occurrences across the dataset — this is a data
+  smell that can silently break sorting, filtering, and UI logic
 
 
 <!-- templates/base/security/security.md -->
@@ -1154,12 +1143,15 @@ tools catch ~30–40% of issues; the rest require human judgment.
 
 ### Automated (run in CI)
 
-- **axe-core** — integrate via `@axe-core/react`, `axe-playwright`, or
-  `jest-axe`; zero violations allowed before merge
+- **axe-core** — integrate via the framework adapter (`@axe-core/react`,
+  `@axe-core/vue`, `axe-playwright`, or `jest-axe`); zero violations
+  allowed before merge
 - **Lighthouse** — accessibility score ≥ 90 on all key pages; run in CI
   via `lighthouse-ci`
-- **ESLint `jsx-a11y`** — catches missing `alt`, incorrect ARIA roles, and
-  missing form labels at write time; must be configured in the linter
+- **Linter a11y plugin** — catches missing `alt`, incorrect ARIA roles, and
+  missing form labels at write time; use the plugin for your framework
+  (`eslint-plugin-jsx-a11y` for React, `eslint-plugin-vuejs-accessibility`
+  for Vue; Svelte has built-in a11y warnings)
 
 ### Manual (run before shipping new interactive components)
 
@@ -1257,20 +1249,19 @@ Choose the right tool for the scope of the state — do not use a global store
 for state that is local to a component or a server cache for state that is
 never fetched from a server.
 
-| State type          | Tool                     | When to use                                                                          |
-| ------------------- | ------------------------ | ------------------------------------------------------------------------------------ |
-| **Local UI state**  | `useState`, `useReducer` | Scoped to one component — form inputs, toggles, counters                             |
-| **Shared UI state** | Zustand / Redux Toolkit  | Needed by multiple unrelated components — auth session, sidebar open, active filters |
-| **Server state**    | TanStack Query / SWR     | Data fetched from an API — lists, detail views, paginated results                    |
-| **Form state**      | React Hook Form / Formik | Complex forms with validation, field arrays, multi-step flows                        |
-| **URL state**       | Router search params     | Shareable or bookmarkable UI state — filters, pagination, selected tab               |
+| State type          | Scope                | When to use                                       |
+| ------------------- | -------------------- | ------------------------------------------------- |
+| **Local UI state**  | Single component     | Form inputs, toggles, counters                    |
+| **Shared UI state** | Multiple components  | Auth session, sidebar state, active filters       |
+| **Server state**    | Cached from API      | Lists, detail views, paginated results            |
+| **Form state**      | Form lifecycle       | Validation, field arrays, multi-step flows        |
+| **URL state**       | URL search params    | Bookmarkable filters, pagination, selected tab    |
 
 Rules:
 
-- Never duplicate server state in a global store — TanStack Query or SWR is
-  the cache; the store holds only client-owned state
-- Never put derived state in the store — compute it from existing state with
-  a selector or `useMemo`
+- Never duplicate server state in a global store — use a dedicated server
+  cache; the store holds only client-owned state
+- Never put derived state in the store — compute it from existing state
 - Prefer URL state for anything the user should be able to bookmark or share
 - Keep global store slices small and focused — one slice per domain concern,
   not one slice for everything
@@ -1286,7 +1277,7 @@ Rules:
 
 ## CSS
 
-- All CSS in a single stylesheet — no inline styles except dynamic/computed values
+- No inline styles except for dynamic/computed values
 - No hardcoded colour or spacing values — always use CSS custom properties
   from `:root` or design tokens
 - Consistent naming convention (e.g. BEM-like `.component-element`)
@@ -1300,17 +1291,18 @@ Rules:
 - Defer non-critical scripts
 - Monitor Core Web Vitals (LCP, CLS, INP) — treat regressions as bugs
 
-## SEO & analytics
+## SEO & analytics (if applicable)
 
-- `robots.txt`, Open Graph, and Twitter Card meta tags required
-- Canonical URLs required
+- `robots.txt`, Open Graph, and Twitter Card meta tags required for
+  server-rendered and static pages
+- Canonical URLs required for publicly indexed pages
 - Privacy-friendly analytics only — no consent banner required
 - No third-party tracking scripts without explicit user consent
 
 
 <!-- templates/stack/spa-vue.md -->
 # Stack — Vue Single-Page Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/base/security/security.md, templates/frontend/ux.md, templates/frontend/quality.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/oop.md, templates/base/language/typescript.md, templates/base/security/security.md, templates/frontend/ux.md, templates/frontend/quality.md]
 
 A client-side Vue application with TypeScript. Covers the Composition API,
 component model, state management with Pinia, routing, API integration,

@@ -40,20 +40,19 @@ Choose the right tool for the scope of the state — do not use a global store
 for state that is local to a component or a server cache for state that is
 never fetched from a server.
 
-| State type          | Tool                     | When to use                                                                          |
-| ------------------- | ------------------------ | ------------------------------------------------------------------------------------ |
-| **Local UI state**  | `useState`, `useReducer` | Scoped to one component — form inputs, toggles, counters                             |
-| **Shared UI state** | Zustand / Redux Toolkit  | Needed by multiple unrelated components — auth session, sidebar open, active filters |
-| **Server state**    | TanStack Query / SWR     | Data fetched from an API — lists, detail views, paginated results                    |
-| **Form state**      | React Hook Form / Formik | Complex forms with validation, field arrays, multi-step flows                        |
-| **URL state**       | Router search params     | Shareable or bookmarkable UI state — filters, pagination, selected tab               |
+| State type          | Scope                | When to use                                       |
+| ------------------- | -------------------- | ------------------------------------------------- |
+| **Local UI state**  | Single component     | Form inputs, toggles, counters                    |
+| **Shared UI state** | Multiple components  | Auth session, sidebar state, active filters       |
+| **Server state**    | Cached from API      | Lists, detail views, paginated results            |
+| **Form state**      | Form lifecycle       | Validation, field arrays, multi-step flows        |
+| **URL state**       | URL search params    | Bookmarkable filters, pagination, selected tab    |
 
 Rules:
 
-- Never duplicate server state in a global store — TanStack Query or SWR is
-  the cache; the store holds only client-owned state
-- Never put derived state in the store — compute it from existing state with
-  a selector or `useMemo`
+- Never duplicate server state in a global store — use a dedicated server
+  cache; the store holds only client-owned state
+- Never put derived state in the store — compute it from existing state
 - Prefer URL state for anything the user should be able to bookmark or share
 - Keep global store slices small and focused — one slice per domain concern,
   not one slice for everything
@@ -69,7 +68,7 @@ Rules:
 
 ## CSS
 
-- All CSS in a single stylesheet — no inline styles except dynamic/computed values
+- No inline styles except for dynamic/computed values
 - No hardcoded colour or spacing values — always use CSS custom properties
   from `:root` or design tokens
 - Consistent naming convention (e.g. BEM-like `.component-element`)
@@ -83,9 +82,10 @@ Rules:
 - Defer non-critical scripts
 - Monitor Core Web Vitals (LCP, CLS, INP) — treat regressions as bugs
 
-## SEO & analytics
+## SEO & analytics (if applicable)
 
-- `robots.txt`, Open Graph, and Twitter Card meta tags required
-- Canonical URLs required
+- `robots.txt`, Open Graph, and Twitter Card meta tags required for
+  server-rendered and static pages
+- Canonical URLs required for publicly indexed pages
 - Privacy-friendly analytics only — no consent banner required
 - No third-party tracking scripts without explicit user consent

@@ -5,36 +5,13 @@
 
 ## Architecture
 
-- All editable content in a data directory — never hardcoded in components
+- All editable content in a data directory — never hardcoded in source modules
 - Never hardcode derived counts or statistics — compute them from the data
   source; a hardcoded number is a stale number
-- Default to the simplest component type; only reach for heavier abstractions
+- Default to the simplest abstraction; only reach for heavier patterns
   when genuinely needed
-- No dead code — remove unused components, styles, and data files promptly
+- No dead code — remove unused modules, assets, and data files promptly
 - No over-engineering — build the minimum needed for the current requirement
-
-## Disposability
-
-- Processes MUST start fast — minimize initialization time
-- Processes MUST shut down gracefully on `SIGTERM` — finish
-  in-flight work, release resources, then exit
-- Set a shutdown timeout — if graceful shutdown exceeds the
-  deadline, force-exit
-- Design for crash safety — the system MUST recover cleanly if
-  a process is killed without warning (`SIGKILL`, power loss)
-- Do not store state in-process — use external stores (database,
-  cache, queue) so processes are disposable and replaceable
-
-## Admin processes
-
-- One-off tasks (migrations, data fixes, REPL sessions) MUST run
-  in the same environment as the application — same code, same
-  config, same dependencies
-- Admin scripts MUST be committed to the repository — not run
-  from ad-hoc shell commands
-- Prefer idempotent scripts — safe to re-run without side effects
-- Never run admin tasks directly against production without a
-  tested rollback plan
 
 ## Core principles
 
@@ -45,61 +22,6 @@
 - **YAGNI — You Aren't Gonna Need It**: do not build for hypothetical
   future requirements; build what is needed now, refactor when the
   need is real
-
-## SOLID principles
-
-Apply SOLID at the class, module, and service level:
-
-- **S — Single Responsibility**: every class or module has exactly one reason
-  to change; split anything that serves more than one concern
-- **O — Open/Closed**: extend behaviour by adding new code, not by modifying
-  existing code; use interfaces, abstract base classes, or composition
-- **L — Liskov Substitution**: subtypes must be fully substitutable for their
-  base type without altering correctness; never override a method in a way
-  that weakens its contract
-- **I — Interface Segregation**: prefer many small, focused interfaces over
-  one large general-purpose one; callers should not depend on methods they
-  do not use
-- **D — Dependency Inversion**: depend on abstractions, not concretions;
-  inject dependencies rather than instantiating them inside a class
-
-## OOP
-
-- Prefer **composition over inheritance** — inherit only to model a true
-  is-a relationship; compose for code reuse
-- **Encapsulate** implementation details — expose behaviour through a public
-  interface, hide state and implementation
-- Design to interfaces (or protocols / abstract base classes), not concrete types
-- Keep class hierarchies shallow — more than two levels of inheritance is a
-  signal to refactor towards composition
-
-## Design patterns
-
-- Apply established **GoF design patterns** where they fit the problem —
-  do not invent ad-hoc solutions for problems that have named solutions
-- Favour **behavioural patterns** for algorithm variation:
-  Strategy, Command, Observer, Template Method
-- Favour **structural patterns** for object composition:
-  Adapter, Decorator, Facade, Proxy
-- Use **creational patterns** to decouple object creation:
-  Factory Method, Abstract Factory, Builder
-- Use **Singleton** only for stateless services or infrastructure objects
-  (logger, config) — never for mutable shared state
-- Name the pattern in code when you use one: a class named `OrderExportStrategy`
-  communicates intent; a class named `OrderHelper` does not
-
-## Aspect-Oriented Programming (AOP)
-
-- **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
-  interception, bytecode weaving, runtime proxies) makes code hard to read,
-  debug, and test
-- Implement cross-cutting concerns explicitly:
-  - Logging → call the logger directly in the function
-  - Auth → explicit middleware or guard in the call chain
-  - Transactions → explicit context manager or decorator with visible call site
-  - Validation → explicit call at the boundary
-- Transparent decorators (a decorator that wraps and clearly delegates) are
-  acceptable; opaque interceptors that inject hidden behaviour are not
 
 ## Readability
 
@@ -650,19 +572,18 @@ communication partner). Mocks MUST NOT substitute the dependency being
 integrated — they MAY be used for unrelated dependencies outside the scope
 of the test.
 
-Configuration MAY be sourced from the product manual when the integration
-requires a formally defined input (e.g. a communication configuration packet).
-This does not change the classification — the boundary crossed determines the
-type, not the asset used.
+Configuration MAY be sourced from the product specification when the
+integration requires a formally defined input. This does not change the
+classification — the boundary crossed determines the type, not the asset
+used.
 
 - MUST verify the primary interaction path between the integrated components
 - SHOULD cover fault scenarios — dependency unavailable, malformed response,
   timeout, boundary violations
 - SHOULD cover cases where a behaviour is only valid under specific conditions
 - MUST NOT rely on shared mutable state between test runs
-- Names MUST follow the codification scheme defined in the Imbra knowledge
-  repository under `standards/` — the scheme provides a structured format
-  that enables filtering, traceability, and maintenance across projects
+- Names SHOULD follow a structured codification scheme that enables
+  filtering, traceability, and maintenance across projects
 
 ---
 
@@ -798,12 +719,6 @@ fixing the design fixes the testability.
   concluding the code under test is at fault
 - Integration tests MUST use real dependencies for the boundary under test —
   not hand-written mocks
-- Test factory defaults for optional fields MUST be `undefined` (omitted),
-  not convenient values like `false` or `0` — explicit defaults mask bugs
-  that only appear with real data shapes
-- Data validation tests SHOULD flag boolean fields where one branch (`true`
-  or `false`) has zero occurrences across the dataset — this is a data
-  smell that can silently break sorting, filtering, and UI logic
 
 
 <!-- templates/base/core/config.md -->
@@ -1597,6 +1512,70 @@ security template with backend-specific depth.
 - Test token revocation: assert that a revoked refresh token cannot obtain
   a new access token
 
+<!-- templates/base/core/oop.md -->
+# Base — Object-Oriented Design
+
+[ID: base-oop]
+
+## SOLID principles
+
+Apply SOLID at the class, module, and service level:
+
+- **S — Single Responsibility**: every class or module has exactly one reason
+  to change; split anything that serves more than one concern
+- **O — Open/Closed**: extend behaviour by adding new code, not by modifying
+  existing code; use interfaces, abstract base classes, or composition
+- **L — Liskov Substitution**: subtypes must be fully substitutable for their
+  base type without altering correctness; never override a method in a way
+  that weakens its contract
+- **I — Interface Segregation**: prefer many small, focused interfaces over
+  one large general-purpose one; callers should not depend on methods they
+  do not use
+- **D — Dependency Inversion**: depend on abstractions, not concretions;
+  inject dependencies rather than instantiating them inside a class
+
+## OOP
+
+- Prefer **composition over inheritance** — inherit only to model a true
+  is-a relationship; compose for code reuse
+- **Encapsulate** implementation details — expose behaviour through a public
+  interface, hide state and implementation
+- Design to interfaces (or protocols / abstract base classes), not concrete
+  types
+- Keep class hierarchies shallow — more than two levels of inheritance is a
+  signal to refactor towards composition
+
+## Design patterns
+
+- Apply established **GoF design patterns** where they fit the problem —
+  do not invent ad-hoc solutions for problems that have named solutions
+- Favour **behavioural patterns** for algorithm variation:
+  Strategy, Command, Observer, Template Method
+- Favour **structural patterns** for object composition:
+  Adapter, Decorator, Facade, Proxy
+- Use **creational patterns** to decouple object creation:
+  Factory Method, Abstract Factory, Builder
+- Use **Singleton** only for stateless services or infrastructure objects
+  (logger, config) — never for mutable shared state
+- Name the pattern in code when you use one: a class named
+  `OrderExportStrategy` communicates intent; a class named `OrderHelper`
+  does not
+
+## Aspect-Oriented Programming (AOP)
+
+- **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
+  interception, bytecode weaving, runtime proxies) makes code hard to read,
+  debug, and test
+- Implement cross-cutting concerns explicitly:
+  - Logging: call the logger directly in the function
+  - Auth: explicit middleware or guard in the call chain
+  - Transactions: explicit context manager or decorator with visible
+    call site
+  - Validation: explicit call at the boundary
+- Transparent decorators (a decorator that wraps and clearly delegates) are
+  acceptable; opaque interceptors that inject hidden behaviour are not
+
+
 <!-- templates/base/infra/containers.md -->
 # Base — Containers
 [ID: base-containers]
@@ -1650,7 +1629,7 @@ security template with backend-specific depth.
 <!-- templates/backend/quality.md -->
 # Backend — Quality Attributes
 [ID: backend-quality]
-[DEPENDS ON: templates/base/core/quality.md, templates/base/security/security.md, templates/base/infra/containers.md]
+[DEPENDS ON: templates/base/core/quality.md, templates/base/core/oop.md, templates/base/security/security.md, templates/base/infra/containers.md]
 
 ## Layered architecture
 - Enforce a strict handler → service → repository separation
@@ -1680,6 +1659,29 @@ Prefer these patterns for backend concerns:
   write to an outbox table in the same transaction and relay asynchronously
 - **CQRS** — separate read models from write models when query and command
   requirements diverge significantly; do not apply by default
+
+## Disposability
+
+- Processes MUST start fast — minimize initialization time
+- Processes MUST shut down gracefully on `SIGTERM` — finish
+  in-flight work, release resources, then exit
+- Set a shutdown timeout — if graceful shutdown exceeds the
+  deadline, force-exit
+- Design for crash safety — the system MUST recover cleanly if
+  a process is killed without warning (`SIGKILL`, power loss)
+- Do not store state in-process — use external stores (database,
+  cache, queue) so processes are disposable and replaceable
+
+## Admin processes
+
+- One-off tasks (migrations, data fixes, REPL sessions) MUST run
+  in the same environment as the application — same code, same
+  config, same dependencies
+- Admin scripts MUST be committed to the repository — not run
+  from ad-hoc shell commands
+- Prefer idempotent scripts — safe to re-run without side effects
+- Never run admin tasks directly against production without a
+  tested rollback plan
 
 ## Security
 [EXTEND: security-input]
