@@ -91,7 +91,7 @@ def write_report(run_results, started_at, runner_name, columns):
 
 
 def parse_args(argv):
-    """Parse common CLI args: filter IDs, --fail-fast, --area, --offline, --dry-run."""
+    """Parse common CLI args: filter IDs, --fail-fast, --area, --offline, --dry-run, --all."""
     flags = set()
     area = None
     filter_ids = []
@@ -103,6 +103,8 @@ def parse_args(argv):
             flags.add("offline")
         elif arg == "--dry-run":
             flags.add("dry-run")
+        elif arg == "--all":
+            flags.add("all")
         elif arg.startswith("--area="):
             area = arg.split("=", 1)[1].upper()
         elif arg.startswith("--"):

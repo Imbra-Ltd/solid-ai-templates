@@ -256,7 +256,8 @@ Four files in `tests/`:
 py tests/run_smoke.py              # structural checks
 py tests/run_smoke.py SYS-01       # run one check by ID
 
-py tests/run_e2e.py                # agent-based tests (live, needs API key)
+py tests/run_e2e.py                # canary only (python-lib, needs API key)
+py tests/run_e2e.py --all          # all tests (live, needs API key)
 py tests/run_e2e.py --offline      # validate test infrastructure without API
 py tests/run_e2e.py --area=STK     # run all stack tests
 py tests/run_e2e.py STK-01 FMT-01  # run specific tests by ID
