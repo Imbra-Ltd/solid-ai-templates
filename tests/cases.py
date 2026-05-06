@@ -340,6 +340,7 @@ STK_TESTS = [
     {
         "id": "STK-15",
         "spec": "SAIT-E2E-STK-15-001A",
+        "canary": True,  # smallest chain (~12K tokens) — default live test
         "stack": "templates/stack/python-lib.md",
         "answers": {
             "Project name": "validify",
@@ -628,3 +629,4 @@ DPL_TESTS = [
 # -------------------------------------------------------------------------
 
 ALL_TESTS = STK_TESTS + FMT_TESTS + ITV_TESTS + DPL_TESTS
+CANARY_TESTS = [t for t in ALL_TESTS if t.get("canary")]

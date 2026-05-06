@@ -9,19 +9,20 @@ Provider is selected via E2E_PROVIDER env var (default: gemini).
 See tests/providers.py for available backends.
 
 Usage:
-  py tests/run_e2e.py                    # run all non-skipped tests
+  py tests/run_e2e.py                    # run canary test only (python-lib)
+  py tests/run_e2e.py --all              # run all non-skipped tests
   py tests/run_e2e.py STK-01             # run one test by short ID
   py tests/run_e2e.py STK-01 FMT-01      # run multiple
   py tests/run_e2e.py --area=STK          # run all stack tests
   py tests/run_e2e.py --dry-run          # print prompt, skip LLM call
-  py tests/run_e2e.py --offline          # validate test infrastructure without API
   py tests/run_e2e.py --fail-fast        # stop on first failure
 
-Offline mode validates:
-  - All referenced template files exist and are non-empty
-  - Each test has required fields (id, spec, stack, answers, required)
-  - Prompts build successfully from templates + answers
-  - No structural issues in the test suite
+Default (no args) runs only the canary test (STK-15, python-lib) to keep
+live runs fast and token-efficient. Use --all, --area, or explicit IDs
+to run more tests.
+
+Structural validation (file existence, field presence, prompt assembly)
+is handled by smoke tests — run `py tests/run_smoke.py` instead.
 """
 
 import datetime
@@ -30,7 +31,7 @@ import sys
 import time
 
 from lib import ROOT, PASS, FAIL, SKIP, ERR, read, parse_args, load_dotenv
-from cases import ALL_TESTS
+from cases import ALL_TESTS, CANARY_TESTS
 
 # Import shared resolver from tools/
 sys.path.insert(0, os.path.join(ROOT, "tools"))
@@ -128,61 +129,11 @@ def check_assertions(output, required=(), forbidden=()):
     return failures
 
 
-def validate_test_offline(test):
-    """Validate test infrastructure without calling Claude."""
-    failures = []
-
-    for field in ("id", "spec", "stack", "answers", "required"):
-        if field not in test:
-            failures.append(f"  missing field: {field!r}")
-
-    if failures:
-        return FAIL, "\n".join(failures)
-
-    stack_file = os.path.join(ROOT, test["stack"])
-    if not os.path.isfile(stack_file):
-        failures.append(f"  stack file missing: {test['stack']}")
-    elif os.path.getsize(stack_file) == 0:
-        failures.append(f"  stack file empty: {test['stack']}")
-
-    output_file = test.get("output_file", "templates/base/core/agents.md")
-    out_path = os.path.join(ROOT, output_file)
-    if not os.path.isfile(out_path):
-        failures.append(f"  output format missing: {output_file}")
-
-    for ef in test.get("extra_files", ()):
-        ef_path = os.path.join(ROOT, ef)
-        if not os.path.isfile(ef_path):
-            failures.append(f"  extra file missing: {ef}")
-
-    if not test.get("required"):
-        failures.append("  required list is empty")
-
-    if not failures:
-        try:
-            prompt = build_prompt(
-                test["stack"], test["answers"],
-                output_file, test.get("extra_files", ()),
-            )
-            if len(prompt) < 100:
-                failures.append(f"  prompt suspiciously short: {len(prompt)} chars")
-        except Exception as e:
-            failures.append(f"  prompt build failed: {e}")
-
-    if failures:
-        return FAIL, "\n".join(failures)
-    return PASS, f"prompt {len(prompt)} chars, {len(test['required'])} assertions"
-
-
-def run_test(test, dry_run=False, offline=False):
+def run_test(test, dry_run=False):
     tid = test["id"]
 
     if "skip" in test:
         return SKIP, test["skip"], None, None, None
-
-    if offline:
-        status, detail = validate_test_offline(test)
-        return status, detail, None, None, None
 
     prompt = build_prompt(
         test["stack"], test["answers"],
@@ -287,10 +238,9 @@ def main():
 
     filter_ids, flags, area = parse_args(sys.argv[1:])
     dry_run = "dry-run" in flags
-    offline = "offline" in flags
     fail_fast = "fail-fast" in flags
+    run_all = "all" in flags
 
-    tests = ALL_TESTS
     if filter_ids:
         tests = [t for t in ALL_TESTS if t["id"] in filter_ids]
         if not tests:
@@ -301,22 +251,26 @@ def main():
         if not tests:
             print(f"No tests matched area: {area}")
             sys.exit(1)
+    elif run_all:
+        tests = ALL_TESTS
+    else:
+        tests = CANARY_TESTS
 
     results = {PASS: 0, FAIL: 0, SKIP: 0, ERR: 0}
     run_results = []
 
     total = len(tests)
-    if not offline and not dry_run:
+    if not dry_run:
         name, _ = _get_provider()
         print(f"Provider: {name}")
     print(f"Running {total} test(s)...\n")
 
     for i, test in enumerate(tests, 1):
         tid = test["id"]
-        if not dry_run and not offline:
+        if not dry_run:
             print(f"  [{i}/{total}] {tid} running...", end="\r", flush=True)
 
-        status, detail, elapsed, output, prompt = run_test(test, dry_run=dry_run, offline=offline)
+        status, detail, elapsed, output, prompt = run_test(test, dry_run=dry_run)
         results[status] += 1
         run_results.append({
             "id": tid, "status": status,
@@ -347,7 +301,7 @@ def main():
         f"  ({elapsed:.1f}s)"
     )
 
-    write_report(run_results, started_at, dry_run or offline)
+    write_report(run_results, started_at, dry_run)
 
     sys.exit(0 if results[FAIL] == 0 and results[ERR] == 0 else 1)
 
