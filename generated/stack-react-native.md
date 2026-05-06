@@ -1515,6 +1515,30 @@ every project regardless of language or framework.
 - Scan uploaded files for malware if the application serves them
   to other users
 
+---
+
+## Agent secrets handling
+
+[ID: security-agent-secrets]
+
+- MUST NOT read, print, or cat files that may contain secrets:
+  `.env`, `credentials.json`, `*-key*`, `*.pem`, `*.key`,
+  `serviceaccount.json`, `secrets.yaml`
+- MUST NOT echo, log, or display environment variable values —
+  use `printenv | grep -c KEY` to check presence without
+  revealing the value
+- MUST NOT include secret values in commit messages, PR
+  descriptions, or conversation output
+- MUST warn the user before committing files that commonly
+  contain secrets (`.env`, `credentials.json`, private keys)
+- Use targeted commands to verify secret presence without
+  exposure: `grep -c PATTERN file` (count matches),
+  `test -f .env && echo exists` (check file existence)
+- If secrets are accidentally exposed in a session, immediately
+  flag to the user: name the exposed secret, recommend
+  immediate rotation, and note that session history may be
+  cached or logged
+
 
 <!-- templates/backend/auth.md -->
 # Backend — Authentication and Authorization

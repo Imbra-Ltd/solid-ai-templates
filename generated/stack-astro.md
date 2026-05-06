@@ -1249,6 +1249,10 @@ Rules:
 | Secrets | — | gitleaks | gitleaks | — |
 | Build | — | — | astro build | — |
 | Links | — | — | lychee | `lychee.toml` |
+
+- Lychee MUST use `--root-dir dist` to resolve root-relative
+  paths (e.g. `/about`); without it, every root-relative link
+  reports a false error
 | Site quality | — | — | Lighthouse CI ≥ 90 | `lighthouserc.json` |
 
 - Hook framework: `husky` + `lint-staged` — config in `package.json`

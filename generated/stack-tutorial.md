@@ -1249,6 +1249,10 @@ Rules:
 | Secrets | — | gitleaks | gitleaks | — |
 | Build | — | — | astro build | — |
 | Links | — | — | lychee | `lychee.toml` |
+
+- Lychee MUST use `--root-dir dist` to resolve root-relative
+  paths (e.g. `/about`); without it, every root-relative link
+  reports a false error
 | Site quality | — | — | Lighthouse CI ≥ 90 | `lighthouserc.json` |
 
 - Hook framework: `husky` + `lint-staged` — config in `package.json`
@@ -1742,7 +1746,8 @@ Two workflows:
 
 - Use `actions/setup-node` built-in cache (keyed on
   `package-lock.json`)
-- Use lychee for link checking against built `dist/` output
+- Use lychee for link checking against built `dist/` output —
+  MUST use `--root-dir dist` to resolve root-relative paths
 - Pin Node version to exact version matching `engines` in
   `package.json`
 
