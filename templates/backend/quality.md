@@ -1,6 +1,6 @@
 # Backend — Quality Attributes
 [ID: backend-quality]
-[DEPENDS ON: templates/base/core/quality.md, templates/base/security/security.md]
+[DEPENDS ON: templates/base/core/quality.md, templates/base/security/security.md, templates/base/infra/containers.md]
 
 ## Layered architecture
 - Enforce a strict handler → service → repository separation
