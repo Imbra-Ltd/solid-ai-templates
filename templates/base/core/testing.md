@@ -51,19 +51,18 @@ communication partner). Mocks MUST NOT substitute the dependency being
 integrated — they MAY be used for unrelated dependencies outside the scope
 of the test.
 
-Configuration MAY be sourced from the product manual when the integration
-requires a formally defined input (e.g. a communication configuration packet).
-This does not change the classification — the boundary crossed determines the
-type, not the asset used.
+Configuration MAY be sourced from the product specification when the
+integration requires a formally defined input. This does not change the
+classification — the boundary crossed determines the type, not the asset
+used.
 
 - MUST verify the primary interaction path between the integrated components
 - SHOULD cover fault scenarios — dependency unavailable, malformed response,
   timeout, boundary violations
 - SHOULD cover cases where a behaviour is only valid under specific conditions
 - MUST NOT rely on shared mutable state between test runs
-- Names MUST follow the codification scheme defined in the Imbra knowledge
-  repository under `standards/` — the scheme provides a structured format
-  that enables filtering, traceability, and maintenance across projects
+- Names SHOULD follow a structured codification scheme that enables
+  filtering, traceability, and maintenance across projects
 
 ---
 
@@ -199,9 +198,3 @@ fixing the design fixes the testability.
   concluding the code under test is at fault
 - Integration tests MUST use real dependencies for the boundary under test —
   not hand-written mocks
-- Test factory defaults for optional fields MUST be `undefined` (omitted),
-  not convenient values like `false` or `0` — explicit defaults mask bugs
-  that only appear with real data shapes
-- Data validation tests SHOULD flag boolean fields where one branch (`true`
-  or `false`) has zero occurrences across the dataset — this is a data
-  smell that can silently break sorting, filtering, and UI logic

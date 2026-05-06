@@ -1,6 +1,6 @@
 # Backend — Quality Attributes
 [ID: backend-quality]
-[DEPENDS ON: templates/base/core/quality.md, templates/base/security/security.md, templates/base/infra/containers.md]
+[DEPENDS ON: templates/base/core/quality.md, templates/base/core/oop.md, templates/base/security/security.md, templates/base/infra/containers.md]
 
 ## Layered architecture
 - Enforce a strict handler → service → repository separation
@@ -30,6 +30,29 @@ Prefer these patterns for backend concerns:
   write to an outbox table in the same transaction and relay asynchronously
 - **CQRS** — separate read models from write models when query and command
   requirements diverge significantly; do not apply by default
+
+## Disposability
+
+- Processes MUST start fast — minimize initialization time
+- Processes MUST shut down gracefully on `SIGTERM` — finish
+  in-flight work, release resources, then exit
+- Set a shutdown timeout — if graceful shutdown exceeds the
+  deadline, force-exit
+- Design for crash safety — the system MUST recover cleanly if
+  a process is killed without warning (`SIGKILL`, power loss)
+- Do not store state in-process — use external stores (database,
+  cache, queue) so processes are disposable and replaceable
+
+## Admin processes
+
+- One-off tasks (migrations, data fixes, REPL sessions) MUST run
+  in the same environment as the application — same code, same
+  config, same dependencies
+- Admin scripts MUST be committed to the repository — not run
+  from ad-hoc shell commands
+- Prefer idempotent scripts — safe to re-run without side effects
+- Never run admin tasks directly against production without a
+  tested rollback plan
 
 ## Security
 [EXTEND: security-input]

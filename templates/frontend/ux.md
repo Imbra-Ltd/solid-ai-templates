@@ -39,12 +39,15 @@ tools catch ~30–40% of issues; the rest require human judgment.
 
 ### Automated (run in CI)
 
-- **axe-core** — integrate via `@axe-core/react`, `axe-playwright`, or
-  `jest-axe`; zero violations allowed before merge
+- **axe-core** — integrate via the framework adapter (`@axe-core/react`,
+  `@axe-core/vue`, `axe-playwright`, or `jest-axe`); zero violations
+  allowed before merge
 - **Lighthouse** — accessibility score ≥ 90 on all key pages; run in CI
   via `lighthouse-ci`
-- **ESLint `jsx-a11y`** — catches missing `alt`, incorrect ARIA roles, and
-  missing form labels at write time; must be configured in the linter
+- **Linter a11y plugin** — catches missing `alt`, incorrect ARIA roles, and
+  missing form labels at write time; use the plugin for your framework
+  (`eslint-plugin-jsx-a11y` for React, `eslint-plugin-vuejs-accessibility`
+  for Vue; Svelte has built-in a11y warnings)
 
 ### Manual (run before shipping new interactive components)
 

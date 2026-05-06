@@ -1,5 +1,5 @@
 # Stack — React Single-Page Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/base/security/security.md, templates/frontend/ux.md, templates/frontend/quality.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/oop.md, templates/base/language/typescript.md, templates/base/security/security.md, templates/frontend/ux.md, templates/frontend/quality.md]
 
 A client-side React application with TypeScript. Covers component model,
 state management, routing, API integration, and tooling.
@@ -52,19 +52,11 @@ CLAUDE.md
 
 ## TypeScript conventions
 [ID: react-spa-typescript]
+[EXTEND: base-typescript]
 
-- Follow the **TypeScript ESLint** recommended ruleset
-  (`@typescript-eslint/recommended`) and `eslint-plugin-sonarjs` —
-  enforced by ESLint; do not suppress lint errors without a
-  documented reason
+- `eslint-plugin-sonarjs` MUST be included in the ESLint config
 - **Prettier** owns all formatting decisions — no style discussions in code
   review; configure once and commit the config
-- `strict: true` in `tsconfig.json` — no exceptions
-- No `any` — use `unknown` and narrow, or define a proper type
-- Explicit return types on all non-trivial functions
-- Use `interface` for object shapes, `type` for unions and aliases
-- Import types with `import type { ... }` to keep runtime bundle clean
-- Enums avoided — use `as const` objects or string literal unions instead
 
 ---
 
@@ -83,10 +75,16 @@ CLAUDE.md
 ## State management
 [ID: react-spa-state]
 
-- Local state (`useState`, `useReducer`) for component-scoped concerns
-- Shared/global state in the chosen store (Zustand slice or Redux slice)
-- Server state (fetched data) managed by React Query / TanStack Query —
-  never duplicate server state in the global store
+| State type          | Tool                     | When to use                            |
+| ------------------- | ------------------------ | -------------------------------------- |
+| **Local UI state**  | `useState`, `useReducer` | Form inputs, toggles, counters         |
+| **Shared UI state** | Zustand / Redux Toolkit  | Auth session, sidebar, active filters  |
+| **Server state**    | TanStack Query / SWR     | Lists, detail views, paginated results |
+| **Form state**      | React Hook Form / Formik | Validation, field arrays, multi-step   |
+| **URL state**       | Router search params     | Bookmarkable filters, pagination, tabs |
+
+- Never duplicate server state in the global store — TanStack Query or SWR
+  is the cache; the store holds only client-owned state
 - No direct DOM manipulation — all state flows through React
 
 ---
