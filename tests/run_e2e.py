@@ -9,12 +9,17 @@ Provider is selected via E2E_PROVIDER env var (default: gemini).
 See tests/providers.py for available backends.
 
 Usage:
-  py tests/run_e2e.py                    # run all non-skipped tests
+  py tests/run_e2e.py                    # run canary test only (python-lib)
+  py tests/run_e2e.py --all              # run all non-skipped tests
   py tests/run_e2e.py STK-01             # run one test by short ID
   py tests/run_e2e.py STK-01 FMT-01      # run multiple
   py tests/run_e2e.py --area=STK          # run all stack tests
   py tests/run_e2e.py --dry-run          # print prompt, skip LLM call
   py tests/run_e2e.py --fail-fast        # stop on first failure
+
+Default (no args) runs only the canary test (STK-15, python-lib) to keep
+live runs fast and token-efficient. Use --all, --area, or explicit IDs
+to run more tests.
 
 Structural validation (file existence, field presence, prompt assembly)
 is handled by smoke tests — run `py tests/run_smoke.py` instead.
@@ -26,7 +31,7 @@ import sys
 import time
 
 from lib import ROOT, PASS, FAIL, SKIP, ERR, read, parse_args, load_dotenv
-from cases import ALL_TESTS
+from cases import ALL_TESTS, CANARY_TESTS
 
 load_dotenv()
 
@@ -282,8 +287,8 @@ def main():
     filter_ids, flags, area = parse_args(sys.argv[1:])
     dry_run = "dry-run" in flags
     fail_fast = "fail-fast" in flags
+    run_all = "all" in flags
 
-    tests = ALL_TESTS
     if filter_ids:
         tests = [t for t in ALL_TESTS if t["id"] in filter_ids]
         if not tests:
@@ -294,6 +299,10 @@ def main():
         if not tests:
             print(f"No tests matched area: {area}")
             sys.exit(1)
+    elif run_all:
+        tests = ALL_TESTS
+    else:
+        tests = CANARY_TESTS
 
     results = {PASS: 0, FAIL: 0, SKIP: 0, ERR: 0}
     run_results = []

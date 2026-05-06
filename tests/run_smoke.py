@@ -29,6 +29,58 @@ try:
 except ImportError:
     HAS_YAML = False
 
+
+# ---------------------------------------------------------------------------
+# Manifest resolution helpers (shared by MNF-02, MNF-03, MNF-04)
+# ---------------------------------------------------------------------------
+
+def _load_manifest():
+    """Load manifest.yaml and return (core_ids, entries, file_to_id)."""
+    manifest_path = os.path.join(ROOT, "templates", "manifest.yaml")
+    with io.open(manifest_path, encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    entries = {}
+    for section in ("base", "platform", "frontend", "backend", "stacks"):
+        for entry in data.get(section, []):
+            entries[entry["id"]] = entry
+
+    file_to_id = {e["file"]: e["id"] for e in entries.values()}
+    return data.get("core", []), entries, file_to_id
+
+
+def _resolve_stack(stack_id, core_ids, entries):
+    """Resolve full dependency chain for a stack.
+
+    Returns (ordered_files, resolved_ids).
+    """
+    resolved = set()
+    files = []
+
+    def add(eid):
+        if eid in resolved:
+            return
+        resolved.add(eid)
+        entry = entries.get(eid)
+        if entry:
+            files.append(entry["file"])
+
+    def resolve(eid):
+        if eid in resolved:
+            return
+        entry = entries.get(eid)
+        if not entry:
+            return
+        for dep in entry.get("depends_on", []):
+            resolve(dep)
+        add(eid)
+
+    for cid in core_ids:
+        add(cid)
+
+    resolve(stack_id)
+    return files, resolved
+
 TEMPLATE_DIRS = [
     os.path.join("templates", "base", "core"),
     os.path.join("templates", "base", "security"),
@@ -302,6 +354,109 @@ def check_tpl_03():
 
 
 # ---------------------------------------------------------------------------
+# MNF-02 — all stacks resolve to valid, non-empty file lists
+# ---------------------------------------------------------------------------
+
+def check_mnf_02():
+    if not HAS_YAML:
+        return ["  PyYAML not installed — run: pip install pyyaml"]
+
+    core_ids, entries, _ = _load_manifest()
+    failures = []
+
+    stacks = [e for e in entries.values()
+              if e["file"].startswith("templates/stack/")]
+
+    for stack in stacks:
+        sid = stack["id"]
+        files, _ = _resolve_stack(sid, core_ids, entries)
+
+        if not files:
+            failures.append(f"  {sid}: resolution produced empty file list")
+            continue
+
+        for f in files:
+            path = os.path.join(ROOT, f)
+            if not os.path.isfile(path):
+                failures.append(f"  {sid}: resolved file missing: {f}")
+            elif os.path.getsize(path) == 0:
+                failures.append(f"  {sid}: resolved file empty: {f}")
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
+# MNF-03 — all resolved chains include core tier files
+# ---------------------------------------------------------------------------
+
+def check_mnf_03():
+    if not HAS_YAML:
+        return ["  PyYAML not installed — run: pip install pyyaml"]
+
+    core_ids, entries, _ = _load_manifest()
+    failures = []
+
+    stacks = [e for e in entries.values()
+              if e["file"].startswith("templates/stack/")]
+
+    for stack in stacks:
+        sid = stack["id"]
+        _, resolved_ids = _resolve_stack(sid, core_ids, entries)
+
+        for cid in core_ids:
+            if cid not in resolved_ids:
+                failures.append(
+                    f"  {sid}: core ID '{cid}' missing from "
+                    f"resolved chain"
+                )
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
+# MNF-04 — prompt builds for all stacks
+# ---------------------------------------------------------------------------
+
+def check_mnf_04():
+    if not HAS_YAML:
+        return ["  PyYAML not installed — run: pip install pyyaml"]
+
+    core_ids, entries, _ = _load_manifest()
+    failures = []
+
+    output_file = "templates/base/core/agents.md"
+    output_path = os.path.join(ROOT, output_file)
+    if not os.path.isfile(output_path):
+        return [f"  output format missing: {output_file}"]
+
+    output_fmt = read(output_path)
+
+    stacks = [e for e in entries.values()
+              if e["file"].startswith("templates/stack/")]
+
+    for stack in stacks:
+        sid = stack["id"]
+        files, _ = _resolve_stack(sid, core_ids, entries)
+
+        try:
+            parts = []
+            for f in files:
+                parts.append(read(os.path.join(ROOT, f)))
+            prompt = "\n\n".join(parts) + "\n\n" + output_fmt
+        except Exception as e:
+            failures.append(f"  {sid}: prompt build failed: {e}")
+            continue
+
+        if len(prompt) < 500:
+            failures.append(
+                f"  {sid}: prompt suspiciously short "
+                f"({len(prompt)} chars)"
+            )
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
 # E2E-01 — all cases.py paths resolve to existing files
 # ---------------------------------------------------------------------------
 
@@ -362,6 +517,12 @@ CHECKS = [
      "title": "All EXTEND/OVERRIDE refs point to existing IDs", "fn": check_tpl_04},
     {"id": "MNF-01", "spec": "SAIT-INT-MNF-01-001A",
      "title": "Manifest entries reference valid paths and IDs", "fn": check_mnf_01},
+    {"id": "MNF-02", "spec": "SAIT-INT-MNF-02-001A",
+     "title": "All stacks resolve to valid, non-empty file lists", "fn": check_mnf_02},
+    {"id": "MNF-03", "spec": "SAIT-INT-MNF-03-001A",
+     "title": "All resolved chains include core tier files", "fn": check_mnf_03},
+    {"id": "MNF-04", "spec": "SAIT-INT-MNF-04-001A",
+     "title": "Prompt builds for all stacks", "fn": check_mnf_04},
     {"id": "TPL-01", "spec": "SAIT-INT-TPL-01-001A",
      "title": "DEPENDS ON chain from python-fastapi.md is complete", "fn": check_tpl_01},
     {"id": "TPL-02", "spec": "SAIT-INT-TPL-02-001A",

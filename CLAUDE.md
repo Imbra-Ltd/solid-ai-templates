@@ -256,7 +256,8 @@ Four files in `tests/`:
 py tests/run_smoke.py              # structural checks
 py tests/run_smoke.py SYS-01       # run one check by ID
 
-py tests/run_e2e.py                # agent-based tests (live, needs API key)
+py tests/run_e2e.py                # canary only (python-lib, needs API key)
+py tests/run_e2e.py --all          # all tests (live, needs API key)
 py tests/run_e2e.py --area=STK     # run all stack tests
 py tests/run_e2e.py STK-01 FMT-01  # run specific tests by ID
 py tests/run_e2e.py --fail-fast    # stop on first failure
@@ -298,6 +299,9 @@ Run `py tests/run_smoke.py` before every PR. It checks:
 - All manifest entries point to existing files
 - All template files have a manifest entry
 - No duplicate IDs across layers
+- All stacks resolve to valid, non-empty file lists
+- All resolved chains include core tier files
+- Prompt builds for all stacks
 
 ## 6. Session protocol
 
