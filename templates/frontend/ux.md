@@ -24,6 +24,8 @@
   `:focus` shows outlines on mouse clicks (distracting), `:focus-visible`
   shows them only for keyboard navigation
 - Focus indicators must be visible at all times during keyboard navigation
+- All `<a>` elements and nav links MUST have a visible `:focus-visible`
+  outline — links often lack focus styles even when buttons have them
 - No content that relies on colour alone to convey meaning
 - Images must have descriptive `alt` text; decorative images use `alt=""`
 - Semantic HTML: correct landmark elements and heading hierarchy
