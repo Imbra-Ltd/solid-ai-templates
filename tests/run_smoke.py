@@ -467,17 +467,29 @@ def check_e2e_01():
     if not os.path.isfile(interview):
         failures.append("  INTERVIEW.md not found: templates/INTERVIEW.md")
 
+    required_fields = ("id", "spec", "stack", "answers", "required")
+
     for test in ALL_TESTS:
         if "skip" in test:
             continue
 
         tid = test.get("id", "?")
 
+        # Validate required fields
+        for field in required_fields:
+            if field not in test:
+                failures.append(f"  {tid}: missing field: {field!r}")
+
+        if not test.get("required"):
+            failures.append(f"  {tid}: required list is empty")
+
         stack = test.get("stack", "")
         if stack:
             path = os.path.join(ROOT, stack)
             if not os.path.isfile(path):
                 failures.append(f"  {tid}: stack file missing: {stack}")
+            elif os.path.getsize(path) == 0:
+                failures.append(f"  {tid}: stack file empty: {stack}")
 
         output_file = test.get("output_file", "templates/base/core/agents.md")
         path = os.path.join(ROOT, output_file)

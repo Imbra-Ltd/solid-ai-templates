@@ -258,7 +258,6 @@ py tests/run_smoke.py SYS-01       # run one check by ID
 
 py tests/run_e2e.py                # canary only (python-lib, needs API key)
 py tests/run_e2e.py --all          # all tests (live, needs API key)
-py tests/run_e2e.py --offline      # validate test infrastructure without API
 py tests/run_e2e.py --area=STK     # run all stack tests
 py tests/run_e2e.py STK-01 FMT-01  # run specific tests by ID
 py tests/run_e2e.py --fail-fast    # stop on first failure
@@ -269,10 +268,9 @@ py tests/run_e2e.py --dry-run      # print prompts, skip execution
   `tests/reports/` after every run (gitignored)
 - Spec files live in `tests/specs/` — see `tests/CODIFICATION.md`
   for the ID scheme and `tests/INDEX.md` for the full list
-- CI runs smoke + gitleaks + e2e offline on PRs (and on push
-  to main)
-- Live e2e mode (without `--offline`) calls Claude via the API —
-  run manually on the dev machine for functional validation
+- CI runs smoke + gitleaks on PRs and on push to main
+- Live e2e calls an LLM via the API — run manually on the
+  dev machine for functional validation
 - To validate a new template: run `py tests/run_smoke.py` and
   attach `templates/INTERVIEW.md` + the new stack to an agent to
   confirm coherent output
