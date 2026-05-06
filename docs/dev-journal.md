@@ -1,5 +1,28 @@
 # Dev Journal
 
+## 2026-05-06 — Template quality cleanup batch
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**Key changes:**
+- Fixed dependency chains: removed wrong deps (go-grpc, celery-worker,
+  sveltekit), added missing deps across 9 templates (htmx, SPAs,
+  nextjs, go-lib, java-grpc) — PR #278
+- Split `base/core/quality.md`: extracted OOP into new
+  `base/core/oop.md`, moved 12-factor to `backend/quality.md` — PR #279
+- Cleaned framework-specific content from shared templates: testing.md,
+  frontend/quality.md, frontend/ux.md, spa-react.md — PR #279
+- Added 4 override declarations for stack contradictions (nestjs AOP,
+  c-embedded testing, django statelessness, nextjs stack) — PR #280
+- Merged 3 housekeeping PRs: Dependabot (#261, #262), dev journal (#263)
+- Cleaned up stale branches (3 local + 40 remote refs pruned)
+
+**Issues closed:** #265, #266, #267, #271, #273, #274, #277
+**PRs merged:** #261, #262, #263, #278, #279, #280
+**Epic updated:** #264 (8 of 11 sub-issues complete)
+
+---
+
 ## 2026-05-06 — Generated stacks audit
 
 - Tool: Claude Code (Opus 4.6)
