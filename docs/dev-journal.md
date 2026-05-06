@@ -1,5 +1,14 @@
 # Dev Journal
 
+## 2026-05-06 — Generated stacks audit
+
+- Tool: Claude Code (Opus 4.6)
+- Audited 5 generated stacks: terraform, tutorial, python-lib, react-spa, go-service
+- Created #264 (audit parent) + 4 sub-issues (#265–#268)
+- Fixed #268: added `base-security` and `base-containers` to `backend-quality` deps — resolved missing dependency gap for all 6 service stacks
+- Merged PR #269
+- Swapped milestones: v2.4 is now Templates & Content, v2.5 is now Discovery
+
 ## 2026-04-27 — Skills roadmap
 
 - Added Phase 15 (Skills) to `ROADMAP.md` with four categories:
