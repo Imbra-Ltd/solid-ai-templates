@@ -3,16 +3,6 @@
 
 [ID: base-quality]
 
-## Architecture
-
-- All editable content in a data directory — never hardcoded in source modules
-- Never hardcode derived counts or statistics — compute them from the data
-  source; a hardcoded number is a stale number
-- Default to the simplest abstraction; only reach for heavier patterns
-  when genuinely needed
-- No dead code — remove unused modules, assets, and data files promptly
-- No over-engineering — build the minimum needed for the current requirement
-
 ## Core principles
 
 - **DRY — Don't Repeat Yourself**: every piece of knowledge must have
@@ -22,6 +12,16 @@
 - **YAGNI — You Aren't Gonna Need It**: do not build for hypothetical
   future requirements; build what is needed now, refactor when the
   need is real
+
+## Architecture
+
+- All editable content in a data directory — never hardcoded in source modules
+- Never hardcode derived counts or statistics — compute them from the data
+  source; a hardcoded number is a stale number
+- Default to the simplest abstraction; only reach for heavier patterns
+  when genuinely needed
+- No dead code — remove unused modules, assets, and data files promptly
+- No over-engineering — build the minimum needed for the current requirement
 
 ## Readability
 
@@ -98,10 +98,6 @@
   code first and struggle to test later
 - If code is hard to test, treat it as a design problem, not a
   testing problem
-## Automated enforcement
-
-- Quality conventions in this document are enforced automatically via
-  quality gates (editor → pre-commit → CI)
 
 ## Code style
 
@@ -110,6 +106,9 @@
 - Line endings MUST be LF — CRLF is not acceptable in any committed file
 - A linter SHOULD enforce formatting automatically on save; keep manual style
   rules to a minimum
+- Commit an `.editorconfig` file at the project root — enforces indent
+  style, indent size, line endings, charset, and trailing whitespace
+  across all editors without tool-specific config
 - Prefer self-documenting code — if a comment feels necessary, treat it as a
   signal that the code needs restructuring before the comment is added
 - Add comments only where the intent cannot be expressed in code
@@ -122,6 +121,11 @@
 - No commented-out code blocks — delete dead code; version control is the history
 - Debug tooling (profilers, REPL helpers, verbose loggers) MUST be
   gated behind a flag or environment variable, never on by default
+
+## Automated enforcement
+
+- Quality conventions in this document are enforced automatically via
+  quality gates (editor → pre-commit → CI)
 
 ## Testing
 
