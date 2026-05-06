@@ -1,5 +1,5 @@
 # Stack — Flutter Mobile Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/backend/auth.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/mobile/auth.md, templates/mobile/ux.md]
 
 A cross-platform mobile (iOS + Android) application built with Flutter and
 Dart. Covers project structure, widget conventions, state management, routing,
@@ -132,12 +132,11 @@ CLAUDE.md
 ---
 
 ## Authentication
-[EXTEND: backend-auth]
+[EXTEND: mobile-auth]
 
-- Store tokens in `flutter_secure_storage` — never in `SharedPreferences`
-- Refresh tokens via a Dio interceptor — transparent to the rest of the app
-- Biometric auth via `local_auth` as an optional unlock layer —
-  not a replacement for server-side authentication
+- Use `flutter_secure_storage` for token storage
+- Use `local_auth` for biometric unlock
+- Refresh interceptor implemented as a Dio `Interceptor` subclass
 
 ---
 

@@ -42,7 +42,7 @@ def _load_manifest():
         data = yaml.safe_load(f)
 
     entries = {}
-    for section in ("base", "platform", "frontend", "backend", "stacks"):
+    for section in ("base", "platform", "frontend", "mobile", "backend", "stacks"):
         for entry in data.get(section, []):
             entries[entry["id"]] = entry
 
@@ -91,6 +91,7 @@ TEMPLATE_DIRS = [
     os.path.join("templates", "base", "data"),
     os.path.join("templates", "backend"),
     os.path.join("templates", "frontend"),
+    os.path.join("templates", "mobile"),
     os.path.join("templates", "stack"),
 ]
 

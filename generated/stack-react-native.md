@@ -778,71 +778,6 @@ fixing the design fixes the testability.
   smell that can silently break sorting, filtering, and UI logic
 
 
-<!-- templates/base/core/oop.md -->
-# Base — Object-Oriented Design
-
-[ID: base-oop]
-
-## SOLID principles
-
-Apply SOLID at the class, module, and service level:
-
-- **S — Single Responsibility**: every class or module has exactly one reason
-  to change; split anything that serves more than one concern
-- **O — Open/Closed**: extend behaviour by adding new code, not by modifying
-  existing code; use interfaces, abstract base classes, or composition
-- **L — Liskov Substitution**: subtypes must be fully substitutable for their
-  base type without altering correctness; never override a method in a way
-  that weakens its contract
-- **I — Interface Segregation**: prefer many small, focused interfaces over
-  one large general-purpose one; callers should not depend on methods they
-  do not use
-- **D — Dependency Inversion**: depend on abstractions, not concretions;
-  inject dependencies rather than instantiating them inside a class
-
-## OOP
-
-- Prefer **composition over inheritance** — inherit only to model a true
-  is-a relationship; compose for code reuse
-- **Encapsulate** implementation details — expose behaviour through a public
-  interface, hide state and implementation
-- Design to interfaces (or protocols / abstract base classes), not concrete
-  types
-- Keep class hierarchies shallow — more than two levels of inheritance is a
-  signal to refactor towards composition
-
-## Design patterns
-
-- Apply established **GoF design patterns** where they fit the problem —
-  do not invent ad-hoc solutions for problems that have named solutions
-- Favour **behavioural patterns** for algorithm variation:
-  Strategy, Command, Observer, Template Method
-- Favour **structural patterns** for object composition:
-  Adapter, Decorator, Facade, Proxy
-- Use **creational patterns** to decouple object creation:
-  Factory Method, Abstract Factory, Builder
-- Use **Singleton** only for stateless services or infrastructure objects
-  (logger, config) — never for mutable shared state
-- Name the pattern in code when you use one: a class named
-  `OrderExportStrategy` communicates intent; a class named `OrderHelper`
-  does not
-
-## Aspect-Oriented Programming (AOP)
-[ID: base-oop-aop]
-
-- **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
-  interception, bytecode weaving, runtime proxies) makes code hard to read,
-  debug, and test
-- Implement cross-cutting concerns explicitly:
-  - Logging: call the logger directly in the function
-  - Auth: explicit middleware or guard in the call chain
-  - Transactions: explicit context manager or decorator with visible
-    call site
-  - Validation: explicit call at the boundary
-- Transparent decorators (a decorator that wraps and clearly delegates) are
-  acceptable; opaque interceptors that inject hidden behaviour are not
-
-
 <!-- templates/base/security/security.md -->
 # Base — Application Security
 
@@ -1107,546 +1042,175 @@ every project regardless of language or framework.
   cached or logged
 
 
-<!-- templates/frontend/ux.md -->
-# Frontend — UX Principles
+<!-- templates/mobile/auth.md -->
+# Mobile — Authentication
+[ID: mobile-auth]
+[DEPENDS ON: templates/base/security/security.md]
 
-[ID: frontend-ux]
+Authentication rules for native mobile applications. Overrides
+web-specific token transport (httpOnly cookies) with platform
+secure storage.
+
+---
+
+## Token storage
+[ID: mobile-auth-token-storage]
+
+- Store access and refresh tokens in the platform's secure enclave:
+  `expo-secure-store` (React Native) or `flutter_secure_storage`
+  (Flutter) — never in `AsyncStorage`, `SharedPreferences`,
+  `localStorage`, or plain files
+- Tokens are encrypted at rest by the OS keychain (iOS Keychain /
+  Android Keystore) — do not add a custom encryption layer on top
+- Access tokens sent in the `Authorization: Bearer <token>` header
+  — same as backend clients
+- Clear all tokens on logout — wipe both access and refresh tokens
+  from secure storage in a single operation
+
+---
+
+## Token refresh
+
+- Implement a transparent refresh interceptor in the HTTP client
+  (Axios interceptor / Dio interceptor) — the rest of the app
+  must not know about token expiry
+- On 401 response: attempt a single refresh; if refresh fails,
+  redirect to the login screen
+- Queue concurrent requests during a refresh — do not fire
+  multiple refresh calls in parallel
+- Rotate refresh tokens on every use — the server issues a new
+  refresh token with each refresh response
+
+---
+
+## Biometric authentication
+
+- Biometric unlock (Face ID, Touch ID, fingerprint) is an
+  optional convenience layer — not a replacement for server-side
+  token-based authentication
+- Gate biometric enrolment behind an opt-in setting — never
+  enable silently
+- Fall back to PIN / password if biometric authentication fails
+  or is unavailable
+- Use platform APIs: `expo-local-authentication` (React Native)
+  or `local_auth` (Flutter)
+
+---
+
+## Session lifecycle
+
+- Persist the refresh token across app restarts — the user
+  should not re-authenticate on every cold start
+- Invalidate all local tokens when the server signals revocation
+  (e.g. password change, account lock)
+- On app backgrounding, do not clear tokens — mobile users
+  switch apps frequently; clearing forces unnecessary re-login
+- Set a maximum offline session duration — if the app has not
+  contacted the server within a configurable window, force
+  re-authentication on next foreground
+
+
+<!-- templates/mobile/ux.md -->
+# Mobile — UX and Accessibility
+[ID: mobile-ux]
+[DEPENDS ON: templates/base/core/quality.md]
+
+Mobile-specific UX principles and accessibility rules. Replaces
+browser-centric guidance (WCAG viewports, axe, Lighthouse, CSS
+media queries) with native platform equivalents.
+
+---
 
 ## UX principles
 
-- Mobile-first — design for small screens first, enhance for larger ones
+- Design for one-handed use — primary actions within thumb reach
 - Progressive disclosure — show only what the user needs at each step
-- No dark patterns — no misleading UI, no forced actions, no hidden costs
-- Consistency — same interaction patterns throughout the product
-- Performance is UX — slow interfaces are bad user experience
-- **Least Surprise**: components and interactions should behave as users
-  expect; if a pattern looks like a button it must act like a button
+- Performance is UX — 60 fps minimum; janky scrolling is a bug
+- Respect platform conventions — iOS and Android have distinct
+  interaction patterns (back gesture, navigation bar, pull-to-refresh);
+  do not force one platform's idioms on the other
+- Offline-first — assume intermittent connectivity; never block
+  the UI without a loading state and a retry option
 
-## Accessibility — WCAG 2.1 AA
+---
 
-- Target standard: WCAG 2.1 AA
-- Minimum text contrast ratio: 4.5:1 (normal text), 3:1 (large text)
-- All interactive elements reachable and operable by keyboard
-- Any non-focusable element (`<th>`, `<div>`, `<span>`) with `onClick` MUST
-  contain a `<button>` — `onClick` alone does not add the element to the tab
-  order or provide keyboard activation
-- Use `:focus-visible` instead of `:focus` for focus indicators —
-  `:focus` shows outlines on mouse clicks (distracting), `:focus-visible`
-  shows them only for keyboard navigation
-- Focus indicators must be visible at all times during keyboard navigation
-- No content that relies on colour alone to convey meaning
-- Images must have descriptive `alt` text; decorative images use `alt=""`
-- Semantic HTML: correct landmark elements and heading hierarchy
-- `aria-label` on all interactive elements (buttons, icon links, social links)
-- All `<a>` elements with icon-only or ambiguous text must have a descriptive
-  `aria-label`
-- Keyboard navigation: menus must close on Escape and restore focus
+## Touch targets
+
+- Minimum touch target: 48 × 48 dp (Android Material) /
+  44 × 44 pt (Apple HIG) — smaller targets cause mis-taps
+- Spacing between adjacent targets: ≥ 8 dp — prevent accidental
+  activation of the wrong control
+- Interactive elements at screen edges need extra padding —
+  system gestures compete for the same space
+
+---
+
+## Accessibility — screen readers
+
+- Target standard: WCAG 2.1 AA adapted for native platforms
+- Every interactive element MUST have a screen-reader label:
+  `accessibilityLabel` (React Native) or `Semantics(label:)`
+  (Flutter)
+- Images: provide `accessibilityLabel` for informative images;
+  mark decorative images as `accessibilityElementsHidden` (RN)
+  or `Semantics(excludeSemantics: true)` (Flutter)
+- State changes (loading, error, success) MUST be announced:
+  use `AccessibilityInfo.announceForAccessibility()` (RN) or
+  `SemanticsService.announce()` (Flutter)
+- Group related elements into a single accessible unit where
+  appropriate — a card with title + subtitle + action should
+  announce as one item, not three
+
+---
+
+## Accessibility — navigation
+
+- Focus order follows the visual reading order (top-to-bottom,
+  leading-to-trailing)
+- Modals and bottom sheets MUST trap focus and restore it on
+  dismiss
+- Screen reader users MUST be able to reach all interactive
+  elements — hidden overflow does not excuse inaccessible
+  controls
+
+---
 
 ## Accessibility testing
 
-Meeting WCAG 2.1 AA requires both automated and manual testing — automated
-tools catch ~30–40% of issues; the rest require human judgment.
+### Automated
 
-### Automated (run in CI)
+- Lint for missing accessibility labels in CI — use
+  `eslint-plugin-react-native-a11y` (React Native) or
+  custom lint rules with `dart analyze` (Flutter)
 
-- **axe-core** — integrate via the framework adapter (`@axe-core/react`,
-  `@axe-core/vue`, `axe-playwright`, or `jest-axe`); zero violations
-  allowed before merge
-- **Lighthouse** — accessibility score ≥ 90 on all key pages; run in CI
-  via `lighthouse-ci`
-- **Linter a11y plugin** — catches missing `alt`, incorrect ARIA roles, and
-  missing form labels at write time; use the plugin for your framework
-  (`eslint-plugin-jsx-a11y` for React, `eslint-plugin-vuejs-accessibility`
-  for Vue; Svelte has built-in a11y warnings)
+### Manual (before shipping new screens)
 
-### Manual (run before shipping new interactive components)
-
-- **Keyboard-only navigation** — tab through the entire feature; every
-  action reachable without a mouse; focus order is logical; no focus traps
-  except intentional modal dialogs
-- **Screen reader** — test with at least one: NVDA + Chrome (Windows),
-  VoiceOver + Safari (macOS / iOS), or TalkBack (Android); verify that
-  all content and state changes are announced correctly
-- **Zoom to 200%** — no content clipped or overlapping at double zoom;
-  horizontal scroll must not appear on a 1280px viewport
-- **High contrast mode** — verify in Windows High Contrast or forced-colors
-  CSS media query; no information lost when colours are overridden
+- **VoiceOver** (iOS): enable in Settings → Accessibility;
+  navigate every screen; verify all elements are announced
+  with correct labels, roles, and state
+- **TalkBack** (Android): enable in Settings → Accessibility;
+  same verification as VoiceOver
+- **Switch Control / Switch Access**: verify the app is usable
+  with external switch devices (required for motor impairment)
+- **Dynamic type / font scaling**: verify layout at the largest
+  system font size — no text clipping or overlapping
 
 ### Criteria for done
 
 A feature is not complete until:
 
-- [ ] `axe-core` reports zero violations in component tests
-- [ ] Lighthouse accessibility score ≥ 90
-- [ ] Keyboard navigation verified manually
-- [ ] Screen reader walkthrough completed for new interactive elements
+- [ ] Every interactive element has an accessibility label
+- [ ] VoiceOver walkthrough completed on iOS
+- [ ] TalkBack walkthrough completed on Android
+- [ ] Layout verified at maximum system font size
 
-## Sortable tables
-
-- Boolean columns SHOULD sort descending (true first) on first click ���
-  users click a boolean column to find items that have a feature, not
-  items that lack it; ascending puts `false` first, which looks
-  identical to unsorted and appears broken
-
-## Responsive breakpoints
-
-- Tablet: max-width 1024px
-- Mobile: max-width 768px
-- Small mobile: max-width 480px
-
-## Design system
-
-- Use a design system if one exists for the project — never design ad-hoc
-  components that duplicate established patterns
-- Design tokens (colours, spacing, typography, radii) MUST come from the
-  design system — never hardcode visual values
-- Component-driven development: build UI as a hierarchy of reusable,
-  self-contained components; avoid monolithic views
-- New components SHOULD be documented with usage examples before shipping
-
-## Browser support
-
-[ID: frontend-ux-browsers]
-
-- Default target: last 2 versions of Chrome, Firefox, Safari, and Edge
-- Progressive enhancement: graceful degradation for unsupported features
-
-
-<!-- templates/frontend/quality.md -->
-# Frontend — Quality Attributes
-
-[ID: frontend-quality]
-
-## Patterns
-
-- Use error boundary, skeleton loading, optimistic update, virtual
-  scroll, debounced search, form validation, responsive switch, and
-  URL state sync patterns where appropriate
-
-## Design patterns
-
-Prefer these patterns for frontend concerns:
-
-- **Container / Presentational** — separate data-fetching and state logic
-  (container) from rendering (presentational); presentational components
-  receive only props, have no side effects, and are easy to test in isolation
-- **Custom Hook** — extract reusable stateful logic into a named hook
-  (`use[Name]`); hooks are the frontend equivalent of a service or strategy
-- **Compound Component** — expose a set of related sub-components that share
-  implicit state via context (e.g. `<Tabs>`, `<Tab>`, `<TabPanel>`);
-  prefer over deeply nested prop drilling
-- **Render Props / Slot** — pass render logic as a prop or slot to invert
-  control over what is rendered; use sparingly — prefer custom hooks where possible
-- **Observer** — subscribe to external state changes (store, event bus,
-  WebSocket) via a single subscription point; unsubscribe on component unmount
-- **Facade** — wrap third-party libraries (analytics, maps, payment SDKs)
-  behind a thin project-owned interface; never scatter SDK calls across components
-- **Optimistic Update** — apply the expected result of a mutation immediately
-  in the UI and roll back on failure; document the rollback path
-
-Avoid:
-
-- **Mediator / Event Bus** between components — use shared state or lifting
-  state up instead; an event bus between components creates invisible coupling
-
-## State management
-
-Choose the right tool for the scope of the state — do not use a global store
-for state that is local to a component or a server cache for state that is
-never fetched from a server.
-
-| State type          | Scope                | When to use                                       |
-| ------------------- | -------------------- | ------------------------------------------------- |
-| **Local UI state**  | Single component     | Form inputs, toggles, counters                    |
-| **Shared UI state** | Multiple components  | Auth session, sidebar state, active filters       |
-| **Server state**    | Cached from API      | Lists, detail views, paginated results            |
-| **Form state**      | Form lifecycle       | Validation, field arrays, multi-step flows        |
-| **URL state**       | URL search params    | Bookmarkable filters, pagination, selected tab    |
-
-Rules:
-
-- Never duplicate server state in a global store — use a dedicated server
-  cache; the store holds only client-owned state
-- Never put derived state in the store — compute it from existing state
-- Prefer URL state for anything the user should be able to bookmark or share
-- Keep global store slices small and focused — one slice per domain concern,
-  not one slice for everything
-
-## Linting and formatting
-
-- A linter MUST be configured for all JS/TS code
-- Linter and formatter SHOULD run on save in the IDE — never rely on CI
-  alone to catch style issues
-- No warnings or errors MUST appear in the browser console or test output
-  before a PR is merged — start every review on a clean slate
-- Lint error count SHOULD go down over time — never increase it
-
-## CSS
-
-- No inline styles except for dynamic/computed values
-- No hardcoded colour or spacing values — always use CSS custom properties
-  from `:root` or design tokens
-- Consistent naming convention (e.g. BEM-like `.component-element`)
-- Maximum line length: 80 characters (exempt: prose strings, third-party URLs)
-
-## Performance
-
-- Preload critical above-the-fold assets
-- Keep client-side JS minimal — every dependency adds to bundle size
-- Avoid unnecessary dependencies
-- Defer non-critical scripts
-- Monitor Core Web Vitals (LCP, CLS, INP) — treat regressions as bugs
-
-## SEO & analytics (if applicable)
-
-- `robots.txt`, Open Graph, and Twitter Card meta tags required for
-  server-rendered and static pages
-- Canonical URLs required for publicly indexed pages
-- Privacy-friendly analytics only — no consent banner required
-- No third-party tracking scripts without explicit user consent
-
-
-<!-- templates/stack/spa-react.md -->
-# Stack — React Single-Page Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/oop.md, templates/base/language/typescript.md, templates/base/security/security.md, templates/frontend/ux.md, templates/frontend/quality.md]
-
-A client-side React application with TypeScript. Covers component model,
-state management, routing, API integration, and tooling.
-
----
-
-## Stack
-[ID: react-spa-stack]
-
-- Language: TypeScript (strict mode)
-- Framework: React 18+
-- Bundler: [Vite / Create React App / Next.js]
-- Routing: [React Router v6 / TanStack Router]
-- State: [Zustand / Redux Toolkit / React Query + local state]
-- Styling: [CSS Modules / Tailwind / plain CSS]
-- HTTP client: [fetch / axios / TanStack Query]
-- Test runner: Vitest + React Testing Library
-- Package manager: [npm / pnpm / yarn]
-- Deployment: [Vercel / Netlify / GitHub Pages / Docker]
-
----
-
-## Project structure
-[ID: react-spa-structure]
-
-```
-src/
-  components/
-    [Feature]/
-      [Feature].tsx
-      [Feature].test.tsx
-      [Feature].module.css   # if using CSS Modules
-  pages/                     # or routes/ — one file per route
-  hooks/                     # custom hooks (use[Name].ts)
-  services/                  # API calls (no business logic in components)
-  store/                     # global state slices
-  types/                     # shared TypeScript types and interfaces
-  utils/                     # pure utility functions
-  App.tsx
-  main.tsx
-public/
-tsconfig.json
-vite.config.ts               # or equivalent
-package.json
-README.md
-CLAUDE.md
-```
-
----
-
-## TypeScript conventions
-[ID: react-spa-typescript]
-[EXTEND: base-typescript]
-
-- `eslint-plugin-sonarjs` MUST be included in the ESLint config
-- **Prettier** owns all formatting decisions — no style discussions in code
-  review; configure once and commit the config
-
----
-
-## Component conventions
-[ID: react-spa-components]
-
-- One component per file — filename matches component name (PascalCase)
-- Functional components only — no class components
-- Props typed with an explicit `interface` or `type` in the same file
-- No prop drilling beyond two levels — lift state or use context/store
-- Extract reusable logic into custom hooks (`use[Name].ts` in `hooks/`)
-- Keep components small: if a component exceeds ~150 lines, split it
-
----
-
-## State management
-[ID: react-spa-state]
-
-| State type          | Tool                     | When to use                            |
-| ------------------- | ------------------------ | -------------------------------------- |
-| **Local UI state**  | `useState`, `useReducer` | Form inputs, toggles, counters         |
-| **Shared UI state** | Zustand / Redux Toolkit  | Auth session, sidebar, active filters  |
-| **Server state**    | TanStack Query / SWR     | Lists, detail views, paginated results |
-| **Form state**      | React Hook Form / Formik | Validation, field arrays, multi-step   |
-| **URL state**       | Router search params     | Bookmarkable filters, pagination, tabs |
-
-- Never duplicate server state in the global store — TanStack Query or SWR
-  is the cache; the store holds only client-owned state
-- No direct DOM manipulation — all state flows through React
-
----
-
-## API integration
-[ID: react-spa-api]
-
-- All API calls in `src/services/` — never inline `fetch` in components
-- Return typed response objects — no untyped `any` from API boundaries
-- Handle loading, error, and empty states explicitly in every data-dependent view
-- Never store tokens in `localStorage` — prefer `httpOnly` cookies or memory
-
----
-
-## Styling
-[ID: react-spa-styling]
-
-- No inline styles except for dynamic/computed values
-- No hardcoded colour or spacing values — use CSS custom properties or
-  design tokens from the chosen system
-- Responsive styles follow a mobile-first approach (per `templates/frontend/ux.md`)
-- Global styles in `src/index.css` only; component styles co-located
-
----
-
-## Testing
-[EXTEND: base-testing]
-
-- React Testing Library for component tests — test behaviour, not implementation
-- No `getByTestId` as a first resort — prefer accessible queries
-  (`getByRole`, `getByLabelText`, `getByText`)
-- Vitest for component tests on utils, hooks, and services
-- Mock API calls at the network boundary (`msw`) — not inside components
-- Component test naming: Given/When/Then
-  e.g. `given a logged-out user, when they submit the form, then an error is shown`
-- System tests MUST cover critical user journeys (login, checkout, key flows)
-- System tests SHOULD use Playwright or Cypress — colocated in `tests/system/`
-  at project root
-- Run before every commit: `npm test && tsc --noEmit`
-
----
-
-## Accessibility
-[EXTEND: frontend-ux]
-
-- All interactive elements must be keyboard-accessible
-- Use semantic HTML — prefer `<button>` over `<div onClick>`
-- Every form input has an associated `<label>`
-- Modals and dialogs trap focus and restore it on close
-- Test with a screen reader before shipping new interactive components
-
----
-
-## Git conventions
-[EXTEND: base-git]
-
-- Do not commit `node_modules/`, `dist/`, `.env`, `.env.local`
-- Lock file (`package-lock.json` / `pnpm-lock.yaml`) is committed — do not delete it
-- Always run `npm test && tsc --noEmit` before committing
-
----
-
-## Commands
-```
-npm run dev       # develop — hot reload
-npm run build     # production build
-npm run preview   # preview production build locally
-npm test          # run tests (watch mode)
-tsc --noEmit      # type check without emitting files
-```
-
-<!-- templates/backend/http.md -->
-# Backend — HTTP Conventions
-[ID: backend-http]
-
-## Handler design
-- Handlers are thin: decode request → call service → encode response
-- No business logic in handlers — delegate to a service layer
-- Validate all incoming request data before processing
-
-## URI design
-- Path segments MUST be lowercase with hyphens as word separators —
-  underscores and camelCase are not permitted
-- Paths MUST use nouns, not verbs: `/orders` not `/getOrders`
-- Collection resources MUST use plural nouns: `/orders`, `/products`
-- Individual resources MUST be addressed under their collection:
-  `/orders/{orderId}`
-- Sub-resources MUST be nested under their parent: `/customers/{id}/orders`
-- A URI MUST NOT end with a trailing slash
-- Paths MUST use American English spelling with no abbreviations or acronyms
-
-## Query parameters
-- Query parameter names MUST use camelCase
-- Query parameters MUST be used for filtering, sorting, and pagination —
-  not for resource identity (use path segments for that)
-- The following names are reserved for framework-level use and MUST NOT
-  be repurposed: `limit`, `skip`, `offset`, `expand`, `sortedBy`
-
-## Request headers
-- All HTTP headers MUST follow Hyphenated-Pascal-Case casing:
-  `Api-Correlation-Id`, `Accept-Language`
-- Custom headers SHOULD NOT use the `X-` prefix — this convention was
-  deprecated by RFC 6648; use a vendor or application-specific prefix instead
-
-## HTTP methods
-| Method | Use for | Idempotent |
-|--------|---------|-----------|
-| GET | Retrieve a resource or collection — no side effects | Yes |
-| POST | Create a new resource — server assigns URI | No |
-| PUT | Replace a resource entirely | Yes |
-| PATCH | Partially update a resource | No |
-| DELETE | Remove a resource | Yes |
-
-## Resource representation
-- JSON MUST be the default serialisation format; XML MAY be used where
-  explicitly required by the consuming system
-- Field types MUST conform to the relevant ISO standard:
-  - Date and time values: ISO 8601
-  - Language codes: ISO 639
-  - Country codes: ISO 3166-1 alpha-2
-  - Currency codes: ISO 4217
-- Any integer that exceeds 2^53 − 1 (9007199254740991) MUST be serialised
-  as a string — JavaScript cannot represent larger integers precisely
-- Responses MUST contain only the fields needed by the caller — do not pad
-  payloads with fields that are not consumed
-
-## HATEOAS
-- Embed hyperlinks in responses to enable resource discovery
-- Use a `links` array with `href`, `rel`, `type`, and `media` fields:
-  ```json
-  "links": [
-    {
-      "href": "invoices/f9c3b2a1-0d4e-4f8b-9c7a-1e2d3f4a5b6c",
-      "rel": "invoice",
-      "type": "paymentSummary",
-      "media": "application/pdf"
-    }
-  ]
-  ```
-- Support at minimum: `self`, `next`, `prev` relations on paginated collections
-
-## Error responses
-- Use consistent error response shape across all endpoints
-- Follow RFC 9457 (`application/problem+json`) for error format
-- Use 4xx for client errors, 5xx for server errors — never use 200 for errors
-- Never return stack traces, internal paths, or implementation details to the client
-- Set explicit `Content-Type: application/json` on all JSON responses
-
-## Authentication and authorisation
-- All API traffic MUST be served over HTTPS — plain HTTP is not acceptable
-- Access tokens MUST have a finite lifetime; use JWT or an equivalent
-  short-lived token mechanism
-- Every external API endpoint MUST enforce both authentication and
-  authorisation
-- Internal API endpoints SHOULD require authentication at minimum
-- Write endpoints MUST NOT be accessible without a valid authenticated identity
-
-<!-- templates/backend/auth.md -->
-# Backend — Authentication and Authorization
-[ID: backend-auth]
-[DEPENDS ON: templates/base/security/security.md]
-
-Rules for identity verification (authn) and access control (authz).
-Applies to any backend service that has protected resources.
-Extends `security-authn` and `security-sessions` from the base
-security template with backend-specific depth.
-
----
-
-## General principles
-
-- Authentication (who are you?) and authorization (what can you do?) are
-  separate concerns — keep them in separate layers
-- Never implement your own cryptographic primitives — use well-audited libraries
-- Fail closed: deny access by default; grant explicitly
-- Centralise auth logic — no scattered permission checks across route handlers
-
----
-
-## Authentication
-[EXTEND: security-authn]
-
-- Prefer delegating authentication to an identity provider (IdP) via
-  OAuth 2.0 / OIDC (e.g. Auth0, Keycloak, Cognito) over rolling your own
-- If issuing tokens directly, use short-lived JWTs (access token ≤ 15 minutes)
-  with a separate refresh token (≤ 7 days, rotated on use)
-- Validate every JWT: signature, `exp`, `iss`, `aud` — reject tokens missing
-  any required claim
-- Store refresh tokens server-side (database or cache) so they can be revoked —
-  stateless refresh tokens cannot be invalidated before expiry
-
----
-
-## Token transport
-
-- Access tokens MUST be sent in the `Authorization: Bearer <token>` header
-- Do NOT accept tokens in query parameters — they appear in server logs and
-  browser history
-- Refresh tokens MUST be stored in `httpOnly`, `Secure`, `SameSite=Strict`
-  cookies — never in `localStorage` or JavaScript-accessible memory
-- HTTPS required for all authenticated endpoints — no exceptions
-
----
-
-## Authorization
-
-- Use role-based access control (RBAC) as the baseline:
-  assign permissions to roles, assign roles to users
-- For fine-grained needs, layer attribute-based access control (ABAC) on top
-  of RBAC — do not replace RBAC entirely
-- Authorise at the service layer, not only at the route layer:
-  a route that passes auth may call a service that operates on another user's data
-- Never trust client-supplied IDs for ownership checks — always verify that
-  the authenticated user owns or has access to the requested resource
-
----
-
-## API keys (service-to-service)
-
-- Issue API keys with the minimum required scope
-- Hash API keys before storing — treat them like passwords
-- Rotate API keys on a schedule and immediately on suspected compromise
-- Log every API key usage with the key ID (not the key value) and the
-  calling service identity
-
----
-
-## Observability
-
-- Log authentication failures at WARN with IP, user agent, and username
-  (never the attempted password)
-- Log authorization failures at WARN with user ID, resource, and action
-- Alert on a spike in auth failures — may indicate a credential stuffing attack
-- Never log tokens, passwords, or secrets — even at DEBUG level
-
----
-
-## Testing
-
-- Unit test permission logic with all role combinations including edge cases
-  (no role, multiple roles, deprecated role)
-- Integration test that protected endpoints return 401 for unauthenticated
-  requests and 403 for authenticated requests with insufficient permissions
-- Test token expiry: assert that an expired token is rejected
-- Test token revocation: assert that a revoked refresh token cannot obtain
-  a new access token
 
 <!-- templates/stack/mobile-react-native.md -->
 # Stack — React Native Mobile Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/stack/spa-react.md, templates/backend/auth.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/mobile/auth.md, templates/mobile/ux.md]
 
-Extends the React SPA stack with React Native and Expo conventions. Covers
-mobile-specific project structure, navigation, platform APIs, offline
+React Native and Expo conventions for cross-platform mobile apps.
+Covers project structure, navigation, platform APIs, offline
 behaviour, and testing.
 
 ---
@@ -1701,9 +1265,8 @@ CLAUDE.md
 ---
 
 ## TypeScript conventions
-[EXTEND: react-spa-typescript]
+[EXTEND: base-typescript]
 
-- Strict mode enforced — same rules as `react-spa.md`
 - Platform-specific files use `.ios.tsx` / `.android.tsx` suffixes —
   only when the difference cannot be handled with `Platform.select()`
 - Prefer `Platform.select({ ios: ..., android: ..., default: ... })`
@@ -1712,7 +1275,7 @@ CLAUDE.md
 ---
 
 ## Component conventions
-[EXTEND: react-spa-components]
+[ID: react-native-components]
 
 - Use `StyleSheet.create()` for all styles — no inline style objects
   except for dynamic/computed values
@@ -1765,11 +1328,12 @@ CLAUDE.md
 ---
 
 ## State management
-[EXTEND: react-spa-state]
+[ID: react-native-state]
 
 - Local state: `useState` / `useReducer` for screen-scoped concerns
 - Global state: Zustand for cross-screen shared state
-- Server state: TanStack Query — same rules as `react-spa.md`
+- Server state: TanStack Query — deduplicate, cache, and sync
+  server data; do not duplicate in local state
 - Persist sensitive data (tokens, user ID) in `expo-secure-store` —
   never in `AsyncStorage`
 - Non-sensitive persisted state (preferences, cached data) in `AsyncStorage`
@@ -1778,12 +1342,10 @@ CLAUDE.md
 ---
 
 ## Authentication
-[EXTEND: backend-auth]
+[EXTEND: mobile-auth]
 
-- Store access and refresh tokens in `expo-secure-store` — not `AsyncStorage`
-- Intercept 401 responses to attempt token refresh before redirecting to login
-- Biometric authentication via `expo-local-authentication` as an optional
-  layer on top of token-based auth — not a replacement for it
+- Use `expo-secure-store` for token storage
+- Use `expo-local-authentication` for biometric unlock
 
 ---
 
