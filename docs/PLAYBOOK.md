@@ -16,16 +16,23 @@ composition model.
    - One section per concern, each tagged `[ID: <name>]`
    - Use `[EXTEND: <id>]` to add rules on top of a parent section
    - Use `[OVERRIDE: <id>]` to replace a parent section entirely
-3. Register in `manifest.yaml`:
+3. Review for terminology carry-over from the source template:
+   - All framework and runtime names match the target stack
+   - CLI commands reference the correct package manager and tools
+   - Server/runtime terms are accurate (e.g. WSGI vs ASGI vs
+     process manager)
+   - Language-specific vocabulary is correct (e.g. "packages" in Go,
+     "crates" in Rust, "modules" in Python)
+4. Register in `manifest.yaml`:
    ```yaml
    - id: stack-<name>
      file: stack/<prefix>-<name>.md
      depends_on:
        - <parent-id>
    ```
-4. Add to the stack list in `SPEC.md` (alphabetical within category)
-5. Add a row to the stacks table in `README.md`
-6. Validate: attach `INTERVIEW.md` + new stack to an agent and review output
+5. Add to the stack list in `SPEC.md` (alphabetical within category)
+6. Add a row to the stacks table in `README.md`
+7. Validate: attach `INTERVIEW.md` + new stack to an agent and review output
 
 ---
 
@@ -122,7 +129,7 @@ If the agent cannot run scripts, use the pre-resolved files in
 ## Run the test suite
 
 ```bash
-py tests/run_smoke.py              # 11 structural checks — seconds
+py tests/run_smoke.py              # 12 structural checks — seconds
 py tests/run_e2e.py                # canary test (python-lib)
 py tests/run_e2e.py --all          # all agent tests
 py tests/run_e2e.py STK-01 FMT-01  # specific tests only
