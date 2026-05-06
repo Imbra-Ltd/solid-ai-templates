@@ -54,8 +54,9 @@ CLAUDE.md
 [ID: react-spa-typescript]
 
 - Follow the **TypeScript ESLint** recommended ruleset
-  (`@typescript-eslint/recommended`) — enforced by ESLint; do not suppress
-  lint errors without a documented reason
+  (`@typescript-eslint/recommended`) and `eslint-plugin-sonarjs` —
+  enforced by ESLint; do not suppress lint errors without a
+  documented reason
 - **Prettier** owns all formatting decisions — no style discussions in code
   review; configure once and commit the config
 - `strict: true` in `tsconfig.json` — no exceptions
