@@ -2392,6 +2392,7 @@ security template with backend-specific depth.
 ---
 
 ## Token transport
+[ID: backend-auth-token-transport]
 
 - Access tokens MUST be sent in the `Authorization: Bearer <token>` header
 - Do NOT accept tokens in query parameters — they appear in server logs and

@@ -726,92 +726,6 @@ fixing the design fixes the testability.
   not hand-written mocks
 
 
-<!-- templates/backend/http.md -->
-# Backend — HTTP Conventions
-[ID: backend-http]
-
-## Handler design
-- Handlers are thin: decode request → call service → encode response
-- No business logic in handlers — delegate to a service layer
-- Validate all incoming request data before processing
-
-## URI design
-- Path segments MUST be lowercase with hyphens as word separators —
-  underscores and camelCase are not permitted
-- Paths MUST use nouns, not verbs: `/orders` not `/getOrders`
-- Collection resources MUST use plural nouns: `/orders`, `/products`
-- Individual resources MUST be addressed under their collection:
-  `/orders/{orderId}`
-- Sub-resources MUST be nested under their parent: `/customers/{id}/orders`
-- A URI MUST NOT end with a trailing slash
-- Paths MUST use American English spelling with no abbreviations or acronyms
-
-## Query parameters
-- Query parameter names MUST use camelCase
-- Query parameters MUST be used for filtering, sorting, and pagination —
-  not for resource identity (use path segments for that)
-- The following names are reserved for framework-level use and MUST NOT
-  be repurposed: `limit`, `skip`, `offset`, `expand`, `sortedBy`
-
-## Request headers
-- All HTTP headers MUST follow Hyphenated-Pascal-Case casing:
-  `Api-Correlation-Id`, `Accept-Language`
-- Custom headers SHOULD NOT use the `X-` prefix — this convention was
-  deprecated by RFC 6648; use a vendor or application-specific prefix instead
-
-## HTTP methods
-| Method | Use for | Idempotent |
-|--------|---------|-----------|
-| GET | Retrieve a resource or collection — no side effects | Yes |
-| POST | Create a new resource — server assigns URI | No |
-| PUT | Replace a resource entirely | Yes |
-| PATCH | Partially update a resource | No |
-| DELETE | Remove a resource | Yes |
-
-## Resource representation
-- JSON MUST be the default serialisation format; XML MAY be used where
-  explicitly required by the consuming system
-- Field types MUST conform to the relevant ISO standard:
-  - Date and time values: ISO 8601
-  - Language codes: ISO 639
-  - Country codes: ISO 3166-1 alpha-2
-  - Currency codes: ISO 4217
-- Any integer that exceeds 2^53 − 1 (9007199254740991) MUST be serialised
-  as a string — JavaScript cannot represent larger integers precisely
-- Responses MUST contain only the fields needed by the caller — do not pad
-  payloads with fields that are not consumed
-
-## HATEOAS
-- Embed hyperlinks in responses to enable resource discovery
-- Use a `links` array with `href`, `rel`, `type`, and `media` fields:
-  ```json
-  "links": [
-    {
-      "href": "invoices/f9c3b2a1-0d4e-4f8b-9c7a-1e2d3f4a5b6c",
-      "rel": "invoice",
-      "type": "paymentSummary",
-      "media": "application/pdf"
-    }
-  ]
-  ```
-- Support at minimum: `self`, `next`, `prev` relations on paginated collections
-
-## Error responses
-- Use consistent error response shape across all endpoints
-- Follow RFC 9457 (`application/problem+json`) for error format
-- Use 4xx for client errors, 5xx for server errors — never use 200 for errors
-- Never return stack traces, internal paths, or implementation details to the client
-- Set explicit `Content-Type: application/json` on all JSON responses
-
-## Authentication and authorisation
-- All API traffic MUST be served over HTTPS — plain HTTP is not acceptable
-- Access tokens MUST have a finite lifetime; use JWT or an equivalent
-  short-lived token mechanism
-- Every external API endpoint MUST enforce both authentication and
-  authorisation
-- Internal API endpoints SHOULD require authentication at minimum
-- Write endpoints MUST NOT be accessible without a valid authenticated identity
-
 <!-- templates/base/security/security.md -->
 # Base — Application Security
 
@@ -1076,99 +990,172 @@ every project regardless of language or framework.
   cached or logged
 
 
-<!-- templates/backend/auth.md -->
-# Backend — Authentication and Authorization
-[ID: backend-auth]
+<!-- templates/mobile/auth.md -->
+# Mobile — Authentication
+[ID: mobile-auth]
 [DEPENDS ON: templates/base/security/security.md]
 
-Rules for identity verification (authn) and access control (authz).
-Applies to any backend service that has protected resources.
-Extends `security-authn` and `security-sessions` from the base
-security template with backend-specific depth.
+Authentication rules for native mobile applications. Overrides
+web-specific token transport (httpOnly cookies) with platform
+secure storage.
 
 ---
 
-## General principles
+## Token storage
+[ID: mobile-auth-token-storage]
 
-- Authentication (who are you?) and authorization (what can you do?) are
-  separate concerns — keep them in separate layers
-- Never implement your own cryptographic primitives — use well-audited libraries
-- Fail closed: deny access by default; grant explicitly
-- Centralise auth logic — no scattered permission checks across route handlers
-
----
-
-## Authentication
-[EXTEND: security-authn]
-
-- Prefer delegating authentication to an identity provider (IdP) via
-  OAuth 2.0 / OIDC (e.g. Auth0, Keycloak, Cognito) over rolling your own
-- If issuing tokens directly, use short-lived JWTs (access token ≤ 15 minutes)
-  with a separate refresh token (≤ 7 days, rotated on use)
-- Validate every JWT: signature, `exp`, `iss`, `aud` — reject tokens missing
-  any required claim
-- Store refresh tokens server-side (database or cache) so they can be revoked —
-  stateless refresh tokens cannot be invalidated before expiry
+- Store access and refresh tokens in the platform's secure enclave:
+  `expo-secure-store` (React Native) or `flutter_secure_storage`
+  (Flutter) — never in `AsyncStorage`, `SharedPreferences`,
+  `localStorage`, or plain files
+- Tokens are encrypted at rest by the OS keychain (iOS Keychain /
+  Android Keystore) — do not add a custom encryption layer on top
+- Access tokens sent in the `Authorization: Bearer <token>` header
+  — same as backend clients
+- Clear all tokens on logout — wipe both access and refresh tokens
+  from secure storage in a single operation
 
 ---
 
-## Token transport
+## Token refresh
 
-- Access tokens MUST be sent in the `Authorization: Bearer <token>` header
-- Do NOT accept tokens in query parameters — they appear in server logs and
-  browser history
-- Refresh tokens MUST be stored in `httpOnly`, `Secure`, `SameSite=Strict`
-  cookies — never in `localStorage` or JavaScript-accessible memory
-- HTTPS required for all authenticated endpoints — no exceptions
-
----
-
-## Authorization
-
-- Use role-based access control (RBAC) as the baseline:
-  assign permissions to roles, assign roles to users
-- For fine-grained needs, layer attribute-based access control (ABAC) on top
-  of RBAC — do not replace RBAC entirely
-- Authorise at the service layer, not only at the route layer:
-  a route that passes auth may call a service that operates on another user's data
-- Never trust client-supplied IDs for ownership checks — always verify that
-  the authenticated user owns or has access to the requested resource
+- Implement a transparent refresh interceptor in the HTTP client
+  (Axios interceptor / Dio interceptor) — the rest of the app
+  must not know about token expiry
+- On 401 response: attempt a single refresh; if refresh fails,
+  redirect to the login screen
+- Queue concurrent requests during a refresh — do not fire
+  multiple refresh calls in parallel
+- Rotate refresh tokens on every use — the server issues a new
+  refresh token with each refresh response
 
 ---
 
-## API keys (service-to-service)
+## Biometric authentication
 
-- Issue API keys with the minimum required scope
-- Hash API keys before storing — treat them like passwords
-- Rotate API keys on a schedule and immediately on suspected compromise
-- Log every API key usage with the key ID (not the key value) and the
-  calling service identity
-
----
-
-## Observability
-
-- Log authentication failures at WARN with IP, user agent, and username
-  (never the attempted password)
-- Log authorization failures at WARN with user ID, resource, and action
-- Alert on a spike in auth failures — may indicate a credential stuffing attack
-- Never log tokens, passwords, or secrets — even at DEBUG level
+- Biometric unlock (Face ID, Touch ID, fingerprint) is an
+  optional convenience layer — not a replacement for server-side
+  token-based authentication
+- Gate biometric enrolment behind an opt-in setting — never
+  enable silently
+- Fall back to PIN / password if biometric authentication fails
+  or is unavailable
+- Use platform APIs: `expo-local-authentication` (React Native)
+  or `local_auth` (Flutter)
 
 ---
 
-## Testing
+## Session lifecycle
 
-- Unit test permission logic with all role combinations including edge cases
-  (no role, multiple roles, deprecated role)
-- Integration test that protected endpoints return 401 for unauthenticated
-  requests and 403 for authenticated requests with insufficient permissions
-- Test token expiry: assert that an expired token is rejected
-- Test token revocation: assert that a revoked refresh token cannot obtain
-  a new access token
+- Persist the refresh token across app restarts — the user
+  should not re-authenticate on every cold start
+- Invalidate all local tokens when the server signals revocation
+  (e.g. password change, account lock)
+- On app backgrounding, do not clear tokens — mobile users
+  switch apps frequently; clearing forces unnecessary re-login
+- Set a maximum offline session duration — if the app has not
+  contacted the server within a configurable window, force
+  re-authentication on next foreground
+
+
+<!-- templates/mobile/ux.md -->
+# Mobile — UX and Accessibility
+[ID: mobile-ux]
+[DEPENDS ON: templates/base/core/quality.md]
+
+Mobile-specific UX principles and accessibility rules. Replaces
+browser-centric guidance (WCAG viewports, axe, Lighthouse, CSS
+media queries) with native platform equivalents.
+
+---
+
+## UX principles
+
+- Design for one-handed use — primary actions within thumb reach
+- Progressive disclosure — show only what the user needs at each step
+- Performance is UX — 60 fps minimum; janky scrolling is a bug
+- Respect platform conventions — iOS and Android have distinct
+  interaction patterns (back gesture, navigation bar, pull-to-refresh);
+  do not force one platform's idioms on the other
+- Offline-first — assume intermittent connectivity; never block
+  the UI without a loading state and a retry option
+
+---
+
+## Touch targets
+
+- Minimum touch target: 48 × 48 dp (Android Material) /
+  44 × 44 pt (Apple HIG) — smaller targets cause mis-taps
+- Spacing between adjacent targets: ≥ 8 dp — prevent accidental
+  activation of the wrong control
+- Interactive elements at screen edges need extra padding —
+  system gestures compete for the same space
+
+---
+
+## Accessibility — screen readers
+
+- Target standard: WCAG 2.1 AA adapted for native platforms
+- Every interactive element MUST have a screen-reader label:
+  `accessibilityLabel` (React Native) or `Semantics(label:)`
+  (Flutter)
+- Images: provide `accessibilityLabel` for informative images;
+  mark decorative images as `accessibilityElementsHidden` (RN)
+  or `Semantics(excludeSemantics: true)` (Flutter)
+- State changes (loading, error, success) MUST be announced:
+  use `AccessibilityInfo.announceForAccessibility()` (RN) or
+  `SemanticsService.announce()` (Flutter)
+- Group related elements into a single accessible unit where
+  appropriate — a card with title + subtitle + action should
+  announce as one item, not three
+
+---
+
+## Accessibility — navigation
+
+- Focus order follows the visual reading order (top-to-bottom,
+  leading-to-trailing)
+- Modals and bottom sheets MUST trap focus and restore it on
+  dismiss
+- Screen reader users MUST be able to reach all interactive
+  elements — hidden overflow does not excuse inaccessible
+  controls
+
+---
+
+## Accessibility testing
+
+### Automated
+
+- Lint for missing accessibility labels in CI — use
+  `eslint-plugin-react-native-a11y` (React Native) or
+  custom lint rules with `dart analyze` (Flutter)
+
+### Manual (before shipping new screens)
+
+- **VoiceOver** (iOS): enable in Settings → Accessibility;
+  navigate every screen; verify all elements are announced
+  with correct labels, roles, and state
+- **TalkBack** (Android): enable in Settings → Accessibility;
+  same verification as VoiceOver
+- **Switch Control / Switch Access**: verify the app is usable
+  with external switch devices (required for motor impairment)
+- **Dynamic type / font scaling**: verify layout at the largest
+  system font size — no text clipping or overlapping
+
+### Criteria for done
+
+A feature is not complete until:
+
+- [ ] Every interactive element has an accessibility label
+- [ ] VoiceOver walkthrough completed on iOS
+- [ ] TalkBack walkthrough completed on Android
+- [ ] Layout verified at maximum system font size
+
 
 <!-- templates/stack/mobile-flutter.md -->
 # Stack — Flutter Mobile Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/backend/auth.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/mobile/auth.md, templates/mobile/ux.md]
 
 A cross-platform mobile (iOS + Android) application built with Flutter and
 Dart. Covers project structure, widget conventions, state management, routing,
@@ -1301,12 +1288,11 @@ CLAUDE.md
 ---
 
 ## Authentication
-[EXTEND: backend-auth]
+[EXTEND: mobile-auth]
 
-- Store tokens in `flutter_secure_storage` — never in `SharedPreferences`
-- Refresh tokens via a Dio interceptor — transparent to the rest of the app
-- Biometric auth via `local_auth` as an optional unlock layer —
-  not a replacement for server-side authentication
+- Use `flutter_secure_storage` for token storage
+- Use `local_auth` for biometric unlock
+- Refresh interceptor implemented as a Dio `Interceptor` subclass
 
 ---
 

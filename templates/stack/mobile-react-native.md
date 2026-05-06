@@ -1,8 +1,8 @@
 # Stack — React Native Mobile Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/stack/spa-react.md, templates/backend/auth.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/mobile/auth.md, templates/mobile/ux.md]
 
-Extends the React SPA stack with React Native and Expo conventions. Covers
-mobile-specific project structure, navigation, platform APIs, offline
+React Native and Expo conventions for cross-platform mobile apps.
+Covers project structure, navigation, platform APIs, offline
 behaviour, and testing.
 
 ---
@@ -57,9 +57,8 @@ CLAUDE.md
 ---
 
 ## TypeScript conventions
-[EXTEND: react-spa-typescript]
+[EXTEND: base-typescript]
 
-- Strict mode enforced — same rules as `react-spa.md`
 - Platform-specific files use `.ios.tsx` / `.android.tsx` suffixes —
   only when the difference cannot be handled with `Platform.select()`
 - Prefer `Platform.select({ ios: ..., android: ..., default: ... })`
@@ -68,7 +67,7 @@ CLAUDE.md
 ---
 
 ## Component conventions
-[EXTEND: react-spa-components]
+[ID: react-native-components]
 
 - Use `StyleSheet.create()` for all styles — no inline style objects
   except for dynamic/computed values
@@ -121,11 +120,12 @@ CLAUDE.md
 ---
 
 ## State management
-[EXTEND: react-spa-state]
+[ID: react-native-state]
 
 - Local state: `useState` / `useReducer` for screen-scoped concerns
 - Global state: Zustand for cross-screen shared state
-- Server state: TanStack Query — same rules as `react-spa.md`
+- Server state: TanStack Query — deduplicate, cache, and sync
+  server data; do not duplicate in local state
 - Persist sensitive data (tokens, user ID) in `expo-secure-store` —
   never in `AsyncStorage`
 - Non-sensitive persisted state (preferences, cached data) in `AsyncStorage`
@@ -134,12 +134,10 @@ CLAUDE.md
 ---
 
 ## Authentication
-[EXTEND: backend-auth]
+[EXTEND: mobile-auth]
 
-- Store access and refresh tokens in `expo-secure-store` — not `AsyncStorage`
-- Intercept 401 responses to attempt token refresh before redirecting to login
-- Biometric authentication via `expo-local-authentication` as an optional
-  layer on top of token-based auth — not a replacement for it
+- Use `expo-secure-store` for token storage
+- Use `expo-local-authentication` for biometric unlock
 
 ---
 
