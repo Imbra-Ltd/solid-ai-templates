@@ -17,6 +17,9 @@ Spec files live in `tests/specs/`. See `CODIFICATION.md` for the ID scheme, area
 | `SAIT-INT-TPL-03-001A` | INT | P1 | OVERRIDE replaces parent section entirely |
 | `SAIT-INT-TPL-05-001A` | INT | P1 | Conflicting OVERRIDEs on the same ID are flagged or resolved |
 | `SAIT-INT-MNF-01-001A` | INT | P0 | All manifest entries reference valid paths and IDs |
+| `SAIT-INT-MNF-02-001A` | INT | P0 | All stacks resolve to valid, non-empty file lists |
+| `SAIT-INT-MNF-03-001A` | INT | P0 | All resolved chains include core tier files |
+| `SAIT-INT-MNF-04-001A` | INT | P1 | Prompt builds for all stacks |
 | `SAIT-INT-ITV-01-001A` | INT | P0 | All REQUIRED interview questions are asked before output is generated |
 | `SAIT-INT-ITV-02-001A` | INT | P1 | DEFAULTED sections are pre-filled from the selected stack template |
 | `SAIT-INT-ITV-03-001A` | INT | P0 | Interview answers override stack and base template rules in the output |
