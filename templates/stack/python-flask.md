@@ -62,7 +62,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: base-config]
+[EXTEND: python-service-config]
 
 - Three config classes: `DevelopmentConfig`, `TestingConfig`, `ProductionConfig`
 - `FLASK_ENV` / `FLASK_DEBUG` must be `False` in production
@@ -95,17 +95,10 @@ CLAUDE.md
 ---
 
 ## Testing
-[EXTEND: base-testing]
+[EXTEND: python-service-testing]
 
 - `pytest-flask` for the test client and app fixture
 - One `app` fixture in `conftest.py` — uses `TestingConfig`
-- Test each route for: success, validation error, auth error (if applicable)
-- No mocking of the database in component integration tests — use a test database
-- Component test naming: `test_<route_or_function>_<state>_<expected>`
-  e.g. `test_create_user_duplicate_email_returns_409`
-- Component tests in `tests/component/`, component integration tests in
-  `tests/integration/`
-- Run before every commit: `pytest && mypy src/ --strict`
 
 ---
 

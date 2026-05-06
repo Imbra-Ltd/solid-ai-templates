@@ -47,12 +47,8 @@ CLAUDE.md
 
 ## TypeScript conventions
 [ID: nodejs-lib-typescript]
+[EXTEND: base-typescript]
 
-- `strict: true` in `tsconfig.json` — no exceptions
-- No `any` in public API — use specific types, generics, or `unknown`
-- Explicit return types on all exported functions
-- Use `interface` for object shapes, `type` for unions and aliases
-- Import types with `import type { ... }` — keeps the runtime bundle clean
 - `tsconfig.build.json` excludes `tests/` — type-check tests separately
 
 ---

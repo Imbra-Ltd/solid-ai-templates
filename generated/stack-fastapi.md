@@ -2036,8 +2036,7 @@ Covers conventions that are shared regardless of framework choice.
 
 ## Layered architecture
 [ID: python-service-layers]
-
-All Python web services follow a three-layer model regardless of framework:
+[EXTEND: backend-quality]
 
 ```
 HTTP handler / view / route
@@ -2047,12 +2046,8 @@ HTTP handler / view / route
     Repository / ORM query    ← data access lives here
 ```
 
-- **Handler layer**: decode request, validate input, call service, return response.
-  No business logic. No database calls.
-- **Service layer**: pure functions or classes containing all business logic.
-  No HTTP concerns (`request`, `response`, status codes). Independently testable.
-- **Repository layer**: all database interaction. No business logic. Returns
-  domain objects, not ORM model instances passed to the caller.
+- Repository layer returns domain objects, not ORM model instances
+  passed to the caller
 
 ---
 
@@ -2087,10 +2082,7 @@ Overridden by each framework stack. The common principle:
 
 - SQLAlchemy 2.x for Flask and FastAPI — use `select()` style queries,
   no legacy `Query` API
-- Migrations managed by Alembic — one migration per logical schema change,
-  committed to source control
-- Never edit a migration already applied in any environment
-- No raw SQL strings — parameterised queries via the ORM only
+- Migrations managed by Alembic
 
 ---
 
@@ -2113,8 +2105,6 @@ Overridden by each framework stack. The common principle:
 ## Observability
 [EXTEND: backend-observability]
 
-- Structured JSON logs — inject a request ID per request
-- Never log passwords, tokens, or PII
 - `/health` — liveness check
 - `/ready` — readiness check (verifies DB and any required external dependencies)
 
@@ -2278,10 +2268,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: base-config]
-
-- Use `pydantic-settings` (`BaseSettings`) for all configuration
-- `Settings` instantiated once and injected as a dependency — never imported globally
+[EXTEND: python-service-config]
 
 ---
 
@@ -2336,18 +2323,11 @@ CLAUDE.md
 ---
 
 ## Testing
-[EXTEND: base-testing]
+[EXTEND: python-service-testing]
 
 - `httpx.AsyncClient` with `ASGITransport` for route tests — no `TestClient` (sync)
 - One async `client` fixture in `conftest.py`
-- Test each route for: success (2xx), validation error (422), auth error (401/403)
-- No mocking of the database in component integration tests — use a test database
 - Override dependencies with `app.dependency_overrides` in tests
-- Component test naming: `test_<route_or_function>_<state>_<expected>`
-  e.g. `test_create_item_invalid_payload_returns_422`
-- Component tests in `tests/component/`, component integration tests in
-  `tests/integration/`
-- Run before every commit: `pytest && mypy src/ --strict`
 
 ---
 

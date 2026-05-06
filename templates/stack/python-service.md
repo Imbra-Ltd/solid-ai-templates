@@ -26,8 +26,7 @@ Covers conventions that are shared regardless of framework choice.
 
 ## Layered architecture
 [ID: python-service-layers]
-
-All Python web services follow a three-layer model regardless of framework:
+[EXTEND: backend-quality]
 
 ```
 HTTP handler / view / route
@@ -37,12 +36,8 @@ HTTP handler / view / route
     Repository / ORM query    ← data access lives here
 ```
 
-- **Handler layer**: decode request, validate input, call service, return response.
-  No business logic. No database calls.
-- **Service layer**: pure functions or classes containing all business logic.
-  No HTTP concerns (`request`, `response`, status codes). Independently testable.
-- **Repository layer**: all database interaction. No business logic. Returns
-  domain objects, not ORM model instances passed to the caller.
+- Repository layer returns domain objects, not ORM model instances
+  passed to the caller
 
 ---
 
@@ -77,10 +72,7 @@ Overridden by each framework stack. The common principle:
 
 - SQLAlchemy 2.x for Flask and FastAPI — use `select()` style queries,
   no legacy `Query` API
-- Migrations managed by Alembic — one migration per logical schema change,
-  committed to source control
-- Never edit a migration already applied in any environment
-- No raw SQL strings — parameterised queries via the ORM only
+- Migrations managed by Alembic
 
 ---
 
@@ -103,8 +95,6 @@ Overridden by each framework stack. The common principle:
 ## Observability
 [EXTEND: backend-observability]
 
-- Structured JSON logs — inject a request ID per request
-- Never log passwords, tokens, or PII
 - `/health` — liveness check
 - `/ready` — readiness check (verifies DB and any required external dependencies)
 

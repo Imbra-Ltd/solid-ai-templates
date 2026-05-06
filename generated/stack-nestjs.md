@@ -2128,7 +2128,7 @@ and testing.
 - Linter: ESLint (`@typescript-eslint/recommended`, `eslint-plugin-sonarjs`)
 - Formatter: Prettier
 - Test runner: Jest + Supertest
-- ASGI server (production): Node.js process managed by PM2 or Docker
+- Process manager (production): PM2 or Docker
 - Distribution: Docker image / [platform]
 
 ---
