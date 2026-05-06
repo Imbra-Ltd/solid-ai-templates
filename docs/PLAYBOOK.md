@@ -129,7 +129,7 @@ If the agent cannot run scripts, use the pre-resolved files in
 ## Run the test suite
 
 ```bash
-py tests/run_smoke.py              # 12 structural checks — seconds
+py tests/run_smoke.py              # structural checks — seconds
 py tests/run_e2e.py                # canary test (python-lib)
 py tests/run_e2e.py --all          # all agent tests
 py tests/run_e2e.py STK-01 FMT-01  # specific tests only
@@ -148,7 +148,7 @@ After editing any template or `manifest.yaml`, regenerate the cached
 files in `generated/`:
 
 ```bash
-py tools/resolve.py --generate     # regenerate all 30 files
+py tools/resolve.py --generate     # regenerate all cached files
 py tools/resolve.py --check        # verify they are up to date
 py tools/sync.py                   # also regenerates via --check
 ```
