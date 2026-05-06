@@ -1817,9 +1817,6 @@ CLAUDE.md
 ## Task design
 [EXTEND: backend-jobs]
 
-- Keep task functions thin — delegate all logic to a service function;
-  the task is the entry point, not the implementation
-- Every task MUST be idempotent — assume it will execute more than once
 - Bind tasks with `@app.task(bind=True)` only when the task needs access
   to `self` (e.g. for retry logic) — avoid `bind=True` by default
 - Never pass ORM model instances as task arguments — pass primitive IDs

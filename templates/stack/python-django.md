@@ -140,7 +140,7 @@ CLAUDE.md
 ---
 
 ## Testing
-[EXTEND: base-testing]
+[EXTEND: python-service-testing]
 
 - `pytest-django` for all tests — no `unittest.TestCase` unless there is a
   specific reason
@@ -148,14 +148,6 @@ CLAUDE.md
   keeps the test suite fast
 - One `settings` fixture using `testing.py` — never use production settings
   in tests
-- No mocking of the database in integration tests — use the test database
-- Test each view/viewset for: success (2xx), validation error (400/422),
-  auth error (401/403), not found (404)
-- Component test naming: `test_<view_or_function>_<state>_<expected>`
-  e.g. `test_create_order_missing_quantity_returns_400`
-- Component tests in `tests/component/`, integration tests in
-  `tests/integration/`
-- Run before every commit: `pytest && mypy src/ --strict`
 
 ---
 

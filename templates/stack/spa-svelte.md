@@ -53,11 +53,9 @@ CLAUDE.md
 
 ## TypeScript conventions
 [ID: svelte-typescript]
+[EXTEND: base-typescript]
 
-- `strict: true` in `tsconfig.json` — no exceptions
-- No `any` — use `unknown` and narrow, or define a proper type
 - Type component props explicitly: `let { label, onClick }: { label: string; onClick: () => void } = $props()`
-- Import types with `import type { ... }` to keep the runtime bundle clean
 
 ---
 

@@ -985,7 +985,7 @@ CLAUDE.md
 ---
 
 ## SEO
-[EXTEND: frontend-quality]
+[EXTEND: static-site-seo]
 
 - `robots.txt` generated from `layouts/robots.txt` template
 - Open Graph and Twitter Card meta tags in `layouts/partials/head.html`

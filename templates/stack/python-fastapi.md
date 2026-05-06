@@ -65,10 +65,7 @@ CLAUDE.md
 ---
 
 ## Configuration
-[EXTEND: base-config]
-
-- Use `pydantic-settings` (`BaseSettings`) for all configuration
-- `Settings` instantiated once and injected as a dependency — never imported globally
+[EXTEND: python-service-config]
 
 ---
 
@@ -123,18 +120,11 @@ CLAUDE.md
 ---
 
 ## Testing
-[EXTEND: base-testing]
+[EXTEND: python-service-testing]
 
 - `httpx.AsyncClient` with `ASGITransport` for route tests — no `TestClient` (sync)
 - One async `client` fixture in `conftest.py`
-- Test each route for: success (2xx), validation error (422), auth error (401/403)
-- No mocking of the database in component integration tests — use a test database
 - Override dependencies with `app.dependency_overrides` in tests
-- Component test naming: `test_<route_or_function>_<state>_<expected>`
-  e.g. `test_create_item_invalid_payload_returns_422`
-- Component tests in `tests/component/`, component integration tests in
-  `tests/integration/`
-- Run before every commit: `pytest && mypy src/ --strict`
 
 ---
 

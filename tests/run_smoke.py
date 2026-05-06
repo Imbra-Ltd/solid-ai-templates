@@ -313,11 +313,11 @@ def check_tpl_02():
         failures.append("  base/core/testing.md [ID: base-testing] section is empty")
 
     flask_content = _extract_section(
-        os.path.join(ROOT, "templates", "stack", "python-flask.md"), "base-testing"
+        os.path.join(ROOT, "templates", "stack", "python-flask.md"), "python-service-testing"
     )
     if not flask_content:
         failures.append(
-            "  stack/python-flask.md [EXTEND: base-testing] section is empty "
+            "  stack/python-flask.md [EXTEND: python-service-testing] section is empty "
             "— base rules may have been lost"
         )
 

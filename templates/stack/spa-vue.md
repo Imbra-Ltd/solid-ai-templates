@@ -54,13 +54,10 @@ CLAUDE.md
 
 ## TypeScript conventions
 [ID: vue-typescript]
+[EXTEND: base-typescript]
 
-- `strict: true` in `tsconfig.json` — no exceptions
-- No `any` — use `unknown` and narrow, or define a proper type
 - Use `defineProps<T>()` and `defineEmits<T>()` for typed component APIs —
   never the options-style `props: {}` object
-- Import types with `import type { ... }` to keep the runtime bundle clean
-- Enums avoided — use `as const` objects or string literal unions
 
 ---
 

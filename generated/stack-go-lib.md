@@ -737,7 +737,7 @@ no HTTP layer.
 [ID: go-lib-stack]
 
 - Language: Go 1.22+
-- CLI framework: [cobra / flag (stdlib)] — only for binary crates
+- CLI framework: [cobra / flag (stdlib)] — only for command packages
 - Test runner: go test (stdlib)
 - Distribution: [binary / GitHub Releases / Go module proxy]
 

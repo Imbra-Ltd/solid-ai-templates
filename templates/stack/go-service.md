@@ -1,5 +1,5 @@
 # Stack — Go Service
-[DEPENDS ON: templates/stack/go-lib.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/quality.md, templates/backend/concurrency.md, templates/backend/features.md, templates/backend/messaging.md]
+[DEPENDS ON: templates/stack/go-lib.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/errors.md, templates/backend/quality.md, templates/backend/concurrency.md, templates/backend/features.md, templates/backend/messaging.md]
 
 Extends the Go library stack with service-specific rules. Covers project
 structure, HTTP handlers, configuration, concurrency, graceful shutdown,
@@ -94,7 +94,6 @@ CLAUDE.md
 - Integration tests in `internal/[feature]/*_integration_test.go`
   behind a build tag: `//go:build integration`
 - Performance tests with k6 — colocated in `tests/performance/`
-- Run before every commit: `go test ./... && go vet ./...`
 
 ---
 
@@ -120,14 +119,6 @@ CLAUDE.md
   never pass raw `[]byte` to business logic
 
 ---
-
-## Git conventions
-[EXTEND: go-lib-git]
-
-- Do not commit compiled binaries, `*.test` files, or `vendor/` (unless
-  vendoring intentionally)
-- `go.sum` is committed — do not delete or regenerate without cause
-- Tag releases with `vX.Y.Z` — Go module proxy uses these
 
 ---
 

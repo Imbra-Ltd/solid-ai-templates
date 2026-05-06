@@ -197,6 +197,7 @@ stacks:
     depends_on:
       - frontend-static-site
       - base-typescript
+      - base-quality-gates
 
   - id: stack-tutorial
     file: templates/stack/static-site-tutorial.md
@@ -324,6 +325,7 @@ stacks:
       - backend-http
       - backend-database
       - backend-observability
+      - backend-errors
       - backend-quality
       - backend-concurrency
       - backend-features
