@@ -405,3 +405,27 @@ recorded in ADR-004.
   token limits, rate limits) — document, don't guarantee
 - Live e2e tests are internal quality tools, not a product feature
 - One canary test (python-lib) is more valuable than 27 flaky tests
+
+## 2026-05-06 — v2.3 Tooling batch (P2 sweep)
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**PRs merged:**
+- #245 — ADR-007: generation is out of scope (docs/decisions/)
+- #250 — Agent secrets handling rules (security-agent-secrets)
+- #246 — Expanded smoke tests: MNF-02, MNF-03, MNF-04 (8 → 11 checks)
+- #247 — E2e canary default (STK-15 python-lib, --all flag)
+- #248 — Drop --offline mode, delete e2e.yml workflow
+- #249 — tools/resolve.py + 30 pre-resolved files in generated/
+
+**Issues closed:** #238, #239, #240, #241, #236, #244
+
+**Key changes:**
+- Smoke suite now validates manifest resolution for all stacks
+- Default `py tests/run_e2e.py` runs only the canary test
+- `tools/resolve.py` implements ADR-004 resolution (--list, --concat,
+  --generate, --check)
+- `generated/` directory committed with pre-resolved chain per stack
+- `sync.py --check` now validates generated/ files
+- Branch protection updated: only `smoke` required (removed `e2e`)
+- run_e2e.py refactored to use shared resolver from tools/resolve.py
