@@ -1,5 +1,31 @@
 # Dev Journal
 
+## 2026-05-06 — v2.4 milestone completion
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**Key changes:**
+- Closed #264 epic (audit generated stacks) — all 11 sub-issues done
+- Created mobile layer: `templates/mobile/auth.md` and `mobile/ux.md` (#272)
+- Refactored React Native/Flutter to use mobile layers instead of web templates
+- Removed rule duplications across 11 stack templates (#275)
+- Fixed dangling EXTEND references and terminology errors (#276)
+- Added TPL-06 smoke check: chain reachability (#283)
+- Added TPL-07 smoke check: duplication detection (#284)
+- Added terminology review checklist to PLAYBOOK.md (#285)
+- Restructured quality.md + added .editorconfig rule (#224, #255)
+- Replaced stale hardcoded values in SPEC.md/PLAYBOOK.md (#203)
+- Created ADR-008: issue and PR naming conventions (#233)
+- Added focus-visible rule for anchor elements (#104)
+- Closed #131 (Dependabot already present)
+- Moved 5 new-content issues to Backlog
+
+**PRs merged:** #282, #286, #287, #288, #289, #290, #291, #292, #293
+**Issues closed:** #104, #131, #203, #224, #233, #255, #264, #272, #275, #276, #283, #284, #285
+**Smoke checks:** 11 → 13 (TPL-06, TPL-07)
+
+---
+
 ## 2026-05-06 — Template quality cleanup batch
 
 **Tool:** Claude Code (Opus 4.6, 1M context)
