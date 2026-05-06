@@ -1,5 +1,33 @@
 # Dev Journal
 
+## 2026-05-06 — v2.3 Tooling milestone completion
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**Key changes:**
+- Added `.editorconfig` for consistent formatting (#184, PR #254)
+- Added `.pre-commit-config.yaml` with trailing-whitespace,
+  end-of-file-fixer, check-yaml, gitleaks hooks (#185, PR #256)
+- Enabled Dependabot for pip and GitHub Actions (#186, PR #257)
+- Added `eslint-plugin-sonarjs` to base/quality.md and 5 Node/TS
+  stack templates with rule mapping table (#130, PR #258)
+- Added lychee `--root-dir` rule to static site templates
+  (#135, PR #259)
+- Audited README, INTERVIEW, SPEC, PLAYBOOK for unsustainable
+  generation claims — reframed templates as product (#242, PR #260)
+- Created #255 (editorconfig recommendation for base/quality.md,
+  assigned to v2.5)
+- Closed v2.2 milestone, closed v2.3 milestone, released v2.3.0
+- Removed descriptors from all release titles (v1.0.0–v2.2.0)
+
+**Issues closed:** #184, #185, #186, #130, #135, #242
+**Issues created:** #255
+**PRs merged:** #254, #256, #257, #258, #259, #260
+**Milestones closed:** v2.2 — Quality, v2.3 — Tooling
+**Released:** v2.3.0
+
+---
+
 ## 2026-04-27 — Skills roadmap
 
 - Added Phase 15 (Skills) to `ROADMAP.md` with four categories:
