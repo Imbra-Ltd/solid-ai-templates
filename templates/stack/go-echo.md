@@ -41,7 +41,6 @@ middleware, request binding, validation, error handling, and graceful shutdown.
   never trust unbound input
 - Return errors with `c.JSON(code, resp)` or by returning an `*echo.HTTPError`
   — never write directly to `c.Response()`
-- Handlers are thin — all business logic belongs in the service layer
 
 ---
 

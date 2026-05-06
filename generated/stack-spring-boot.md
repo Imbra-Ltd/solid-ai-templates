@@ -2167,7 +2167,6 @@ CLAUDE.md
 
 - Flyway manages all schema changes — migration scripts in
   `src/main/resources/db/migration/` named `V<n>__<description>.sql`
-- Never modify a migration script that has already been applied
 - Use Spring Data JPA `findBy*` query methods for simple queries;
   `@Query` with JPQL for complex ones — no raw SQL strings except
   for native queries; annotate these

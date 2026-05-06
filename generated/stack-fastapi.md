@@ -2219,7 +2219,6 @@ Overridden by each framework stack. The common principle:
   reads from environment variables automatically
 - One `Settings` class per application — instantiated once at startup,
   injected where needed, never imported as a global in service code
-- `.env.example` committed; `.env` in `.gitignore`
 - Fail fast: missing required settings raise a `ValidationError` on startup
 
 ---

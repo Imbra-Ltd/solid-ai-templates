@@ -17,6 +17,7 @@ Spec files live in `tests/specs/`. See `CODIFICATION.md` for the ID scheme, area
 | `SAIT-INT-TPL-03-001A` | INT | P1 | OVERRIDE replaces parent section entirely |
 | `SAIT-INT-TPL-05-001A` | INT | P1 | Conflicting OVERRIDEs on the same ID are flagged or resolved |
 | `SAIT-INT-TPL-06-001A` | INT | P1 | EXTEND/OVERRIDE targets are reachable in the resolved chain |
+| `SAIT-INT-TPL-07-001A` | INT | P2 | EXTEND sections do not duplicate parent rules |
 | `SAIT-INT-MNF-01-001A` | INT | P0 | All manifest entries reference valid paths and IDs |
 | `SAIT-INT-MNF-02-001A` | INT | P0 | All stacks resolve to valid, non-empty file lists |
 | `SAIT-INT-MNF-03-001A` | INT | P0 | All resolved chains include core tier files |
