@@ -144,7 +144,8 @@ Two workflows:
 
 - Use `actions/setup-node` built-in cache (keyed on
   `package-lock.json`)
-- Use lychee for link checking against built `dist/` output
+- Use lychee for link checking against built `dist/` output —
+  MUST use `--root-dir dist` to resolve root-relative paths
 - Pin Node version to exact version matching `engines` in
   `package.json`
 

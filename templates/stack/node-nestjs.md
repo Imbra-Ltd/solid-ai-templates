@@ -17,7 +17,7 @@ and testing.
 - Validation: class-validator + class-transformer
 - ORM: [TypeORM / Prisma / MikroORM]
 - Package manager: [npm / pnpm]
-- Linter: ESLint (`@typescript-eslint/recommended`)
+- Linter: ESLint (`@typescript-eslint/recommended`, `eslint-plugin-sonarjs`)
 - Formatter: Prettier
 - Test runner: Jest + Supertest
 - ASGI server (production): Node.js process managed by PM2 or Docker

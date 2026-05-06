@@ -25,7 +25,7 @@ composition model.
    ```
 4. Add to the stack list in `SPEC.md` (alphabetical within category)
 5. Add a row to the stacks table in `README.md`
-6. Validate: attach `INTERVIEW.md` + new stack to an agent and confirm output
+6. Validate: attach `INTERVIEW.md` + new stack to an agent and review output
 
 ---
 
@@ -110,7 +110,7 @@ If the agent cannot run scripts, use the pre-resolved files in
    This verifies all `[DEPENDS ON: ...]` paths, unique IDs, `[EXTEND: ...]` /
    `[OVERRIDE: ...]` references, and `manifest.yaml` consistency in one pass.
 2. **Agent check**: attach `INTERVIEW.md` + the changed template to an agent
-   and confirm the generated output is coherent and complete; or run the
+   and review the output for coherence; or run the
    relevant E2E test if one exists:
    ```bash
    py tests/run_e2e.py STK-01   # example — replace with the relevant ID

@@ -168,7 +168,7 @@ backend:
   - id: backend-quality
     file: templates/backend/quality.md
     description: Layered architecture, security, performance, API stability
-    depends_on: [base-quality]
+    depends_on: [base-quality, base-security, base-containers]
   - id: backend-templating
     file: templates/backend/templating.md
     description: Server-side rendering, partials, escaping, caching, forms, testing

@@ -116,8 +116,22 @@ Apply SOLID at the class, module, and service level:
   read the implementation to understand what a call site does, the function
   needs a better name or needs to be split
 - Cognitive complexity ≤ 15 per function — enforced by static analysis
-  (SonarQube, Codacy, or equivalent); each nesting level and decision point
-  increases the score
+  (SonarQube, Codacy, or `eslint-plugin-sonarjs` for ESLint); each
+  nesting level and decision point increases the score
+
+### eslint-plugin-sonarjs rules (if applicable)
+
+| sonarjs rule | Enforces |
+|---|---|
+| `cognitive-complexity` | Cognitive complexity ≤ 15 per function |
+| `no-nested-conditional` | Maximum nesting depth |
+| `no-duplicated-branches` | DRY — identical branches in if/switch |
+| `no-identical-expressions` | DRY — same expression on both sides of operator |
+| `no-identical-functions` | DRY — duplicated function bodies |
+| `no-collapsible-if` | KISS — collapse nested ifs |
+| `no-redundant-jump` | No dead code — unnecessary return/continue/break |
+| `no-unused-collection` | No dead code — collection populated but never read |
+| `no-inverted-boolean-check` | Readability — avoid negative conditions |
 - Maximum nesting depth of three levels — use early returns and guard clauses
   to reduce indentation rather than adding else branches
 - No boolean flag parameters — they force the caller to read the implementation
@@ -1187,8 +1201,9 @@ files into `src/content/`.
 
 ## Code conventions
 
-- **ESLint** with `@typescript-eslint/recommended` for any `.ts` / `.tsx`
-  files — configured in `eslint.config.js`, run on save
+- **ESLint** with `@typescript-eslint/recommended` and
+  `eslint-plugin-sonarjs` for any `.ts` / `.tsx` files —
+  configured in `eslint.config.js`, run on save
 - **Prettier** owns all formatting — commit `.prettierrc`; no style debates
   in code review
 - `.astro` files formatted with the official Prettier Astro plugin
@@ -1249,6 +1264,10 @@ Rules:
 | Secrets | — | gitleaks | gitleaks | — |
 | Build | — | — | astro build | — |
 | Links | — | — | lychee | `lychee.toml` |
+
+- Lychee MUST use `--root-dir dist` to resolve root-relative
+  paths (e.g. `/about`); without it, every root-relative link
+  reports a false error
 | Site quality | — | — | Lighthouse CI ≥ 90 | `lighthouserc.json` |
 
 - Hook framework: `husky` + `lint-staged` — config in `package.json`
@@ -1742,7 +1761,8 @@ Two workflows:
 
 - Use `actions/setup-node` built-in cache (keyed on
   `package-lock.json`)
-- Use lychee for link checking against built `dist/` output
+- Use lychee for link checking against built `dist/` output —
+  MUST use `--root-dir dist` to resolve root-relative paths
 - Pin Node version to exact version matching `engines` in
   `package.json`
 

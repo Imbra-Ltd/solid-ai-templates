@@ -201,8 +201,9 @@ files into `src/content/`.
 
 ## Code conventions
 
-- **ESLint** with `@typescript-eslint/recommended` for any `.ts` / `.tsx`
-  files — configured in `eslint.config.js`, run on save
+- **ESLint** with `@typescript-eslint/recommended` and
+  `eslint-plugin-sonarjs` for any `.ts` / `.tsx` files —
+  configured in `eslint.config.js`, run on save
 - **Prettier** owns all formatting — commit `.prettierrc`; no style debates
   in code review
 - `.astro` files formatted with the official Prettier Astro plugin
@@ -263,6 +264,10 @@ Rules:
 | Secrets | — | gitleaks | gitleaks | — |
 | Build | — | — | astro build | — |
 | Links | — | — | lychee | `lychee.toml` |
+
+- Lychee MUST use `--root-dir dist` to resolve root-relative
+  paths (e.g. `/about`); without it, every root-relative link
+  reports a false error
 | Site quality | — | — | Lighthouse CI ≥ 90 | `lighthouserc.json` |
 
 - Hook framework: `husky` + `lint-staged` — config in `package.json`
