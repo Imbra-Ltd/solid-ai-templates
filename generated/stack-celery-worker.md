@@ -705,6 +705,7 @@ fixing the design fixes the testability.
 ---
 
 ## General rules
+[ID: base-testing-general]
 
 - Design for testability from the start — do not write code first and
   struggle to test later
@@ -1047,6 +1048,7 @@ Apply SOLID at the class, module, and service level:
   does not
 
 ## Aspect-Oriented Programming (AOP)
+[ID: base-oop-aop]
 
 - **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
   interception, bytecode weaving, runtime proxies) makes code hard to read,

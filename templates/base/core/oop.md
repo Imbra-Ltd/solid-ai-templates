@@ -47,6 +47,7 @@ Apply SOLID at the class, module, and service level:
   does not
 
 ## Aspect-Oriented Programming (AOP)
+[ID: base-oop-aop]
 
 - **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
   interception, bytecode weaving, runtime proxies) makes code hard to read,

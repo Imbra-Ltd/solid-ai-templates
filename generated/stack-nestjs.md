@@ -705,6 +705,7 @@ fixing the design fixes the testability.
 ---
 
 ## General rules
+[ID: base-testing-general]
 
 - Design for testability from the start — do not write code first and
   struggle to test later
@@ -1055,6 +1056,7 @@ Sunset: <HTTP-date>
 ```
 
 ## Statelessness
+[ID: backend-api-statelessness]
 - APIs MUST be stateless — no client context stored on the server between requests
 - All information needed to process a request MUST be in the request itself
 - Session state belongs in the client or a dedicated session store, not in the
@@ -1614,6 +1616,7 @@ Apply SOLID at the class, module, and service level:
   does not
 
 ## Aspect-Oriented Programming (AOP)
+[ID: base-oop-aop]
 
 - **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
   interception, bytecode weaving, runtime proxies) makes code hard to read,
@@ -2217,6 +2220,20 @@ CLAUDE.md
 - Never pass raw `req.body` to a service — always go through a validated DTO
 
 ---
+
+## Cross-cutting concerns
+[OVERRIDE: base-oop-aop]
+
+NestJS uses framework-managed interceptors, guards, pipes, and filters as
+its standard cross-cutting model. These are explicit, typed, and visible in
+the module wiring — not hidden AOP proxies.
+
+- Use guards for auth, interceptors for logging/transform, pipes for
+  validation, and exception filters for error handling
+- Register cross-cutting providers at the module or global level — never
+  via hidden runtime proxies or bytecode weaving
+- Each provider has a single responsibility — do not combine auth and
+  logging in one interceptor
 
 ## Guards and interceptors
 [ID: nestjs-guards]

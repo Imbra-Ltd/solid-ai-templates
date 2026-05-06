@@ -113,6 +113,20 @@ CLAUDE.md
 
 ---
 
+## Cross-cutting concerns
+[OVERRIDE: base-oop-aop]
+
+NestJS uses framework-managed interceptors, guards, pipes, and filters as
+its standard cross-cutting model. These are explicit, typed, and visible in
+the module wiring — not hidden AOP proxies.
+
+- Use guards for auth, interceptors for logging/transform, pipes for
+  validation, and exception filters for error handling
+- Register cross-cutting providers at the module or global level — never
+  via hidden runtime proxies or bytecode weaving
+- Each provider has a single responsibility — do not combine auth and
+  logging in one interceptor
+
 ## Guards and interceptors
 [ID: nestjs-guards]
 

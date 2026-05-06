@@ -9,6 +9,7 @@ and deployment.
 
 ## Stack
 [ID: nextjs-stack]
+[OVERRIDE: react-spa-stack]
 
 - Language: TypeScript (strict mode)
 - Framework: Next.js 14+ (App Router)

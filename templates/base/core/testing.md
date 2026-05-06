@@ -184,6 +184,7 @@ fixing the design fixes the testability.
 ---
 
 ## General rules
+[ID: base-testing-general]
 
 - Design for testability from the start — do not write code first and
   struggle to test later

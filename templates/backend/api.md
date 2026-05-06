@@ -76,6 +76,7 @@ Sunset: <HTTP-date>
 ```
 
 ## Statelessness
+[ID: backend-api-statelessness]
 - APIs MUST be stateless — no client context stored on the server between requests
 - All information needed to process a request MUST be in the request itself
 - Session state belongs in the client or a dedicated session store, not in the

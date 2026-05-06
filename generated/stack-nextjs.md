@@ -705,6 +705,7 @@ fixing the design fixes the testability.
 ---
 
 ## General rules
+[ID: base-testing-general]
 
 - Design for testability from the start — do not write code first and
   struggle to test later
@@ -1022,6 +1023,7 @@ Apply SOLID at the class, module, and service level:
   does not
 
 ## Aspect-Oriented Programming (AOP)
+[ID: base-oop-aop]
 
 - **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
   interception, bytecode weaving, runtime proxies) makes code hard to read,
@@ -1741,6 +1743,7 @@ Sunset: <HTTP-date>
 ```
 
 ## Statelessness
+[ID: backend-api-statelessness]
 - APIs MUST be stateless — no client context stored on the server between requests
 - All information needed to process a request MUST be in the request itself
 - Session state belongs in the client or a dedicated session store, not in the
@@ -2158,6 +2161,7 @@ and deployment.
 
 ## Stack
 [ID: nextjs-stack]
+[OVERRIDE: react-spa-stack]
 
 - Language: TypeScript (strict mode)
 - Framework: Next.js 14+ (App Router)
