@@ -300,6 +300,9 @@ Run `py tests/run_smoke.py` before every PR. It checks:
 - All manifest entries point to existing files
 - All template files have a manifest entry
 - No duplicate IDs across layers
+- All stacks resolve to valid, non-empty file lists
+- All resolved chains include core tier files
+- Prompt builds for all stacks
 
 ## 6. Session protocol
 
