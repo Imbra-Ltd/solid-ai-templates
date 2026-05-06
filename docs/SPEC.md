@@ -428,72 +428,54 @@ Ordering: base → backend/frontend → stack (topological sort of
 the dependency graph). Within the same depth level, order follows
 the `depends_on` list declaration order.
 
-### Example: static-site-astro (Resolution: full)
+### Example: static-site-astro
 
-```
-Declaration:
-  Stack: stack-astro
-  Extras: data-quality, 360, issues, scope
-  Platform: github
-  Resolution: full
-
-Resolved (17 files):
-  templates/base/core/git.md
-  templates/base/core/docs.md
-  templates/base/core/quality.md
-  templates/base/workflow/quality-gates.md
-  templates/base/core/testing.md
-  docs/patterns/testing.md            ← full resolution
-  templates/base/language/typescript.md
-  templates/frontend/ux.md
-  templates/frontend/quality.md
-  docs/patterns/frontend.md           ← full resolution
-  templates/frontend/static-site.md
-  templates/stack/static-site-astro.md
-  templates/base/language/data-quality.md  ← extra
-  templates/base/workflow/360.md           ← extra
-  templates/base/workflow/issues.md        ← extra
-  templates/base/workflow/scope.md         ← extra
-  templates/platform/github.md             ← platform
+```bash
+py tools/resolve.py stack-astro
 ```
 
-### Example: python-flask (Resolution: rules)
-
 ```
-Declaration:
-  Stack: stack-flask
-  Extras: scope, issues
-  Platform: github
-  Resolution: rules
-
-Resolved (17 files):
-  templates/base/core/git.md
-  templates/base/core/docs.md
-  templates/base/core/quality.md
-  templates/stack/python-lib.md
-  templates/backend/config.md
-  templates/backend/http.md
-  templates/backend/database.md
-  templates/backend/observability.md
-  templates/backend/quality.md
-  templates/backend/features.md
-  templates/backend/messaging.md
-  templates/stack/python-service.md
-  templates/stack/python-flask.md
-  templates/base/workflow/scope.md       ← extra
-  templates/base/workflow/issues.md      ← extra
-  templates/platform/github.md           ← platform
-  templates/base/core/agents.md          ← output format
+templates/base/core/quality.md
+templates/base/core/git.md
+templates/base/core/docs.md
+templates/base/core/readme.md
+templates/base/core/testing.md
+templates/frontend/static-site.md
+templates/base/language/typescript.md
+templates/base/core/config.md
+templates/base/workflow/quality-gates.md
+templates/stack/static-site-astro.md
 ```
 
-### Current vs target
+### Example: python-flask
 
-| Step | Current | Target |
-|------|---------|--------|
-| Declaration | Hand-curated file list | `Stack: <id>` + extras |
-| Resolution | None — flat list is the resolution | Agent resolves from manifest.yaml |
-| Pattern inclusion | Manual — must list each file | Automatic via `Resolution: full` |
-| Upstream changes | Must edit startup block manually | Submodule bump is sufficient |
+```bash
+py tools/resolve.py stack-flask
+```
+
+```
+templates/base/core/quality.md
+templates/base/core/git.md
+templates/base/core/docs.md
+templates/base/core/readme.md
+templates/base/core/testing.md
+templates/base/core/config.md
+templates/backend/http.md
+templates/backend/database.md
+templates/backend/observability.md
+templates/base/core/oop.md
+templates/base/security/security.md
+templates/base/infra/containers.md
+templates/backend/quality.md
+templates/backend/features.md
+templates/backend/messaging.md
+templates/base/infra/cicd.md
+templates/base/security/devsecops.md
+templates/base/workflow/quality-gates.md
+templates/stack/python-lib.md
+templates/stack/python-service.md
+templates/stack/python-flask.md
+```
 
 ---
 
