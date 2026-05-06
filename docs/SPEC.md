@@ -2,9 +2,10 @@
 
 ## Goal
 
-A composable, inheritance-based template system that any LLM agent can use
-to generate a project context file (`CLAUDE.md` or `AGENTS.md`) for any
-type of project — from a static portfolio to a Python SDK to a React SPA.
+A composable, inheritance-based template library that an LLM agent can
+use to draft a project context file (`CLAUDE.md` or `AGENTS.md`) for
+any type of project — from a static portfolio to a Python SDK to a
+React SPA. Output quality depends on the model and context window.
 
 Designed to be agent-agnostic: works with Claude Code, Codex CLI, Devin,
 Cursor, or any agent that reads a Markdown context file.
@@ -204,8 +205,8 @@ Rules:
 - A stack template MUST reference which base templates it depends on
 - A stack template MAY override a base rule — overrides must be explicit
 - A stack template MAY add new rules not present in the base
-- The agent assembles the final output by merging base defaults + stack
-  overrides + interview answers, then applies the output format template
+- The agent merges base defaults + stack overrides + interview answers,
+  then applies the output format template
 
 ---
 
@@ -217,7 +218,7 @@ See ADR-004 for the full rationale.
 ### Core tier
 
 Five base templates apply to every project. They are declared in
-`templates/manifest.yaml` under `core:` and loaded automatically during
+`templates/manifest.yaml` under `core:` and included during
 resolution — stacks do not need to list them in `depends_on`:
 
 - `templates/base/core/quality.md`
@@ -311,7 +312,7 @@ section ID with different directives (`OVERRIDE` vs `EXTEND`).
 | Two templates both `OVERRIDE` the same ID | Error — the agent MUST surface this conflict to the user and ask which override to apply |
 | Two templates both `EXTEND` the same ID | Both extensions are applied; order follows the dependency declaration in the stack template |
 
-**When a conflict cannot be resolved automatically**, the agent must:
+**When a conflict cannot be resolved by the rules above**, the agent must:
 
 1. Show the user both conflicting rules
 2. Ask which takes precedence
@@ -359,7 +360,7 @@ agent can follow them without tool-specific interpretation.
 
 The current workflow (above) requires the agent to manually navigate
 template files. The target model replaces hand-curated file lists with
-a declarative header that the agent resolves automatically.
+a declarative header that the agent resolves at startup.
 
 ### Lifecycle
 
@@ -380,7 +381,7 @@ a declarative header that the agent resolves automatically.
 │  4. UPDATE (on upstream change)                 │
 │     git submodule update --remote               │
 │     Next session resolves the same chain →      │
-│     picks up new/changed rules automatically    │
+│     picks up new/changed rules on next session  │
 └─────────────────────────────────────────────────┘
 ```
 

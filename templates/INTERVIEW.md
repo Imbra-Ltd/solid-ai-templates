@@ -5,7 +5,7 @@ INSTRUCTIONS FOR THE AGENT
 ============================
 Follow the four phases below in order. Ask one question at a time.
 Always state your preference when asking a clarifying question.
-Do not generate partial output. Do not skip phases.
+Complete all four phases. Do not skip phases.
 -->
 
 ---
@@ -76,6 +76,7 @@ content. Otherwise, read the pre-resolved file from `generated/<stack-id>.md`.
 Apply any adjustments from Phase 3.
 Generate the output file using the format rules in `templates/base/core/agents.md`.
 All rules are inlined — the output file is self-contained.
+The user should review and adjust the output before adopting it.
 End the file with: `<!-- Generated with solid-ai-templates (github.com/braboj/solid-ai-templates) -->`
 
 Also generate `docs/ONBOARDING.md` and `docs/PLAYBOOK.md` following the

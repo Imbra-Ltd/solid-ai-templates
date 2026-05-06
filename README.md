@@ -4,12 +4,12 @@ Your AI agent writes better code when it has good instructions — but most
 teams write CLAUDE.md and AGENTS.md files from scratch, and they quickly
 fall out of sync.
 
-This repo gives you composable, SOLID-inspired templates that generate
+This repo gives you composable, SOLID-inspired templates for building
 consistent context files for any stack and any agent.
 
 ## What it does
 
-- Generate `CLAUDE.md` or `AGENTS.md` from reusable layers — base, backend/frontend, stack
+- Build `CLAUDE.md` or `AGENTS.md` from reusable layers — base, backend/frontend, stack
 - Cover Python, Go, Java, Node, Rust, mobile, and DevOps stacks
 - Output `CLAUDE.md` for Claude Code or `AGENTS.md` for Cursor, Copilot, Codex CLI
 - Run a 360-degree project assessment across four perspectives
@@ -20,12 +20,14 @@ consistent context files for any stack and any agent.
 Most AI context files are written from scratch for each project and quickly
 fall out of sync. This repository provides a reusable template system —
 structured like object-oriented design — where base rules are defined once
-and composed with stack-specific extensions to produce a complete, consistent
-context file for any project type.
+and composed with stack-specific extensions to build a context file
+for any project type.
 
-Works for new projects and refactoring alike — the generated context file
-describes how code *should be written*, giving your agent a consistent target
-to work toward whether starting from scratch or improving existing code.
+Works for new projects and refactoring alike — the context file
+describes how code *should be written*, giving your agent a consistent
+target whether starting from scratch or improving existing code.
+Review and adjust the output before adopting it — results vary by
+model and prompt size.
 
 ## How to use
 
@@ -53,8 +55,8 @@ Name: my-service, owner: Acme, repo: github.com/acme/my-service,
 database: PostgreSQL, auth: JWT.
 ```
 
-The agent generates a context file immediately. Place it at your
-project root.
+The agent drafts a context file. Review it, adjust as needed, and
+place it at your project root.
 
 ### Use it — clone and run the interview
 
@@ -71,9 +73,10 @@ git clone https://github.com/braboj/solid-ai-templates.git
 4. Confirm the stack — the agent generates `CLAUDE.md` or `AGENTS.md`
 5. Place the generated file at your project root
 
-The interview produces a more complete output than attaching a single
-file, because the agent resolves the full dependency chain (base rules,
-layer rules, stack rules).
+The interview tends to produce more complete output than attaching a
+single file, because the agent resolves the full dependency chain
+(base rules, layer rules, stack rules). Results depend on the model
+and context window available.
 
 ### Adopt it — vendor as a submodule
 
