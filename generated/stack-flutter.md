@@ -1,0 +1,1408 @@
+<!-- templates/base/core/quality.md -->
+# Base — Quality Attributes
+
+[ID: base-quality]
+
+## Architecture
+
+- All editable content in a data directory — never hardcoded in components
+- Never hardcode derived counts or statistics — compute them from the data
+  source; a hardcoded number is a stale number
+- Default to the simplest component type; only reach for heavier abstractions
+  when genuinely needed
+- No dead code — remove unused components, styles, and data files promptly
+- No over-engineering — build the minimum needed for the current requirement
+
+## Disposability
+
+- Processes MUST start fast — minimize initialization time
+- Processes MUST shut down gracefully on `SIGTERM` — finish
+  in-flight work, release resources, then exit
+- Set a shutdown timeout — if graceful shutdown exceeds the
+  deadline, force-exit
+- Design for crash safety — the system MUST recover cleanly if
+  a process is killed without warning (`SIGKILL`, power loss)
+- Do not store state in-process — use external stores (database,
+  cache, queue) so processes are disposable and replaceable
+
+## Admin processes
+
+- One-off tasks (migrations, data fixes, REPL sessions) MUST run
+  in the same environment as the application — same code, same
+  config, same dependencies
+- Admin scripts MUST be committed to the repository — not run
+  from ad-hoc shell commands
+- Prefer idempotent scripts — safe to re-run without side effects
+- Never run admin tasks directly against production without a
+  tested rollback plan
+
+## Core principles
+
+- **DRY — Don't Repeat Yourself**: every piece of knowledge must have
+  a single, authoritative representation; the third copy is a bug
+- **KISS — Keep It Simple**: prefer the simplest solution that works;
+  complexity must be justified by a requirement, not by elegance
+- **YAGNI — You Aren't Gonna Need It**: do not build for hypothetical
+  future requirements; build what is needed now, refactor when the
+  need is real
+
+## SOLID principles
+
+Apply SOLID at the class, module, and service level:
+
+- **S — Single Responsibility**: every class or module has exactly one reason
+  to change; split anything that serves more than one concern
+- **O — Open/Closed**: extend behaviour by adding new code, not by modifying
+  existing code; use interfaces, abstract base classes, or composition
+- **L — Liskov Substitution**: subtypes must be fully substitutable for their
+  base type without altering correctness; never override a method in a way
+  that weakens its contract
+- **I — Interface Segregation**: prefer many small, focused interfaces over
+  one large general-purpose one; callers should not depend on methods they
+  do not use
+- **D — Dependency Inversion**: depend on abstractions, not concretions;
+  inject dependencies rather than instantiating them inside a class
+
+## OOP
+
+- Prefer **composition over inheritance** — inherit only to model a true
+  is-a relationship; compose for code reuse
+- **Encapsulate** implementation details — expose behaviour through a public
+  interface, hide state and implementation
+- Design to interfaces (or protocols / abstract base classes), not concrete types
+- Keep class hierarchies shallow — more than two levels of inheritance is a
+  signal to refactor towards composition
+
+## Design patterns
+
+- Apply established **GoF design patterns** where they fit the problem —
+  do not invent ad-hoc solutions for problems that have named solutions
+- Favour **behavioural patterns** for algorithm variation:
+  Strategy, Command, Observer, Template Method
+- Favour **structural patterns** for object composition:
+  Adapter, Decorator, Facade, Proxy
+- Use **creational patterns** to decouple object creation:
+  Factory Method, Abstract Factory, Builder
+- Use **Singleton** only for stateless services or infrastructure objects
+  (logger, config) — never for mutable shared state
+- Name the pattern in code when you use one: a class named `OrderExportStrategy`
+  communicates intent; a class named `OrderHelper` does not
+
+## Aspect-Oriented Programming (AOP)
+
+- **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
+  interception, bytecode weaving, runtime proxies) makes code hard to read,
+  debug, and test
+- Implement cross-cutting concerns explicitly:
+  - Logging → call the logger directly in the function
+  - Auth → explicit middleware or guard in the call chain
+  - Transactions → explicit context manager or decorator with visible call site
+  - Validation → explicit call at the boundary
+- Transparent decorators (a decorator that wraps and clearly delegates) are
+  acceptable; opaque interceptors that inject hidden behaviour are not
+
+## Readability
+
+- **Names are the primary documentation** — a name that requires a comment to
+  explain is a name that needs to be changed
+- Functions and methods: verb or verb phrase (`calculateTotal`, `fetchUser`)
+- Classes and modules: noun or noun phrase (`OrderRepository`, `AuthService`)
+- Booleans: prefix with `is`, `has`, or `can` (`isActive`, `hasPermission`)
+- No single-letter names except loop counters (`i`, `j`) and well-established
+  conventions (`err` in Go, `e` in except clauses)
+- No abbreviations unless universally understood in the domain (`url`, `id`,
+  `http` are fine; `mgr`, `proc`, `obj` are not)
+- A function's name must make reading its body unnecessary — if you need to
+  read the implementation to understand what a call site does, the function
+  needs a better name or needs to be split
+- Cognitive complexity ≤ 15 per function — enforced by static analysis
+  (SonarQube, Codacy, or equivalent); each nesting level and decision point
+  increases the score
+- Maximum nesting depth of three levels — use early returns and guard clauses
+  to reduce indentation rather than adding else branches
+- No boolean flag parameters — they force the caller to read the implementation
+  to understand what `true` means; use an enum or two named functions instead
+- Avoid negative conditions in `if` statements where possible —
+  `if isEnabled` reads better than `if !isDisabled`
+
+## Maintainability
+
+- No circular dependencies between modules or packages — dependency graphs
+  must be acyclic; restructure or introduce an interface to break cycles
+- Keep the dependency graph shallow — if changing module A requires reading
+  modules B, C, and D to understand the impact, the coupling is too high
+- Changes to one module's internals must not require changes in unrelated
+  modules — if they do, the abstraction boundary is wrong
+- Before removing or renaming a public symbol, mark it deprecated with a
+  comment referencing the replacement; remove it in a follow-up change
+- Magic numbers and magic strings must be named constants — unnamed literals
+  scattered across the codebase are a maintenance hazard
+- No substantial duplication across sibling modules — if the same code
+  appears in two or more places, extract a shared module; the third
+  copy is a bug
+- Consistent naming across modules — the same concept must use the same
+  name everywhere; divergent names for the same thing (e.g. `clearButton`
+  vs `clearBtn`) signal missing abstraction
+- When the same logic block repeats across three or more modules,
+  extract a shared module; short inline repetition (e.g. three similar
+  assignments) does not warrant extraction — only substantial
+  duplicated logic
+- **Fail Fast**: validate inputs at boundaries and throw immediately on
+  invalid state; do not propagate bad data through the system
+- **Law of Demeter**: a module should only talk to its direct
+  dependencies; chaining through objects (`a.b.c.d`) signals missing
+  abstraction
+- **High Cohesion**: modules that change together should live together;
+  a module whose parts serve unrelated concerns should be split
+
+## Testability
+
+- Testability is a first-class design concern, not an afterthought
+- Code MUST be designed for testability from the start — do not write
+  code first and struggle to test later
+- If code is hard to test, treat it as a design problem, not a
+  testing problem
+## Automated enforcement
+
+- Quality conventions in this document are enforced automatically via
+  quality gates (editor → pre-commit → CI)
+
+## Code style
+
+- Encode all source files in UTF-8; content MUST be restricted to ASCII
+  characters
+- Line endings MUST be LF — CRLF is not acceptable in any committed file
+- A linter SHOULD enforce formatting automatically on save; keep manual style
+  rules to a minimum
+- Prefer self-documenting code — if a comment feels necessary, treat it as a
+  signal that the code needs restructuring before the comment is added
+- Add comments only where the intent cannot be expressed in code
+
+## Debug code
+
+- No debug statements in committed code: no `print()`, `console.log()`,
+  `fmt.Println()`, or equivalent used for debugging
+- No hardcoded breakpoints (`debugger`, `pdb.set_trace()`) in committed code
+- No commented-out code blocks — delete dead code; version control is the history
+- Debug tooling (profilers, REPL helpers, verbose loggers) MUST be
+  gated behind a flag or environment variable, never on by default
+
+## Testing
+
+- Write tests for business logic and edge cases
+- Do not test implementation details — test behaviour
+- Tests must pass before merging to `main`
+- Tests MUST be runnable from CI without human intervention
+
+
+<!-- templates/base/core/git.md -->
+# Base — Git Conventions
+[ID: base-git]
+
+## Committer identity
+- Configure git with your full name and a consistent, professional email address
+- Do not use private or personal email addresses for work repositories
+- Identity must not change — git history and tooling depend on consistent authorship
+
+## Commit messages
+- Use conventional commit prefixes:
+  `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `style:`, `test:`
+- Keep the subject line under 80 characters
+- Use the imperative mood: "add feature" not "added feature"
+
+## Branching
+- Always work on a branch — never commit directly to `main`
+- Branch naming: `feat/description`, `fix/description`, `chore/description`,
+  `docs/description`
+
+## Pull requests
+- PRs should be small and focused — one concern per PR
+- Always test locally before committing
+- **Before merging**, review the diff against the base branch. Follow
+  `templates/base/core/review.md` priority order: security → correctness → clarity →
+  conventions. Check CI passes. Only merge after the review passes.
+- **Before pushing or creating a PR**, check `git status` and list open PRs.
+  If the previous PR is closed or merged, create a new branch rather than
+  pushing to a stale one.
+- **After a PR is merged**, delete both remote and local branch, then pull main:
+  ```
+  git branch -d <branch>
+  git push origin --delete <branch>
+  git checkout main && git pull
+  ```
+
+### Squash-merge safety
+
+When using squash merge, the branch commits become orphaned after
+the PR merges — only the squash commit lands on main. If a branch
+contains multiple concerns and only one is merged via PR, the
+remaining commits are silently lost.
+
+- MUST NOT mix unrelated changes on a single branch
+- MUST verify that all branch commits are accounted for before
+  deleting a branch — compare the squash diff against the branch diff
+- SHOULD enable "automatically delete head branches" in repository
+  settings to prevent stale branches from accumulating
+
+## README
+- Every repository MUST contain a `README.md`
+- The README MUST conform to the structure and rules defined in `templates/base/core/readme.md`
+
+## Versioning
+- Use [Semantic Versioning](https://semver.org/) — `MAJOR.MINOR.PATCH`
+  - **MAJOR** — incompatible API or breaking changes
+  - **MINOR** — new functionality, backwards-compatible
+  - **PATCH** — backwards-compatible bug fixes
+- Tags use the `v` prefix: `v1.0.0`, `v0.3.1`
+- Pre-release versions: `v1.0.0-alpha.1`, `v1.0.0-rc.1`
+
+## Release process
+
+### Pre-release checks
+  1. Check for unmerged branches: `git branch --no-merged main`
+     — investigate any results before proceeding
+  2. Check for orphaned commits: `git fsck --unreachable --no-reflogs
+     | grep commit` — verify no unique work is lost
+  3. Run a 360-degree analysis if the project uses
+     `templates/base/workflow/360.md` — the project SHOULD NOT
+     ship with critical findings unresolved
+
+### Projects with a version manifest
+  4. `git checkout -b chore/release-vX.Y.Z`
+  5. Bump version in the project manifest (`package.json`,
+     `pyproject.toml`, `Cargo.toml`, or equivalent) to `X.Y.Z`
+  6. `git commit -m "chore: release vX.Y.Z"`
+  7. Push, open PR, merge
+  8. `git checkout main && git pull`
+  9. `git tag vX.Y.Z && git push origin vX.Y.Z`
+
+### Projects without a version manifest (no-build)
+  4. `git checkout main && git pull`
+  5. `git tag -a vX.Y.Z -m "vX.Y.Z — <milestone name>"`
+  6. `git push origin vX.Y.Z`
+  7. Create a GitHub Release with auto-generated notes:
+     `gh release create vX.Y.Z --title "vX.Y.Z — <milestone name>" --generate-notes`
+
+## General
+- Do not commit build output, secrets, or dependency directories
+- Do not commit generated files that can be reproduced by running a
+  build command
+- Treat every repository as if it were public — no secrets,
+  credentials, or sensitive information in source files or history
+
+## `.gitignore`
+- Every repository MUST have a `.gitignore` file
+- Ignore at minimum:
+  - **Dependencies** — `node_modules/`, `.venv/`, `vendor/`
+  - **Build output** — `dist/`, `build/`, `out/`, `*.pyc`, `__pycache__/`
+  - **Secrets** — `.env`, `.env.local`, `*.pem`, `*.key`
+  - **IDE/editor** — `.idea/`, `.vscode/`, `*.swp`, `*.swo`
+  - **OS files** — `.DS_Store`, `Thumbs.db`, `desktop.ini`
+  - **Test/coverage** — `coverage/`, `.coverage`, `htmlcov/`
+- Use [gitignore.io](https://gitignore.io) or GitHub's templates as a
+  starting point — then trim to what the project actually needs
+- Do not ignore lockfiles — they MUST be committed
+
+
+<!-- templates/base/core/docs.md -->
+# Base — Documentation
+
+[ID: base-docs]
+
+## Rule language
+
+All rules use the key words defined in **RFC 2119** to indicate requirement
+levels. Every rule MUST use one of these words:
+
+| Word       | Meaning                                                         |
+| ---------- | --------------------------------------------------------------- |
+| MUST       | Absolute requirement — no exceptions without explicit rationale |
+| MUST NOT   | Absolute prohibition                                            |
+| SHOULD     | Recommended — deviations require justification                  |
+| SHOULD NOT | Not recommended — may be ignored with justification             |
+| MAY        | Optional — developer decides without further discussion         |
+
+## Single source of truth
+
+- `README.md` is the single source of truth for project structure
+- Do not duplicate structure in other documents — reference `README.md` instead
+- No references to non-existent files, components, or services
+
+## Standard documents
+
+| File                  | Purpose                                                                |
+| --------------------- | ---------------------------------------------------------------------- |
+| `README.md`           | Project overview, structure, setup, commands                           |
+| `CLAUDE.md`           | AI agent context and project rules                                     |
+| `docs/ONBOARDING.md`  | Onboarding guide for new contributors                                  |
+| `docs/PLAYBOOK.md`    | Operational reference for common tasks                                 |
+| `docs/dev-journal.md` | Development history and session log (MUST for agent-assisted projects) |
+| `docs/SPEC.md`        | System design, architecture rules, composition model (SHOULD for complex projects) |
+
+## Numbering
+
+- Use numbered headings (1, 1.1, 1.2, 2, 2.1, etc.) in PLAYBOOK and
+  ONBOARDING — this enables cross-referencing between documents
+  (e.g. "see PLAYBOOK 2.4")
+
+## ONBOARDING structure
+
+`docs/ONBOARDING.md` MUST contain the following sections in order:
+
+1. **Prerequisites** — required tools and versions (Node, Python, Docker, etc.)
+2. **First-time setup** — clone, install, configure (copy-pasteable commands)
+3. **Verify the setup** — how to confirm everything works (run dev server,
+   run tests, expected output). Verify step descriptions SHOULD be
+   re-checked when the default route (`/`) or landing page changes —
+   a content change can invalidate the expected output without triggering
+   a "setup changed" check. Structure audits MUST verify that verify
+   steps produce the described output.
+4. **Key files** — table of files a new contributor should read first
+5. **Project context** — brief domain overview and links to architecture docs
+6. **Daily workflow** — cross-reference PLAYBOOK sections, do not duplicate
+
+## PLAYBOOK structure
+
+`docs/PLAYBOOK.md` MUST contain the following sections in order:
+
+1. **Git workflow** — branch, commit, PR, merge, issues
+2. **Domain operations** — how to add/modify the project's core data or
+   entities (project-specific — e.g. "add a new lens", "add a migration")
+3. **Maintenance** — update dependencies, quality conventions, ADRs
+4. **Release and deploy** — release process, tagging, deployment
+
+## Documentation rule
+
+Before every commit, update all relevant documentation:
+
+- **`CLAUDE.md`** — update if architecture, stack, design rules, or conventions change
+- **`README.md`** — update if project structure, stack, or setup steps change
+- **`docs/PLAYBOOK.md`** — update if commands, workflow, or release process change
+- **`docs/ONBOARDING.md`** — update if the contributor workflow changes
+
+## Decision logs
+
+- Significant architectural decisions MUST be recorded as Architecture Decision
+  Records (ADR) in `docs/decisions/`
+- Each ADR documents: context, decision, alternatives considered, consequences
+- ADRs are immutable once merged — create a new ADR to supersede an old one
+- File naming: `NNN-slug.md` — zero-padded sequence number + kebab-case slug
+  (e.g. `001-data-storage.md`, `002-hosting.md`)
+- ADR file format:
+
+```markdown
+# ADR-NNN: [Decision title]
+
+**Status:** Accepted | Superseded by ADR-NNN
+**Date:** YYYY-MM-DD
+
+## Context
+
+[Why this decision was needed]
+
+## Decision
+
+[What was decided]
+
+## Alternatives considered
+
+[What was rejected and why]
+
+## Consequences
+
+[What follows from this decision]
+```
+
+- Do NOT maintain a monolithic architecture document that mixes decisions,
+  data model specs, and migration tracking — decisions go in ADRs, data
+  model is the code (`src/types/`), migration tracking belongs in the
+  dev journal or issue tracker
+
+## Development journal
+
+- Projects using agent-assisted development MUST maintain a
+  `docs/dev-journal.md`
+- Agents have no persistent memory across sessions — the journal provides
+  continuity by recording what was done, what changed, and why
+- Structure: architecture overview at the top, then chronological session
+  entries (newest last)
+- Each session entry records: date, tool used, key changes, decisions made
+- Session entry heading format: `### Session N — Short Theme Description`
+  (3-6 words describing what was done; no dates or tool names in the
+  heading)
+- When milestones or phases are renamed or renumbered in the issue tracker,
+  the dev journal architecture overview MUST be updated in the same PR
+- Do not duplicate content that belongs elsewhere — link to ADRs for
+  decisions, link to issues for task tracking, do not repeat data model
+  specs that live in code
+
+### Post-mortems
+
+P0/P1 bugs and all incidents MUST include a post-mortem in the dev
+journal session entry. Format:
+
+- **Symptom:** what the user saw
+- **Root cause:** what was actually wrong
+- **Why missed:** what review or test gap allowed it
+- **Fix:** PR reference
+- **Prevention:** what was changed to catch it next time
+
+Not needed for minor fixes or cosmetic bugs. The purpose is to produce
+actionable prevention steps — a post-mortem without a prevention action
+is incomplete.
+
+## Writing style
+
+- Write in present tense — past or future tense indicates out-of-sync documentation
+- Write as little as necessary but as much as needed — documentation that goes
+  out of sync is worse than no documentation
+- Remove redundant, inconsistent, or outdated documentation promptly
+- Use full, grammatically correct sentences — enumerations are exempt
+
+## Diagrams and assets
+
+- Prefer text-based diagram formats: Mermaid for flowcharts, sequence diagrams,
+  and Gantt charts; Draw.io for complex visual diagrams
+- Commit all raw editable sources alongside rendered outputs
+- Do not use proprietary formats (Word, Illustrator, Affinity Designer)
+- Diagrams MUST be version-controlled — binary-only diagrams are not acceptable
+
+## Docs-as-code
+
+- Technical documentation lives in the repository alongside the code
+- Documentation follows the same review process as code
+- All documentation MUST be written in Markdown
+
+## Output file by agent
+
+| Agent            | Context file                      |
+| ---------------- | --------------------------------- |
+| Claude Code      | `CLAUDE.md`                       |
+| Cursor           | `.cursor/rules/project.mdc`       |
+| GitHub Copilot   | `.github/copilot-instructions.md` |
+| OpenAI Codex CLI | `AGENTS.md`                       |
+| Generic / other  | `AI_CONTEXT.md`                   |
+
+
+<!-- templates/base/core/readme.md -->
+# Base — README
+[ID: base-readme]
+
+## Principle
+A README is the front door of a repository. It MUST answer the three
+questions a new reader asks within the first 30 seconds:
+what is this, why does it exist, and how do I start using it.
+
+## Required sections
+
+Every README MUST contain the following sections, in this order:
+
+### 1. Title and summary
+- The repository name MUST appear as a top-level heading
+- 2–4 sentences MUST follow the title: what the project does, for whom,
+  what problem it solves, and why this solution exists — no preamble, no
+  marketing language
+- A capability list MUST follow the summary — bullet points stating
+  what the product can do, written as capabilities not counts (e.g.
+  "browse and filter lenses by specs" not "240+ lenses"); this list
+  is the product's contract and the primary input for value evaluation
+- A badges line SHOULD follow: build status, latest version, license
+
+### 2. Quick start
+- MUST be copy-pasteable: a reader MUST be able to go from zero to running
+  in under five minutes by following this section alone
+- Prerequisites MUST be listed before the first command
+- Every command MUST be shown in a fenced code block with the shell indicated
+- MUST NOT assume environment-specific context (paths, credentials, ports)
+  without stating them explicitly
+
+### 3. Usage
+- MUST show the most common real-world usage — not every option, not
+  contrived examples
+- Each example MUST include the expected output or outcome
+- If the project has multiple usage modes, each MUST have its own example
+
+### 4. Project structure
+- MUST include a directory tree covering the top two levels
+- Each entry MUST have a one-line description of its purpose
+- Generated directories (`dist/`, `__pycache__/`, `.venv/`) MUST be omitted
+
+### 5. Development setup
+- MUST cover: cloning, installing dependencies, running tests, running the
+  application locally
+- MUST list every external tool or service required (database, message
+  broker, etc.) and how to start it
+- If a `.env.example` file exists, MUST reference it here
+
+### 6. Configuration reference
+- SHOULD list every environment variable or configuration key the project
+  reads, with type, default value, and a one-line description
+- Sensitive keys (secrets, tokens) MUST be noted as such — never show
+  real values as defaults
+
+### 7. Links
+- SHOULD link to: full API / library reference, CHANGELOG, contribution
+  guide, and any deployed environments (staging, docs site)
+- Internal links MUST use relative paths — not absolute URLs pointing to
+  a specific branch or host
+
+### 8. License
+- MUST state the license name and include a link to the full license text
+- MUST appear as the last section
+
+## Rules
+
+### Accuracy
+- Every command MUST be tested and known to work at the time of writing
+- A README that describes functionality not yet implemented MUST mark that
+  section with a `> Note: planned for vX.Y` callout
+- README MUST be updated in the same commit that changes the behaviour it
+  describes — a stale README is a defect
+
+### Length and tone
+- Write in present tense — past or future tense signals out-of-sync content
+- SHOULD NOT exceed what a reader needs to evaluate or use the project —
+  move deep reference content to `docs/`
+- Avoid superlatives and filler phrases ("easy", "simple", "just run") —
+  describe what the project does, not how good it is
+
+### Audience
+- A README serves two audiences. The first three sections (title,
+  quick start, usage) are user-facing — what the product does and
+  how to use it. The remaining sections (structure, setup, config)
+  are developer-facing — how to build and contribute. Write each
+  section for its audience.
+- Write for a reader who has not seen this project before — MUST
+  NOT assume familiarity with internal terminology
+- Acronyms MUST be expanded on first use
+
+### Maintenance
+- When a dependency version, command, or configuration key changes, the
+  README MUST be updated in the same PR
+- Sections that have not been updated in over six months SHOULD be reviewed
+  for accuracy
+
+<!-- templates/base/core/testing.md -->
+# Base — Testing
+
+[ID: base-testing]
+
+## Patterns
+
+- Use factory, AAA, builder, parameterized, fixtures, mock boundary,
+  snapshot, and contract testing patterns where appropriate
+
+## Taxonomy
+
+Test types are classified by the **boundary crossed during execution** — not by
+who runs them, what tools are used, or what assets drive the test content.
+
+| Type            | Boundary crossed                     | Primary focus                                   |
+| --------------- | ------------------------------------ | ----------------------------------------------- |
+| **Unit**        | None — single component in isolation | Correctness of individual functions and classes |
+| **Integration** | Process or component boundary        | Behaviour and interaction across components     |
+| **System**      | System boundary                      | End-to-end behaviour from a user perspective    |
+| **Regression**  | Any — reuses existing tests          | Protection against unintended change            |
+| **Exploratory** | Any — unscripted                     | Discovery of unexpected behaviour               |
+
+---
+
+## Unit tests
+
+Unit tests verify the correctness of individual functions and classes in
+isolation. Dependencies MUST be replaced with mocks or stubs. The primary
+driver is TDD — tests are written alongside or before the code.
+
+- MUST cover all happy paths defined by functional requirements
+- MUST achieve 90% coverage of new code before merging
+- SHOULD cover negative scenarios and edge cases
+- The total codebase SHOULD maintain 80% unit test coverage — see
+  `templates/base/workflow/quality-gates.md` for the coverage policy (80% for new projects,
+  warn-only for legacy)
+- Coverage MUST NOT regress between releases
+- MUST be runnable from CI without human intervention
+- Names are not part of any external report or traceability system — they
+  SHOULD be chosen freely, provided the name alone communicates the unit under
+  test, the input condition, and the expected outcome; each stack template
+  defines its own naming convention
+
+---
+
+## Integration tests
+
+Integration tests verify behaviour and interactions across a process or
+component boundary using real dependencies (database, message queue, filesystem,
+communication partner). Mocks MUST NOT substitute the dependency being
+integrated — they MAY be used for unrelated dependencies outside the scope
+of the test.
+
+Configuration MAY be sourced from the product manual when the integration
+requires a formally defined input (e.g. a communication configuration packet).
+This does not change the classification — the boundary crossed determines the
+type, not the asset used.
+
+- MUST verify the primary interaction path between the integrated components
+- SHOULD cover fault scenarios — dependency unavailable, malformed response,
+  timeout, boundary violations
+- SHOULD cover cases where a behaviour is only valid under specific conditions
+- MUST NOT rely on shared mutable state between test runs
+- Names MUST follow the codification scheme defined in the Imbra knowledge
+  repository under `standards/` — the scheme provides a structured format
+  that enables filtering, traceability, and maintenance across projects
+
+---
+
+## System tests
+
+System tests verify the complete product against its documented requirements
+from a user perspective, crossing the system boundary (interacting with
+external systems, users, or interfaces).
+
+- MUST be driven by the product manual or system specification
+- MUST cover the primary user scenarios defined in the requirements
+- SHOULD cover fault and degraded-mode scenarios at the system level
+- MUST be executed in an environment representative of production
+
+### E2E tests (subset of system)
+
+E2E tests are automated system tests that simulate complete user journeys
+through the full product stack.
+
+- MUST cover the critical user journeys defined in the product requirements
+- SHOULD cover non-happy paths and system-level edge cases
+- MAY provide data-agnostic scenarios to reduce environment coupling
+
+### Acceptance tests (subset of system)
+
+Acceptance tests are always executed manually, typically by the QA department
+or the customer, to determine whether the product satisfies its acceptance
+criteria.
+
+- MUST be executed in the target environment with production-representative
+  configuration
+- MUST be driven by documented acceptance criteria — not improvised
+- Automated tests MAY support acceptance testing but MUST NOT replace manual
+  sign-off
+
+---
+
+## Regression tests
+
+Regression tests protect against unintended change by re-executing a defined
+subset of existing tests after a modification. They reuse unit, integration,
+and system tests — they are not a separate test type.
+
+Regression suites are divided by scope and execution time:
+
+| Variant   | Scope               | Trigger             | Target duration |
+| --------- | ------------------- | ------------------- | --------------- |
+| **Smoke** | Critical paths only | Every commit        | < 15 minutes    |
+| **Quick** | Core functionality  | Every merge request | < 60 minutes    |
+| **Full**  | Complete suite      | Release candidate   | Unrestricted    |
+
+- Smoke and Quick regression MUST be fully automated
+- Full regression SHOULD be fully automated; manual steps MUST be documented
+- A regression failure MUST trigger an investigation:
+  1. Review the test logic first — if incorrect, refactor the test
+  2. If the test logic is correct, investigate the code under test
+
+---
+
+## Exploratory tests
+
+Exploratory testing is unscripted, experience-driven investigation with no
+predefined expected outcome. It is not part of any regression suite.
+
+- MAY be triggered by a discovered bug, a release candidate, or intuition
+- Findings that reveal a defect SHOULD result in a new regression test to
+  prevent recurrence
+- Results SHOULD be documented informally (session notes, bug reports)
+
+---
+
+## Testability
+
+Testability is a first-class design concern, not an afterthought. Code
+that is hard to test is hard to test because it is poorly designed —
+fixing the design fixes the testability.
+
+### Pure functions over side effects
+
+- Business logic SHOULD be implemented as pure functions — same input,
+  same output, no side effects (no I/O, no mutation of external state)
+- Side effects (database, API, filesystem, DOM) SHOULD be pushed to
+  the boundary — thin adapters that call pure logic
+- Pure functions are trivially unit-testable with no mocks, stubs, or
+  setup
+- A function that mixes logic and side effects is a signal to split
+  it: extract the logic into a pure function, keep the side effect
+  in a thin wrapper
+
+### Architecture for testability
+
+- Push side effects to the edges:
+  `[boundary: I/O] → [pure: logic] → [boundary: I/O]`
+- The pure center is unit-testable; the thin boundaries are
+  integration-testable
+- If a function needs more than two mocks to test, it has too many
+  responsibilities — split it
+
+### SOLID enables testability
+
+- **SRP** — one responsibility = one reason to test; multiple
+  responsibilities require combinatorial test cases
+- **OCP** — new behaviour via extension means existing tests stay
+  green
+- **LSP** — subtypes that honour contracts can be tested against the
+  base type's tests
+- **ISP** — small interfaces mean fewer dependencies to mock
+- **DIP** — depend on abstractions, inject dependencies; code that
+  instantiates its own dependencies cannot be tested in isolation
+
+### Design patterns and composition
+
+- Design patterns enable testability by enforcing separation of
+  concerns, loose coupling, and clear contracts
+- Prefer composition over inheritance — composed dependencies can be
+  injected and swapped in tests; inherited behaviour drags the entire
+  class hierarchy into every test
+
+---
+
+## General rules
+
+- Design for testability from the start — do not write code first and
+  struggle to test later
+- If code is hard to test, treat it as a design problem, not a testing
+  problem
+- Test behaviour, not implementation details
+- Each test MUST be independent — no shared mutable state between tests
+- A failing test MUST trigger an investigation before any other action —
+  never suppress or skip a failing test without a documented reason
+- Tests are code and MUST be treated as such — they MAY contain bugs; when
+  a test behaves unexpectedly, the test logic MUST be verified before
+  concluding the code under test is at fault
+- Integration tests MUST use real dependencies for the boundary under test —
+  not hand-written mocks
+- Test factory defaults for optional fields MUST be `undefined` (omitted),
+  not convenient values like `false` or `0` — explicit defaults mask bugs
+  that only appear with real data shapes
+- Data validation tests SHOULD flag boolean fields where one branch (`true`
+  or `false`) has zero occurrences across the dataset — this is a data
+  smell that can silently break sorting, filtering, and UI logic
+
+
+<!-- templates/backend/http.md -->
+# Backend — HTTP Conventions
+[ID: backend-http]
+
+## Handler design
+- Handlers are thin: decode request → call service → encode response
+- No business logic in handlers — delegate to a service layer
+- Validate all incoming request data before processing
+
+## URI design
+- Path segments MUST be lowercase with hyphens as word separators —
+  underscores and camelCase are not permitted
+- Paths MUST use nouns, not verbs: `/orders` not `/getOrders`
+- Collection resources MUST use plural nouns: `/orders`, `/products`
+- Individual resources MUST be addressed under their collection:
+  `/orders/{orderId}`
+- Sub-resources MUST be nested under their parent: `/customers/{id}/orders`
+- A URI MUST NOT end with a trailing slash
+- Paths MUST use American English spelling with no abbreviations or acronyms
+
+## Query parameters
+- Query parameter names MUST use camelCase
+- Query parameters MUST be used for filtering, sorting, and pagination —
+  not for resource identity (use path segments for that)
+- The following names are reserved for framework-level use and MUST NOT
+  be repurposed: `limit`, `skip`, `offset`, `expand`, `sortedBy`
+
+## Request headers
+- All HTTP headers MUST follow Hyphenated-Pascal-Case casing:
+  `Api-Correlation-Id`, `Accept-Language`
+- Custom headers SHOULD NOT use the `X-` prefix — this convention was
+  deprecated by RFC 6648; use a vendor or application-specific prefix instead
+
+## HTTP methods
+| Method | Use for | Idempotent |
+|--------|---------|-----------|
+| GET | Retrieve a resource or collection — no side effects | Yes |
+| POST | Create a new resource — server assigns URI | No |
+| PUT | Replace a resource entirely | Yes |
+| PATCH | Partially update a resource | No |
+| DELETE | Remove a resource | Yes |
+
+## Resource representation
+- JSON MUST be the default serialisation format; XML MAY be used where
+  explicitly required by the consuming system
+- Field types MUST conform to the relevant ISO standard:
+  - Date and time values: ISO 8601
+  - Language codes: ISO 639
+  - Country codes: ISO 3166-1 alpha-2
+  - Currency codes: ISO 4217
+- Any integer that exceeds 2^53 − 1 (9007199254740991) MUST be serialised
+  as a string — JavaScript cannot represent larger integers precisely
+- Responses MUST contain only the fields needed by the caller — do not pad
+  payloads with fields that are not consumed
+
+## HATEOAS
+- Embed hyperlinks in responses to enable resource discovery
+- Use a `links` array with `href`, `rel`, `type`, and `media` fields:
+  ```json
+  "links": [
+    {
+      "href": "invoices/f9c3b2a1-0d4e-4f8b-9c7a-1e2d3f4a5b6c",
+      "rel": "invoice",
+      "type": "paymentSummary",
+      "media": "application/pdf"
+    }
+  ]
+  ```
+- Support at minimum: `self`, `next`, `prev` relations on paginated collections
+
+## Error responses
+- Use consistent error response shape across all endpoints
+- Follow RFC 9457 (`application/problem+json`) for error format
+- Use 4xx for client errors, 5xx for server errors — never use 200 for errors
+- Never return stack traces, internal paths, or implementation details to the client
+- Set explicit `Content-Type: application/json` on all JSON responses
+
+## Authentication and authorisation
+- All API traffic MUST be served over HTTPS — plain HTTP is not acceptable
+- Access tokens MUST have a finite lifetime; use JWT or an equivalent
+  short-lived token mechanism
+- Every external API endpoint MUST enforce both authentication and
+  authorisation
+- Internal API endpoints SHOULD require authentication at minimum
+- Write endpoints MUST NOT be accessible without a valid authenticated identity
+
+<!-- templates/base/security/security.md -->
+# Base — Application Security
+
+[ID: base-security]
+
+Cross-cutting security rules for application code. Applies to
+every project regardless of language or framework.
+
+
+---
+
+## Input validation
+
+[ID: security-input]
+
+- Validate all external input at the system boundary — the first
+  point where untrusted data enters the application
+- Use schema validation libraries (Zod, Joi, Pydantic, JSON Schema)
+  — never hand-write validation for complex inputs
+- Allowlist, not blocklist — define what is valid, reject everything
+  else
+- Reject invalid input with a clear error — do not silently coerce
+  or strip fields
+- Internal code trusts validated data — do not re-validate in
+  service or repository layers
+
+---
+
+## Output encoding
+
+[ID: security-output]
+
+- Encode dynamic data for its rendering context at the point of
+  output — HTML, URL, JavaScript, SQL, shell
+- Encode on output, not on input — store the raw value, encode
+  when rendering
+- Use framework-provided encoding: React JSX, Jinja2 autoescape,
+  Go `html/template`, Astro `{expression}`
+- Never use `innerHTML`, `set:html`, `dangerouslySetInnerHTML`,
+  or `| safe` with user-supplied data
+- Context matters — HTML encoding does not prevent URL injection
+
+---
+
+## Injection prevention
+
+[ID: security-injection]
+
+- Use parameterized queries for all database access — never
+  concatenate user input into SQL strings
+- Use prepared statements or ORM query builders — raw SQL with
+  string interpolation is a SQL injection vulnerability
+- Escape shell arguments when invoking external commands — or
+  use API alternatives that do not invoke a shell
+- Never pass user input to `eval()`, `exec()`, `Function()`,
+  or equivalent dynamic code execution
+
+---
+
+## Authentication
+
+[ID: security-authn]
+
+- Hash passwords with a modern algorithm: bcrypt, scrypt, or
+  Argon2 — never MD5, SHA-1, or plain SHA-256
+- Enforce minimum password complexity at the boundary
+- Use constant-time comparison for secrets and tokens — timing
+  attacks leak information through response time
+- Support multi-factor authentication for privileged operations
+- Lock accounts or throttle after repeated failed attempts
+
+---
+
+## Session management
+
+[ID: security-sessions]
+
+- Generate session IDs with a cryptographic random generator
+- Regenerate the session ID after login — prevents session fixation
+- Set cookie flags: `HttpOnly`, `Secure`, `SameSite=Lax` (or
+  `Strict` for sensitive applications)
+- Expire sessions after a reasonable idle period — 30 minutes
+  for sensitive applications, configurable otherwise
+- Invalidate sessions on logout — do not rely on cookie expiry
+  alone
+
+---
+
+## Secrets in code
+
+[ID: security-secrets]
+
+- Never hardcode secrets, API keys, tokens, or credentials in
+  source files
+- Never commit secrets to version control — even in test files
+  or example configurations
+- Use `.env` files for local development — add to `.gitignore`
+- Provide `.env.example` with placeholder values — never real
+  secrets
+- If a secret is accidentally committed, rotate it immediately —
+  removing from git history is not sufficient; the secret is
+  compromised
+
+---
+
+## Transport security
+
+[ID: security-transport]
+
+- HTTPS everywhere — no exceptions for production traffic
+- HSTS MUST be enabled on all production sites with
+  `includeSubDomains` and a minimum `max-age` of one year
+- TLS 1.2 is the minimum version — disable TLS 1.0 and 1.1
+- Use strong cipher suites — disable known-weak ciphers
+- Internal service-to-service traffic SHOULD use mTLS via a
+  service mesh or explicit certificate configuration
+
+---
+
+## Security headers
+
+[ID: security-headers]
+
+- Set security headers on every HTTP response at the reverse proxy
+  or middleware level — not per route
+- Required headers:
+  - `Content-Security-Policy` — start strict, relax only as needed
+  - `X-Content-Type-Options: nosniff`
+  - `X-Frame-Options: DENY` (or CSP `frame-ancestors`)
+  - `Strict-Transport-Security` (see Transport security)
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+  - `Permissions-Policy` — disable unused browser APIs
+- Never use `unsafe-inline` or `unsafe-eval` in CSP without a
+  written justification
+- Do not expose server version or technology stack in headers —
+  remove `X-Powered-By`, `Server` version strings
+
+---
+
+## Error handling
+
+[ID: security-errors]
+
+- Never expose stack traces, internal paths, or database errors
+  to end users — return generic error messages externally
+- Log full error details server-side for debugging
+- Use consistent error response formats — do not leak internal
+  structure through varying error shapes
+- Return appropriate HTTP status codes — do not use 200 for errors
+- Do not reveal whether a resource exists via error messages —
+  login errors should say "invalid credentials", not "user not
+  found" vs "wrong password"
+
+---
+
+## Logging
+
+[ID: security-logging]
+
+- Never log secrets, tokens, passwords, or personally identifiable
+  information (PII)
+- Sanitize log output — user-supplied data in logs can enable
+  log injection attacks
+- Log security-relevant events: authentication attempts, access
+  denials, privilege changes, configuration changes
+- Include enough context for investigation: timestamp, user ID,
+  IP, action, result
+- Retain security logs for a defined period — compliance may
+  require 90 days to 7 years
+
+---
+
+## CORS
+
+[ID: security-cors]
+
+- Restrict `Access-Control-Allow-Origin` to specific known
+  origins — never use `*` for authenticated endpoints
+- Do not reflect the `Origin` header back as
+  `Access-Control-Allow-Origin` without validation
+- Restrict allowed methods and headers to what the API actually
+  needs
+- Set `Access-Control-Max-Age` to cache preflight responses —
+  reduces latency and server load
+
+---
+
+## Deserialization and data integrity
+
+[ID: security-integrity]
+
+- Never deserialize untrusted data with native serialization
+  formats (Python `pickle`, Java `ObjectInputStream`, PHP
+  `unserialize`) — use safe formats (JSON, Protocol Buffers)
+- Validate the structure and types of deserialized data before
+  use — treat it as untrusted input
+- Verify integrity of downloaded artifacts, updates, and
+  dependencies — use checksums or digital signatures
+- Pin dependency versions and verify checksums in lockfiles —
+  do not trust upstream registries blindly
+- CI/CD pipelines MUST use pinned, verified actions and images —
+  never pull `latest` tags in production pipelines
+
+---
+
+## Server-Side Request Forgery (SSRF)
+
+[ID: security-ssrf]
+
+- Never pass user-supplied URLs directly to server-side HTTP
+  clients — validate and sanitize first
+- Allowlist permitted destination hosts and schemes — reject
+  anything not on the list
+- Block requests to internal networks (`127.0.0.0/8`,
+  `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `169.254.0.0/16`,
+  `::1`, `fc00::/7`) — even after DNS resolution
+- Resolve the hostname and validate the IP before making the
+  request — prevents DNS rebinding attacks
+- Disable HTTP redirects in server-side HTTP clients, or
+  re-validate the destination after each redirect
+- Limit response size and timeout for outbound requests to
+  prevent resource exhaustion
+
+---
+
+## File uploads
+
+[ID: security-uploads]
+
+- Validate file type by content (magic bytes), not by extension
+  or MIME type — both are trivially spoofed
+- Enforce maximum file size at the boundary
+- Store uploads outside the web root — never serve user uploads
+  from the same domain without sanitization
+- Generate random filenames — do not use the original filename
+  (path traversal risk)
+- Scan uploaded files for malware if the application serves them
+  to other users
+
+
+<!-- templates/backend/auth.md -->
+# Backend — Authentication and Authorization
+[ID: backend-auth]
+[DEPENDS ON: templates/base/security/security.md]
+
+Rules for identity verification (authn) and access control (authz).
+Applies to any backend service that has protected resources.
+Extends `security-authn` and `security-sessions` from the base
+security template with backend-specific depth.
+
+---
+
+## General principles
+
+- Authentication (who are you?) and authorization (what can you do?) are
+  separate concerns — keep them in separate layers
+- Never implement your own cryptographic primitives — use well-audited libraries
+- Fail closed: deny access by default; grant explicitly
+- Centralise auth logic — no scattered permission checks across route handlers
+
+---
+
+## Authentication
+[EXTEND: security-authn]
+
+- Prefer delegating authentication to an identity provider (IdP) via
+  OAuth 2.0 / OIDC (e.g. Auth0, Keycloak, Cognito) over rolling your own
+- If issuing tokens directly, use short-lived JWTs (access token ≤ 15 minutes)
+  with a separate refresh token (≤ 7 days, rotated on use)
+- Validate every JWT: signature, `exp`, `iss`, `aud` — reject tokens missing
+  any required claim
+- Store refresh tokens server-side (database or cache) so they can be revoked —
+  stateless refresh tokens cannot be invalidated before expiry
+
+---
+
+## Token transport
+
+- Access tokens MUST be sent in the `Authorization: Bearer <token>` header
+- Do NOT accept tokens in query parameters — they appear in server logs and
+  browser history
+- Refresh tokens MUST be stored in `httpOnly`, `Secure`, `SameSite=Strict`
+  cookies — never in `localStorage` or JavaScript-accessible memory
+- HTTPS required for all authenticated endpoints — no exceptions
+
+---
+
+## Authorization
+
+- Use role-based access control (RBAC) as the baseline:
+  assign permissions to roles, assign roles to users
+- For fine-grained needs, layer attribute-based access control (ABAC) on top
+  of RBAC — do not replace RBAC entirely
+- Authorise at the service layer, not only at the route layer:
+  a route that passes auth may call a service that operates on another user's data
+- Never trust client-supplied IDs for ownership checks — always verify that
+  the authenticated user owns or has access to the requested resource
+
+---
+
+## API keys (service-to-service)
+
+- Issue API keys with the minimum required scope
+- Hash API keys before storing — treat them like passwords
+- Rotate API keys on a schedule and immediately on suspected compromise
+- Log every API key usage with the key ID (not the key value) and the
+  calling service identity
+
+---
+
+## Observability
+
+- Log authentication failures at WARN with IP, user agent, and username
+  (never the attempted password)
+- Log authorization failures at WARN with user ID, resource, and action
+- Alert on a spike in auth failures — may indicate a credential stuffing attack
+- Never log tokens, passwords, or secrets — even at DEBUG level
+
+---
+
+## Testing
+
+- Unit test permission logic with all role combinations including edge cases
+  (no role, multiple roles, deprecated role)
+- Integration test that protected endpoints return 401 for unauthenticated
+  requests and 403 for authenticated requests with insufficient permissions
+- Test token expiry: assert that an expired token is rejected
+- Test token revocation: assert that a revoked refresh token cannot obtain
+  a new access token
+
+<!-- templates/stack/mobile-flutter.md -->
+# Stack — Flutter Mobile Application
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/backend/auth.md]
+
+A cross-platform mobile (iOS + Android) application built with Flutter and
+Dart. Covers project structure, widget conventions, state management, routing,
+platform integration, and testing.
+
+---
+
+## Stack
+[ID: flutter-stack]
+
+- Language: Dart 3+
+- Framework: Flutter (stable channel, latest stable)
+- State management: [Riverpod / Bloc / Provider]
+- Routing: [go_router / auto_route]
+- HTTP client: Dio / http
+- Serialisation: json_serializable + freezed
+- Dependency injection: [Riverpod / get_it]
+- Test runner: flutter_test (unit + widget) + integration_test
+- Distribution: [Fastlane / Codemagic / manual]
+
+---
+
+## Project structure
+[ID: flutter-structure]
+
+```
+lib/
+  main.dart                  # entry point — wires providers, runs app
+  app.dart                   # MaterialApp / CupertinoApp, routing, theme
+  [feature]/
+    data/
+      [feature]_repository.dart   # data access — remote + local
+      [feature]_api.dart          # HTTP calls
+      [feature]_dto.dart          # JSON serialisable DTOs
+    domain/
+      [feature]_model.dart        # pure domain models (freezed)
+      [feature]_repository.dart   # abstract repository interface
+    presentation/
+      [feature]_screen.dart       # screen widget — thin
+      [feature]_controller.dart   # Riverpod notifier / Bloc
+      widgets/
+        [widget].dart
+  core/
+    network/
+      api_client.dart        # Dio instance, interceptors
+    storage/
+      secure_storage.dart    # flutter_secure_storage wrapper
+    theme/
+      app_theme.dart
+    router/
+      app_router.dart
+test/
+  [feature]/
+    [feature]_test.dart
+integration_test/
+  app_test.dart
+pubspec.yaml
+analysis_options.yaml
+README.md
+CLAUDE.md
+```
+
+---
+
+## Dart conventions
+[ID: flutter-dart]
+
+- Follow the official **Dart style guide** — enforced by `dart format` and
+  `flutter analyze`; do not suppress analysis warnings without a documented reason
+- `analysis_options.yaml` with `flutter` lints enabled — commit it
+- Prefer `final` for all local variables and fields that are not reassigned
+- Use `const` constructors wherever possible — reduces widget rebuilds
+- No dynamic typing — avoid `dynamic`; use explicit types or generics
+- Null safety enforced — no `!` force-unwrap without a comment explaining
+  why null is impossible at that point
+
+---
+
+## Widget conventions
+[ID: flutter-widgets]
+
+- One widget per file — filename in `snake_case`, class name in `PascalCase`
+- Prefer `StatelessWidget` — only use `StatefulWidget` when local ephemeral
+  state (animations, focus, scroll position) cannot be lifted to a controller
+- Keep `build()` methods short — extract sub-widgets into separate classes,
+  not private methods, so Flutter can optimise rebuilds
+- Use `const` widget constructors wherever all arguments are compile-time constants
+- Never put business logic or data fetching inside a widget — delegate to
+  a controller/notifier
+
+---
+
+## State management (Riverpod)
+[ID: flutter-state]
+
+- Define providers at the top level of a file — never inside a widget class
+- Use `AsyncNotifierProvider` for async data; `NotifierProvider` for sync state
+- Expose immutable state — use `freezed` data classes for state objects
+- Do not read providers inside `build()` before their data is available without
+  handling the loading and error states via `when()` / `AsyncValue`
+- Keep providers small and composable — one concern per provider
+
+---
+
+## Routing
+[ID: flutter-routing]
+
+- All routes defined in `app_router.dart` — no `Navigator.push()` with
+  hardcoded widget constructors scattered through the codebase
+- Type-safe route parameters — use `go_router`'s typed routes or `auto_route`
+- Deep links and push notification navigation handled in the router —
+  not in individual screens
+- Handle the back stack explicitly for authentication flows —
+  replace, not push, after login/logout
+
+---
+
+## Data layer
+[ID: flutter-data]
+
+- Abstract repository interfaces in `domain/` — concrete implementations in `data/`
+- DTOs in `data/` are JSON-serialisable (via `json_serializable`) —
+  never pass DTOs to the presentation layer; map to domain models
+- Use `freezed` for immutable domain models and union types
+- All HTTP calls in `*_api.dart` files — never inline `Dio.get()` in a widget
+  or controller
+- Run `dart run build_runner build` after modifying `freezed` or
+  `json_serializable` annotated classes
+
+---
+
+## Authentication
+[EXTEND: backend-auth]
+
+- Store tokens in `flutter_secure_storage` — never in `SharedPreferences`
+- Refresh tokens via a Dio interceptor — transparent to the rest of the app
+- Biometric auth via `local_auth` as an optional unlock layer —
+  not a replacement for server-side authentication
+
+---
+
+## Platform and permissions
+[ID: flutter-platform]
+
+- Declare all required permissions in `AndroidManifest.xml` and
+  `Info.plist` — document why each permission is needed in a comment
+- Request permissions at the point of use with `permission_handler` —
+  not at app launch
+- Handle permission denial gracefully — show an explanation and a
+  settings deep link if the user has permanently denied
+- Test on real devices for camera, location, Bluetooth, and biometrics —
+  simulators do not replicate all platform behaviours
+
+---
+
+## Testing
+[EXTEND: base-testing]
+
+- Unit tests (`flutter_test`): test controllers/notifiers, repositories,
+  and pure functions — no Flutter widgets
+- Widget tests: test individual widgets and screens with `WidgetTester` —
+  mock providers with `ProviderScope` overrides
+- Integration tests (`integration_test`): end-to-end flows on a real device
+  or emulator — cover onboarding, authentication, and key user journeys
+- Mock HTTP with `mockito` or `http_mock_adapter` — never hit real endpoints
+  in tests
+- Test naming: `<unit>_<state>_<expected>`
+  e.g. `loginController_invalidCredentials_returnsAuthError`
+- Run before every commit: `flutter test && flutter analyze`
+
+---
+
+## Git conventions
+[EXTEND: base-git]
+
+- Do not commit `build/`, `.dart_tool/`, `*.g.dart`, `*.freezed.dart` if
+  generated files are excluded — document the regeneration step in README
+- Commit generated files if the CI does not run `build_runner` — keep the
+  choice consistent and document it
+- `pubspec.lock` is committed — do not delete it
+
+---
+
+## Commands
+```
+flutter run                  # develop — hot reload on connected device/emulator
+flutter run --release        # test release build locally
+flutter test                 # run unit and widget tests
+flutter test integration_test/  # run integration tests (device required)
+flutter analyze              # static analysis
+dart format .                # format all Dart files
+dart run build_runner build  # regenerate freezed / json_serializable code
+flutter build apk            # Android release build
+flutter build ios            # iOS release build (macOS required)
+```

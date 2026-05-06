@@ -1,6 +1,5 @@
 .idea/
 tests/reports/
-generated/
 temp/
 __pycache__/
 .env
