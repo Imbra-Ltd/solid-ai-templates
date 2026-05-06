@@ -16,7 +16,7 @@ these conventions fill the gap.
 - Validation: [Zod / joi / express-validator]
 - ORM / query builder: [Prisma / Drizzle / Knex / pg]
 - Package manager: [npm / pnpm]
-- Linter: ESLint (`@typescript-eslint/recommended`)
+- Linter: ESLint (`@typescript-eslint/recommended`, `eslint-plugin-sonarjs`)
 - Formatter: Prettier
 - Test runner: Vitest + Supertest
 - Production server: Node.js process managed by PM2 or Docker

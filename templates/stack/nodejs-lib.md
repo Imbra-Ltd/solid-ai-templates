@@ -15,7 +15,7 @@ versioning, and testing.
 - Runtime: Node.js 20+ (LTS)
 - Package manager: [npm / pnpm]
 - Build tool: [tsup / tsc / esbuild]
-- Linter: ESLint (`@typescript-eslint/recommended`)
+- Linter: ESLint (`@typescript-eslint/recommended`, `eslint-plugin-sonarjs`)
 - Formatter: Prettier
 - Test runner: Vitest
 - Distribution: [npm (public) / npm (private) / GitHub Packages]
