@@ -106,6 +106,26 @@ If the agent cannot run scripts, use the pre-resolved files in
 2. Attach `templates/base/core/agents.md` (output format)
 3. Provide your answers and ask the agent to generate the file
 
+### Path selection guide
+
+| Interface | Recommended path | Why |
+|-----------|-----------------|-----|
+| Local agent (Claude Code, Codex CLI) | Interview or direct | Agent reads files from disk |
+| Web portal (Claude.ai, ChatGPT) | Pre-resolved | Upload one file, no shell needed |
+| REST API | Pre-resolved | Include `generated/<stack>.md` in prompt |
+
+### Model limitations
+
+| Stack category | Prompt size | Min context window |
+|----------------|-------------|-------------------|
+| Library / CLI | ~12K tokens | 32K |
+| Static site | ~15K tokens | 32K |
+| Backend service | ~25–50K tokens | 128K |
+| Full-stack | ~40–60K tokens | 128K |
+
+- Output token limit < 16K: generate section by section
+- Output token limit 32K+: full inline file fits in one pass
+
 ---
 
 ## Validate a template change
