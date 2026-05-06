@@ -848,449 +848,6 @@ fixing the design fixes the testability.
 - Follow `@typescript-eslint/recommended`
 
 
-<!-- templates/frontend/ux.md -->
-# Frontend — UX Principles
-
-[ID: frontend-ux]
-
-## UX principles
-
-- Mobile-first — design for small screens first, enhance for larger ones
-- Progressive disclosure — show only what the user needs at each step
-- No dark patterns — no misleading UI, no forced actions, no hidden costs
-- Consistency — same interaction patterns throughout the product
-- Performance is UX — slow interfaces are bad user experience
-- **Least Surprise**: components and interactions should behave as users
-  expect; if a pattern looks like a button it must act like a button
-
-## Accessibility — WCAG 2.1 AA
-
-- Target standard: WCAG 2.1 AA
-- Minimum text contrast ratio: 4.5:1 (normal text), 3:1 (large text)
-- All interactive elements reachable and operable by keyboard
-- Any non-focusable element (`<th>`, `<div>`, `<span>`) with `onClick` MUST
-  contain a `<button>` — `onClick` alone does not add the element to the tab
-  order or provide keyboard activation
-- Use `:focus-visible` instead of `:focus` for focus indicators —
-  `:focus` shows outlines on mouse clicks (distracting), `:focus-visible`
-  shows them only for keyboard navigation
-- Focus indicators must be visible at all times during keyboard navigation
-- No content that relies on colour alone to convey meaning
-- Images must have descriptive `alt` text; decorative images use `alt=""`
-- Semantic HTML: correct landmark elements and heading hierarchy
-- `aria-label` on all interactive elements (buttons, icon links, social links)
-- All `<a>` elements with icon-only or ambiguous text must have a descriptive
-  `aria-label`
-- Keyboard navigation: menus must close on Escape and restore focus
-
-## Accessibility testing
-
-Meeting WCAG 2.1 AA requires both automated and manual testing — automated
-tools catch ~30–40% of issues; the rest require human judgment.
-
-### Automated (run in CI)
-
-- **axe-core** — integrate via `@axe-core/react`, `axe-playwright`, or
-  `jest-axe`; zero violations allowed before merge
-- **Lighthouse** — accessibility score ≥ 90 on all key pages; run in CI
-  via `lighthouse-ci`
-- **ESLint `jsx-a11y`** — catches missing `alt`, incorrect ARIA roles, and
-  missing form labels at write time; must be configured in the linter
-
-### Manual (run before shipping new interactive components)
-
-- **Keyboard-only navigation** — tab through the entire feature; every
-  action reachable without a mouse; focus order is logical; no focus traps
-  except intentional modal dialogs
-- **Screen reader** — test with at least one: NVDA + Chrome (Windows),
-  VoiceOver + Safari (macOS / iOS), or TalkBack (Android); verify that
-  all content and state changes are announced correctly
-- **Zoom to 200%** — no content clipped or overlapping at double zoom;
-  horizontal scroll must not appear on a 1280px viewport
-- **High contrast mode** — verify in Windows High Contrast or forced-colors
-  CSS media query; no information lost when colours are overridden
-
-### Criteria for done
-
-A feature is not complete until:
-
-- [ ] `axe-core` reports zero violations in component tests
-- [ ] Lighthouse accessibility score ≥ 90
-- [ ] Keyboard navigation verified manually
-- [ ] Screen reader walkthrough completed for new interactive elements
-
-## Sortable tables
-
-- Boolean columns SHOULD sort descending (true first) on first click ���
-  users click a boolean column to find items that have a feature, not
-  items that lack it; ascending puts `false` first, which looks
-  identical to unsorted and appears broken
-
-## Responsive breakpoints
-
-- Tablet: max-width 1024px
-- Mobile: max-width 768px
-- Small mobile: max-width 480px
-
-## Design system
-
-- Use a design system if one exists for the project — never design ad-hoc
-  components that duplicate established patterns
-- Design tokens (colours, spacing, typography, radii) MUST come from the
-  design system — never hardcode visual values
-- Component-driven development: build UI as a hierarchy of reusable,
-  self-contained components; avoid monolithic views
-- New components SHOULD be documented with usage examples before shipping
-
-## Browser support
-
-[ID: frontend-ux-browsers]
-
-- Default target: last 2 versions of Chrome, Firefox, Safari, and Edge
-- Progressive enhancement: graceful degradation for unsupported features
-
-
-<!-- templates/frontend/quality.md -->
-# Frontend — Quality Attributes
-
-[ID: frontend-quality]
-
-## Patterns
-
-- Use error boundary, skeleton loading, optimistic update, virtual
-  scroll, debounced search, form validation, responsive switch, and
-  URL state sync patterns where appropriate
-
-## Design patterns
-
-Prefer these patterns for frontend concerns:
-
-- **Container / Presentational** — separate data-fetching and state logic
-  (container) from rendering (presentational); presentational components
-  receive only props, have no side effects, and are easy to test in isolation
-- **Custom Hook** — extract reusable stateful logic into a named hook
-  (`use[Name]`); hooks are the frontend equivalent of a service or strategy
-- **Compound Component** — expose a set of related sub-components that share
-  implicit state via context (e.g. `<Tabs>`, `<Tab>`, `<TabPanel>`);
-  prefer over deeply nested prop drilling
-- **Render Props / Slot** — pass render logic as a prop or slot to invert
-  control over what is rendered; use sparingly — prefer custom hooks where possible
-- **Observer** — subscribe to external state changes (store, event bus,
-  WebSocket) via a single subscription point; unsubscribe on component unmount
-- **Facade** — wrap third-party libraries (analytics, maps, payment SDKs)
-  behind a thin project-owned interface; never scatter SDK calls across components
-- **Optimistic Update** — apply the expected result of a mutation immediately
-  in the UI and roll back on failure; document the rollback path
-
-Avoid:
-
-- **Mediator / Event Bus** between components — use shared state or lifting
-  state up instead; an event bus between components creates invisible coupling
-
-## State management
-
-Choose the right tool for the scope of the state — do not use a global store
-for state that is local to a component or a server cache for state that is
-never fetched from a server.
-
-| State type          | Tool                     | When to use                                                                          |
-| ------------------- | ------------------------ | ------------------------------------------------------------------------------------ |
-| **Local UI state**  | `useState`, `useReducer` | Scoped to one component — form inputs, toggles, counters                             |
-| **Shared UI state** | Zustand / Redux Toolkit  | Needed by multiple unrelated components — auth session, sidebar open, active filters |
-| **Server state**    | TanStack Query / SWR     | Data fetched from an API — lists, detail views, paginated results                    |
-| **Form state**      | React Hook Form / Formik | Complex forms with validation, field arrays, multi-step flows                        |
-| **URL state**       | Router search params     | Shareable or bookmarkable UI state — filters, pagination, selected tab               |
-
-Rules:
-
-- Never duplicate server state in a global store — TanStack Query or SWR is
-  the cache; the store holds only client-owned state
-- Never put derived state in the store — compute it from existing state with
-  a selector or `useMemo`
-- Prefer URL state for anything the user should be able to bookmark or share
-- Keep global store slices small and focused — one slice per domain concern,
-  not one slice for everything
-
-## Linting and formatting
-
-- A linter MUST be configured for all JS/TS code
-- Linter and formatter SHOULD run on save in the IDE — never rely on CI
-  alone to catch style issues
-- No warnings or errors MUST appear in the browser console or test output
-  before a PR is merged — start every review on a clean slate
-- Lint error count SHOULD go down over time — never increase it
-
-## CSS
-
-- All CSS in a single stylesheet — no inline styles except dynamic/computed values
-- No hardcoded colour or spacing values — always use CSS custom properties
-  from `:root` or design tokens
-- Consistent naming convention (e.g. BEM-like `.component-element`)
-- Maximum line length: 80 characters (exempt: prose strings, third-party URLs)
-
-## Performance
-
-- Preload critical above-the-fold assets
-- Keep client-side JS minimal — every dependency adds to bundle size
-- Avoid unnecessary dependencies
-- Defer non-critical scripts
-- Monitor Core Web Vitals (LCP, CLS, INP) — treat regressions as bugs
-
-## SEO & analytics
-
-- `robots.txt`, Open Graph, and Twitter Card meta tags required
-- Canonical URLs required
-- Privacy-friendly analytics only — no consent banner required
-- No third-party tracking scripts without explicit user consent
-
-
-<!-- templates/stack/spa-react.md -->
-# Stack — React Single-Page Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md]
-
-A client-side React application with TypeScript. Covers component model,
-state management, routing, API integration, and tooling.
-
----
-
-## Stack
-[ID: react-spa-stack]
-
-- Language: TypeScript (strict mode)
-- Framework: React 18+
-- Bundler: [Vite / Create React App / Next.js]
-- Routing: [React Router v6 / TanStack Router]
-- State: [Zustand / Redux Toolkit / React Query + local state]
-- Styling: [CSS Modules / Tailwind / plain CSS]
-- HTTP client: [fetch / axios / TanStack Query]
-- Test runner: Vitest + React Testing Library
-- Package manager: [npm / pnpm / yarn]
-- Deployment: [Vercel / Netlify / GitHub Pages / Docker]
-
----
-
-## Project structure
-[ID: react-spa-structure]
-
-```
-src/
-  components/
-    [Feature]/
-      [Feature].tsx
-      [Feature].test.tsx
-      [Feature].module.css   # if using CSS Modules
-  pages/                     # or routes/ — one file per route
-  hooks/                     # custom hooks (use[Name].ts)
-  services/                  # API calls (no business logic in components)
-  store/                     # global state slices
-  types/                     # shared TypeScript types and interfaces
-  utils/                     # pure utility functions
-  App.tsx
-  main.tsx
-public/
-tsconfig.json
-vite.config.ts               # or equivalent
-package.json
-README.md
-CLAUDE.md
-```
-
----
-
-## TypeScript conventions
-[ID: react-spa-typescript]
-
-- Follow the **TypeScript ESLint** recommended ruleset
-  (`@typescript-eslint/recommended`) and `eslint-plugin-sonarjs` —
-  enforced by ESLint; do not suppress lint errors without a
-  documented reason
-- **Prettier** owns all formatting decisions — no style discussions in code
-  review; configure once and commit the config
-- `strict: true` in `tsconfig.json` — no exceptions
-- No `any` — use `unknown` and narrow, or define a proper type
-- Explicit return types on all non-trivial functions
-- Use `interface` for object shapes, `type` for unions and aliases
-- Import types with `import type { ... }` to keep runtime bundle clean
-- Enums avoided — use `as const` objects or string literal unions instead
-
----
-
-## Component conventions
-[ID: react-spa-components]
-
-- One component per file — filename matches component name (PascalCase)
-- Functional components only — no class components
-- Props typed with an explicit `interface` or `type` in the same file
-- No prop drilling beyond two levels — lift state or use context/store
-- Extract reusable logic into custom hooks (`use[Name].ts` in `hooks/`)
-- Keep components small: if a component exceeds ~150 lines, split it
-
----
-
-## State management
-[ID: react-spa-state]
-
-- Local state (`useState`, `useReducer`) for component-scoped concerns
-- Shared/global state in the chosen store (Zustand slice or Redux slice)
-- Server state (fetched data) managed by React Query / TanStack Query —
-  never duplicate server state in the global store
-- No direct DOM manipulation — all state flows through React
-
----
-
-## API integration
-[ID: react-spa-api]
-
-- All API calls in `src/services/` — never inline `fetch` in components
-- Return typed response objects — no untyped `any` from API boundaries
-- Handle loading, error, and empty states explicitly in every data-dependent view
-- Never store tokens in `localStorage` — prefer `httpOnly` cookies or memory
-
----
-
-## Styling
-[ID: react-spa-styling]
-
-- No inline styles except for dynamic/computed values
-- No hardcoded colour or spacing values — use CSS custom properties or
-  design tokens from the chosen system
-- Responsive styles follow a mobile-first approach (per `templates/frontend/ux.md`)
-- Global styles in `src/index.css` only; component styles co-located
-
----
-
-## Testing
-[EXTEND: base-testing]
-
-- React Testing Library for component tests — test behaviour, not implementation
-- No `getByTestId` as a first resort — prefer accessible queries
-  (`getByRole`, `getByLabelText`, `getByText`)
-- Vitest for component tests on utils, hooks, and services
-- Mock API calls at the network boundary (`msw`) — not inside components
-- Component test naming: Given/When/Then
-  e.g. `given a logged-out user, when they submit the form, then an error is shown`
-- System tests MUST cover critical user journeys (login, checkout, key flows)
-- System tests SHOULD use Playwright or Cypress — colocated in `tests/system/`
-  at project root
-- Run before every commit: `npm test && tsc --noEmit`
-
----
-
-## Accessibility
-[EXTEND: frontend-ux]
-
-- All interactive elements must be keyboard-accessible
-- Use semantic HTML — prefer `<button>` over `<div onClick>`
-- Every form input has an associated `<label>`
-- Modals and dialogs trap focus and restore it on close
-- Test with a screen reader before shipping new interactive components
-
----
-
-## Git conventions
-[EXTEND: base-git]
-
-- Do not commit `node_modules/`, `dist/`, `.env`, `.env.local`
-- Lock file (`package-lock.json` / `pnpm-lock.yaml`) is committed — do not delete it
-- Always run `npm test && tsc --noEmit` before committing
-
----
-
-## Commands
-```
-npm run dev       # develop — hot reload
-npm run build     # production build
-npm run preview   # preview production build locally
-npm test          # run tests (watch mode)
-tsc --noEmit      # type check without emitting files
-```
-
-<!-- templates/backend/http.md -->
-# Backend — HTTP Conventions
-[ID: backend-http]
-
-## Handler design
-- Handlers are thin: decode request → call service → encode response
-- No business logic in handlers — delegate to a service layer
-- Validate all incoming request data before processing
-
-## URI design
-- Path segments MUST be lowercase with hyphens as word separators —
-  underscores and camelCase are not permitted
-- Paths MUST use nouns, not verbs: `/orders` not `/getOrders`
-- Collection resources MUST use plural nouns: `/orders`, `/products`
-- Individual resources MUST be addressed under their collection:
-  `/orders/{orderId}`
-- Sub-resources MUST be nested under their parent: `/customers/{id}/orders`
-- A URI MUST NOT end with a trailing slash
-- Paths MUST use American English spelling with no abbreviations or acronyms
-
-## Query parameters
-- Query parameter names MUST use camelCase
-- Query parameters MUST be used for filtering, sorting, and pagination —
-  not for resource identity (use path segments for that)
-- The following names are reserved for framework-level use and MUST NOT
-  be repurposed: `limit`, `skip`, `offset`, `expand`, `sortedBy`
-
-## Request headers
-- All HTTP headers MUST follow Hyphenated-Pascal-Case casing:
-  `Api-Correlation-Id`, `Accept-Language`
-- Custom headers SHOULD NOT use the `X-` prefix — this convention was
-  deprecated by RFC 6648; use a vendor or application-specific prefix instead
-
-## HTTP methods
-| Method | Use for | Idempotent |
-|--------|---------|-----------|
-| GET | Retrieve a resource or collection — no side effects | Yes |
-| POST | Create a new resource — server assigns URI | No |
-| PUT | Replace a resource entirely | Yes |
-| PATCH | Partially update a resource | No |
-| DELETE | Remove a resource | Yes |
-
-## Resource representation
-- JSON MUST be the default serialisation format; XML MAY be used where
-  explicitly required by the consuming system
-- Field types MUST conform to the relevant ISO standard:
-  - Date and time values: ISO 8601
-  - Language codes: ISO 639
-  - Country codes: ISO 3166-1 alpha-2
-  - Currency codes: ISO 4217
-- Any integer that exceeds 2^53 − 1 (9007199254740991) MUST be serialised
-  as a string — JavaScript cannot represent larger integers precisely
-- Responses MUST contain only the fields needed by the caller — do not pad
-  payloads with fields that are not consumed
-
-## HATEOAS
-- Embed hyperlinks in responses to enable resource discovery
-- Use a `links` array with `href`, `rel`, `type`, and `media` fields:
-  ```json
-  "links": [
-    {
-      "href": "invoices/f9c3b2a1-0d4e-4f8b-9c7a-1e2d3f4a5b6c",
-      "rel": "invoice",
-      "type": "paymentSummary",
-      "media": "application/pdf"
-    }
-  ]
-  ```
-- Support at minimum: `self`, `next`, `prev` relations on paginated collections
-
-## Error responses
-- Use consistent error response shape across all endpoints
-- Follow RFC 9457 (`application/problem+json`) for error format
-- Use 4xx for client errors, 5xx for server errors — never use 200 for errors
-- Never return stack traces, internal paths, or implementation details to the client
-- Set explicit `Content-Type: application/json` on all JSON responses
-
-## Authentication and authorisation
-- All API traffic MUST be served over HTTPS — plain HTTP is not acceptable
-- Access tokens MUST have a finite lifetime; use JWT or an equivalent
-  short-lived token mechanism
-- Every external API endpoint MUST enforce both authentication and
-  authorisation
-- Internal API endpoints SHOULD require authentication at minimum
-- Write endpoints MUST NOT be accessible without a valid authenticated identity
-
 <!-- templates/base/security/security.md -->
 # Base — Application Security
 
@@ -1554,6 +1111,449 @@ every project regardless of language or framework.
   immediate rotation, and note that session history may be
   cached or logged
 
+
+<!-- templates/frontend/ux.md -->
+# Frontend — UX Principles
+
+[ID: frontend-ux]
+
+## UX principles
+
+- Mobile-first — design for small screens first, enhance for larger ones
+- Progressive disclosure — show only what the user needs at each step
+- No dark patterns — no misleading UI, no forced actions, no hidden costs
+- Consistency — same interaction patterns throughout the product
+- Performance is UX — slow interfaces are bad user experience
+- **Least Surprise**: components and interactions should behave as users
+  expect; if a pattern looks like a button it must act like a button
+
+## Accessibility — WCAG 2.1 AA
+
+- Target standard: WCAG 2.1 AA
+- Minimum text contrast ratio: 4.5:1 (normal text), 3:1 (large text)
+- All interactive elements reachable and operable by keyboard
+- Any non-focusable element (`<th>`, `<div>`, `<span>`) with `onClick` MUST
+  contain a `<button>` — `onClick` alone does not add the element to the tab
+  order or provide keyboard activation
+- Use `:focus-visible` instead of `:focus` for focus indicators —
+  `:focus` shows outlines on mouse clicks (distracting), `:focus-visible`
+  shows them only for keyboard navigation
+- Focus indicators must be visible at all times during keyboard navigation
+- No content that relies on colour alone to convey meaning
+- Images must have descriptive `alt` text; decorative images use `alt=""`
+- Semantic HTML: correct landmark elements and heading hierarchy
+- `aria-label` on all interactive elements (buttons, icon links, social links)
+- All `<a>` elements with icon-only or ambiguous text must have a descriptive
+  `aria-label`
+- Keyboard navigation: menus must close on Escape and restore focus
+
+## Accessibility testing
+
+Meeting WCAG 2.1 AA requires both automated and manual testing — automated
+tools catch ~30–40% of issues; the rest require human judgment.
+
+### Automated (run in CI)
+
+- **axe-core** — integrate via `@axe-core/react`, `axe-playwright`, or
+  `jest-axe`; zero violations allowed before merge
+- **Lighthouse** — accessibility score ≥ 90 on all key pages; run in CI
+  via `lighthouse-ci`
+- **ESLint `jsx-a11y`** — catches missing `alt`, incorrect ARIA roles, and
+  missing form labels at write time; must be configured in the linter
+
+### Manual (run before shipping new interactive components)
+
+- **Keyboard-only navigation** — tab through the entire feature; every
+  action reachable without a mouse; focus order is logical; no focus traps
+  except intentional modal dialogs
+- **Screen reader** — test with at least one: NVDA + Chrome (Windows),
+  VoiceOver + Safari (macOS / iOS), or TalkBack (Android); verify that
+  all content and state changes are announced correctly
+- **Zoom to 200%** — no content clipped or overlapping at double zoom;
+  horizontal scroll must not appear on a 1280px viewport
+- **High contrast mode** — verify in Windows High Contrast or forced-colors
+  CSS media query; no information lost when colours are overridden
+
+### Criteria for done
+
+A feature is not complete until:
+
+- [ ] `axe-core` reports zero violations in component tests
+- [ ] Lighthouse accessibility score ≥ 90
+- [ ] Keyboard navigation verified manually
+- [ ] Screen reader walkthrough completed for new interactive elements
+
+## Sortable tables
+
+- Boolean columns SHOULD sort descending (true first) on first click ���
+  users click a boolean column to find items that have a feature, not
+  items that lack it; ascending puts `false` first, which looks
+  identical to unsorted and appears broken
+
+## Responsive breakpoints
+
+- Tablet: max-width 1024px
+- Mobile: max-width 768px
+- Small mobile: max-width 480px
+
+## Design system
+
+- Use a design system if one exists for the project — never design ad-hoc
+  components that duplicate established patterns
+- Design tokens (colours, spacing, typography, radii) MUST come from the
+  design system — never hardcode visual values
+- Component-driven development: build UI as a hierarchy of reusable,
+  self-contained components; avoid monolithic views
+- New components SHOULD be documented with usage examples before shipping
+
+## Browser support
+
+[ID: frontend-ux-browsers]
+
+- Default target: last 2 versions of Chrome, Firefox, Safari, and Edge
+- Progressive enhancement: graceful degradation for unsupported features
+
+
+<!-- templates/frontend/quality.md -->
+# Frontend — Quality Attributes
+
+[ID: frontend-quality]
+
+## Patterns
+
+- Use error boundary, skeleton loading, optimistic update, virtual
+  scroll, debounced search, form validation, responsive switch, and
+  URL state sync patterns where appropriate
+
+## Design patterns
+
+Prefer these patterns for frontend concerns:
+
+- **Container / Presentational** — separate data-fetching and state logic
+  (container) from rendering (presentational); presentational components
+  receive only props, have no side effects, and are easy to test in isolation
+- **Custom Hook** — extract reusable stateful logic into a named hook
+  (`use[Name]`); hooks are the frontend equivalent of a service or strategy
+- **Compound Component** — expose a set of related sub-components that share
+  implicit state via context (e.g. `<Tabs>`, `<Tab>`, `<TabPanel>`);
+  prefer over deeply nested prop drilling
+- **Render Props / Slot** — pass render logic as a prop or slot to invert
+  control over what is rendered; use sparingly — prefer custom hooks where possible
+- **Observer** — subscribe to external state changes (store, event bus,
+  WebSocket) via a single subscription point; unsubscribe on component unmount
+- **Facade** — wrap third-party libraries (analytics, maps, payment SDKs)
+  behind a thin project-owned interface; never scatter SDK calls across components
+- **Optimistic Update** — apply the expected result of a mutation immediately
+  in the UI and roll back on failure; document the rollback path
+
+Avoid:
+
+- **Mediator / Event Bus** between components — use shared state or lifting
+  state up instead; an event bus between components creates invisible coupling
+
+## State management
+
+Choose the right tool for the scope of the state — do not use a global store
+for state that is local to a component or a server cache for state that is
+never fetched from a server.
+
+| State type          | Tool                     | When to use                                                                          |
+| ------------------- | ------------------------ | ------------------------------------------------------------------------------------ |
+| **Local UI state**  | `useState`, `useReducer` | Scoped to one component — form inputs, toggles, counters                             |
+| **Shared UI state** | Zustand / Redux Toolkit  | Needed by multiple unrelated components — auth session, sidebar open, active filters |
+| **Server state**    | TanStack Query / SWR     | Data fetched from an API — lists, detail views, paginated results                    |
+| **Form state**      | React Hook Form / Formik | Complex forms with validation, field arrays, multi-step flows                        |
+| **URL state**       | Router search params     | Shareable or bookmarkable UI state — filters, pagination, selected tab               |
+
+Rules:
+
+- Never duplicate server state in a global store — TanStack Query or SWR is
+  the cache; the store holds only client-owned state
+- Never put derived state in the store — compute it from existing state with
+  a selector or `useMemo`
+- Prefer URL state for anything the user should be able to bookmark or share
+- Keep global store slices small and focused — one slice per domain concern,
+  not one slice for everything
+
+## Linting and formatting
+
+- A linter MUST be configured for all JS/TS code
+- Linter and formatter SHOULD run on save in the IDE — never rely on CI
+  alone to catch style issues
+- No warnings or errors MUST appear in the browser console or test output
+  before a PR is merged — start every review on a clean slate
+- Lint error count SHOULD go down over time — never increase it
+
+## CSS
+
+- All CSS in a single stylesheet — no inline styles except dynamic/computed values
+- No hardcoded colour or spacing values — always use CSS custom properties
+  from `:root` or design tokens
+- Consistent naming convention (e.g. BEM-like `.component-element`)
+- Maximum line length: 80 characters (exempt: prose strings, third-party URLs)
+
+## Performance
+
+- Preload critical above-the-fold assets
+- Keep client-side JS minimal — every dependency adds to bundle size
+- Avoid unnecessary dependencies
+- Defer non-critical scripts
+- Monitor Core Web Vitals (LCP, CLS, INP) — treat regressions as bugs
+
+## SEO & analytics
+
+- `robots.txt`, Open Graph, and Twitter Card meta tags required
+- Canonical URLs required
+- Privacy-friendly analytics only — no consent banner required
+- No third-party tracking scripts without explicit user consent
+
+
+<!-- templates/stack/spa-react.md -->
+# Stack — React Single-Page Application
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/base/security/security.md, templates/frontend/ux.md, templates/frontend/quality.md]
+
+A client-side React application with TypeScript. Covers component model,
+state management, routing, API integration, and tooling.
+
+---
+
+## Stack
+[ID: react-spa-stack]
+
+- Language: TypeScript (strict mode)
+- Framework: React 18+
+- Bundler: [Vite / Create React App / Next.js]
+- Routing: [React Router v6 / TanStack Router]
+- State: [Zustand / Redux Toolkit / React Query + local state]
+- Styling: [CSS Modules / Tailwind / plain CSS]
+- HTTP client: [fetch / axios / TanStack Query]
+- Test runner: Vitest + React Testing Library
+- Package manager: [npm / pnpm / yarn]
+- Deployment: [Vercel / Netlify / GitHub Pages / Docker]
+
+---
+
+## Project structure
+[ID: react-spa-structure]
+
+```
+src/
+  components/
+    [Feature]/
+      [Feature].tsx
+      [Feature].test.tsx
+      [Feature].module.css   # if using CSS Modules
+  pages/                     # or routes/ — one file per route
+  hooks/                     # custom hooks (use[Name].ts)
+  services/                  # API calls (no business logic in components)
+  store/                     # global state slices
+  types/                     # shared TypeScript types and interfaces
+  utils/                     # pure utility functions
+  App.tsx
+  main.tsx
+public/
+tsconfig.json
+vite.config.ts               # or equivalent
+package.json
+README.md
+CLAUDE.md
+```
+
+---
+
+## TypeScript conventions
+[ID: react-spa-typescript]
+
+- Follow the **TypeScript ESLint** recommended ruleset
+  (`@typescript-eslint/recommended`) and `eslint-plugin-sonarjs` —
+  enforced by ESLint; do not suppress lint errors without a
+  documented reason
+- **Prettier** owns all formatting decisions — no style discussions in code
+  review; configure once and commit the config
+- `strict: true` in `tsconfig.json` — no exceptions
+- No `any` — use `unknown` and narrow, or define a proper type
+- Explicit return types on all non-trivial functions
+- Use `interface` for object shapes, `type` for unions and aliases
+- Import types with `import type { ... }` to keep runtime bundle clean
+- Enums avoided — use `as const` objects or string literal unions instead
+
+---
+
+## Component conventions
+[ID: react-spa-components]
+
+- One component per file — filename matches component name (PascalCase)
+- Functional components only — no class components
+- Props typed with an explicit `interface` or `type` in the same file
+- No prop drilling beyond two levels — lift state or use context/store
+- Extract reusable logic into custom hooks (`use[Name].ts` in `hooks/`)
+- Keep components small: if a component exceeds ~150 lines, split it
+
+---
+
+## State management
+[ID: react-spa-state]
+
+- Local state (`useState`, `useReducer`) for component-scoped concerns
+- Shared/global state in the chosen store (Zustand slice or Redux slice)
+- Server state (fetched data) managed by React Query / TanStack Query —
+  never duplicate server state in the global store
+- No direct DOM manipulation — all state flows through React
+
+---
+
+## API integration
+[ID: react-spa-api]
+
+- All API calls in `src/services/` — never inline `fetch` in components
+- Return typed response objects — no untyped `any` from API boundaries
+- Handle loading, error, and empty states explicitly in every data-dependent view
+- Never store tokens in `localStorage` — prefer `httpOnly` cookies or memory
+
+---
+
+## Styling
+[ID: react-spa-styling]
+
+- No inline styles except for dynamic/computed values
+- No hardcoded colour or spacing values — use CSS custom properties or
+  design tokens from the chosen system
+- Responsive styles follow a mobile-first approach (per `templates/frontend/ux.md`)
+- Global styles in `src/index.css` only; component styles co-located
+
+---
+
+## Testing
+[EXTEND: base-testing]
+
+- React Testing Library for component tests — test behaviour, not implementation
+- No `getByTestId` as a first resort — prefer accessible queries
+  (`getByRole`, `getByLabelText`, `getByText`)
+- Vitest for component tests on utils, hooks, and services
+- Mock API calls at the network boundary (`msw`) — not inside components
+- Component test naming: Given/When/Then
+  e.g. `given a logged-out user, when they submit the form, then an error is shown`
+- System tests MUST cover critical user journeys (login, checkout, key flows)
+- System tests SHOULD use Playwright or Cypress — colocated in `tests/system/`
+  at project root
+- Run before every commit: `npm test && tsc --noEmit`
+
+---
+
+## Accessibility
+[EXTEND: frontend-ux]
+
+- All interactive elements must be keyboard-accessible
+- Use semantic HTML — prefer `<button>` over `<div onClick>`
+- Every form input has an associated `<label>`
+- Modals and dialogs trap focus and restore it on close
+- Test with a screen reader before shipping new interactive components
+
+---
+
+## Git conventions
+[EXTEND: base-git]
+
+- Do not commit `node_modules/`, `dist/`, `.env`, `.env.local`
+- Lock file (`package-lock.json` / `pnpm-lock.yaml`) is committed — do not delete it
+- Always run `npm test && tsc --noEmit` before committing
+
+---
+
+## Commands
+```
+npm run dev       # develop — hot reload
+npm run build     # production build
+npm run preview   # preview production build locally
+npm test          # run tests (watch mode)
+tsc --noEmit      # type check without emitting files
+```
+
+<!-- templates/backend/http.md -->
+# Backend — HTTP Conventions
+[ID: backend-http]
+
+## Handler design
+- Handlers are thin: decode request → call service → encode response
+- No business logic in handlers — delegate to a service layer
+- Validate all incoming request data before processing
+
+## URI design
+- Path segments MUST be lowercase with hyphens as word separators —
+  underscores and camelCase are not permitted
+- Paths MUST use nouns, not verbs: `/orders` not `/getOrders`
+- Collection resources MUST use plural nouns: `/orders`, `/products`
+- Individual resources MUST be addressed under their collection:
+  `/orders/{orderId}`
+- Sub-resources MUST be nested under their parent: `/customers/{id}/orders`
+- A URI MUST NOT end with a trailing slash
+- Paths MUST use American English spelling with no abbreviations or acronyms
+
+## Query parameters
+- Query parameter names MUST use camelCase
+- Query parameters MUST be used for filtering, sorting, and pagination —
+  not for resource identity (use path segments for that)
+- The following names are reserved for framework-level use and MUST NOT
+  be repurposed: `limit`, `skip`, `offset`, `expand`, `sortedBy`
+
+## Request headers
+- All HTTP headers MUST follow Hyphenated-Pascal-Case casing:
+  `Api-Correlation-Id`, `Accept-Language`
+- Custom headers SHOULD NOT use the `X-` prefix — this convention was
+  deprecated by RFC 6648; use a vendor or application-specific prefix instead
+
+## HTTP methods
+| Method | Use for | Idempotent |
+|--------|---------|-----------|
+| GET | Retrieve a resource or collection — no side effects | Yes |
+| POST | Create a new resource — server assigns URI | No |
+| PUT | Replace a resource entirely | Yes |
+| PATCH | Partially update a resource | No |
+| DELETE | Remove a resource | Yes |
+
+## Resource representation
+- JSON MUST be the default serialisation format; XML MAY be used where
+  explicitly required by the consuming system
+- Field types MUST conform to the relevant ISO standard:
+  - Date and time values: ISO 8601
+  - Language codes: ISO 639
+  - Country codes: ISO 3166-1 alpha-2
+  - Currency codes: ISO 4217
+- Any integer that exceeds 2^53 − 1 (9007199254740991) MUST be serialised
+  as a string — JavaScript cannot represent larger integers precisely
+- Responses MUST contain only the fields needed by the caller — do not pad
+  payloads with fields that are not consumed
+
+## HATEOAS
+- Embed hyperlinks in responses to enable resource discovery
+- Use a `links` array with `href`, `rel`, `type`, and `media` fields:
+  ```json
+  "links": [
+    {
+      "href": "invoices/f9c3b2a1-0d4e-4f8b-9c7a-1e2d3f4a5b6c",
+      "rel": "invoice",
+      "type": "paymentSummary",
+      "media": "application/pdf"
+    }
+  ]
+  ```
+- Support at minimum: `self`, `next`, `prev` relations on paginated collections
+
+## Error responses
+- Use consistent error response shape across all endpoints
+- Follow RFC 9457 (`application/problem+json`) for error format
+- Use 4xx for client errors, 5xx for server errors — never use 200 for errors
+- Never return stack traces, internal paths, or implementation details to the client
+- Set explicit `Content-Type: application/json` on all JSON responses
+
+## Authentication and authorisation
+- All API traffic MUST be served over HTTPS — plain HTTP is not acceptable
+- Access tokens MUST have a finite lifetime; use JWT or an equivalent
+  short-lived token mechanism
+- Every external API endpoint MUST enforce both authentication and
+  authorisation
+- Internal API endpoints SHOULD require authentication at minimum
+- Write endpoints MUST NOT be accessible without a valid authenticated identity
 
 <!-- templates/backend/auth.md -->
 # Backend — Authentication and Authorization

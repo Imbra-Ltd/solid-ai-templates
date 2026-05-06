@@ -1804,7 +1804,7 @@ not after deployment.
 
 <!-- templates/stack/java-grpc.md -->
 # Stack — gRPC Service (Java / Kotlin)
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/testing.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md]
 
 Extends the gRPC backend layer with Java/Kotlin-specific conventions for
 implementing gRPC servers and clients using grpc-java.

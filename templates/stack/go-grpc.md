@@ -1,7 +1,7 @@
 # Stack — gRPC Service (Go)
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md, templates/stack/go-service.md]
+[DEPENDS ON: templates/stack/go-lib.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
-Extends the Go service stack and the gRPC backend layer with Go-specific
+Extends the Go library stack and the gRPC backend layer with Go-specific
 conventions for implementing gRPC servers and clients.
 
 ---
@@ -20,7 +20,7 @@ conventions for implementing gRPC servers and clients.
 ---
 
 ## Project structure
-[OVERRIDE: go-service-structure]
+[ID: grpc-go-structure]
 
 ```
 cmd/

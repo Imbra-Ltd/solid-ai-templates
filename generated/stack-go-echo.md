@@ -808,7 +808,7 @@ fixing the design fixes the testability.
 
 <!-- templates/stack/go-lib.md -->
 # Stack — Go Library / CLI
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/workflow/quality-gates.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/testing.md, templates/base/workflow/quality-gates.md]
 
 Base Go conventions for any Go module — library, CLI tool, or service.
 Never used directly for services — always extended by `templates/stack/go-service.md`.
