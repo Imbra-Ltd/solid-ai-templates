@@ -66,6 +66,10 @@ py tools/resolve.py --generate               # regenerate all cached files
   `chore/<scope>`
 - Commits: `<type>(<scope>): <summary>` — types: feat, fix, chore,
   docs, refactor
+- PR titles: `<type>(<scope>): <summary> (#issue)` — same format
+  as commits, with issue number(s) at the end
+- Issue titles: sentence case, imperative verb — no type prefix
+  (labels carry the type)
 - PRs are small and focused — one concern per PR; one approval
   required to merge
 - After a PR is merged, delete branch and pull main before starting
