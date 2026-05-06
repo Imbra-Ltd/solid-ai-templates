@@ -38,6 +38,12 @@ cd solid-ai-templates
 No build step, no dependencies to install. All templates are plain Markdown.
 Install PyYAML for the smoke tests: `pip install pyyaml`
 
+Set up pre-commit hooks for local validation:
+```bash
+pip install pre-commit
+pre-commit install
+```
+
 ## Understand the structure
 
 | File / folder | Read this to understand |
