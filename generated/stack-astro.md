@@ -809,7 +809,7 @@ fixing the design fixes the testability.
 <!-- templates/frontend/static-site.md -->
 # Frontend — Static Site
 [ID: frontend-static-site]
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/frontend/ux.md, templates/frontend/quality.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/security/security.md, templates/frontend/ux.md, templates/frontend/quality.md]
 
 Abstract rules for any static site generated at build time and served as
 plain HTML, CSS, and minimal JavaScript. Never used directly — always

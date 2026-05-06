@@ -111,7 +111,7 @@ frontend:
     file: templates/frontend/static-site.md
     description: Abstract SSG rules — content, assets, SEO
     depends_on:
-      [base-git, base-docs, base-quality, frontend-ux, frontend-quality]
+      [base-git, base-docs, base-quality, base-security, frontend-ux, frontend-quality]
 
 backend:
   - id: base-config
@@ -180,6 +180,10 @@ stacks:
     layer: hypermedia
     description: HTMX 2.x, Alpine.js, SSE, OOB swaps, partial responses
     depends_on:
+      - base-git
+      - base-docs
+      - base-quality
+      - base-config
       - backend-templating
 
   - id: stack-astro
@@ -211,6 +215,7 @@ stacks:
       - base-docs
       - base-quality
       - base-typescript
+      - base-security
       - frontend-ux
       - frontend-quality
 
@@ -231,6 +236,8 @@ stacks:
       - backend-http
       - backend-api
       - backend-auth
+      - backend-database
+      - backend-observability
       - base-cicd
       - base-devsecops
 
@@ -300,6 +307,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-testing
 
   - id: stack-go-service
     file: templates/stack/go-service.md
@@ -337,6 +345,7 @@ stacks:
       - base-docs
       - base-quality
       - base-typescript
+      - base-security
       - frontend-ux
       - frontend-quality
 
@@ -350,6 +359,7 @@ stacks:
       - base-docs
       - base-quality
       - base-typescript
+      - base-security
       - frontend-ux
       - frontend-quality
 
@@ -368,7 +378,6 @@ stacks:
       - stack-svelte
       - base-config
       - backend-http
-      - backend-api
       - backend-auth
       - base-cicd
       - base-devsecops
@@ -458,7 +467,6 @@ stacks:
       - base-config
       - backend-jobs
       - backend-observability
-      - backend-messaging
       - backend-quality
       - base-cicd
       - base-devsecops
@@ -471,7 +479,7 @@ stacks:
     description: gRPC service, bufconn, errgroup
     depends_on:
       - stack-go-lib
-      - stack-go-service
+      - base-config
       - backend-grpc
       - backend-concurrency
       - base-cicd
@@ -502,6 +510,7 @@ stacks:
       - base-git
       - base-docs
       - base-quality
+      - base-testing
       - base-config
       - backend-grpc
       - backend-concurrency

@@ -808,7 +808,7 @@ fixing the design fixes the testability.
 
 <!-- templates/stack/go-lib.md -->
 # Stack — Go Library / CLI
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/workflow/quality-gates.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/testing.md, templates/base/workflow/quality-gates.md]
 
 Base Go conventions for any Go module — library, CLI tool, or service.
 Never used directly for services — always extended by `templates/stack/go-service.md`.
@@ -1122,150 +1122,6 @@ DEBUG=false
 - Internal API endpoints SHOULD require authentication at minimum
 - Write endpoints MUST NOT be accessible without a valid authenticated identity
 
-<!-- templates/backend/database.md -->
-# Backend — Database Conventions
-[ID: backend-database]
-
-## Schema changes
-
-- All schema changes via migrations — never edit the database manually
-- Migrations are committed to source control
-- Never regenerate or modify a migration that is already merged
-- One migration per logical change — do not batch unrelated schema changes
-- Migrations must be reversible — provide a `down` migration for every `up`
-
-## Queries
-
-- No raw SQL strings — use an ORM or query builder
-- Use parameterised queries if raw SQL is unavoidable — never string
-  interpolation
-- No unbounded queries — always apply a limit or filter
-- Avoid `SELECT *` — select only the columns actually needed
-- Detect and eliminate N+1 queries — use eager loading (`joinedload`,
-  `preload`, `WITH` clauses, `DataLoader`) for related data fetched in a loop
-- Prefer indexed columns in `WHERE`, `JOIN ON`, and `ORDER BY` clauses
-- Review slow query logs in staging before releasing schema changes
-
-## Indexing
-
-- Add an index for every foreign key — most ORMs do not do this automatically
-- Add composite indexes for common multi-column filter + sort combinations
-- Avoid over-indexing write-heavy tables — each index adds write overhead
-- Use partial indexes for filtered queries on large tables
-  (e.g. `WHERE deleted_at IS NULL`)
-- Drop unused indexes — check `pg_stat_user_indexes` or equivalent regularly
-
-## Transactions
-
-- Wrap multi-step writes in a transaction — commit only after all writes
-  succeed
-- Never leave a transaction open across an HTTP request boundary
-- Keep transactions short — do not call external services inside a transaction
-- Use serialisable isolation only when genuinely required; prefer read
-  committed for OLTP workloads
-
-## Connections
-
-- Use a connection pool — never open a new connection per request
-- Inject the database session/connection as a dependency — no global DB
-  handles
-- Set explicit pool size limits appropriate to the deployment
-  (e.g. `pool_size=10`, `max_overflow=5` for a single-instance service)
-- Monitor pool exhaustion — alert when pool wait time exceeds threshold
-
-## Soft deletes
-
-- Use soft deletes (`deleted_at` timestamp) only when audit history is
-  required; otherwise use hard deletes
-- If using soft deletes, add a partial index on `deleted_at IS NULL` and
-  filter all queries by default — never return deleted rows to callers
-- Consider an append-only audit log table as an alternative to soft deletes
-
-## Testing
-[EXTEND: base-testing]
-
-- Reset state between test runs — truncate tables or wrap each test in a
-  transaction rolled back after completion
-- Do not substitute a different database engine in tests (e.g. SQLite
-  instead of PostgreSQL) — behaviour differences cause false passes
-- Never run schema migrations against a production database inside a test
-  suite
-
-<!-- templates/backend/observability.md -->
-# Backend — Observability
-[ID: backend-observability]
-
-## Logging
-
-### Log levels
-Use the correct level — do not elevate debug information to INFO:
-
-| Level | When to use | Examples |
-|-------|-------------|---------|
-| FATAL | App cannot continue — imminent shutdown | Out of memory, missing critical dependency at startup, DB schema mismatch |
-| ERROR | Operation failed — normal flow disrupted | Failed DB write, file not found, unhandled exception in request handler |
-| WARN | Unexpected but recoverable — may lead to error | Low disk space, slow response, retry attempt, deprecated endpoint accessed |
-| INFO | Normal operation — confirm correct functioning | Order accepted, service started, payment processed, scheduled job completed |
-| DEBUG | Technical detail for debugging — not for production | Query results, data mapping steps, connection established |
-| TRACE | Most verbose — step-by-step tracing, development only | Function parameters, pipeline steps, request/response payloads |
-
-- Default log level in all environments: **INFO**
-- DEBUG and TRACE MUST NOT be enabled in production by default
-- INFO MUST NOT contain debug or trace information — keep it operational
-
-### Log format
-- Use structured logging in all environments: JSON in production,
-  human-readable in development
-- Every log entry MUST include: timestamp, level, message, properties
-- Include a request ID in all log entries for a given request lifecycle
-- Minimum JSON structure:
-  ```json
-  {
-    "Timestamp": "2024-01-15T12:34:56.789Z",
-    "Level": "Information",
-    "MessageTemplate": "Order ({orderId}) accepted.",
-    "Message": "Order (ORD-78901) accepted.",
-    "Properties": { "orderId": "ORD-78901" }
-  }
-  ```
-
-### Rules
-- Log errors once — at the top of the call stack, not at every level
-- Never log sensitive data: passwords, tokens, API keys, PII
-- Client errors (4xx) — log at INFO
-- Server errors (5xx) — log at ERROR
-- All unhandled errors MUST be logged with enough context to reproduce the issue
-
-## Distributed tracing
-
-- Assign a unique **trace ID** to every inbound request at the service boundary
-- Propagate the trace ID in all outbound calls (HTTP headers, message queue
-  metadata) using the W3C `traceparent` header or OpenTelemetry context
-- Include the trace ID in every log entry for that request — use the same
-  field name across all services (`trace_id`)
-- Use OpenTelemetry as the instrumentation standard — avoid vendor-specific
-  SDKs in application code; export to the backend of choice (Jaeger, Tempo,
-  Datadog, etc.) via the OTel collector
-- Create spans for: inbound HTTP requests, outbound HTTP calls, DB queries,
-  cache operations, and background job execution
-- Span names MUST be low-cardinality — use route templates, not URLs with IDs
-  (e.g. `GET /users/{id}`, not `GET /users/42`)
-- Return the trace ID in error responses (`X-Trace-Id` header) so clients
-  can report it to support
-
-## Health check
-- Expose a health check endpoint: `/health` or `/healthz`
-- Return HTTP 200 when the service is ready to handle traffic
-- Return HTTP 503 when a critical dependency (DB, cache) is unavailable
-- Health check MUST NOT require authentication
-- Health check MUST be the first thing that passes before traffic is routed
-  to a new instance
-
-## Error visibility
-- Distinguish between client errors (4xx) and server errors (5xx) in logs
-- Include correlation/request IDs in error responses to enable log tracing
-- Never expose internal state, stack traces, or file paths in error responses
-
 <!-- templates/base/security/security.md -->
 # Base — Application Security
 
@@ -1530,107 +1386,291 @@ every project regardless of language or framework.
   cached or logged
 
 
-<!-- templates/base/infra/containers.md -->
-# Base — Containers
-[ID: base-containers]
+<!-- templates/backend/auth.md -->
+# Backend — Authentication and Authorization
+[ID: backend-auth]
+[DEPENDS ON: templates/base/security/security.md]
 
-## Dockerfile conventions
-- Use official, minimal base images (e.g. `alpine`, `slim`, `distroless`)
-- Pin base images to a specific version tag — never use `latest`
-- Use multi-stage builds: build in one stage, copy only the final artifact
-  into a minimal runtime image
-- Exclude dev dependencies, build tools, and test files from the final image
-- Each `RUN` instruction should do one logical thing — chain related commands
-  with `&&` to minimise layers
-- Copy only what is needed — use `.dockerignore` to exclude everything else
+Rules for identity verification (authn) and access control (authz).
+Applies to any backend service that has protected resources.
+Extends `security-authn` and `security-sessions` from the base
+security template with backend-specific depth.
 
-## Runtime security
-- MUST run containers as a non-root user — create and switch to a dedicated
-  application user in the Dockerfile
-- Set the filesystem to read-only where possible (`--read-only`)
-- Never run containers in privileged mode unless absolutely required and
-  explicitly justified
-- Drop all Linux capabilities and add back only those required
-- Do not store secrets in environment variables baked into the image — inject
-  at runtime from a secret vault
+---
 
-## Resource management
-- MUST define CPU and memory requests and limits for every container
-- Set requests to the typical workload; set limits to the safe maximum
-- Never set memory limit lower than memory request
-- Monitor resource usage and adjust limits based on observed behaviour —
-  do not guess
+## General principles
 
-## Image hygiene
-- Scan all images for vulnerabilities in CI before pushing to a registry
-- Never push an image with critical or high vulnerabilities to staging or
-  production
-- Tag images with the git commit SHA or release version — never rely on
-  mutable tags in staging or production
-- Remove unused images from the registry regularly
+- Authentication (who are you?) and authorization (what can you do?) are
+  separate concerns — keep them in separate layers
+- Never implement your own cryptographic primitives — use well-audited libraries
+- Fail closed: deny access by default; grant explicitly
+- Centralise auth logic — no scattered permission checks across route handlers
 
-## Orchestration (Kubernetes)
-- Define all Kubernetes resources as code — no `kubectl apply` from a local
-  machine in production
-- Use namespaces to separate environments and teams
-- MUST run at least two replicas of every service in staging and production
-- Use liveness and readiness probes — readiness probe MUST pass before a pod
-  receives traffic
-- Use `PodDisruptionBudget` to guarantee availability during rolling updates
-- Never store configuration or secrets in ConfigMaps as plain text — use
-  secret management integration (e.g. external secrets operator)
+---
 
-<!-- templates/backend/quality.md -->
-# Backend — Quality Attributes
-[ID: backend-quality]
-[DEPENDS ON: templates/base/core/quality.md, templates/base/security/security.md, templates/base/infra/containers.md]
+## Authentication
+[EXTEND: security-authn]
 
-## Layered architecture
-- Enforce a strict handler → service → repository separation
-- No database access in handlers — always go through the service layer
-- No HTTP concerns in the service layer — services are framework-agnostic
-- Domain logic lives in the service layer, not in models or schemas
+- Prefer delegating authentication to an identity provider (IdP) via
+  OAuth 2.0 / OIDC (e.g. Auth0, Keycloak, Cognito) over rolling your own
+- If issuing tokens directly, use short-lived JWTs (access token ≤ 15 minutes)
+  with a separate refresh token (≤ 7 days, rotated on use)
+- Validate every JWT: signature, `exp`, `iss`, `aud` — reject tokens missing
+  any required claim
+- Store refresh tokens server-side (database or cache) so they can be revoked —
+  stateless refresh tokens cannot be invalidated before expiry
 
-## Design patterns
+---
 
-Prefer these patterns for backend concerns:
+## Token transport
 
-- **Repository** — abstract all data access behind a repository interface;
-  the service layer never constructs queries directly
-- **Service layer** — encapsulate business logic in stateless service objects;
-  one service per domain aggregate
-- **Unit of Work** — coordinate multiple repository operations in a single
-  transaction; commit or roll back as one atomic unit
-- **Factory / Factory Method** — centralise object construction, especially
-  for domain objects with complex invariants
-- **Strategy** — swap algorithms or business rules (pricing, validation,
-  export format) at runtime without modifying the caller
-- **Observer / Event** — decouple producers from consumers for domain events
-  (user registered, order placed); use an internal event bus or message queue
-- **Circuit Breaker** — wrap all outbound calls to external services;
-  fail fast and recover gracefully rather than cascading timeouts
-- **Outbox** — when publishing an event must be atomic with a DB write,
-  write to an outbox table in the same transaction and relay asynchronously
-- **CQRS** — separate read models from write models when query and command
-  requirements diverge significantly; do not apply by default
+- Access tokens MUST be sent in the `Authorization: Bearer <token>` header
+- Do NOT accept tokens in query parameters — they appear in server logs and
+  browser history
+- Refresh tokens MUST be stored in `httpOnly`, `Secure`, `SameSite=Strict`
+  cookies — never in `localStorage` or JavaScript-accessible memory
+- HTTPS required for all authenticated endpoints — no exceptions
 
-## Security
-[EXTEND: security-input]
+---
 
-- Rate-limit public endpoints — never expose unbounded write operations
-- Apply authentication and authorisation before any business logic
-  executes
+## Authorization
 
-## Performance
-- Prefer async I/O for network-bound operations
-- Cache only when there is a measured need — document cache invalidation strategy
-- Avoid N+1 queries — use eager loading or batch fetching
-- Set timeouts on all outbound calls (HTTP clients, DB queries)
+- Use role-based access control (RBAC) as the baseline:
+  assign permissions to roles, assign roles to users
+- For fine-grained needs, layer attribute-based access control (ABAC) on top
+  of RBAC — do not replace RBAC entirely
+- Authorise at the service layer, not only at the route layer:
+  a route that passes auth may call a service that operates on another user's data
+- Never trust client-supplied IDs for ownership checks — always verify that
+  the authenticated user owns or has access to the requested resource
 
-## API stability
-- Never remove or rename a field in a response without a deprecation period
-- Increment the API version (`/v2/`) for breaking changes — keep the old version alive
-- Document deprecated endpoints; set a removal date before retiring them
+---
+
+## API keys (service-to-service)
+
+- Issue API keys with the minimum required scope
+- Hash API keys before storing — treat them like passwords
+- Rotate API keys on a schedule and immediately on suspected compromise
+- Log every API key usage with the key ID (not the key value) and the
+  calling service identity
+
+---
+
+## Observability
+
+- Log authentication failures at WARN with IP, user agent, and username
+  (never the attempted password)
+- Log authorization failures at WARN with user ID, resource, and action
+- Alert on a spike in auth failures — may indicate a credential stuffing attack
+- Never log tokens, passwords, or secrets — even at DEBUG level
+
+---
+
+## Testing
+
+- Unit test permission logic with all role combinations including edge cases
+  (no role, multiple roles, deprecated role)
+- Integration test that protected endpoints return 401 for unauthenticated
+  requests and 403 for authenticated requests with insufficient permissions
+- Test token expiry: assert that an expired token is rejected
+- Test token revocation: assert that a revoked refresh token cannot obtain
+  a new access token
+
+<!-- templates/backend/observability.md -->
+# Backend — Observability
+[ID: backend-observability]
+
+## Logging
+
+### Log levels
+Use the correct level — do not elevate debug information to INFO:
+
+| Level | When to use | Examples |
+|-------|-------------|---------|
+| FATAL | App cannot continue — imminent shutdown | Out of memory, missing critical dependency at startup, DB schema mismatch |
+| ERROR | Operation failed — normal flow disrupted | Failed DB write, file not found, unhandled exception in request handler |
+| WARN | Unexpected but recoverable — may lead to error | Low disk space, slow response, retry attempt, deprecated endpoint accessed |
+| INFO | Normal operation — confirm correct functioning | Order accepted, service started, payment processed, scheduled job completed |
+| DEBUG | Technical detail for debugging — not for production | Query results, data mapping steps, connection established |
+| TRACE | Most verbose — step-by-step tracing, development only | Function parameters, pipeline steps, request/response payloads |
+
+- Default log level in all environments: **INFO**
+- DEBUG and TRACE MUST NOT be enabled in production by default
+- INFO MUST NOT contain debug or trace information — keep it operational
+
+### Log format
+- Use structured logging in all environments: JSON in production,
+  human-readable in development
+- Every log entry MUST include: timestamp, level, message, properties
+- Include a request ID in all log entries for a given request lifecycle
+- Minimum JSON structure:
+  ```json
+  {
+    "Timestamp": "2024-01-15T12:34:56.789Z",
+    "Level": "Information",
+    "MessageTemplate": "Order ({orderId}) accepted.",
+    "Message": "Order (ORD-78901) accepted.",
+    "Properties": { "orderId": "ORD-78901" }
+  }
+  ```
+
+### Rules
+- Log errors once — at the top of the call stack, not at every level
+- Never log sensitive data: passwords, tokens, API keys, PII
+- Client errors (4xx) — log at INFO
+- Server errors (5xx) — log at ERROR
+- All unhandled errors MUST be logged with enough context to reproduce the issue
+
+## Distributed tracing
+
+- Assign a unique **trace ID** to every inbound request at the service boundary
+- Propagate the trace ID in all outbound calls (HTTP headers, message queue
+  metadata) using the W3C `traceparent` header or OpenTelemetry context
+- Include the trace ID in every log entry for that request — use the same
+  field name across all services (`trace_id`)
+- Use OpenTelemetry as the instrumentation standard — avoid vendor-specific
+  SDKs in application code; export to the backend of choice (Jaeger, Tempo,
+  Datadog, etc.) via the OTel collector
+- Create spans for: inbound HTTP requests, outbound HTTP calls, DB queries,
+  cache operations, and background job execution
+- Span names MUST be low-cardinality — use route templates, not URLs with IDs
+  (e.g. `GET /users/{id}`, not `GET /users/42`)
+- Return the trace ID in error responses (`X-Trace-Id` header) so clients
+  can report it to support
+
+## Health check
+- Expose a health check endpoint: `/health` or `/healthz`
+- Return HTTP 200 when the service is ready to handle traffic
+- Return HTTP 503 when a critical dependency (DB, cache) is unavailable
+- Health check MUST NOT require authentication
+- Health check MUST be the first thing that passes before traffic is routed
+  to a new instance
+
+## Error visibility
+- Distinguish between client errors (4xx) and server errors (5xx) in logs
+- Include correlation/request IDs in error responses to enable log tracing
+- Never expose internal state, stack traces, or file paths in error responses
+
+<!-- templates/backend/grpc.md -->
+# Backend — gRPC
+[ID: backend-grpc]
+
+Cross-cutting rules for gRPC services backed by Protocol Buffers. Applies
+regardless of implementation language. Language-specific stacks extend this
+file with runtime conventions, project structure, and tooling.
+
+---
+
+## When to use gRPC
+
+- Use gRPC for synchronous service-to-service communication where performance,
+  strong typing, or streaming are required
+- Use gRPC when a shared proto schema across multiple language runtimes is
+  preferable to maintaining multiple OpenAPI specs
+- Do NOT use gRPC as the primary API for browser clients — use REST or GraphQL
+  at the edge and gRPC internally
+
+---
+
+## Proto design
+[ID: grpc-proto]
+
+- Package all protos under a versioned namespace: `package [org].[service].v1`
+- One proto file per service — do not mix unrelated services in one file
+- Field names in `snake_case` — generated code adapts to each language's conventions
+- Use `google.protobuf.Timestamp` for all timestamps — never raw integers
+- Use `google.protobuf.FieldMask` for partial update (patch) operations
+- Never remove or renumber existing fields — mark deprecated fields with
+  `[deprecated = true]` and reserve the number: `reserved 4;`
+- Breaking changes require a new package version (`v2`) — serve the old
+  version until all consumers have migrated
+
+---
+
+## Service implementation
+[ID: grpc-implementation]
+
+- Service handlers are thin — decode the request, call a domain service
+  function, encode the response; no business logic in the handler
+- Domain service functions have no gRPC imports — independently testable
+- Validate request messages at the handler entry point; return
+  `INVALID_ARGUMENT` for missing or malformed fields
+
+### Status codes
+
+| Situation | Code |
+|-----------|------|
+| Missing or invalid field | `INVALID_ARGUMENT` |
+| Resource not found | `NOT_FOUND` |
+| Caller not authenticated | `UNAUTHENTICATED` |
+| Caller lacks permission | `PERMISSION_DENIED` |
+| Conflicting state | `ALREADY_EXISTS` / `ABORTED` |
+| Transient infrastructure error | `UNAVAILABLE` |
+| Unexpected error | `INTERNAL` |
+
+---
+
+## Interceptors
+[ID: grpc-interceptors]
+
+- **Auth**: validate token on every call — reject with `UNAUTHENTICATED`
+  before the handler runs
+- **Logging**: log method name, request ID, caller identity, duration, and
+  status code for every call
+- **Tracing**: propagate W3C `traceparent` via gRPC metadata using
+  OpenTelemetry gRPC instrumentation
+- **Recovery**: catch unhandled panics or exceptions — return `INTERNAL`,
+  never crash the server process
+- Register all interceptors as a chain at server startup — not inside handlers
+
+---
+
+## Authentication
+[EXTEND: backend-auth]
+
+- Pass credentials via gRPC metadata: key `authorization`, value `Bearer <token>`
+- Validate in the auth interceptor — not in service handlers
+- Mutual TLS (mTLS) for service-to-service calls in production — certificate
+  rotation managed at the infrastructure layer (cert-manager, Vault)
+- Plaintext only in local development — never in staging or production
+
+---
+
+## Observability
+[EXTEND: backend-observability]
+
+- Expose Prometheus metrics on a separate HTTP port (`/metrics`):
+  - `grpc_server_handled_total` — labelled by method and status code
+  - `grpc_server_handling_seconds` — histogram, labelled by method
+- Implement the standard gRPC Health Checking Protocol
+  (`grpc.health.v1.Health`) — required for Kubernetes probes
+- Propagate trace context through gRPC metadata for distributed tracing
+
+---
+
+## Testing
+[ID: grpc-testing]
+[EXTEND: base-testing]
+
+- Unit-test domain service functions independently of gRPC — pass plain
+  request structs/objects, assert plain response structs/objects
+- Integration tests: start an in-process gRPC server and call it with a
+  real client — test each method for success, invalid argument, and auth failure
+- Test naming: `<MethodName>_<state>_<expected>`
+  e.g. `GetUser_UserNotFound_ReturnsNotFoundStatus`
+
+---
+
+## Proto tooling
+[ID: grpc-tooling]
+
+- Lint protos with `buf lint` in CI — enforce naming, field numbering, and
+  style consistency
+- Detect breaking changes with `buf breaking --against` in CI — reject PRs
+  that introduce wire-incompatible changes without a version bump
+- Generate stubs in CI — if generated code is committed, regenerate and commit
+  in the same PR as the proto change; never let protos and stubs diverge
+
 
 <!-- templates/backend/concurrency.md -->
 # Backend — Concurrency
@@ -1714,195 +1754,6 @@ CPU-bound work cannot be offloaded to a background job or worker process.
   threads concurrently and assert invariants hold
 - Test cancellation paths: assert that cancelling a context or token
   terminates the operation promptly and cleans up resources
-
-<!-- templates/backend/features.md -->
-# Backend — Feature Flags
-[ID: backend-features]
-
-## Purpose
-
-Feature flags decouple deployment from release. Code ships to production
-disabled; the flag controls when and for whom it activates. Use them for:
-
-- Rolling out a new feature progressively (canary, percentage, cohort)
-- Running A/B experiments without a separate deployment
-- Providing a kill switch for a risky change without a rollback
-- Hiding incomplete work that must be deployed incrementally
-
-Do not use feature flags as a permanent configuration system — they are a
-temporary release mechanism.
-
----
-
-## Rules
-
-- Every flag has an owner and a removal date set at creation time — flags
-  without a removal date are not allowed to merge
-- Remove the flag and its dead branch as soon as the rollout is complete —
-  stale flags are technical debt
-- Never nest feature flags — a flag that only activates when another flag
-  is also active creates untestable combinations
-- Keep the flagged code path as small as possible — wrap the decision point,
-  not the entire function
-- Flags are evaluated at runtime, not at startup — never cache a flag value
-  for longer than one request lifecycle unless the evaluation cost is measured
-  and justified
-
----
-
-## Flag types
-
-| Type | Controls | Example |
-|------|----------|---------|
-| **Release** | Whether a feature is visible at all | New checkout flow for 0% → 100% of users |
-| **Experiment** | Which variant a user sees | Button colour A vs B |
-| **Ops / kill switch** | Emergency disable of a subsystem | Disable background sync |
-| **Permission** | Access for a specific user, role, or tenant | Beta access for select accounts |
-
----
-
-## Targeting and rollout strategy
-
-- **Percentage rollout**: enable for N% of requests or users; increase
-  gradually while monitoring error rate and latency
-- **Cohort targeting**: enable for specific user IDs, tenant IDs, or roles
-  before a general rollout
-- **Canary**: enable for one instance or region before expanding
-- Stick users to their assigned variant for the duration of an experiment —
-  use a consistent hash on user ID, not a random value per request
-
----
-
-## Evaluation
-
-- Evaluate flags at the entry point of the feature — handler or service layer,
-  never deep inside domain logic
-- Return the same response shape for both flag states — diverging response
-  shapes on a flag boundary creates API instability
-- Treat the flag-off path as the production default until the rollout is
-  complete and the flag is removed
-
----
-
-## Observability
-
-- Log which variant was evaluated for every flagged request — include the
-  flag name and variant in the structured log properties
-- Emit a metric per flag variant — track error rate and latency separately
-  for each variant to detect regressions introduced by the new path
-- Alert if flag evaluation fails — a broken flag service must not silently
-  default to the wrong variant; fail to the safe default and alert
-
----
-
-## Tooling
-
-- Use a dedicated flag service or SDK (LaunchDarkly, Unleash, Flagsmith,
-  GrowthBook, or equivalent) — never implement flag storage in the application
-  database
-- Flags are not secrets — store targeting rules in the flag service, not in
-  environment variables or config files
-- The flag service must be available before the application can serve traffic
-  — treat it as a required dependency, not an optional one
-
-<!-- templates/backend/messaging.md -->
-# Backend — Messaging
-[ID: backend-messaging]
-
-Cross-cutting rules for asynchronous messaging in backend services.
-Applies regardless of message broker (Kafka, RabbitMQ, SQS, or equivalent).
-
----
-
-## When to use async messaging
-
-- Use messaging when the producer does not need an immediate response
-- Use messaging for workloads that must survive producer restarts — fire-and-forget
-  with durability
-- Use messaging to decouple services that scale independently
-- Do NOT use messaging when the caller needs a synchronous result — use HTTP or
-  gRPC instead
-- Do NOT replace a simple job queue within one service with a broker — use
-  `templates/backend/jobs.md` instead
-
-### Broker selection guide
-
-| Broker | Best for |
-|--------|----------|
-| **Kafka** | High-throughput event streaming, ordered logs, replay, analytics pipelines |
-| **RabbitMQ** | Task queues, work distribution, complex routing, RPC-over-messaging |
-| **SQS** | AWS-native workloads, simple queues, no broker management overhead |
-| **SQS + SNS** | Fan-out from one publisher to multiple independent consumers |
-
----
-
-## Producer rules
-
-- Validate message schema before publishing — the producer is responsible for
-  schema correctness; the consumer should not be the first line of defence
-- Every message MUST carry a correlation ID (trace ID or request ID) in its
-  headers so consumers can link it to the originating request
-- Use deterministic message IDs where the broker supports them — allows
-  broker-level deduplication on producer retry
-- Do not publish inside a database transaction without the transactional outbox
-  pattern — a commit/publish race will cause lost or phantom messages
-- Outbox pattern: write the message to an `outbox` table in the same transaction
-  as the domain write; a relay process publishes from the outbox asynchronously
-
----
-
-## Consumer rules
-
-- Design all consumers to be **idempotent** — at-least-once delivery is the
-  default; the same message will arrive more than once under failure conditions
-- ACK only after the message has been fully processed — never ACK at receipt
-- On processing failure: NACK or leave unacknowledged so the broker requeues
-  or routes to the dead-letter queue (DLQ); never silently discard
-- Apply exponential backoff on retries — tight retry loops amplify downstream
-  failures
-- Move messages to the DLQ after a configurable maximum retry count —
-  the DLQ is the primary alerting surface for consumer failures
-- Keep consumer handlers thin — delegate logic to a service function, exactly
-  as HTTP handlers delegate to services
-
----
-
-## Schema and contracts
-
-- Define message schemas explicitly — JSON Schema, Avro, or Protobuf
-- Schema changes MUST be backward-compatible: add fields, never remove or
-  rename required fields without a versioning strategy
-- Use a schema registry (Confluent Schema Registry, AWS Glue, or equivalent)
-  for Kafka-based systems — prevents schema drift across teams
-- Version the schema on breaking changes: encode the version in the topic name
-  (`orders.v2`) or as a `schema_version` field in the payload
-
----
-
-## Observability
-
-- Log at consumer entry: message ID, topic/queue name, correlation ID, consumer group
-- Log at consumer exit: processing duration, outcome (success / retry / DLQ)
-- Track per topic/queue:
-  - Consumer lag (Kafka) or queue depth (RabbitMQ / SQS)
-  - Processing time (p50 / p95 / p99)
-  - Error rate and DLQ depth
-- Alert when:
-  - Consumer lag grows continuously for > N minutes
-  - DLQ depth exceeds a threshold
-  - Consumer processing time exceeds the defined SLA
-
----
-
-## Testing
-[EXTEND: base-testing]
-
-- Unit-test consumer business logic independently of the broker —
-  pass a constructed message object directly to the handler function
-- Test the DLQ path: publish a message designed to fail processing
-  and assert it reaches the DLQ after the expected retry count
-- Test idempotency: publish the same message twice and assert the
-  consumer produces the same result with no unintended side effects
 
 <!-- templates/base/infra/cicd.md -->
 # Base — CI/CD and Delivery
@@ -2064,368 +1915,11 @@ not after deployment.
 - Prefer dependencies that are actively maintained and widely adopted
 
 
-<!-- templates/stack/go-service.md -->
-# Stack — Go Service
-[DEPENDS ON: templates/stack/go-lib.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/quality.md, templates/backend/concurrency.md, templates/backend/features.md, templates/backend/messaging.md]
-
-Extends the Go library stack with service-specific rules. Covers project
-structure, HTTP handlers, configuration, concurrency, graceful shutdown,
-and deployment.
-
----
-
-## Stack
-[ID: go-service-stack]
-[OVERRIDE: go-lib-stack]
-
-- Language: Go 1.22+
-- HTTP router: [net/http (stdlib) / chi / gin / echo]
-- Database: [database/sql + pgx / sqlc / GORM]
-- Config: [github.com/caarlos0/env / viper / godotenv]
-- Test runner: go test (stdlib)
-- Containerisation: Docker
-- Distribution: [binary / Docker image / GitHub Releases]
-
----
-
-## Project structure
-[ID: go-service-structure]
-
-```
-cmd/
-  [service]/
-    main.go              # entry point — wires dependencies, starts server
-internal/
-  [feature]/
-    handler.go           # HTTP handlers (thin)
-    service.go           # business logic
-    repository.go        # data access
-    model.go             # domain types
-  config/
-    config.go
-  server/
-    server.go            # HTTP server setup, middleware, routing
-pkg/                     # code safe to import by external packages (if any)
-migrations/              # SQL migration files
-Dockerfile
-Makefile
-go.mod
-go.sum
-README.md
-CLAUDE.md
-```
-
-- `internal/` enforces encapsulation — external packages cannot import it
-- `cmd/` is thin — no business logic, only wiring
-
----
-
-## HTTP handlers
-[ID: go-service-http]
-[EXTEND: backend-http]
-
-- Decode request body explicitly — never trust unvalidated input
-- Use `http.Error()` or a JSON encoder for all error responses
-- Handlers are thin — delegate all logic to service functions
-
----
-
-## Configuration
-[EXTEND: base-config]
-
-- One `Config` struct in `internal/config/config.go` — loaded from env
-  vars at startup; passed explicitly through the dependency graph
-- Never read `os.Getenv` directly in application code outside of
-  the config loader
-
----
-
-## Concurrency
-[EXTEND: backend-concurrency]
-
-- Protect shared state with `sync.Mutex` or `sync.RWMutex` — document
-  which fields are guarded and by which lock
-- Always use `context.Context` as the first argument in functions that may block
-- Use `errgroup` for structured concurrency — all goroutines started in
-  `main.go` under one group, stopped cleanly on context cancellation
-- Never start a goroutine without a clear owner and a clear way to stop it
-- Graceful shutdown: listen for `SIGTERM`, call server shutdown, drain
-  in-flight requests, then cancel the root context
-
----
-
-## Testing
-[ID: go-service-testing]
-[EXTEND: go-lib-testing]
-
-- Integration tests in `internal/[feature]/*_integration_test.go`
-  behind a build tag: `//go:build integration`
-- Performance tests with k6 — colocated in `tests/performance/`
-- Run before every commit: `go test ./... && go vet ./...`
-
----
-
-## Feature flags (if applicable)
-[EXTEND: backend-features]
-
-- Use the OpenFeature Go SDK or a provider SDK (LaunchDarkly, Unleash) —
-  wrap behind an interface so the provider can be swapped in tests
-- Pass the flag client through the dependency graph — constructor argument,
-  not a package-level singleton
-- In tests, use the in-memory OpenFeature provider
-
----
-
-## Messaging (if applicable)
-[EXTEND: backend-messaging]
-
-- Use `confluent-kafka-go` for Kafka, `amqp091-go` for RabbitMQ, or the
-  AWS SDK v2 `sqs` package for SQS
-- Run consumers as goroutines under an `errgroup` — stop cleanly on
-  context cancellation
-- Define a `Message` struct per topic/queue — decode at the entry point,
-  never pass raw `[]byte` to business logic
-
----
-
-## Git conventions
-[EXTEND: go-lib-git]
-
-- Do not commit compiled binaries, `*.test` files, or `vendor/` (unless
-  vendoring intentionally)
-- `go.sum` is committed — do not delete or regenerate without cause
-- Tag releases with `vX.Y.Z` — Go module proxy uses these
-
----
-
-## Commands
-```
-go run ./cmd/[service]    # develop
-go build ./cmd/[service]  # build binary
-go test ./...             # run all tests
-go test -tags integration ./...  # run integration tests
-go vet ./...              # static analysis
-goimports -w .            # format imports
-make migrate-up           # apply DB migrations
-docker build -t [name] .  # build container image
-```
-
-<!-- templates/backend/auth.md -->
-# Backend — Authentication and Authorization
-[ID: backend-auth]
-[DEPENDS ON: templates/base/security/security.md]
-
-Rules for identity verification (authn) and access control (authz).
-Applies to any backend service that has protected resources.
-Extends `security-authn` and `security-sessions` from the base
-security template with backend-specific depth.
-
----
-
-## General principles
-
-- Authentication (who are you?) and authorization (what can you do?) are
-  separate concerns — keep them in separate layers
-- Never implement your own cryptographic primitives — use well-audited libraries
-- Fail closed: deny access by default; grant explicitly
-- Centralise auth logic — no scattered permission checks across route handlers
-
----
-
-## Authentication
-[EXTEND: security-authn]
-
-- Prefer delegating authentication to an identity provider (IdP) via
-  OAuth 2.0 / OIDC (e.g. Auth0, Keycloak, Cognito) over rolling your own
-- If issuing tokens directly, use short-lived JWTs (access token ≤ 15 minutes)
-  with a separate refresh token (≤ 7 days, rotated on use)
-- Validate every JWT: signature, `exp`, `iss`, `aud` — reject tokens missing
-  any required claim
-- Store refresh tokens server-side (database or cache) so they can be revoked —
-  stateless refresh tokens cannot be invalidated before expiry
-
----
-
-## Token transport
-
-- Access tokens MUST be sent in the `Authorization: Bearer <token>` header
-- Do NOT accept tokens in query parameters — they appear in server logs and
-  browser history
-- Refresh tokens MUST be stored in `httpOnly`, `Secure`, `SameSite=Strict`
-  cookies — never in `localStorage` or JavaScript-accessible memory
-- HTTPS required for all authenticated endpoints — no exceptions
-
----
-
-## Authorization
-
-- Use role-based access control (RBAC) as the baseline:
-  assign permissions to roles, assign roles to users
-- For fine-grained needs, layer attribute-based access control (ABAC) on top
-  of RBAC — do not replace RBAC entirely
-- Authorise at the service layer, not only at the route layer:
-  a route that passes auth may call a service that operates on another user's data
-- Never trust client-supplied IDs for ownership checks — always verify that
-  the authenticated user owns or has access to the requested resource
-
----
-
-## API keys (service-to-service)
-
-- Issue API keys with the minimum required scope
-- Hash API keys before storing — treat them like passwords
-- Rotate API keys on a schedule and immediately on suspected compromise
-- Log every API key usage with the key ID (not the key value) and the
-  calling service identity
-
----
-
-## Observability
-
-- Log authentication failures at WARN with IP, user agent, and username
-  (never the attempted password)
-- Log authorization failures at WARN with user ID, resource, and action
-- Alert on a spike in auth failures — may indicate a credential stuffing attack
-- Never log tokens, passwords, or secrets — even at DEBUG level
-
----
-
-## Testing
-
-- Unit test permission logic with all role combinations including edge cases
-  (no role, multiple roles, deprecated role)
-- Integration test that protected endpoints return 401 for unauthenticated
-  requests and 403 for authenticated requests with insufficient permissions
-- Test token expiry: assert that an expired token is rejected
-- Test token revocation: assert that a revoked refresh token cannot obtain
-  a new access token
-
-<!-- templates/backend/grpc.md -->
-# Backend — gRPC
-[ID: backend-grpc]
-
-Cross-cutting rules for gRPC services backed by Protocol Buffers. Applies
-regardless of implementation language. Language-specific stacks extend this
-file with runtime conventions, project structure, and tooling.
-
----
-
-## When to use gRPC
-
-- Use gRPC for synchronous service-to-service communication where performance,
-  strong typing, or streaming are required
-- Use gRPC when a shared proto schema across multiple language runtimes is
-  preferable to maintaining multiple OpenAPI specs
-- Do NOT use gRPC as the primary API for browser clients — use REST or GraphQL
-  at the edge and gRPC internally
-
----
-
-## Proto design
-[ID: grpc-proto]
-
-- Package all protos under a versioned namespace: `package [org].[service].v1`
-- One proto file per service — do not mix unrelated services in one file
-- Field names in `snake_case` — generated code adapts to each language's conventions
-- Use `google.protobuf.Timestamp` for all timestamps — never raw integers
-- Use `google.protobuf.FieldMask` for partial update (patch) operations
-- Never remove or renumber existing fields — mark deprecated fields with
-  `[deprecated = true]` and reserve the number: `reserved 4;`
-- Breaking changes require a new package version (`v2`) — serve the old
-  version until all consumers have migrated
-
----
-
-## Service implementation
-[ID: grpc-implementation]
-
-- Service handlers are thin — decode the request, call a domain service
-  function, encode the response; no business logic in the handler
-- Domain service functions have no gRPC imports — independently testable
-- Validate request messages at the handler entry point; return
-  `INVALID_ARGUMENT` for missing or malformed fields
-
-### Status codes
-
-| Situation | Code |
-|-----------|------|
-| Missing or invalid field | `INVALID_ARGUMENT` |
-| Resource not found | `NOT_FOUND` |
-| Caller not authenticated | `UNAUTHENTICATED` |
-| Caller lacks permission | `PERMISSION_DENIED` |
-| Conflicting state | `ALREADY_EXISTS` / `ABORTED` |
-| Transient infrastructure error | `UNAVAILABLE` |
-| Unexpected error | `INTERNAL` |
-
----
-
-## Interceptors
-[ID: grpc-interceptors]
-
-- **Auth**: validate token on every call — reject with `UNAUTHENTICATED`
-  before the handler runs
-- **Logging**: log method name, request ID, caller identity, duration, and
-  status code for every call
-- **Tracing**: propagate W3C `traceparent` via gRPC metadata using
-  OpenTelemetry gRPC instrumentation
-- **Recovery**: catch unhandled panics or exceptions — return `INTERNAL`,
-  never crash the server process
-- Register all interceptors as a chain at server startup — not inside handlers
-
----
-
-## Authentication
-[EXTEND: backend-auth]
-
-- Pass credentials via gRPC metadata: key `authorization`, value `Bearer <token>`
-- Validate in the auth interceptor — not in service handlers
-- Mutual TLS (mTLS) for service-to-service calls in production — certificate
-  rotation managed at the infrastructure layer (cert-manager, Vault)
-- Plaintext only in local development — never in staging or production
-
----
-
-## Observability
-[EXTEND: backend-observability]
-
-- Expose Prometheus metrics on a separate HTTP port (`/metrics`):
-  - `grpc_server_handled_total` — labelled by method and status code
-  - `grpc_server_handling_seconds` — histogram, labelled by method
-- Implement the standard gRPC Health Checking Protocol
-  (`grpc.health.v1.Health`) — required for Kubernetes probes
-- Propagate trace context through gRPC metadata for distributed tracing
-
----
-
-## Testing
-[ID: grpc-testing]
-[EXTEND: base-testing]
-
-- Unit-test domain service functions independently of gRPC — pass plain
-  request structs/objects, assert plain response structs/objects
-- Integration tests: start an in-process gRPC server and call it with a
-  real client — test each method for success, invalid argument, and auth failure
-- Test naming: `<MethodName>_<state>_<expected>`
-  e.g. `GetUser_UserNotFound_ReturnsNotFoundStatus`
-
----
-
-## Proto tooling
-[ID: grpc-tooling]
-
-- Lint protos with `buf lint` in CI — enforce naming, field numbering, and
-  style consistency
-- Detect breaking changes with `buf breaking --against` in CI — reject PRs
-  that introduce wire-incompatible changes without a version bump
-- Generate stubs in CI — if generated code is committed, regenerate and commit
-  in the same PR as the proto change; never let protos and stubs diverge
-
-
 <!-- templates/stack/go-grpc.md -->
 # Stack — gRPC Service (Go)
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md, templates/stack/go-service.md]
+[DEPENDS ON: templates/stack/go-lib.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
-Extends the Go service stack and the gRPC backend layer with Go-specific
+Extends the Go library stack and the gRPC backend layer with Go-specific
 conventions for implementing gRPC servers and clients.
 
 ---
@@ -2444,7 +1938,7 @@ conventions for implementing gRPC servers and clients.
 ---
 
 ## Project structure
-[OVERRIDE: go-service-structure]
+[ID: grpc-go-structure]
 
 ```
 cmd/

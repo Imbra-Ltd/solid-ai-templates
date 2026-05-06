@@ -1,5 +1,5 @@
 # Stack — Celery Worker
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/jobs.md, templates/backend/observability.md, templates/backend/messaging.md, templates/backend/quality.md, templates/stack/python-lib.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/jobs.md, templates/backend/observability.md, templates/backend/quality.md, templates/stack/python-lib.md]
 
 A standalone Celery worker process. No HTTP layer — purely a background task
 processor. Covers task design, retry/backoff, scheduling, observability,

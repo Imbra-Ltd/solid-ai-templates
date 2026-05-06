@@ -1044,9 +1044,273 @@ Rules:
 - No third-party tracking scripts without explicit user consent
 
 
+<!-- templates/base/security/security.md -->
+# Base — Application Security
+
+[ID: base-security]
+
+Cross-cutting security rules for application code. Applies to
+every project regardless of language or framework.
+
+
+---
+
+## Input validation
+
+[ID: security-input]
+
+- Validate all external input at the system boundary — the first
+  point where untrusted data enters the application
+- Use schema validation libraries (Zod, Joi, Pydantic, JSON Schema)
+  — never hand-write validation for complex inputs
+- Allowlist, not blocklist — define what is valid, reject everything
+  else
+- Reject invalid input with a clear error — do not silently coerce
+  or strip fields
+- Internal code trusts validated data — do not re-validate in
+  service or repository layers
+
+---
+
+## Output encoding
+
+[ID: security-output]
+
+- Encode dynamic data for its rendering context at the point of
+  output — HTML, URL, JavaScript, SQL, shell
+- Encode on output, not on input — store the raw value, encode
+  when rendering
+- Use framework-provided encoding: React JSX, Jinja2 autoescape,
+  Go `html/template`, Astro `{expression}`
+- Never use `innerHTML`, `set:html`, `dangerouslySetInnerHTML`,
+  or `| safe` with user-supplied data
+- Context matters — HTML encoding does not prevent URL injection
+
+---
+
+## Injection prevention
+
+[ID: security-injection]
+
+- Use parameterized queries for all database access — never
+  concatenate user input into SQL strings
+- Use prepared statements or ORM query builders — raw SQL with
+  string interpolation is a SQL injection vulnerability
+- Escape shell arguments when invoking external commands — or
+  use API alternatives that do not invoke a shell
+- Never pass user input to `eval()`, `exec()`, `Function()`,
+  or equivalent dynamic code execution
+
+---
+
+## Authentication
+
+[ID: security-authn]
+
+- Hash passwords with a modern algorithm: bcrypt, scrypt, or
+  Argon2 — never MD5, SHA-1, or plain SHA-256
+- Enforce minimum password complexity at the boundary
+- Use constant-time comparison for secrets and tokens — timing
+  attacks leak information through response time
+- Support multi-factor authentication for privileged operations
+- Lock accounts or throttle after repeated failed attempts
+
+---
+
+## Session management
+
+[ID: security-sessions]
+
+- Generate session IDs with a cryptographic random generator
+- Regenerate the session ID after login — prevents session fixation
+- Set cookie flags: `HttpOnly`, `Secure`, `SameSite=Lax` (or
+  `Strict` for sensitive applications)
+- Expire sessions after a reasonable idle period — 30 minutes
+  for sensitive applications, configurable otherwise
+- Invalidate sessions on logout — do not rely on cookie expiry
+  alone
+
+---
+
+## Secrets in code
+
+[ID: security-secrets]
+
+- Never hardcode secrets, API keys, tokens, or credentials in
+  source files
+- Never commit secrets to version control — even in test files
+  or example configurations
+- Use `.env` files for local development — add to `.gitignore`
+- Provide `.env.example` with placeholder values — never real
+  secrets
+- If a secret is accidentally committed, rotate it immediately —
+  removing from git history is not sufficient; the secret is
+  compromised
+
+---
+
+## Transport security
+
+[ID: security-transport]
+
+- HTTPS everywhere — no exceptions for production traffic
+- HSTS MUST be enabled on all production sites with
+  `includeSubDomains` and a minimum `max-age` of one year
+- TLS 1.2 is the minimum version — disable TLS 1.0 and 1.1
+- Use strong cipher suites — disable known-weak ciphers
+- Internal service-to-service traffic SHOULD use mTLS via a
+  service mesh or explicit certificate configuration
+
+---
+
+## Security headers
+
+[ID: security-headers]
+
+- Set security headers on every HTTP response at the reverse proxy
+  or middleware level — not per route
+- Required headers:
+  - `Content-Security-Policy` — start strict, relax only as needed
+  - `X-Content-Type-Options: nosniff`
+  - `X-Frame-Options: DENY` (or CSP `frame-ancestors`)
+  - `Strict-Transport-Security` (see Transport security)
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+  - `Permissions-Policy` — disable unused browser APIs
+- Never use `unsafe-inline` or `unsafe-eval` in CSP without a
+  written justification
+- Do not expose server version or technology stack in headers —
+  remove `X-Powered-By`, `Server` version strings
+
+---
+
+## Error handling
+
+[ID: security-errors]
+
+- Never expose stack traces, internal paths, or database errors
+  to end users — return generic error messages externally
+- Log full error details server-side for debugging
+- Use consistent error response formats — do not leak internal
+  structure through varying error shapes
+- Return appropriate HTTP status codes — do not use 200 for errors
+- Do not reveal whether a resource exists via error messages —
+  login errors should say "invalid credentials", not "user not
+  found" vs "wrong password"
+
+---
+
+## Logging
+
+[ID: security-logging]
+
+- Never log secrets, tokens, passwords, or personally identifiable
+  information (PII)
+- Sanitize log output — user-supplied data in logs can enable
+  log injection attacks
+- Log security-relevant events: authentication attempts, access
+  denials, privilege changes, configuration changes
+- Include enough context for investigation: timestamp, user ID,
+  IP, action, result
+- Retain security logs for a defined period — compliance may
+  require 90 days to 7 years
+
+---
+
+## CORS
+
+[ID: security-cors]
+
+- Restrict `Access-Control-Allow-Origin` to specific known
+  origins — never use `*` for authenticated endpoints
+- Do not reflect the `Origin` header back as
+  `Access-Control-Allow-Origin` without validation
+- Restrict allowed methods and headers to what the API actually
+  needs
+- Set `Access-Control-Max-Age` to cache preflight responses —
+  reduces latency and server load
+
+---
+
+## Deserialization and data integrity
+
+[ID: security-integrity]
+
+- Never deserialize untrusted data with native serialization
+  formats (Python `pickle`, Java `ObjectInputStream`, PHP
+  `unserialize`) — use safe formats (JSON, Protocol Buffers)
+- Validate the structure and types of deserialized data before
+  use — treat it as untrusted input
+- Verify integrity of downloaded artifacts, updates, and
+  dependencies — use checksums or digital signatures
+- Pin dependency versions and verify checksums in lockfiles —
+  do not trust upstream registries blindly
+- CI/CD pipelines MUST use pinned, verified actions and images —
+  never pull `latest` tags in production pipelines
+
+---
+
+## Server-Side Request Forgery (SSRF)
+
+[ID: security-ssrf]
+
+- Never pass user-supplied URLs directly to server-side HTTP
+  clients — validate and sanitize first
+- Allowlist permitted destination hosts and schemes — reject
+  anything not on the list
+- Block requests to internal networks (`127.0.0.0/8`,
+  `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `169.254.0.0/16`,
+  `::1`, `fc00::/7`) — even after DNS resolution
+- Resolve the hostname and validate the IP before making the
+  request — prevents DNS rebinding attacks
+- Disable HTTP redirects in server-side HTTP clients, or
+  re-validate the destination after each redirect
+- Limit response size and timeout for outbound requests to
+  prevent resource exhaustion
+
+---
+
+## File uploads
+
+[ID: security-uploads]
+
+- Validate file type by content (magic bytes), not by extension
+  or MIME type — both are trivially spoofed
+- Enforce maximum file size at the boundary
+- Store uploads outside the web root — never serve user uploads
+  from the same domain without sanitization
+- Generate random filenames — do not use the original filename
+  (path traversal risk)
+- Scan uploaded files for malware if the application serves them
+  to other users
+
+---
+
+## Agent secrets handling
+
+[ID: security-agent-secrets]
+
+- MUST NOT read, print, or cat files that may contain secrets:
+  `.env`, `credentials.json`, `*-key*`, `*.pem`, `*.key`,
+  `serviceaccount.json`, `secrets.yaml`
+- MUST NOT echo, log, or display environment variable values —
+  use `printenv | grep -c KEY` to check presence without
+  revealing the value
+- MUST NOT include secret values in commit messages, PR
+  descriptions, or conversation output
+- MUST warn the user before committing files that commonly
+  contain secrets (`.env`, `credentials.json`, private keys)
+- Use targeted commands to verify secret presence without
+  exposure: `grep -c PATTERN file` (count matches),
+  `test -f .env && echo exists` (check file existence)
+- If secrets are accidentally exposed in a session, immediately
+  flag to the user: name the exposed secret, recommend
+  immediate rotation, and note that session history may be
+  cached or logged
+
+
 <!-- templates/stack/spa-react.md -->
 # Stack — React Single-Page Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/base/security/security.md, templates/frontend/ux.md, templates/frontend/quality.md]
 
 A client-side React application with TypeScript. Covers component model,
 state management, routing, API integration, and tooling.
@@ -1498,270 +1762,6 @@ Sunset: <HTTP-date>
 - Include navigation links (`next`, `prev`) in the response per HATEOAS
 
 
-<!-- templates/base/security/security.md -->
-# Base — Application Security
-
-[ID: base-security]
-
-Cross-cutting security rules for application code. Applies to
-every project regardless of language or framework.
-
-
----
-
-## Input validation
-
-[ID: security-input]
-
-- Validate all external input at the system boundary — the first
-  point where untrusted data enters the application
-- Use schema validation libraries (Zod, Joi, Pydantic, JSON Schema)
-  — never hand-write validation for complex inputs
-- Allowlist, not blocklist — define what is valid, reject everything
-  else
-- Reject invalid input with a clear error — do not silently coerce
-  or strip fields
-- Internal code trusts validated data — do not re-validate in
-  service or repository layers
-
----
-
-## Output encoding
-
-[ID: security-output]
-
-- Encode dynamic data for its rendering context at the point of
-  output — HTML, URL, JavaScript, SQL, shell
-- Encode on output, not on input — store the raw value, encode
-  when rendering
-- Use framework-provided encoding: React JSX, Jinja2 autoescape,
-  Go `html/template`, Astro `{expression}`
-- Never use `innerHTML`, `set:html`, `dangerouslySetInnerHTML`,
-  or `| safe` with user-supplied data
-- Context matters — HTML encoding does not prevent URL injection
-
----
-
-## Injection prevention
-
-[ID: security-injection]
-
-- Use parameterized queries for all database access — never
-  concatenate user input into SQL strings
-- Use prepared statements or ORM query builders — raw SQL with
-  string interpolation is a SQL injection vulnerability
-- Escape shell arguments when invoking external commands — or
-  use API alternatives that do not invoke a shell
-- Never pass user input to `eval()`, `exec()`, `Function()`,
-  or equivalent dynamic code execution
-
----
-
-## Authentication
-
-[ID: security-authn]
-
-- Hash passwords with a modern algorithm: bcrypt, scrypt, or
-  Argon2 — never MD5, SHA-1, or plain SHA-256
-- Enforce minimum password complexity at the boundary
-- Use constant-time comparison for secrets and tokens — timing
-  attacks leak information through response time
-- Support multi-factor authentication for privileged operations
-- Lock accounts or throttle after repeated failed attempts
-
----
-
-## Session management
-
-[ID: security-sessions]
-
-- Generate session IDs with a cryptographic random generator
-- Regenerate the session ID after login — prevents session fixation
-- Set cookie flags: `HttpOnly`, `Secure`, `SameSite=Lax` (or
-  `Strict` for sensitive applications)
-- Expire sessions after a reasonable idle period — 30 minutes
-  for sensitive applications, configurable otherwise
-- Invalidate sessions on logout — do not rely on cookie expiry
-  alone
-
----
-
-## Secrets in code
-
-[ID: security-secrets]
-
-- Never hardcode secrets, API keys, tokens, or credentials in
-  source files
-- Never commit secrets to version control — even in test files
-  or example configurations
-- Use `.env` files for local development — add to `.gitignore`
-- Provide `.env.example` with placeholder values — never real
-  secrets
-- If a secret is accidentally committed, rotate it immediately —
-  removing from git history is not sufficient; the secret is
-  compromised
-
----
-
-## Transport security
-
-[ID: security-transport]
-
-- HTTPS everywhere — no exceptions for production traffic
-- HSTS MUST be enabled on all production sites with
-  `includeSubDomains` and a minimum `max-age` of one year
-- TLS 1.2 is the minimum version — disable TLS 1.0 and 1.1
-- Use strong cipher suites — disable known-weak ciphers
-- Internal service-to-service traffic SHOULD use mTLS via a
-  service mesh or explicit certificate configuration
-
----
-
-## Security headers
-
-[ID: security-headers]
-
-- Set security headers on every HTTP response at the reverse proxy
-  or middleware level — not per route
-- Required headers:
-  - `Content-Security-Policy` — start strict, relax only as needed
-  - `X-Content-Type-Options: nosniff`
-  - `X-Frame-Options: DENY` (or CSP `frame-ancestors`)
-  - `Strict-Transport-Security` (see Transport security)
-  - `Referrer-Policy: strict-origin-when-cross-origin`
-  - `Permissions-Policy` — disable unused browser APIs
-- Never use `unsafe-inline` or `unsafe-eval` in CSP without a
-  written justification
-- Do not expose server version or technology stack in headers —
-  remove `X-Powered-By`, `Server` version strings
-
----
-
-## Error handling
-
-[ID: security-errors]
-
-- Never expose stack traces, internal paths, or database errors
-  to end users — return generic error messages externally
-- Log full error details server-side for debugging
-- Use consistent error response formats — do not leak internal
-  structure through varying error shapes
-- Return appropriate HTTP status codes — do not use 200 for errors
-- Do not reveal whether a resource exists via error messages —
-  login errors should say "invalid credentials", not "user not
-  found" vs "wrong password"
-
----
-
-## Logging
-
-[ID: security-logging]
-
-- Never log secrets, tokens, passwords, or personally identifiable
-  information (PII)
-- Sanitize log output — user-supplied data in logs can enable
-  log injection attacks
-- Log security-relevant events: authentication attempts, access
-  denials, privilege changes, configuration changes
-- Include enough context for investigation: timestamp, user ID,
-  IP, action, result
-- Retain security logs for a defined period — compliance may
-  require 90 days to 7 years
-
----
-
-## CORS
-
-[ID: security-cors]
-
-- Restrict `Access-Control-Allow-Origin` to specific known
-  origins — never use `*` for authenticated endpoints
-- Do not reflect the `Origin` header back as
-  `Access-Control-Allow-Origin` without validation
-- Restrict allowed methods and headers to what the API actually
-  needs
-- Set `Access-Control-Max-Age` to cache preflight responses —
-  reduces latency and server load
-
----
-
-## Deserialization and data integrity
-
-[ID: security-integrity]
-
-- Never deserialize untrusted data with native serialization
-  formats (Python `pickle`, Java `ObjectInputStream`, PHP
-  `unserialize`) — use safe formats (JSON, Protocol Buffers)
-- Validate the structure and types of deserialized data before
-  use — treat it as untrusted input
-- Verify integrity of downloaded artifacts, updates, and
-  dependencies — use checksums or digital signatures
-- Pin dependency versions and verify checksums in lockfiles —
-  do not trust upstream registries blindly
-- CI/CD pipelines MUST use pinned, verified actions and images —
-  never pull `latest` tags in production pipelines
-
----
-
-## Server-Side Request Forgery (SSRF)
-
-[ID: security-ssrf]
-
-- Never pass user-supplied URLs directly to server-side HTTP
-  clients — validate and sanitize first
-- Allowlist permitted destination hosts and schemes — reject
-  anything not on the list
-- Block requests to internal networks (`127.0.0.0/8`,
-  `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `169.254.0.0/16`,
-  `::1`, `fc00::/7`) — even after DNS resolution
-- Resolve the hostname and validate the IP before making the
-  request — prevents DNS rebinding attacks
-- Disable HTTP redirects in server-side HTTP clients, or
-  re-validate the destination after each redirect
-- Limit response size and timeout for outbound requests to
-  prevent resource exhaustion
-
----
-
-## File uploads
-
-[ID: security-uploads]
-
-- Validate file type by content (magic bytes), not by extension
-  or MIME type — both are trivially spoofed
-- Enforce maximum file size at the boundary
-- Store uploads outside the web root — never serve user uploads
-  from the same domain without sanitization
-- Generate random filenames — do not use the original filename
-  (path traversal risk)
-- Scan uploaded files for malware if the application serves them
-  to other users
-
----
-
-## Agent secrets handling
-
-[ID: security-agent-secrets]
-
-- MUST NOT read, print, or cat files that may contain secrets:
-  `.env`, `credentials.json`, `*-key*`, `*.pem`, `*.key`,
-  `serviceaccount.json`, `secrets.yaml`
-- MUST NOT echo, log, or display environment variable values —
-  use `printenv | grep -c KEY` to check presence without
-  revealing the value
-- MUST NOT include secret values in commit messages, PR
-  descriptions, or conversation output
-- MUST warn the user before committing files that commonly
-  contain secrets (`.env`, `credentials.json`, private keys)
-- Use targeted commands to verify secret presence without
-  exposure: `grep -c PATTERN file` (count matches),
-  `test -f .env && echo exists` (check file existence)
-- If secrets are accidentally exposed in a session, immediately
-  flag to the user: name the exposed secret, recommend
-  immediate rotation, and note that session history may be
-  cached or logged
-
-
 <!-- templates/backend/auth.md -->
 # Backend — Authentication and Authorization
 [ID: backend-auth]
@@ -1851,6 +1851,150 @@ security template with backend-specific depth.
 - Test token expiry: assert that an expired token is rejected
 - Test token revocation: assert that a revoked refresh token cannot obtain
   a new access token
+
+<!-- templates/backend/database.md -->
+# Backend — Database Conventions
+[ID: backend-database]
+
+## Schema changes
+
+- All schema changes via migrations — never edit the database manually
+- Migrations are committed to source control
+- Never regenerate or modify a migration that is already merged
+- One migration per logical change — do not batch unrelated schema changes
+- Migrations must be reversible — provide a `down` migration for every `up`
+
+## Queries
+
+- No raw SQL strings — use an ORM or query builder
+- Use parameterised queries if raw SQL is unavoidable — never string
+  interpolation
+- No unbounded queries — always apply a limit or filter
+- Avoid `SELECT *` — select only the columns actually needed
+- Detect and eliminate N+1 queries — use eager loading (`joinedload`,
+  `preload`, `WITH` clauses, `DataLoader`) for related data fetched in a loop
+- Prefer indexed columns in `WHERE`, `JOIN ON`, and `ORDER BY` clauses
+- Review slow query logs in staging before releasing schema changes
+
+## Indexing
+
+- Add an index for every foreign key — most ORMs do not do this automatically
+- Add composite indexes for common multi-column filter + sort combinations
+- Avoid over-indexing write-heavy tables — each index adds write overhead
+- Use partial indexes for filtered queries on large tables
+  (e.g. `WHERE deleted_at IS NULL`)
+- Drop unused indexes — check `pg_stat_user_indexes` or equivalent regularly
+
+## Transactions
+
+- Wrap multi-step writes in a transaction — commit only after all writes
+  succeed
+- Never leave a transaction open across an HTTP request boundary
+- Keep transactions short — do not call external services inside a transaction
+- Use serialisable isolation only when genuinely required; prefer read
+  committed for OLTP workloads
+
+## Connections
+
+- Use a connection pool — never open a new connection per request
+- Inject the database session/connection as a dependency — no global DB
+  handles
+- Set explicit pool size limits appropriate to the deployment
+  (e.g. `pool_size=10`, `max_overflow=5` for a single-instance service)
+- Monitor pool exhaustion — alert when pool wait time exceeds threshold
+
+## Soft deletes
+
+- Use soft deletes (`deleted_at` timestamp) only when audit history is
+  required; otherwise use hard deletes
+- If using soft deletes, add a partial index on `deleted_at IS NULL` and
+  filter all queries by default — never return deleted rows to callers
+- Consider an append-only audit log table as an alternative to soft deletes
+
+## Testing
+[EXTEND: base-testing]
+
+- Reset state between test runs — truncate tables or wrap each test in a
+  transaction rolled back after completion
+- Do not substitute a different database engine in tests (e.g. SQLite
+  instead of PostgreSQL) — behaviour differences cause false passes
+- Never run schema migrations against a production database inside a test
+  suite
+
+<!-- templates/backend/observability.md -->
+# Backend — Observability
+[ID: backend-observability]
+
+## Logging
+
+### Log levels
+Use the correct level — do not elevate debug information to INFO:
+
+| Level | When to use | Examples |
+|-------|-------------|---------|
+| FATAL | App cannot continue — imminent shutdown | Out of memory, missing critical dependency at startup, DB schema mismatch |
+| ERROR | Operation failed — normal flow disrupted | Failed DB write, file not found, unhandled exception in request handler |
+| WARN | Unexpected but recoverable — may lead to error | Low disk space, slow response, retry attempt, deprecated endpoint accessed |
+| INFO | Normal operation — confirm correct functioning | Order accepted, service started, payment processed, scheduled job completed |
+| DEBUG | Technical detail for debugging — not for production | Query results, data mapping steps, connection established |
+| TRACE | Most verbose — step-by-step tracing, development only | Function parameters, pipeline steps, request/response payloads |
+
+- Default log level in all environments: **INFO**
+- DEBUG and TRACE MUST NOT be enabled in production by default
+- INFO MUST NOT contain debug or trace information — keep it operational
+
+### Log format
+- Use structured logging in all environments: JSON in production,
+  human-readable in development
+- Every log entry MUST include: timestamp, level, message, properties
+- Include a request ID in all log entries for a given request lifecycle
+- Minimum JSON structure:
+  ```json
+  {
+    "Timestamp": "2024-01-15T12:34:56.789Z",
+    "Level": "Information",
+    "MessageTemplate": "Order ({orderId}) accepted.",
+    "Message": "Order (ORD-78901) accepted.",
+    "Properties": { "orderId": "ORD-78901" }
+  }
+  ```
+
+### Rules
+- Log errors once — at the top of the call stack, not at every level
+- Never log sensitive data: passwords, tokens, API keys, PII
+- Client errors (4xx) — log at INFO
+- Server errors (5xx) — log at ERROR
+- All unhandled errors MUST be logged with enough context to reproduce the issue
+
+## Distributed tracing
+
+- Assign a unique **trace ID** to every inbound request at the service boundary
+- Propagate the trace ID in all outbound calls (HTTP headers, message queue
+  metadata) using the W3C `traceparent` header or OpenTelemetry context
+- Include the trace ID in every log entry for that request — use the same
+  field name across all services (`trace_id`)
+- Use OpenTelemetry as the instrumentation standard — avoid vendor-specific
+  SDKs in application code; export to the backend of choice (Jaeger, Tempo,
+  Datadog, etc.) via the OTel collector
+- Create spans for: inbound HTTP requests, outbound HTTP calls, DB queries,
+  cache operations, and background job execution
+- Span names MUST be low-cardinality — use route templates, not URLs with IDs
+  (e.g. `GET /users/{id}`, not `GET /users/42`)
+- Return the trace ID in error responses (`X-Trace-Id` header) so clients
+  can report it to support
+
+## Health check
+- Expose a health check endpoint: `/health` or `/healthz`
+- Return HTTP 200 when the service is ready to handle traffic
+- Return HTTP 503 when a critical dependency (DB, cache) is unavailable
+- Health check MUST NOT require authentication
+- Health check MUST be the first thing that passes before traffic is routed
+  to a new instance
+
+## Error visibility
+- Distinguish between client errors (4xx) and server errors (5xx) in logs
+- Include correlation/request IDs in error responses to enable log tracing
+- Never expose internal state, stack traces, or file paths in error responses
 
 <!-- templates/base/infra/cicd.md -->
 # Base — CI/CD and Delivery
@@ -2014,7 +2158,7 @@ not after deployment.
 
 <!-- templates/stack/full-nextjs.md -->
 # Stack — Next.js Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-react.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-react.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md, templates/backend/database.md, templates/backend/observability.md]
 
 Extends the React SPA stack with Next.js-specific rules. Covers the App
 Router, Server and Client Components, data fetching, API routes, metadata,
