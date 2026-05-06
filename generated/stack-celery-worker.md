@@ -2002,7 +2002,6 @@ CLAUDE.md
   via a typed settings class
 - Broker URL, result backend URL, and any API keys read from env — never
   hardcoded
-- `.env.example` committed; `.env` in `.gitignore`
 
 ---
 

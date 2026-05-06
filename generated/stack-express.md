@@ -2232,7 +2232,7 @@ CLAUDE.md
   where needed — never create multiple instances
 - Knex / Drizzle: single connection pool created at startup, passed through
   the dependency graph — no module-level globals in feature code
-- Migrations managed by the chosen tool's CLI — committed to source control
+- Migrations managed by the chosen tool's CLI
 
 ---
 

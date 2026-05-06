@@ -95,8 +95,8 @@ CLAUDE.md
 - Table-driven tests with `t.Run()` — one sub-test per scenario
 - Inject a mock or fake service into the server under test using interfaces
 - Integration tests behind `//go:build integration` build tag
-- Test naming: `Test<MethodName>_<State>_<Expected>`
-  e.g. `TestGetUser_UserNotFound_ReturnsNotFoundStatus`
+- Go test functions MUST start with `Test` prefix:
+  `TestGetUser_UserNotFound_ReturnsNotFoundStatus`
 - Run before every commit: `go test ./... && go vet ./...`
 
 ---

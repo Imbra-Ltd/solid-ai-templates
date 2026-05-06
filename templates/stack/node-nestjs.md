@@ -154,8 +154,7 @@ the module wiring — not hidden AOP proxies.
 
 - TypeORM: use `Repository<Entity>` injected via `@InjectRepository()`
 - Prisma: use `PrismaService` as an injectable provider wrapping `PrismaClient`
-- Migrations managed by the ORM CLI — committed to source control
-- No raw SQL strings except for complex analytics queries; annotate these
+- Migrations managed by the ORM CLI
 
 ---
 

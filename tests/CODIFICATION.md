@@ -77,6 +77,7 @@ reused for a different component within the same area.
 | `04` | Reference resolution — EXTEND/OVERRIDE refs point to existing IDs |
 | `05` | Conflict resolution — two templates OVERRIDE the same section ID |
 | `06` | Chain reachability — EXTEND/OVERRIDE targets in resolved chain |
+| `07` | Duplication — EXTEND sections do not restate parent rules |
 
 ### MNF - Manifest
 
@@ -164,6 +165,7 @@ corrected prerequisites where test intent is unchanged.
 | `SAIT-INT-TPL-03-001A` | Integration — composition — OVERRIDE directive — spec 1, version A |
 | `SAIT-INT-TPL-05-001A` | Integration — composition — conflict resolution — spec 1, version A |
 | `SAIT-INT-TPL-06-001A` | Integration — composition — chain reachability — spec 1, version A |
+| `SAIT-INT-TPL-07-001A` | Integration — composition — duplication — spec 1, version A |
 | `SAIT-INT-MNF-01-001A` | Integration — manifest — manifest entries — spec 1, version A |
 | `SAIT-INT-MNF-02-001A` | Integration — manifest — resolution — spec 1, version A |
 | `SAIT-INT-MNF-03-001A` | Integration — manifest — core tier — spec 1, version A |

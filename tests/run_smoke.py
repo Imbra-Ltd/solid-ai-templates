@@ -501,6 +501,111 @@ def check_tpl_06():
 
 
 # ---------------------------------------------------------------------------
+# TPL-07 — EXTEND sections do not duplicate parent rules
+# ---------------------------------------------------------------------------
+
+def _extract_bullets(filepath, section_id):
+    """Return list of bullet-point texts from the section tagged with ID."""
+    content = read(filepath)
+    lines = content.splitlines()
+    bullets = []
+    in_section = False
+    tag = f"[ID: {section_id}]"
+
+    for line in lines:
+        if tag in line:
+            in_section = True
+            continue
+        if in_section:
+            if re.match(r'^#{1,4} ', line) and bullets:
+                break
+            if re.match(r'^\[(ID|EXTEND|OVERRIDE|DEPENDS):', line) and bullets:
+                break
+            stripped = line.strip()
+            if stripped.startswith('- '):
+                bullets.append(stripped[2:].strip())
+
+    return bullets
+
+
+def _word_set(text):
+    """Return set of lowercase words (3+ chars) from text."""
+    return {w.lower() for w in re.findall(r'[a-zA-Z]{3,}', text)}
+
+
+def check_tpl_07():
+    if not HAS_YAML:
+        return ["  PyYAML not installed — run: pip install pyyaml"]
+
+    id_pattern = re.compile(r'\[ID:\s*([^\]]+)\]')
+    extend_pattern = re.compile(r'^\[EXTEND:\s*([^\]]+)\]', re.MULTILINE)
+    failures = []
+
+    # Build ID → file map
+    id_to_file = {}
+    for filepath in all_template_files():
+        content = read(filepath)
+        for match in id_pattern.finditer(content):
+            id_to_file[match.group(1).strip()] = filepath
+
+    # For each EXTEND, compare child bullets against parent bullets
+    for filepath in all_template_files():
+        content = read(filepath)
+        rel = os.path.relpath(filepath, ROOT).replace("\\", "/")
+        for match in extend_pattern.finditer(content):
+            parent_id = match.group(1).strip()
+            parent_file = id_to_file.get(parent_id)
+            if not parent_file:
+                continue
+
+            parent_bullets = _extract_bullets(parent_file, parent_id)
+            if not parent_bullets:
+                continue
+
+            # Find the child section that contains this EXTEND
+            child_lines = content.splitlines()
+            extend_line = match.start()
+            char_count = 0
+            extend_lineno = 0
+            for i, line in enumerate(child_lines):
+                char_count += len(line) + 1
+                if char_count > extend_line:
+                    extend_lineno = i
+                    break
+
+            # Collect child bullets after the EXTEND line
+            child_bullets = []
+            for line in child_lines[extend_lineno + 1:]:
+                if re.match(r'^#{1,4} ', line) and child_bullets:
+                    break
+                if re.match(r'^\[(ID|EXTEND|OVERRIDE|DEPENDS):', line):
+                    break
+                stripped = line.strip()
+                if stripped.startswith('- '):
+                    child_bullets.append(stripped[2:].strip())
+
+            # Compare each child bullet against parent bullets
+            for cb in child_bullets:
+                cb_words = _word_set(cb)
+                if len(cb_words) < 3:
+                    continue
+                for pb in parent_bullets:
+                    pb_words = _word_set(pb)
+                    if len(pb_words) < 3:
+                        continue
+                    intersection = cb_words & pb_words
+                    union = cb_words | pb_words
+                    if union and len(intersection) / len(union) >= 0.7:
+                        failures.append(
+                            f"  {rel} [EXTEND: {parent_id}]: "
+                            f"possible duplicate — \"{cb[:60]}...\""
+                        )
+                        break
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
 # E2E-01 — all cases.py paths resolve to existing files
 # ---------------------------------------------------------------------------
 
@@ -575,6 +680,8 @@ CHECKS = [
      "title": "OVERRIDE replaces parent section with different content", "fn": check_tpl_03},
     {"id": "TPL-06", "spec": "SAIT-INT-TPL-06-001A",
      "title": "EXTEND/OVERRIDE targets reachable in resolved chain", "fn": check_tpl_06},
+    {"id": "TPL-07", "spec": "SAIT-INT-TPL-07-001A",
+     "title": "EXTEND sections do not duplicate parent rules", "fn": check_tpl_07},
     {"id": "E2E-01", "spec": "SAIT-SMK-E2E-01-001A",
      "title": "All cases.py paths resolve to existing files", "fn": check_e2e_01},
 ]
