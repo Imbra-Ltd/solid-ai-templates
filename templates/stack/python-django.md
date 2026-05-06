@@ -113,9 +113,14 @@ CLAUDE.md
 
 ## Authentication
 [EXTEND: backend-auth]
+[OVERRIDE: backend-api-statelessness]
 
+- REST API endpoints (DRF/Ninja) MUST be stateless — use JWT or
+  token-based auth; no server-side sessions for API consumers
+- Server-rendered views MAY use `django.contrib.auth` session auth —
+  this is the standard Django pattern for browser-based admin and
+  HTML views; the statelessness rule applies to API endpoints only
 - Use `djangorestframework-simplejwt` for JWT-based APIs
-- Use `django.contrib.auth` sessions for server-rendered views
 - Permission classes on every ViewSet — never rely on `IsAuthenticated` alone
   for sensitive operations; use object-level permissions where needed
 - Custom user model from project start — `AUTH_USER_MODEL` must be set before

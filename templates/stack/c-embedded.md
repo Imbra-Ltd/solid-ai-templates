@@ -106,8 +106,11 @@ CLAUDE.md
 ## Testing
 [ID: c-embedded-testing]
 [EXTEND: base-testing]
+[OVERRIDE: base-testing-general]
 
-- Unit tests run on the host (PC), not on the target hardware
+- All tests run on the host (PC), not on the target hardware — real
+  hardware dependencies are replaced with HAL mocks or hardware-in-the-loop
+  simulators
 - Mock the HAL layer to isolate modules under test
 - One test file per module: `tests/test_[module].c`
 - Use Unity macros: `TEST_ASSERT_EQUAL`, `TEST_ASSERT_NULL`, etc.

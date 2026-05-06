@@ -705,6 +705,7 @@ fixing the design fixes the testability.
 ---
 
 ## General rules
+[ID: base-testing-general]
 
 - Design for testability from the start — do not write code first and
   struggle to test later
@@ -1118,6 +1119,7 @@ Apply SOLID at the class, module, and service level:
   does not
 
 ## Aspect-Oriented Programming (AOP)
+[ID: base-oop-aop]
 
 - **Do not use AOP frameworks** — hidden cross-cutting behaviour (method
   interception, bytecode weaving, runtime proxies) makes code hard to read,
@@ -2204,6 +2206,7 @@ Sunset: <HTTP-date>
 ```
 
 ## Statelessness
+[ID: backend-api-statelessness]
 - APIs MUST be stateless — no client context stored on the server between requests
 - All information needed to process a request MUST be in the request itself
 - Session state belongs in the client or a dedicated session store, not in the
@@ -2421,9 +2424,14 @@ CLAUDE.md
 
 ## Authentication
 [EXTEND: backend-auth]
+[OVERRIDE: backend-api-statelessness]
 
+- REST API endpoints (DRF/Ninja) MUST be stateless — use JWT or
+  token-based auth; no server-side sessions for API consumers
+- Server-rendered views MAY use `django.contrib.auth` session auth —
+  this is the standard Django pattern for browser-based admin and
+  HTML views; the statelessness rule applies to API endpoints only
 - Use `djangorestframework-simplejwt` for JWT-based APIs
-- Use `django.contrib.auth` sessions for server-rendered views
 - Permission classes on every ViewSet — never rely on `IsAuthenticated` alone
   for sensitive operations; use object-level permissions where needed
 - Custom user model from project start — `AUTH_USER_MODEL` must be set before
