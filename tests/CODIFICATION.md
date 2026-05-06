@@ -82,6 +82,9 @@ reused for a different component within the same area.
 | Number | Component |
 |--------|-----------|
 | `01` | Manifest entries — file paths, IDs, depends_on references |
+| `02` | Resolution — all stacks resolve to valid, non-empty file lists |
+| `03` | Core tier — resolved chains include core tier files |
+| `04` | Prompt assembly — prompt builds for all stacks |
 
 ### STK - Stack
 
@@ -160,6 +163,9 @@ corrected prerequisites where test intent is unchanged.
 | `SAIT-INT-TPL-03-001A` | Integration — composition — OVERRIDE directive — spec 1, version A |
 | `SAIT-INT-TPL-05-001A` | Integration — composition — conflict resolution — spec 1, version A |
 | `SAIT-INT-MNF-01-001A` | Integration — manifest — manifest entries — spec 1, version A |
+| `SAIT-INT-MNF-02-001A` | Integration — manifest — resolution — spec 1, version A |
+| `SAIT-INT-MNF-03-001A` | Integration — manifest — core tier — spec 1, version A |
+| `SAIT-INT-MNF-04-001A` | Integration — manifest — prompt assembly — spec 1, version A |
 | `SAIT-INT-ITV-01-001A` | Integration — interview — required questions — spec 1, version A |
 | `SAIT-INT-ITV-02-001A` | Integration — interview — default sections — spec 1, version A |
 | `SAIT-INT-ITV-03-001A` | Integration — interview — answer precedence — spec 1, version A |
