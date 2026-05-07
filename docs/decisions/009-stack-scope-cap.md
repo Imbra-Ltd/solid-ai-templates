@@ -115,6 +115,40 @@ in the base templates (too opinionated) rather than a valid use case.
   the quality boundary and makes it unclear which stacks are
   maintained
 
+## The hourglass model
+
+```
+        Many teams / orgs / developers
+             (forks, submodules)
+                     │
+                     ▼
+       ┌─────────────────────────┐
+       │   solid-ai-templates    │  ← narrow waist
+       │   (base + layers only)  │
+       └─────────────────────────┘
+                     │
+                     ▼
+          Many agents / tools
+     (Claude Code, Cursor, Copilot,
+      Codex CLI, Devin, Windsurf...)
+```
+
+The narrow waist is the set of universal, language-agnostic standards:
+OWASP, 12-factor app, SOLID, testing, git, security, CI/CD. These
+are stable, unopinionated, and rarely overridden.
+
+Everything above the waist varies freely — each team adds their own
+stacks, company conventions, issue tracking, and documentation
+practices via `[EXTEND:]` and new `[ID:]` sections.
+
+Everything below the waist varies freely — any agent that reads
+Markdown can consume the templates. The output format adapts via
+`templates/base/core/agents.md`.
+
+This architecture maximizes reach: one curated set of base templates
+serves any team on any agent, without the core repo growing
+unbounded.
+
 ## Consequences
 
 - PRs adding new stack templates are evaluated against the
