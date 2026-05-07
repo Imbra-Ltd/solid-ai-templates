@@ -5,7 +5,11 @@ Smoke and integration test runner for solid-ai-templates structural checks.
 Implements:
   SAIT-SMK-SYS-01-001A  — all DEPENDS ON paths resolve to existing files
   SAIT-SMK-SYS-02-001A  — all section IDs are unique across all templates
+  SAIT-SMK-SYS-03-001A  — every template file has a manifest entry
+  SAIT-SMK-SYS-04-001A  — DEPENDS ON headers match manifest depends_on
   SAIT-SMK-TPL-04-001A  — all EXTEND/OVERRIDE directives reference existing IDs
+  SAIT-SMK-TPL-08-001A  — every base template has at least one [ID:] tag
+  SAIT-SMK-TPL-09-001A  — no empty [ID:] sections
   SAIT-INT-TPL-06-001A  — EXTEND/OVERRIDE targets reachable in resolved chain
   SAIT-INT-MNF-01-001A  — all manifest entries reference valid paths and IDs
 
@@ -607,6 +611,181 @@ def check_tpl_07():
 
 
 # ---------------------------------------------------------------------------
+# SYS-03 — every template file has a manifest entry
+# ---------------------------------------------------------------------------
+
+def check_sys_03():
+    if not HAS_YAML:
+        return ["  PyYAML not installed — run: pip install pyyaml"]
+
+    manifest_path = os.path.join(ROOT, "templates", "manifest.yaml")
+    with io.open(manifest_path, encoding="utf-8") as f:
+        manifest = yaml.safe_load(f)
+
+    manifest_files = set()
+    for section in ("core", "base", "platform", "frontend", "mobile",
+                    "backend", "stacks"):
+        for entry in manifest.get(section, []):
+            if isinstance(entry, dict) and "file" in entry:
+                manifest_files.add(
+                    entry["file"].replace("/", os.sep)
+                )
+
+    failures = []
+    for filepath in all_template_files():
+        rel = os.path.relpath(filepath, ROOT)
+        rel_fwd = rel.replace(os.sep, "/")
+        if rel_fwd not in {f.replace(os.sep, "/") for f in manifest_files}:
+            failures.append(f"  {rel_fwd}: no manifest entry")
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
+# SYS-04 — DEPENDS ON headers match manifest depends_on
+# ---------------------------------------------------------------------------
+
+def check_sys_04():
+    if not HAS_YAML:
+        return ["  PyYAML not installed — run: pip install pyyaml"]
+
+    manifest_path = os.path.join(ROOT, "templates", "manifest.yaml")
+    with io.open(manifest_path, encoding="utf-8") as f:
+        manifest = yaml.safe_load(f)
+
+    # Build id→file and file→depends_on(as files) maps
+    id_to_file = {}
+    for section in ("core", "base", "platform", "frontend", "mobile",
+                    "backend", "stacks"):
+        for entry in manifest.get(section, []):
+            if isinstance(entry, dict):
+                id_to_file[entry["id"]] = entry["file"]
+
+    file_manifest_deps = {}
+    for section in ("base", "platform", "frontend", "mobile",
+                    "backend", "stacks"):
+        for entry in manifest.get(section, []):
+            if isinstance(entry, dict):
+                dep_files = set()
+                for dep_id in entry.get("depends_on", []):
+                    dep_file = id_to_file.get(dep_id)
+                    if dep_file:
+                        dep_files.add(dep_file)
+                file_manifest_deps[entry["file"]] = dep_files
+
+    dep_pattern = re.compile(r'\[DEPENDS ON:\s*([^\]]+)\]')
+    failures = []
+
+    for filepath in all_template_files():
+        rel = os.path.relpath(filepath, ROOT).replace(os.sep, "/")
+        content = read(filepath)
+
+        # Collect file paths from DEPENDS ON headers
+        header_files = set()
+        for match in dep_pattern.finditer(content):
+            for ref in match.group(1).split(","):
+                header_files.add(ref.strip())
+
+        manifest_deps = file_manifest_deps.get(rel, set())
+
+        # Only flag if at least one side is non-empty
+        if header_files == manifest_deps:
+            continue
+
+        only_header = sorted(header_files - manifest_deps)
+        only_manifest = sorted(manifest_deps - header_files)
+
+        parts = []
+        if only_header:
+            parts.append(f"header only: {', '.join(only_header)}")
+        if only_manifest:
+            parts.append(f"manifest only: {', '.join(only_manifest)}")
+        if parts:
+            failures.append(f"  {rel}: {'; '.join(parts)}")
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
+# TPL-08 — every base/core template has at least one [ID:] tag
+# ---------------------------------------------------------------------------
+
+CORE_DIRS = [
+    os.path.join("templates", "base", "core"),
+    os.path.join("templates", "base", "security"),
+    os.path.join("templates", "base", "infra"),
+    os.path.join("templates", "base", "workflow"),
+    os.path.join("templates", "base", "language"),
+    os.path.join("templates", "base", "data"),
+]
+
+
+def check_tpl_08():
+    failures = []
+    id_pattern = re.compile(r'\[ID:\s*[^\]]+\]')
+
+    for d in CORE_DIRS:
+        dirpath = os.path.join(ROOT, d)
+        if not os.path.isdir(dirpath):
+            continue
+        for name in os.listdir(dirpath):
+            if not name.endswith(".md"):
+                continue
+            filepath = os.path.join(dirpath, name)
+            content = read(filepath)
+            if not id_pattern.search(content):
+                rel = os.path.relpath(filepath, ROOT).replace(os.sep, "/")
+                failures.append(f"  {rel}: missing [ID:] tag")
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
+# TPL-09 — no empty [ID:] sections
+# ---------------------------------------------------------------------------
+
+def check_tpl_09():
+    failures = []
+    id_pattern = re.compile(r'\[ID:\s*([^\]]+)\]')
+    meta_pattern = re.compile(r'^\[(DEPENDS ON|EXTEND|OVERRIDE):')
+    next_id_pattern = re.compile(r'^\[ID:')
+
+    for filepath in all_template_files():
+        content = read(filepath)
+        rel = os.path.relpath(filepath, ROOT).replace(os.sep, "/")
+        lines = content.splitlines()
+
+        for i, line in enumerate(lines):
+            match = id_pattern.search(line)
+            if not match:
+                continue
+            section_id = match.group(1).strip()
+
+            # Check for any non-blank content before the next [ID:]
+            # tag. Skip metadata lines ([DEPENDS ON:], [EXTEND:],
+            # [OVERRIDE:]) that accompany this section's [ID:].
+            # Sub-headings count as content.
+            has_content = False
+            for subsequent in lines[i + 1:]:
+                stripped = subsequent.strip()
+                if not stripped:
+                    continue
+                if next_id_pattern.match(stripped):
+                    break
+                if meta_pattern.match(stripped):
+                    continue
+                has_content = True
+                break
+
+            if not has_content:
+                failures.append(
+                    f"  {rel}: [ID: {section_id}] section is empty"
+                )
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
 # E2E-01 — all cases.py paths resolve to existing files
 # ---------------------------------------------------------------------------
 
@@ -683,6 +862,14 @@ CHECKS = [
      "title": "EXTEND/OVERRIDE targets reachable in resolved chain", "fn": check_tpl_06},
     {"id": "TPL-07", "spec": "SAIT-INT-TPL-07-001A",
      "title": "EXTEND sections do not duplicate parent rules", "fn": check_tpl_07},
+    {"id": "SYS-03", "spec": "SAIT-SMK-SYS-03-001A",
+     "title": "Every template file has a manifest entry", "fn": check_sys_03},
+    {"id": "SYS-04", "spec": "SAIT-SMK-SYS-04-001A",
+     "title": "DEPENDS ON headers match manifest depends_on", "fn": check_sys_04},
+    {"id": "TPL-08", "spec": "SAIT-SMK-TPL-08-001A",
+     "title": "Every base template has at least one [ID:] tag", "fn": check_tpl_08},
+    {"id": "TPL-09", "spec": "SAIT-SMK-TPL-09-001A",
+     "title": "No empty [ID:] sections", "fn": check_tpl_09},
     {"id": "E2E-01", "spec": "SAIT-SMK-E2E-01-001A",
      "title": "All cases.py paths resolve to existing files", "fn": check_e2e_01},
 ]
