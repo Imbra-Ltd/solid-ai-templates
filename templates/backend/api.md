@@ -1,5 +1,6 @@
 # Backend — API Design
 [ID: backend-api]
+[DEPENDS ON: templates/backend/http.md]
 
 ## API-first
 - Software MUST be designed API-first — the public contract MUST be agreed

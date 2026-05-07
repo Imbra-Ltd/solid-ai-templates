@@ -847,7 +847,7 @@ DEBUG=false
 # Base — Quality Gates
 
 [ID: base-quality-gates]
-[DEPENDS ON: templates/base/core/quality.md, templates/base/core/git.md, templates/base/core/testing.md]
+[DEPENDS ON: templates/base/core/quality.md, templates/base/core/git.md, templates/base/core/testing.md, templates/base/core/config.md]
 
 Stack-agnostic quality gate model. Defines the layers, categories,
 thresholds, and constraints. Stack templates extend with concrete tools.
@@ -2304,7 +2304,7 @@ not after deployment.
 
 <!-- templates/stack/go-service.md -->
 # Stack — Go Service
-[DEPENDS ON: templates/stack/go-lib.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/errors.md, templates/backend/quality.md, templates/backend/concurrency.md, templates/backend/features.md, templates/backend/messaging.md]
+[DEPENDS ON: templates/stack/go-lib.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/errors.md, templates/backend/quality.md, templates/backend/concurrency.md, templates/backend/features.md, templates/backend/messaging.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 Extends the Go library stack with service-specific rules. Covers project
 structure, HTTP handlers, configuration, concurrency, graceful shutdown,

@@ -984,6 +984,7 @@ DEBUG=false
 <!-- templates/backend/api.md -->
 # Backend — API Design
 [ID: backend-api]
+[DEPENDS ON: templates/backend/http.md]
 
 ## API-first
 - Software MUST be designed API-first — the public contract MUST be agreed
@@ -1483,7 +1484,7 @@ every project regardless of language or framework.
 <!-- templates/backend/auth.md -->
 # Backend — Authentication and Authorization
 [ID: backend-auth]
-[DEPENDS ON: templates/base/security/security.md]
+[DEPENDS ON: templates/base/security/security.md, templates/backend/http.md]
 
 Rules for identity verification (authn) and access control (authz).
 Applies to any backend service that has protected resources.
@@ -2112,7 +2113,7 @@ not after deployment.
 
 <!-- templates/stack/node-express.md -->
 # Stack — Express.js Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/auth.md, templates/backend/quality.md, templates/backend/features.md, templates/backend/messaging.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/auth.md, templates/backend/quality.md, templates/backend/features.md, templates/backend/messaging.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 A Node.js REST API built with Express. Covers project structure, middleware,
 routing, validation, error handling, and testing. Express is unopinionated —

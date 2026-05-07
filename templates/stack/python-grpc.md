@@ -1,5 +1,5 @@
 # Stack — gRPC Service (Python)
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md, templates/stack/python-lib.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md, templates/stack/python-lib.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 Extends the Python library stack and the gRPC backend layer with Python-specific
 conventions for implementing async gRPC servers and clients.

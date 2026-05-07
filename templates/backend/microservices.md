@@ -1,5 +1,6 @@
 # Backend — Microservices
 [ID: backend-microservices]
+[DEPENDS ON: templates/backend/api.md, templates/backend/http.md, templates/backend/messaging.md]
 
 Rules for projects explicitly built as a microservices architecture.
 Do not apply this template to a monolith or a single-service project.

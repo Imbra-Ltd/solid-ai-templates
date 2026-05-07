@@ -1,6 +1,7 @@
 # Frontend — UX Principles
 
 [ID: frontend-ux]
+[DEPENDS ON: templates/base/core/quality.md]
 
 ## UX principles
 

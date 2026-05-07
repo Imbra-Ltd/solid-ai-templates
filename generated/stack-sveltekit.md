@@ -782,6 +782,7 @@ fixing the design fixes the testability.
 # Frontend — UX Principles
 
 [ID: frontend-ux]
+[DEPENDS ON: templates/base/core/quality.md]
 
 ## UX principles
 
@@ -889,6 +890,7 @@ A feature is not complete until:
 # Frontend — Quality Attributes
 
 [ID: frontend-quality]
+[DEPENDS ON: templates/base/core/quality.md]
 
 ## Patterns
 
@@ -1666,7 +1668,7 @@ DEBUG=false
 <!-- templates/backend/auth.md -->
 # Backend — Authentication and Authorization
 [ID: backend-auth]
-[DEPENDS ON: templates/base/security/security.md]
+[DEPENDS ON: templates/base/security/security.md, templates/backend/http.md]
 
 Rules for identity verification (authn) and access control (authz).
 Applies to any backend service that has protected resources.
@@ -1916,7 +1918,7 @@ not after deployment.
 
 <!-- templates/stack/full-sveltekit.md -->
 # Stack — SvelteKit Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-svelte.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/auth.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-svelte.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/auth.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 Extends the Svelte stack with SvelteKit-specific rules. Covers file-based
 routing, server-side rendering, API routes, form actions, and deployment

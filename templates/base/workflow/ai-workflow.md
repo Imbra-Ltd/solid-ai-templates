@@ -1,4 +1,5 @@
 # AI-Assisted Development Workflow
+[ID: base-ai-workflow]
 
 How to structure work when collaborating with AI coding agents. Covers the project lifecycle, work item hierarchy, and practices that maximize agent effectiveness.
 

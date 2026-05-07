@@ -1196,7 +1196,7 @@ every project regardless of language or framework.
 <!-- templates/backend/auth.md -->
 # Backend — Authentication and Authorization
 [ID: backend-auth]
-[DEPENDS ON: templates/base/security/security.md]
+[DEPENDS ON: templates/base/security/security.md, templates/backend/http.md]
 
 Rules for identity verification (authn) and access control (authz).
 Applies to any backend service that has protected resources.
@@ -1362,6 +1362,7 @@ Use the correct level — do not elevate debug information to INFO:
 <!-- templates/backend/grpc.md -->
 # Backend — gRPC
 [ID: backend-grpc]
+[DEPENDS ON: templates/backend/auth.md, templates/backend/observability.md]
 
 Cross-cutting rules for gRPC services backed by Protocol Buffers. Applies
 regardless of implementation language. Language-specific stacks extend this
@@ -1725,7 +1726,7 @@ not after deployment.
 
 <!-- templates/stack/java-grpc.md -->
 # Stack — gRPC Service (Java / Kotlin)
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/testing.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/testing.md, templates/base/core/config.md, templates/backend/grpc.md, templates/backend/concurrency.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 Extends the gRPC backend layer with Java/Kotlin-specific conventions for
 implementing gRPC servers and clients using grpc-java.
