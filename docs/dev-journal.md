@@ -1,5 +1,38 @@
 # Dev Journal
 
+## 2026-05-07 — v2.5 coverage and scope
+
+**Tool:** Claude Code (Opus 4.6, 1M context)
+
+**Key changes:**
+- Mentioned codified industry standards in README overview (#210, PR #296)
+- Added team consistency hook line to README intro
+- Updated repo topics: removed generic (`templates`, `devtools`, `ai-tools`),
+  added targeted (`12-factor`, `owasp`, `codex-cli`, `copilot`,
+  `coding-standards`, `ai-workflow`, `code-quality`)
+- Defined success metrics in imbra-explore IMCONTEXT.md section 09
+  (#191, imbra-explore PR #45)
+- Added 4 structural smoke checks: SYS-03 (manifest coverage),
+  SYS-04 (header-manifest sync), TPL-08 (ID presence), TPL-09
+  (section content) (#253, PR #300)
+- Added section tag grammar, source of truth, and orthogonal
+  templates sections to SPEC.md
+- Proposed ADR-009: stack scope cap and fork-and-extend workflow
+
+**Issues closed:** #191, #210 (pending merge), #253 (pending merge)
+
+**Issues created:**
+- #297 — Add backend specialization templates to relevant stacks
+- #298 — Add data-heavy stack template
+- #299 — Spike: define orthogonality rules for core templates
+- #301 — Sync DEPENDS ON headers with manifest depends_on
+- #302 — Add missing [ID:] tag to ai-workflow.md
+- #303 — Add smoke checks for heading structure and reachability
+- #304 — Spike: apply RFC 2119 keyword discipline to SPEC.md
+- #305 — Cap stack scope and define extension model
+
+**PRs:** #296 (auto-merge), #300 (pending review)
+
 ## 2026-05-06 — v2.4 milestone completion
 
 **Tool:** Claude Code (Opus 4.6, 1M context)

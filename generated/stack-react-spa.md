@@ -1111,6 +1111,7 @@ every project regardless of language or framework.
 # Frontend — UX Principles
 
 [ID: frontend-ux]
+[DEPENDS ON: templates/base/core/quality.md]
 
 ## UX principles
 
@@ -1218,6 +1219,7 @@ A feature is not complete until:
 # Frontend — Quality Attributes
 
 [ID: frontend-quality]
+[DEPENDS ON: templates/base/core/quality.md]
 
 ## Patterns
 

@@ -62,15 +62,18 @@ base:
   - id: base-data-quality
     file: templates/base/data/data-quality.md
     description: Data sourcing, completeness, freshness, scoring — data-heavy projects
+    depends_on: [base-data-modeling]
   - id: base-data-modeling
     file: templates/base/data/data-modeling.md
     description: Schema design, naming, normalization, relationships, data types
   - id: base-data-governance
     file: templates/base/data/data-governance.md
     description: Classification, PII handling, retention, ownership, audit trail
+    depends_on: [base-data-modeling]
   - id: base-data-migration
     file: templates/base/data/data-migration.md
     description: Versioned migrations, zero-downtime, rollback strategies
+    depends_on: [base-data-modeling]
   - id: base-issues
     file: templates/base/workflow/issues.md
     description: Issue templates — epic, task, bug, incident, spike

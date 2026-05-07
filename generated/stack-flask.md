@@ -1880,7 +1880,7 @@ not after deployment.
 # Base — Quality Gates
 
 [ID: base-quality-gates]
-[DEPENDS ON: templates/base/core/quality.md, templates/base/core/git.md, templates/base/core/testing.md]
+[DEPENDS ON: templates/base/core/quality.md, templates/base/core/git.md, templates/base/core/testing.md, templates/base/core/config.md]
 
 Stack-agnostic quality gate model. Defines the layers, categories,
 thresholds, and constraints. Stack templates extend with concrete tools.
@@ -2157,7 +2157,7 @@ python -m build           # build distribution
 
 <!-- templates/stack/python-service.md -->
 # Stack — Python Web Service
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/quality.md, templates/backend/features.md, templates/backend/messaging.md, templates/stack/python-lib.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/database.md, templates/backend/observability.md, templates/backend/quality.md, templates/backend/features.md, templates/backend/messaging.md, templates/stack/python-lib.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 Abstract rules for any Python web service or API. Never used directly —
 always extended by a framework-specific stack (Flask, FastAPI, Django).

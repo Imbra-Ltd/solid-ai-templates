@@ -1,5 +1,6 @@
 # Backend — gRPC
 [ID: backend-grpc]
+[DEPENDS ON: templates/backend/auth.md, templates/backend/observability.md]
 
 Cross-cutting rules for gRPC services backed by Protocol Buffers. Applies
 regardless of implementation language. Language-specific stacks extend this

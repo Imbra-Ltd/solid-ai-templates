@@ -1620,7 +1620,7 @@ not after deployment.
 # Base — Quality Gates
 
 [ID: base-quality-gates]
-[DEPENDS ON: templates/base/core/quality.md, templates/base/core/git.md, templates/base/core/testing.md]
+[DEPENDS ON: templates/base/core/quality.md, templates/base/core/git.md, templates/base/core/testing.md, templates/base/core/config.md]
 
 Stack-agnostic quality gate model. Defines the layers, categories,
 thresholds, and constraints. Stack templates extend with concrete tools.
@@ -1897,7 +1897,7 @@ python -m build           # build distribution
 
 <!-- templates/stack/python-celery-worker.md -->
 # Stack — Celery Worker
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/jobs.md, templates/backend/observability.md, templates/backend/quality.md, templates/stack/python-lib.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/core/config.md, templates/backend/jobs.md, templates/backend/observability.md, templates/backend/quality.md, templates/stack/python-lib.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 A standalone Celery worker process. No HTTP layer — purely a background task
 processor. Covers task design, retry/backoff, scheduling, observability,

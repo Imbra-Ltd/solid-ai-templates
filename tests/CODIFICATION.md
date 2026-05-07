@@ -66,6 +66,8 @@ reused for a different component within the same area.
 |--------|-----------|
 | `01` | File structure — DEPENDS ON path resolution, file existence |
 | `02` | ID uniqueness — section IDs across all templates |
+| `03` | Manifest coverage — every template file has a manifest entry |
+| `04` | Header–manifest sync — DEPENDS ON headers match manifest depends_on |
 
 ### TPL - Template
 
@@ -78,6 +80,8 @@ reused for a different component within the same area.
 | `05` | Conflict resolution — two templates OVERRIDE the same section ID |
 | `06` | Chain reachability — EXTEND/OVERRIDE targets in resolved chain |
 | `07` | Duplication — EXTEND sections do not restate parent rules |
+| `08` | ID presence — base templates have at least one [ID:] tag |
+| `09` | Section content — [ID:] sections are not empty |
 
 ### MNF - Manifest
 
@@ -159,6 +163,8 @@ corrected prerequisites where test intent is unchanged.
 |----|---------|
 | `SAIT-SMK-SYS-01-001A` | Smoke — system — file structure — spec 1, version A |
 | `SAIT-SMK-SYS-02-001A` | Smoke — system — ID uniqueness — spec 1, version A |
+| `SAIT-SMK-SYS-03-001A` | Smoke — system — manifest coverage — spec 1, version A |
+| `SAIT-SMK-SYS-04-001A` | Smoke — system — header–manifest sync — spec 1, version A |
 | `SAIT-SMK-TPL-04-001A` | Smoke — composition — ref resolution — spec 1, version A |
 | `SAIT-INT-TPL-01-001A` | Integration — composition — DEPENDS ON chain — spec 1, version A |
 | `SAIT-INT-TPL-02-001A` | Integration — composition — EXTEND directive — spec 1, version A |
@@ -166,6 +172,8 @@ corrected prerequisites where test intent is unchanged.
 | `SAIT-INT-TPL-05-001A` | Integration — composition — conflict resolution — spec 1, version A |
 | `SAIT-INT-TPL-06-001A` | Integration — composition — chain reachability — spec 1, version A |
 | `SAIT-INT-TPL-07-001A` | Integration — composition — duplication — spec 1, version A |
+| `SAIT-SMK-TPL-08-001A` | Smoke — composition — ID presence — spec 1, version A |
+| `SAIT-SMK-TPL-09-001A` | Smoke — composition — section content — spec 1, version A |
 | `SAIT-INT-MNF-01-001A` | Integration — manifest — manifest entries — spec 1, version A |
 | `SAIT-INT-MNF-02-001A` | Integration — manifest — resolution — spec 1, version A |
 | `SAIT-INT-MNF-03-001A` | Integration — manifest — core tier — spec 1, version A |

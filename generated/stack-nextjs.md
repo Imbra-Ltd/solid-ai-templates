@@ -782,6 +782,7 @@ fixing the design fixes the testability.
 # Frontend — UX Principles
 
 [ID: frontend-ux]
+[DEPENDS ON: templates/base/core/quality.md]
 
 ## UX principles
 
@@ -889,6 +890,7 @@ A feature is not complete until:
 # Frontend — Quality Attributes
 
 [ID: frontend-quality]
+[DEPENDS ON: templates/base/core/quality.md]
 
 ## Patterns
 
@@ -1673,6 +1675,7 @@ DEBUG=false
 <!-- templates/backend/api.md -->
 # Backend — API Design
 [ID: backend-api]
+[DEPENDS ON: templates/backend/http.md]
 
 ## API-first
 - Software MUST be designed API-first — the public contract MUST be agreed
@@ -1764,7 +1767,7 @@ Sunset: <HTTP-date>
 <!-- templates/backend/auth.md -->
 # Backend — Authentication and Authorization
 [ID: backend-auth]
-[DEPENDS ON: templates/base/security/security.md]
+[DEPENDS ON: templates/base/security/security.md, templates/backend/http.md]
 
 Rules for identity verification (authn) and access control (authz).
 Applies to any backend service that has protected resources.
@@ -2158,7 +2161,7 @@ not after deployment.
 
 <!-- templates/stack/full-nextjs.md -->
 # Stack — Next.js Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-react.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md, templates/backend/database.md, templates/backend/observability.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-react.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md, templates/backend/database.md, templates/backend/observability.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 Extends the React SPA stack with Next.js-specific rules. Covers the App
 Router, Server and Client Components, data fetching, API routes, metadata,

@@ -11,6 +11,8 @@ Spec files live in `tests/specs/`. See `CODIFICATION.md` for the ID scheme, area
 |----|------|----------|-------|
 | `SAIT-SMK-SYS-01-001A` | SMK | P0 | All DEPENDS ON file paths resolve to existing files |
 | `SAIT-SMK-SYS-02-001A` | SMK | P0 | All section IDs are unique across all templates |
+| `SAIT-SMK-SYS-03-001A` | SMK | P0 | Every template file has a corresponding manifest entry |
+| `SAIT-SMK-SYS-04-001A` | SMK | P0 | DEPENDS ON headers match manifest depends_on |
 | `SAIT-SMK-TPL-04-001A` | SMK | P1 | All EXTEND and OVERRIDE directives reference existing IDs |
 | `SAIT-INT-TPL-01-001A` | INT | P0 | DEPENDS ON chain assembles a complete rule set |
 | `SAIT-INT-TPL-02-001A` | INT | P1 | EXTEND adds rules without removing base rules |
@@ -18,6 +20,8 @@ Spec files live in `tests/specs/`. See `CODIFICATION.md` for the ID scheme, area
 | `SAIT-INT-TPL-05-001A` | INT | P1 | Conflicting OVERRIDEs on the same ID are flagged or resolved |
 | `SAIT-INT-TPL-06-001A` | INT | P1 | EXTEND/OVERRIDE targets are reachable in the resolved chain |
 | `SAIT-INT-TPL-07-001A` | INT | P2 | EXTEND sections do not duplicate parent rules |
+| `SAIT-SMK-TPL-08-001A` | SMK | P1 | Every base template has at least one [ID:] tag |
+| `SAIT-SMK-TPL-09-001A` | SMK | P1 | No empty [ID:] sections |
 | `SAIT-INT-MNF-01-001A` | INT | P0 | All manifest entries reference valid paths and IDs |
 | `SAIT-INT-MNF-02-001A` | INT | P0 | All stacks resolve to valid, non-empty file lists |
 | `SAIT-INT-MNF-03-001A` | INT | P0 | All resolved chains include core tier files |

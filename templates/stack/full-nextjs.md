@@ -1,5 +1,5 @@
 # Stack — Next.js Application
-[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-react.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md, templates/backend/database.md, templates/backend/observability.md]
+[DEPENDS ON: templates/base/core/git.md, templates/base/core/docs.md, templates/base/core/quality.md, templates/base/language/typescript.md, templates/frontend/ux.md, templates/frontend/quality.md, templates/stack/spa-react.md, templates/base/core/config.md, templates/backend/http.md, templates/backend/api.md, templates/backend/auth.md, templates/backend/database.md, templates/backend/observability.md, templates/base/infra/cicd.md, templates/base/security/devsecops.md]
 
 Extends the React SPA stack with Next.js-specific rules. Covers the App
 Router, Server and Client Components, data fetching, API routes, metadata,
