@@ -1,5 +1,8 @@
 # SOLID-AI Templates
 
+Five developers with five agents produce five coding styles — unless they
+share the same context file.
+
 Your AI agent writes better code when it has good instructions — but most
 teams write CLAUDE.md and AGENTS.md files from scratch, and they quickly
 fall out of sync.
@@ -17,13 +20,11 @@ consistent context files for any stack and any agent.
 
 ## Overview
 
-Most AI context files are written from scratch for each project and quickly
-fall out of sync. This repository provides a reusable template system —
-structured like object-oriented design — where base rules are defined once
-and composed with stack-specific extensions to build a context file
-for any project type. Templates codify industry standards (12-factor app,
-OWASP, SOLID, SemVer, conventional commits) into actionable rules your
-agent can follow.
+This repository provides a reusable template system — structured like
+object-oriented design — where base rules are defined once and composed
+with stack-specific extensions to build a context file for any project
+type. Templates codify industry standards (12-factor app, OWASP, SOLID,
+SemVer, conventional commits) into actionable rules your agent can follow.
 
 Works for new projects and refactoring alike — the context file
 describes how code *should be written*, giving your agent a consistent
