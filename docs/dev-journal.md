@@ -19,19 +19,25 @@
   templates sections to SPEC.md
 - Proposed ADR-009: stack scope cap and fork-and-extend workflow
 
-**Issues closed:** #191, #210 (pending merge), #253 (pending merge)
+**Issues closed:** #191, #210, #253, #301, #302, #146, #147, #181, #182
 
 **Issues created:**
 - #297 — Add backend specialization templates to relevant stacks
 - #298 — Add data-heavy stack template
 - #299 — Spike: define orthogonality rules for core templates
-- #301 — Sync DEPENDS ON headers with manifest depends_on
-- #302 — Add missing [ID:] tag to ai-workflow.md
+- #301 — Sync DEPENDS ON headers with manifest depends_on (closed same session)
+- #302 — Add missing [ID:] tag to ai-workflow.md (closed same session)
 - #303 — Add smoke checks for heading structure and reachability
 - #304 — Spike: apply RFC 2119 keyword discipline to SPEC.md
 - #305 — Cap stack scope and define extension model
 
-**PRs:** #296 (auto-merge), #300 (pending review)
+**PRs merged:** #296 (README), #300 (smoke checks + SPEC + ADR + fixes)
+
+**Backlog cleanup:**
+- Closed #146, #147, #181, #182 as wontdo per ADR-009
+- Moved #13 to v3.0, converted to spike
+- Moved #90 to Backlog
+- Deleted v2.5 milestone
 
 ## 2026-05-06 — v2.4 milestone completion
 
