@@ -228,6 +228,19 @@ resolution — stacks do not need to list them in `depends_on`:
 - `templates/base/core/readme.md`
 - `templates/base/core/testing.md`
 
+### Orthogonal templates
+
+Some templates are project-level choices, not stack-level dependencies.
+They are not referenced in any stack's `depends_on` chain — users
+opt in via the `Extras` field in the declaration block or during the
+interview.
+
+Orthogonal templates include platform choices (github, gitlab) and
+workflow preferences (360, ai-workflow, review, release, deployment).
+
+Orthogonal templates are NOT expected to appear in stack resolution
+and are excluded from reachability checks.
+
 ### Opt-in tiers
 
 Everything else is explicit. Stacks declare what they need:
@@ -247,7 +260,12 @@ Everything else is explicit. Stacks declare what they need:
 
 `[DEPENDS ON: ...]` headers MUST list direct dependencies only —
 matching the manifest's `depends_on` for that entry. Headers MUST NOT
-expand transitive dependencies. The manifest is the source of truth.
+expand transitive dependencies.
+
+**Source of truth:** `templates/manifest.yaml` is authoritative. When
+a mismatch exists between a file header and the manifest, the manifest
+wins and the file header MUST be updated. Smoke check SYS-04 validates
+this contract.
 
 ### Pattern files
 
@@ -281,6 +299,43 @@ A stack template extends a section by referencing its ID:
 ```
 
 If no override or extend is declared, the base section is used as-is.
+
+### Section tag grammar
+
+A section header MAY combine multiple tags. The valid patterns:
+
+```markdown
+## Heading
+[ID: section-id]
+```
+
+```markdown
+## Heading
+[ID: section-id]
+[DEPENDS ON: path/to/dep.md, path/to/other.md]
+```
+
+```markdown
+## Heading
+[ID: section-id]
+[EXTEND: parent-id]
+```
+
+```markdown
+## Heading
+[ID: section-id]
+[OVERRIDE: parent-id]
+```
+
+Rules:
+- `[ID:]` names the section — MUST appear first when combined
+- `[DEPENDS ON:]` declares file-level dependencies — metadata,
+  not content
+- `[EXTEND:]` / `[OVERRIDE:]` declares the relationship to a parent
+- A section's content starts after all tag lines
+- A section is bounded by the next `[ID:]` tag or end of file
+- A section MUST NOT be empty — at least one content line (heading,
+  bullet, paragraph, table, or code block) MUST follow the tags
 
 ---
 
